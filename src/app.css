@@ -1,0 +1,10 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "tailwindcss/variants";
+
+body {
+  background: rgba(var(--color-surface-900) / 1);
+  min-height: 100vh;
+  width: 100%;
+}

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/translations/translations";
     import { invoke } from "@tauri-apps/api/core";
 
     let name = $state("");
@@ -12,7 +13,7 @@
 </script>
 
 <main class="container">
-    <h1 class="text-secondary-500">Welcome to Tauri + Svelte</h1>
+    <h1 class="text-secondary-500">{$t("common.welcome")}</h1>
 
     <div class="text-primary-500">Sample Text</div>
 
@@ -31,7 +32,9 @@
             />
         </a>
     </div>
-    <p class="text-secondary-500">Click on the Tauri, Vite, and SvelteKit logos to learn more.</p>
+    <p class="text-secondary-500">
+        Click on the Tauri, Vite, and SvelteKit logos to learn more.
+    </p>
 
     <form class="row" onsubmit={greet}>
         <input

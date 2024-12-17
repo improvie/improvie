@@ -7,7 +7,7 @@
     let currentTile: number = 0;
 </script>
 
-<AppRail class={$$props.class ?? ""}>
+<AppRail class="overflow-hidden" background="bg-surface-900-100-token">
     <svelte:fragment slot="lead">
         <AppRailAnchor href="/">(icon)</AppRailAnchor>
     </svelte:fragment>

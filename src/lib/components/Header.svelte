@@ -1,10 +1,20 @@
 <script lang="ts">
-    import { AppBar } from "@skeletonlabs/skeleton";
+    import { AppBar, LightSwitch } from "@skeletonlabs/skeleton";
 </script>
 
-<AppBar>
+<AppBar
+    gridColumns="grid-cols-3"
+    slotDefault="place-self-center"
+    slotTrail="place-content-end"
+    background="bg-surface-900-100-token"
+>
     <svelte:fragment slot="lead">
         <strong class="text-xl uppercase">Improvie</strong>
+        <LightSwitch />
     </svelte:fragment>
-    <svelte:fragment slot="trail" />
+    <div class="flex-grow">
+        <span>Title</span>
+        <span class="text-xs text-gray-500">Subtitle</span>
+    </div>
+    <svelte:fragment slot="trail">(action)</svelte:fragment>
 </AppBar>

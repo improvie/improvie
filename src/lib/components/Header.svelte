@@ -6,10 +6,11 @@
     gridColumns="grid-cols-3"
     slotDefault="place-self-center"
     slotTrail="place-content-end"
-    background="bg-surface-900-100-token"
+    background="bg-surface-100-800-token"
+    shadow="shadow-md"
 >
     <svelte:fragment slot="lead">
-        <strong class="text-xl uppercase">Improvie</strong>
+        <strong class="text-xl">Improvie</strong>
         <LightSwitch />
     </svelte:fragment>
     <div class="flex-grow">

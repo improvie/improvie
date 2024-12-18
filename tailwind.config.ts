@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 
 import { skeleton } from "@skeletonlabs/tw-plugin";
 import { join } from "node:path";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: "selector",
@@ -14,7 +15,11 @@ export default {
   ],
 
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        mplus: ['"M PLUS Rounded 1c"', ...defaultTheme.fontFamily.mono],
+      },
+    },
   },
 
   plugins: [

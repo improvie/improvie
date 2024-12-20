@@ -6,26 +6,22 @@
         AppRailTile,
         AppRailAnchor,
     } from "@skeletonlabs/skeleton";
+    import ThemeChanger from "./ThemeChanger.svelte";
 
     let currentTile: number = 0;
 </script>
 
-<AppRail
-    background="bg-surface-900-100-token"
-    class="ring-1 ring-surface-900-100-token"
->
+<AppRail background="bg-surface-50-900-token" class="ring-1">
     <svelte:fragment slot="lead">
         <AppRailAnchor title="Color Pallet">
             <svelte:fragment slot="lead">
-                <Icon icon="mdi:color" width="36" height="36" />
+                <ThemeChanger />
             </svelte:fragment>
         </AppRailAnchor>
     </svelte:fragment>
     <svelte:fragment slot="default">
         <!-- this 160px is top and bottom elements size -->
-        <div
-            class="h-[calc(100vh-160px)] overflow-scroll ring-1 ring-surface-900-100-token"
-        >
+        <div class="h-[calc(100vh-160px)] overflow-scroll ring-1">
             {#each range(1, 30) as i}
                 <AppRailTile
                     bind:group={currentTile}

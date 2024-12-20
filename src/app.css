@@ -7,3 +7,7 @@ html,
 body {
   @apply h-full overflow-hidden;
 }
+
+.on_center {
+  @apply fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2;
+}

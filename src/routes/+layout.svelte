@@ -7,20 +7,14 @@
     import "@fontsource/m-plus-rounded-1c/900.css";
 
     import { loadTranslations } from "$lib/translations/translations";
-    import Sidebar from "$lib/components/Sidebar.svelte";
-    import Header from "$lib/components/Header.svelte";
+    import Sidebar from "$lib/features/Sidebar.svelte";
 
     const defaultLanguage = "ja";
     loadTranslations(defaultLanguage, "/");
 </script>
 
-<div
-    class="grid h-screen grid-rows-[auto_1fr_auto] text-primary-400-500-token hide-scrollbar font-mplus"
->
-    <header>
-        <Header />
-    </header>
-    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
+<div class="max-h-screen text-surface-700-200-token font-mplus">
+    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] h-screen">
         <aside>
             <Sidebar />
         </aside>

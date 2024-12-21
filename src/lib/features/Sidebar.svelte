@@ -3,10 +3,12 @@
   import Icon from "@iconify/svelte";
   import { AppRail, AppRailAnchor, AppRailTile } from "@skeletonlabs/skeleton";
   import ThemeChanger from "./ThemeChanger.svelte";
+  import AddContent from "./AddContent.svelte";
 
   let currentTile: number = 0;
 </script>
 
+<!-- TODO: sidebar じゃあなくて header にする。 skeleton や melt のheaderを参考にする、お気に入りはDrawerで見れるようにする -->
 <AppRail background="bg-surface-50-900-token" class="ring-1">
   <svelte:fragment slot="lead">
     <AppRailAnchor title="Color Pallet">
@@ -14,10 +16,15 @@
         <ThemeChanger />
       </svelte:fragment>
     </AppRailAnchor>
+    <AppRailAnchor title="Add Content">
+      <svelte:fragment slot="lead">
+        <AddContent />
+      </svelte:fragment>
+    </AppRailAnchor>
   </svelte:fragment>
   <svelte:fragment slot="default">
-    <!-- this 160px is top and bottom elements size -->
-    <div class="h-[calc(100vh-160px)] overflow-scroll ring-1">
+    <!-- this 240 is top and bottom elements size -->
+    <div class="h-[calc(100vh-240px)] overflow-scroll ring-1">
       {#each range(1, 30) as i}
         <AppRailTile
           bind:group={currentTile}
@@ -26,7 +33,7 @@
           title="tile-{i}"
         >
           <svelte:fragment slot="lead">(icon)</svelte:fragment>
-          <span>Tile {i}</span>
+          <span>お気に入り{i}</span>
         </AppRailTile>
       {/each}
     </div>

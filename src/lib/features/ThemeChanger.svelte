@@ -4,6 +4,7 @@
     import { createDialog, melt } from "@melt-ui/svelte";
     import { LightSwitch } from "@skeletonlabs/skeleton";
     import { fade, fly } from "svelte/transition";
+
     const {
         elements: { trigger, portalled, overlay, content, close },
         states: { open },
@@ -11,7 +12,13 @@
         openFocus: "#theme-changer",
     });
 
+    document.body.setAttribute(
+        "data-theme",
+        localStorage.getItem("theme") || "wintry",
+    );
+
     function updateTheme(theme: string) {
+        localStorage.setItem("theme", theme);
         document.body.setAttribute("data-theme", theme);
     }
 </script>

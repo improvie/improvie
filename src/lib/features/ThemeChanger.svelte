@@ -1,21 +1,19 @@
 <script lang="ts">
+    import { themes } from "$lib/themes";
     import Icon from "@iconify/svelte";
     import { createDialog, melt } from "@melt-ui/svelte";
+    import { LightSwitch } from "@skeletonlabs/skeleton";
     import { fade, fly } from "svelte/transition";
     const {
-        elements: {
-            trigger,
-            portalled,
-            overlay,
-            content,
-            title,
-            description,
-            close,
-        },
+        elements: { trigger, portalled, overlay, content, close },
         states: { open },
     } = createDialog({
         openFocus: "#theme-changer",
     });
+
+    function updateTheme(theme: string) {
+        document.body.setAttribute("data-theme", theme);
+    }
 </script>
 
 <button use:melt={$trigger} class="h-20 w-20"
@@ -31,22 +29,43 @@
         ></div>
         <div
             use:melt={$content}
-            class="on_center rounded-xl bg-surface-50-900-token p-6 shadow-lg"
+            class="on_center rounded-xl bg-surface-100-800-token p-6 shadow-lg"
             transition:fly={{
                 duration: 150,
                 y: 8,
             }}
         >
-            <h2 use:melt={$title}>Dialog Title</h2>
-            <p use:melt={$description}>Dialog description</p>
-            <!-- ISSUE: disable auto focus on open -->
             <button
                 use:melt={$close}
                 aria-label="Close"
-                class="absolute right-4 top-4 inline-flex h-6 w-6 appearance-none btn-icon variant-ghost-primary rounded-full"
+                class="absolute right-2 top-2 inline-flex h-6 w-6 btn-icon bg-initial rounded-full"
             >
                 <Icon icon="mdi:close" width="24" height="24" />
             </button>
+            <!-- body -->
+            <div class="flex flex-col pt-2 gap-4 items-center">
+                <div class="flex gap-8">
+                    <h2 class="text-lg">モード</h2>
+                    <LightSwitch />
+                </div>
+                <nav class="list-nav max-h-64 lg:max-h-[500px] overflow-y-auto">
+                    <ul>
+                        {#each themes as theme}
+                            <li>
+                                <button
+                                    class="option w-full h-full"
+                                    onclick={() => updateTheme(theme.file)}
+                                >
+                                    <span>{theme.icon}</span>
+                                    <span class="flex-auto text-left"
+                                        >{theme.name}</span
+                                    ></button
+                                >
+                            </li>
+                        {/each}
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 {/if}

@@ -17,7 +17,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mplus: ['"M PLUS Rounded 1c"', ...defaultTheme.fontFamily.mono],
+        main: ['"Mamelon"', ...defaultTheme.fontFamily.sans],
       },
     },
   },
@@ -26,10 +26,16 @@ export default {
     skeleton({
       themes: {
         preset: [
-          {
-            name: "wintry",
-            enhancements: true,
-          },
+          { name: "crimson", enhancements: true },
+          { name: "gold-nouveau", enhancements: true },
+          { name: "hamlindigo", enhancements: true },
+          { name: "modern", enhancements: true },
+          { name: "rocket", enhancements: true },
+          { name: "sahara", enhancements: true },
+          { name: "seafoam", enhancements: true },
+          { name: "skeleton", enhancements: true },
+          { name: "vintage", enhancements: true },
+          { name: "wintry", enhancements: true },
         ],
       },
     }),

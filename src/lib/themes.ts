@@ -3,47 +3,58 @@
 export interface Theme {
   file: string;
   name: string;
+  icon: string;
 }
 
 export const themes: Theme[] = [
   {
     file: "skeleton",
-    name: "💀 Skeleton",
+    name: "Skeleton",
+    icon: "💀",
   },
   {
     file: "wintry",
-    name: "🌨️ Wintry",
+    name: "Wintry",
+    icon: "🌨️",
   },
   {
     file: "modern",
-    name: "🤖 Modern",
+    name: "Modern",
+    icon: "🤖",
   },
   {
     file: "rocket",
-    name: "🚀 Rocket",
+    name: "Rocket",
+    icon: "🚀",
   },
   {
     file: "seafoam",
-    name: "🧜‍♀️ Seafoam",
+    name: "Seafoam",
+    icon: "🧜",
   },
   {
     file: "vintage",
-    name: "📺 Vintage",
+    name: "Vintage",
+    icon: "📺",
   },
   {
     file: "sahara",
-    name: "🏜️ Sahara",
+    name: "Sahara",
+    icon: "🏜",
   },
   {
     file: "hamlindigo",
-    name: "👔 Hamlindigo",
+    name: "Hamlindigo",
+    icon: "👔",
   },
   {
     file: "gold-nouveau",
-    name: "💫 Gold Nouveau",
+    name: "Gold Nouveau",
+    icon: "💫",
   },
   {
     file: "crimson",
-    name: "⭕ Crimson",
+    name: "Crimson",
+    icon: "⭕",
   },
 ];

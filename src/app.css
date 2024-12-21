@@ -11,3 +11,86 @@ body {
 .on_center {
   @apply fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2;
 }
+
+@font-face {
+  font-family: "Mamelon";
+  src: url("/fonts/Mamelon-5-Hi-Regular.woff2");
+  font-display: swap;
+}
+
+:root [data-theme="crimson"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="wintry"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="gold-nouveau"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="hamlindigo"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="modern"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="rocket"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="sahara"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="seafoam"] {
+  --theme-font-family-base: "mamelon", ui-sans-serif, system-ui, sans-serif,
+    "apple color emoji", "segoe ui emoji", "segoe ui symbol", "noto color emoji";
+  --theme-font-family-heading: "mamelon", ui-sans-serif, system-ui, sans-serif,
+    "apple color emoji", "segoe ui emoji", "segoe ui symbol", "noto color emoji";
+}
+
+:root [data-theme="skeleton"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="vintage"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root [data-theme="wintry"] {
+  --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --theme-font-family-heading: "Mamelon", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}

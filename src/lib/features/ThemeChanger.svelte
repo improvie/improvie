@@ -8,27 +8,22 @@
   const {
     elements: { trigger, portalled, overlay, content, close },
     states: { open },
-  } = createDialog({
-    openFocus: "#theme-changer",
+  } = createDialog();
+
+  let currentTheme: string = $state(localStorage.getItem("theme") || "wintry");
+
+  $effect(() => {
+    document.body.setAttribute("data-theme", currentTheme);
+    localStorage.setItem("theme", currentTheme);
   });
-
-  document.body.setAttribute(
-    "data-theme",
-    localStorage.getItem("theme") || "wintry",
-  );
-
-  function updateTheme(theme: string) {
-    localStorage.setItem("theme", theme);
-    document.body.setAttribute("data-theme", theme);
-  }
 </script>
 
-<button use:melt={$trigger} class="h-20 w-20">
+<button use:melt={$trigger} class="w-20 h-20">
   <Icon icon="mdi:color" width="36" height="36" class="m-auto" />
 </button>
 
 {#if $open}
-  <div use:melt={$portalled} id="theme-changer">
+  <div use:melt={$portalled}>
     <div
       use:melt={$overlay}
       class="fixed inset-0 z-50"
@@ -61,7 +56,8 @@
               <li>
                 <button
                   class="option w-full h-full"
-                  onclick={() => updateTheme(theme.file)}
+                  class:bg-primary-active-token={theme.file == currentTheme}
+                  onclick={() => (currentTheme = theme.file)}
                 >
                   <span>{theme.icon}</span>
                   <span class="flex-auto text-left">{theme.name}</span>

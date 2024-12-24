@@ -3,6 +3,7 @@
   import Icon from "@iconify/svelte";
   import { createDialog, melt } from "@melt-ui/svelte";
   import { LightSwitch } from "@skeletonlabs/skeleton";
+  import { debug } from "@tauri-apps/plugin-log";
   import { fade, fly } from "svelte/transition";
 
   const {
@@ -13,6 +14,7 @@
   let currentTheme: string = $state(localStorage.getItem("theme") || "wintry");
 
   $effect(() => {
+    debug(`currentTheme = ${currentTheme}`);
     document.body.setAttribute("data-theme", currentTheme);
     localStorage.setItem("theme", currentTheme);
   });

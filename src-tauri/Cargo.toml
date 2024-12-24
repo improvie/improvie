@@ -5,6 +5,10 @@ description = "This is a tauri app that improves movie(video) management."
 authors = ["moriyoshi-kasuga"]
 edition = "2021"
 
+[features]
+default = []
+dev = []
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
@@ -18,11 +22,63 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+serde.workspace = true
+serde_json.workspace = true
+log.workspace = true
+
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+tauri-plugin-log = "2"
+
+[workspace]
+resolver = "2"
+members = [
+    "improvie-infra",
+    "improvie-app",
+    "improvie-domain",
+    "improvie-shared",
+]
+
+[workspace.dependencies]
+improvie-infra = { path = "improvie-infra" }
+improvie-app = { path = "improvie-app" }
+improvie-domain = { path = "improvie-domain" }
+improvie-shared = { path = "improvie-shared" }
+
+# async/concurrency/parallelism
+tokio = { version = "1.40", features = ["full"] }
+crossbeam-utils = "0.8"
+
+# ser/de
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# utils
+thiserror = "2.0"
+itertools = "0.13"
+chrono = { version = "0.4", features = ["serde"] }
+
+# macros
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = "2.0"
+seq-macro = "0.3"
+
+# others
+log = "0.4.22"
+uuid = { version = "1.10", features = [
+    "v7",
+    "fast-rng",
+    "macro-diagnostics",
+    "serde",
+] }
+sqlx = { version = "0.8.2", features = [
+    "sqlite",
+    "runtime-tokio-native-tls",
+    "chrono",
+    "uuid",
+] }
 
 [workspace.lints.rust]
 nonstandard_style = { level = "warn", priority = -1 }

@@ -1,14 +1,24 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use sqlx::SqlitePool;
+
+pub struct DbPool(SqlitePool);
+
+impl DbPool {
+    pub fn new() -> std::io::Result<Self> {
+        todo!()
+    }
+
+    pub fn pool(&self) -> SqlitePool {
+        self.0.clone()
+    }
+
+    pub async fn tx(&self) -> sqlx::Result<sqlx::Transaction<'static, sqlx::Sqlite>> {
+        self.0.begin().await
+    }
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+impl DbPool {
+    pub fn with_pool(pool: SqlitePool) -> std::sync::Arc<Self> {
+        std::sync::Arc::new(Self(pool))
     }
 }

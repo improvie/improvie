@@ -1,4 +1,6 @@
-use tauri_plugin_log::{Target, TargetKind};
+use tauri_plugin_log::{Target, TargetKind, TimezoneStrategy};
+
+mod state;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -16,6 +18,7 @@ pub fn run() {
                 } else {
                     log::LevelFilter::Info
                 })
+                .timezone_strategy(TimezoneStrategy::UseLocal)
                 .targets(
                     #[cfg(not(feature = "dev"))]
                     [

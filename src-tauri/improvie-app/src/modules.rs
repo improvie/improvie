@@ -1,6 +1,7 @@
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
+use improvie_shared::AppResult;
 
 use crate::usecase::health_check::HealthCheckUseCase;
 
@@ -9,13 +10,12 @@ pub struct UsecasesModule {
 }
 
 impl UsecasesModule {
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
-        let db = Arc::new(DbPool::new());
+    pub async fn new(data_dir: PathBuf) -> AppResult<Self> {
+        let db = Arc::new(DbPool::new(data_dir).await?);
         let repositories = Arc::new(RepositoriesModuleImpl::new(Arc::clone(&db)));
-        Self {
+        Ok(Self {
             health_check_usecase: HealthCheckUseCase::new(Arc::clone(&repositories)),
-        }
+        })
     }
 }
 

@@ -13,14 +13,15 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
-                .level(if cfg!(feature = "dev") {
-                    log::LevelFilter::Debug
-                } else {
-                    log::LevelFilter::Info
-                })
+                .level(
+                    #[cfg(feature = "dev")]
+                    log::LevelFilter::Debug,
+                    #[cfg(not(feature = "dev"))]
+                    log::LevelFilter::Info,
+                )
                 .timezone_strategy(TimezoneStrategy::UseLocal)
                 .targets(
-                    #[cfg(not(feature = "dev"))]
+                    #[cfg(feature = "dev")]
                     [
                         Target::new(TargetKind::Stdout),
                         Target::new(TargetKind::Folder {
@@ -30,17 +31,16 @@ pub fn run() {
                         }),
                         Target::new(TargetKind::Webview),
                     ],
-                    #[cfg(feature = "dev")]
+                    #[cfg(not(feature = "dev"))]
                     [Target::new(TargetKind::LogDir { file_name: None })],
                 )
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            let usecases = UsecasesModule::new();
-            let hc = block_on(usecases.health_check_usecase().health_check());
-            let _ = hc;
-            // TODO: popup error
+            let data_dir = app.path().app_data_dir()?;
+            let usecases = block_on(UsecasesModule::new(data_dir))?;
+            block_on(usecases.health_check_usecase().health_check())?;
             app.manage(usecases);
             Ok(())
         })

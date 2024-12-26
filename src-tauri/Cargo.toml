@@ -22,15 +22,17 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-improvie-shared.workspace = true
 improvie-app.workspace = true
+improvie-shared.workspace = true
 
 serde.workspace = true
 serde_json.workspace = true
 log.workspace = true
 sqlx.workspace = true
 
-tauri = { version = "2", features = [] }
+tauri.workspace = true
+
+# tauri plugin and config
 tauri-plugin-opener = "2"
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "2"
@@ -50,9 +52,13 @@ improvie-app = { path = "improvie-app" }
 improvie-domain = { path = "improvie-domain" }
 improvie-shared = { path = "improvie-shared" }
 
+# tauri
+tauri = { version = "2", features = [] }
+
 # async/concurrency/parallelism
 tokio = { version = "1.40", features = ["full"] }
 crossbeam-utils = "0.8"
+async-trait = "0.1"
 
 # ser/de
 serde = { version = "1.0", features = ["derive"] }

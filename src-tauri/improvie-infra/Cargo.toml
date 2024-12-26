@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+improvie-domain.workspace = true
+improvie-shared.workspace = true
+
+async-trait.workspace = true
 sqlx.workspace = true
 log.workspace = true
 chrono.workspace = true

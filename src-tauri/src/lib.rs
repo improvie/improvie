@@ -1,6 +1,6 @@
+use improvie_app::modules::UsecasesModule;
+use tauri::{async_runtime::block_on, Manager};
 use tauri_plugin_log::{Target, TargetKind, TimezoneStrategy};
-
-mod state;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -36,6 +36,14 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())
+        .setup(|app| {
+            let usecases = UsecasesModule::new();
+            let hc = block_on(usecases.health_check_usecase().health_check());
+            let _ = hc;
+            // TODO: popup error
+            app.manage(usecases);
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

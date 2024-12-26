@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+improvie-infra.workspace = true
+improvie-domain.workspace = true
+improvie-shared.workspace = true
+
+async-trait.workspace = true
 
 [lints]
 workspace = true

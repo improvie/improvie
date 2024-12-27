@@ -1,19 +1,19 @@
 use std::path::PathBuf;
 
-use improvie_shared::AppResult;
+use improvie_shared::{AppError, AppResult};
 use sqlx::SqlitePool;
 
 pub struct DbPool(SqlitePool);
 
 impl DbPool {
     pub async fn new(data_dir: PathBuf) -> AppResult<Self> {
-        let path = data_dir.join("data.sql").to_str();
-        let _ = path;
-        todo!("handle error");
-        // match path {
-        //     Some(path) => Ok(Self(SqlitePool::connect(path).await)),
-        //     None => Err(AppError("data_dir is not set".to_string())),
-        // }
+        std::fs::create_dir_all(&data_dir)?;
+        let join = data_dir.join("data.sql");
+        std::fs::File::create(&join)?;
+        match join.to_str() {
+            Some(path) => Ok(Self(SqlitePool::connect(path).await?)),
+            None => Err(AppError::NotFound("path", String::from("data_dir"))),
+        }
     }
 
     pub fn pool(&self) -> SqlitePool {

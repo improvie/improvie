@@ -10,6 +10,10 @@ fn greet(name: &str) -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(feature = "dev")]
+    #[allow(clippy::unwrap_used)]
+    let dev_data_dir = std::env::current_dir().unwrap().join("dev");
+
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
@@ -25,8 +29,7 @@ pub fn run() {
                     [
                         Target::new(TargetKind::Stdout),
                         Target::new(TargetKind::Folder {
-                            #[allow(clippy::unwrap_used)]
-                            path: std::env::current_dir().unwrap(),
+                            path: dev_data_dir.clone(),
                             file_name: Some(String::from("dev")),
                         }),
                         Target::new(TargetKind::Webview),
@@ -37,7 +40,10 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())
-        .setup(|app| {
+        .setup(move |app| {
+            #[cfg(feature = "dev")]
+            let data_dir = dev_data_dir.clone();
+            #[cfg(not(feature = "dev"))]
             let data_dir = app.path().app_data_dir()?;
             let usecases = block_on(UsecasesModule::new(data_dir))?;
             block_on(usecases.health_check_usecase().health_check())?;

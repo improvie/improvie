@@ -33,9 +33,9 @@ sqlx.workspace = true
 tauri.workspace = true
 
 # tauri plugin and config
-tauri-plugin-opener = "2"
+tauri-plugin-opener = "2.2.2"
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
-tauri-plugin-log = "2"
+tauri-plugin-log = "2.2.0"
 
 [workspace]
 resolver = "2"
@@ -53,31 +53,32 @@ improvie-domain = { path = "improvie-domain" }
 improvie-shared = { path = "improvie-shared" }
 
 # tauri
-tauri = { version = "2", features = [] }
+tauri = { version = "2.1.1", features = [] }
 
 # async/concurrency/parallelism
-tokio = { version = "1.40", features = ["full"] }
-crossbeam-utils = "0.8"
-async-trait = "0.1"
+tokio = { version = "1.42.0", features = ["full"] }
+crossbeam-utils = "0.8.21"
+async-trait = "0.1.83"
 
 # ser/de
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.134"
 
 # utils
-thiserror = "2.0"
-itertools = "0.13"
-chrono = { version = "0.4", features = ["serde"] }
+thiserror = "2.0.9"
+itertools = "0.13.0"
+chrono = { version = "0.4.39", features = ["serde"] }
+ambassador = "0.4.1"
 
 # macros
-proc-macro2 = "1.0"
-quote = "1.0"
-syn = "2.0"
-seq-macro = "0.3"
+proc-macro2 = "1.0.92"
+quote = "1.0.38"
+syn = "2.0.93"
+seq-macro = "0.3.5"
 
 # others
 log = "0.4.22"
-uuid = { version = "1.10", features = [
+uuid = { version = "1.10.0", features = [
     "v7",
     "fast-rng",
     "macro-diagnostics",

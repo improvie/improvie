@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-improvie-shared.workspace = true
+improvie-logic.workspace = true
 async-trait.workspace = true
 
 [lints]

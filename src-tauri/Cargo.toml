@@ -23,7 +23,7 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 improvie-app.workspace = true
-improvie-shared.workspace = true
+improvie-logic.workspace = true
 
 serde.workspace = true
 serde_json.workspace = true
@@ -43,14 +43,14 @@ members = [
     "improvie-infra",
     "improvie-app",
     "improvie-domain",
-    "improvie-shared",
+    "improvie-logic",
 ]
 
 [workspace.dependencies]
 improvie-infra = { path = "improvie-infra" }
 improvie-app = { path = "improvie-app" }
 improvie-domain = { path = "improvie-domain" }
-improvie-shared = { path = "improvie-shared" }
+improvie-logic = { path = "improvie-logic" }
 
 # tauri
 tauri = { version = "2.1.1", features = [] }

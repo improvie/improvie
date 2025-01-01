@@ -3,7 +3,7 @@ use std::sync::Arc;
 use improvie_domain::{
     modules::RepositoriesModule, repository::health_check::HealthCheckRepository,
 };
-use improvie_shared::AppResult;
+use improvie_logic::AppResult;
 
 pub struct HealthCheckUseCase<R: RepositoriesModule> {
     repository: Arc<R>,

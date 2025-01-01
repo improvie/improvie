@@ -1,4 +1,4 @@
-use improvie_shared::AppResult;
+use improvie_logic::AppResult;
 
 #[async_trait::async_trait]
 pub trait HealthCheckRepository {

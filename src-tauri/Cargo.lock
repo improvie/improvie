@@ -2073,7 +2073,7 @@ version = "0.1.0"
 dependencies = [
  "fix-path-env",
  "improvie-app",
- "improvie-shared",
+ "improvie-logic",
  "log",
  "serde",
  "serde_json",
@@ -2091,7 +2091,7 @@ dependencies = [
  "async-trait",
  "improvie-domain",
  "improvie-infra",
- "improvie-shared",
+ "improvie-logic",
 ]
 
 [[package]]
@@ -2099,7 +2099,7 @@ name = "improvie-domain"
 version = "0.1.0"
 dependencies = [
  "async-trait",
- "improvie-shared",
+ "improvie-logic",
 ]
 
 [[package]]
@@ -2109,18 +2109,20 @@ dependencies = [
  "async-trait",
  "chrono",
  "improvie-domain",
- "improvie-shared",
+ "improvie-logic",
  "log",
  "sqlx",
  "uuid",
 ]
 
 [[package]]
-name = "improvie-shared"
+name = "improvie-logic"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "sqlx",
  "thiserror 2.0.9",
+ "uuid",
 ]
 
 [[package]]

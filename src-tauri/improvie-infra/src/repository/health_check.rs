@@ -16,7 +16,7 @@ impl HealthCheckRepositoryImpl {
 
 #[async_trait::async_trait]
 impl HealthCheckRepository for HealthCheckRepositoryImpl {
-    async fn health_check(&self) -> improvie_shared::AppResult<()> {
+    async fn health_check(&self) -> improvie_logic::AppResult<()> {
         let _ = self.db;
         todo!()
     }

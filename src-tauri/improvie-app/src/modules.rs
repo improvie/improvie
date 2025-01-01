@@ -1,7 +1,7 @@
 use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
-use improvie_shared::AppResult;
+use improvie_logic::AppResult;
 
 use crate::usecase::health_check::HealthCheckUseCase;
 

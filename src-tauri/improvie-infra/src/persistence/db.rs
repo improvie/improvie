@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use improvie_shared::{AppError, AppResult};
+use improvie_logic::{AppError, AppResult};
 use sqlx::SqlitePool;
 
 pub struct DbPool(SqlitePool);

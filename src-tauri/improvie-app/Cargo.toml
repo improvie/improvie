@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 improvie-infra.workspace = true
 improvie-domain.workspace = true
-improvie-shared.workspace = true
+improvie-logic.workspace = true
 
 async-trait.workspace = true
 

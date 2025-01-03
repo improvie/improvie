@@ -8,23 +8,18 @@
   let currentTile: number = 0;
 </script>
 
-<!-- TODO: sidebar じゃあなくて header にする。 skeleton や melt のheaderを参考にする、お気に入りはDrawerで見れるようにする -->
 <AppRail background="bg-surface-50-900-token" class="ring-1">
   <svelte:fragment slot="lead">
-    <AppRailAnchor title="Color Pallet">
+    <AppRailAnchor href="/">
       <svelte:fragment slot="lead">
-        <ThemeChanger />
+        <Icon icon="mdi:home" width="36" height="36" />
       </svelte:fragment>
     </AppRailAnchor>
-    <AppRailAnchor title="Add Content">
-      <svelte:fragment slot="lead">
-        <AddContent />
-      </svelte:fragment>
-    </AppRailAnchor>
+    <!-- <ThemeChanger /> -->
   </svelte:fragment>
   <svelte:fragment slot="default">
     <!-- this 240 is top and bottom elements size -->
-    <div class="h-[calc(100vh-240px)] overflow-scroll ring-1">
+    <div class="h-[calc(100vh-160px)] overflow-scroll ring-1">
       {#each range(1, 30) as i}
         <AppRailTile
           bind:group={currentTile}

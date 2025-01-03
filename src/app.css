@@ -18,6 +18,50 @@ body {
   font-display: swap;
 }
 
+/* TODO: remove ugly scrollbar */
+
+.scrollbar {
+  scrollbar-gutter: stable;
+}
+
+.scrollbar:active::-webkit-scrollbar-thumb,
+.scrollbar:focus::-webkit-scrollbar-thumb,
+.scrollbar:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+.scrollbar::-webkit-scrollbar {
+  background-color: rgba(0, 0, 0, 0);
+  width: 16px;
+  height: 16px;
+  z-index: 999999;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 16px;
+  border: 0px solid #fff;
+  visibility: hidden;
+}
+
+.scrollbar::-webkit-scrollbar-button {
+  display: none;
+}
+
+.scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #a0a0a5;
+  border: 4px solid #fff;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a5;
+  border: 4px solid #f4f4f4;
+}
+
 :root [data-theme="crimson"] {
   --theme-font-family-base: "Mamelon", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

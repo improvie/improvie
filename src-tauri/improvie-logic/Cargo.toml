@@ -7,8 +7,10 @@ edition = "2021"
 thiserror.workspace = true
 uuid.workspace = true
 sqlx.workspace = true
-
+ambassador.workspace = true
 serde.workspace = true
+generator.workspace = true
+rand.workspace = true
 
 [lints]
 workspace = true

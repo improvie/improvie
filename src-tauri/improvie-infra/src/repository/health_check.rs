@@ -18,6 +18,6 @@ impl HealthCheckRepositoryImpl {
 impl HealthCheckRepository for HealthCheckRepositoryImpl {
     async fn health_check(&self) -> improvie_logic::AppResult<()> {
         let _ = self.db;
-        todo!()
+        Ok(())
     }
 }

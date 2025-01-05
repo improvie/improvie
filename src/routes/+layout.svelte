@@ -2,19 +2,42 @@
   import "../app.css";
 
   import { loadTranslations } from "$lib/translations/translations";
-  import Sidebar from "$lib/features/Sidebar.svelte";
+  import * as Sidebar from "$lib/components/ui/sidebar";
+  import AppSidebar from "$lib/components/app-sidebar.svelte";
+  import { Separator } from "$lib/components/ui/separator";
+  import * as Breadcrumb from "$lib/components/ui/breadcrumb";
+  import NavActions from "$lib/components/nav-actions.svelte";
 
   const defaultLanguage = "ja";
   loadTranslations(defaultLanguage, "/");
 </script>
 
-<div class="max-h-screen text-surface-700-200-token scrollbar">
-  <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] h-screen">
-    <aside>
-      <Sidebar />
-    </aside>
-    <slot />
-  </div>
-</div>
+<Sidebar.Provider>
+  <AppSidebar />
+  <Sidebar.Inset>
+    <header class="flex h-14 shrink-0 items-center gap-2">
+      <div class="flex flex-1 items-center gap-2 px-3">
+        <Sidebar.Trigger />
+        <Separator orientation="vertical" class="mr-2 h-4" />
+        <Breadcrumb.Root>
+          <Breadcrumb.List>
+            <Breadcrumb.Item>
+              <Breadcrumb.Page class="line-clamp-1">
+                Project Management & Task Tracking
+              </Breadcrumb.Page>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
+      </div>
+      <div class="ml-auto px-3">
+        <NavActions />
+      </div>
+    </header>
+
+    <div class="flex flex-1 flex-col gap-4 px-4 py-10">
+      <slot />
+    </div>
+  </Sidebar.Inset>
+</Sidebar.Provider>
 
 <style></style>

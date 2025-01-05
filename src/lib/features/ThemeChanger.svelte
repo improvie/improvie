@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { CircleX, Palette } from "lucide-svelte";
+  import LightSwitch from "$lib/components/LightSwitch.svelte";
   import { themes } from "$lib/themes";
-  import Icon from "@iconify/svelte";
   import { createDialog, melt } from "@melt-ui/svelte";
-  import { LightSwitch } from "@skeletonlabs/skeleton";
   import { debug } from "@tauri-apps/plugin-log";
   import { fade, fly } from "svelte/transition";
 
@@ -21,7 +21,7 @@
 </script>
 
 <button use:melt={$trigger} class="w-20 h-20">
-  <Icon icon="mdi:color" width="36" height="36" class="m-auto" />
+  <Palette />
 </button>
 
 {#if $open}
@@ -44,7 +44,7 @@
         aria-label="Close"
         class="absolute right-2 top-2 inline-flex h-6 w-6 btn-icon bg-initial rounded-full"
       >
-        <Icon icon="mdi:close" width="24" height="24" />
+        <CircleX />
       </button>
       <!-- body -->
       <div class="flex flex-col pt-2 gap-4 items-center">

@@ -6,15 +6,15 @@ use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RuleFormat {
-    pub content_uid: Uuid,
+    pub content_id: Uuid,
     pub range_start: Option<u64>,
     pub range_end: Option<u64>,
 }
 
 impl RuleFormat {
-    pub fn new(content_uid: Uuid, range_start: Option<u64>, range_end: Option<u64>) -> Self {
+    pub fn new(content_id: Uuid, range_start: Option<u64>, range_end: Option<u64>) -> Self {
         Self {
-            content_uid,
+            content_id,
             range_start,
             range_end,
         }
@@ -23,6 +23,7 @@ impl RuleFormat {
 
 #[derive(Clone, Delegate, Serialize, Deserialize)]
 #[delegate(RuleFormatIter)]
+#[serde(tag = "type", content = "data")]
 pub enum Rule {
     Content(ContentRule),
     Range(RangeRule),
@@ -37,13 +38,13 @@ pub trait RuleFormatIter {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ContentRule {
-    pub content_uid: Uuid,
+    pub content_id: Uuid,
 }
 
 impl RuleFormatIter for ContentRule {
     fn formats(&self) -> Generator<'_, (), RuleFormat> {
         Gn::new_scoped(|mut s| {
-            s.yield_with(RuleFormat::new(self.content_uid, None, None));
+            s.yield_with(RuleFormat::new(self.content_id, None, None));
             done!();
         })
     }
@@ -51,7 +52,7 @@ impl RuleFormatIter for ContentRule {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct RangeRule {
-    pub content_uid: Uuid,
+    pub content_id: Uuid,
     pub range_start: Option<u64>,
     pub range_end: Option<u64>,
 }
@@ -60,7 +61,7 @@ impl RuleFormatIter for RangeRule {
     fn formats(&self) -> Generator<(), RuleFormat> {
         Gn::new_scoped(|mut s| {
             s.yield_with(RuleFormat::new(
-                self.content_uid,
+                self.content_id,
                 self.range_start,
                 self.range_end,
             ));

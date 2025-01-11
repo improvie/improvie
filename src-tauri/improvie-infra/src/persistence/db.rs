@@ -3,6 +3,8 @@ use std::path::PathBuf;
 use improvie_logic::{AppError, AppResult};
 use sqlx::SqlitePool;
 
+use crate::repository::MIGRATOR;
+
 pub struct DbPool(SqlitePool);
 
 impl DbPool {
@@ -11,7 +13,14 @@ impl DbPool {
         let join = data_dir.join("data.sql");
         std::fs::File::create(&join)?;
         match join.to_str() {
-            Some(path) => Ok(Self(SqlitePool::connect(path).await?)),
+            Some(path) => {
+                let connect = SqlitePool::connect(path).await?;
+                MIGRATOR
+                    .run(&connect)
+                    .await
+                    .map_err(|err| sqlx::Error::Migrate(Box::new(err)))?;
+                Ok(Self(connect))
+            }
             None => Err(AppError::NotFound("path", String::from("data_dir"))),
         }
     }

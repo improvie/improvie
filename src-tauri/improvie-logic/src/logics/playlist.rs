@@ -5,7 +5,7 @@ use super::rule::Rule;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Playlist {
-    pub uid: Uuid,
+    pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
     pub plays: Vec<Play>,
@@ -13,7 +13,7 @@ pub struct Playlist {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Play {
-    pub uid: Uuid,
+    pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
     pub rules: Vec<Rule>,

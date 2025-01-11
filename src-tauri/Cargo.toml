@@ -53,12 +53,12 @@ improvie-domain = { path = "improvie-domain" }
 improvie-logic = { path = "improvie-logic" }
 
 # tauri
-tauri = { version = "2.1.1", features = [] }
+tauri = { version = "2.2.1", features = [] }
 
 # async/concurrency/parallelism
 tokio = { version = "1.42.0", features = ["full"] }
 crossbeam-utils = "0.8.21"
-async-trait = "0.1.83"
+async-trait = "0.1.85"
 
 # ser/de
 serde = { version = "1.0.217", features = ["derive"] }
@@ -66,7 +66,7 @@ serde_json = "1.0.134"
 
 # utils
 thiserror = "2.0.9"
-itertools = "0.13.0"
+itertools = "0.14.0"
 chrono = { version = "0.4.39", features = ["serde"] }
 ambassador = "0.4.1"
 generator = "0.8.4"

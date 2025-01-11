@@ -12,7 +12,7 @@ fn greet(name: &str) -> String {
 pub fn run() {
     #[cfg(feature = "dev")]
     #[allow(clippy::unwrap_used)]
-    let dev_data_dir = std::env::current_dir().unwrap().join("dev");
+    let dev_data_dir = std::path::Path::new(std::env!("CARGO_MANIFEST_DIR")).join("dev");
 
     tauri::Builder::default()
         .plugin(

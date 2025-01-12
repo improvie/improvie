@@ -17,9 +17,9 @@ impl RepositoriesModule for RepositoriesModuleImpl {
 }
 
 impl RepositoriesModuleImpl {
-    pub fn new(db: Arc<DbPool>) -> Self {
+    pub fn new(db: DbPool) -> Self {
         Self {
-            health_check_repository: Arc::new(HealthCheckRepositoryImpl::new(db)),
+            health_check_repository: Arc::new(HealthCheckRepositoryImpl::new(db.clone())),
         }
     }
 }

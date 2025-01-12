@@ -23,7 +23,7 @@ macro_rules! tx_check {
         tx_check!($result, $tx, {})
     };
     ($result:expr,$tx:expr,{$($t:tt)*}) => {
-        $crate::tx_match!($result, $tx, {
+        $crate::repository::tx_match!($result, $tx, {
             $($t)*
             Ok(_) => {}
         })
@@ -35,7 +35,7 @@ macro_rules! tx_commit {
         tx_commit!($result, $tx, {})
     };
     ($result:expr,$tx:expr,{$($t:tt)*}) => {
-        $crate::tx_match!($result, $tx, {
+        $crate::repository::tx_match!($result, $tx, {
             $($t)*
             Ok(_) => {
                 return $tx.commit().await.map_err(Into::into);

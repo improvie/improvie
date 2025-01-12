@@ -7,6 +7,12 @@ use crate::repository::MIGRATOR;
 
 pub struct DbPool(SqlitePool);
 
+impl Clone for DbPool {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
 impl DbPool {
     pub async fn new(data_dir: PathBuf) -> AppResult<Self> {
         std::fs::create_dir_all(&data_dir)?;

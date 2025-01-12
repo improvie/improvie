@@ -5,7 +5,10 @@ edition = "2021"
 
 [dependencies]
 improvie-logic.workspace = true
+
 async-trait.workspace = true
+uuid.workspace = true
+chrono.workspace = true
 
 [lints]
 workspace = true

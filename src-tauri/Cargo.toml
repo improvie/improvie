@@ -22,7 +22,8 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-improvie-app.workspace = true
+improvie-infra.workspace = true
+improvie-domain.workspace = true
 improvie-logic.workspace = true
 
 serde.workspace = true
@@ -41,14 +42,12 @@ tauri-plugin-log = "2.2.0"
 resolver = "2"
 members = [
     "improvie-infra",
-    "improvie-app",
     "improvie-domain",
     "improvie-logic",
 ]
 
 [workspace.dependencies]
 improvie-infra = { path = "improvie-infra" }
-improvie-app = { path = "improvie-app" }
 improvie-domain = { path = "improvie-domain" }
 improvie-logic = { path = "improvie-logic" }
 
@@ -71,6 +70,7 @@ chrono = { version = "0.4.39", features = ["serde"] }
 ambassador = "0.4.1"
 generator = "0.8.4"
 rand = "0.8.5"
+struct-convert = "1.3.1"
 
 # macros
 proc-macro2 = "1.0.92"

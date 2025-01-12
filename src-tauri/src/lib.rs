@@ -1,4 +1,4 @@
-use improvie_app::modules::UsecasesModule;
+use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
 use tauri::{async_runtime::block_on, Manager};
 use tauri_plugin_log::{Target, TargetKind, TimezoneStrategy};
 
@@ -45,9 +45,9 @@ pub fn run() {
             let data_dir = dev_data_dir.clone();
             #[cfg(not(feature = "dev"))]
             let data_dir = app.path().app_data_dir()?;
-            let usecases = block_on(UsecasesModule::new(data_dir))?;
-            block_on(usecases.health_check_usecase().health_check())?;
-            app.manage(usecases);
+            let db = block_on(DbPool::new(data_dir))?;
+            let repositories = RepositoriesModuleImpl::new(db);
+            app.manage(repositories);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![greet])

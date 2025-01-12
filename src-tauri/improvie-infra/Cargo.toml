@@ -12,6 +12,7 @@ sqlx.workspace = true
 log.workspace = true
 chrono.workspace = true
 uuid.workspace = true
+struct-convert.workspace = true
 
 [lints]
 workspace = true

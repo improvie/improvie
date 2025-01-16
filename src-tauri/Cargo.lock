@@ -2138,7 +2138,6 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
- "sqlx",
  "tauri",
  "tauri-build",
  "tauri-plugin-log",

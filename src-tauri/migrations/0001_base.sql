@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS contents (
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
     seconds int unsigned NOT NULL,
+    kind tinyint unsigned NOT NULL,
+    visibility tinyint unsigned NOT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );

@@ -8,11 +8,3 @@ def_constant_enum!(
         Markdown = 2,
     }
 );
-
-def_constant_enum!(
-    #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq)]
-    pub enum ContentVis {
-        Visible = 0,
-        Favorite = 1,
-    }
-);

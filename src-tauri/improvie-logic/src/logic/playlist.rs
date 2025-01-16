@@ -11,7 +11,6 @@ pub struct Playlist {
     pub title: String,
     pub description: Option<String>,
     pub vis: Visibility,
-    pub plays: Vec<Play>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

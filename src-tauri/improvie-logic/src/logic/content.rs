@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{DateTime, Local};
 use uuid::Uuid;
@@ -11,6 +13,7 @@ pub struct Content {
     pub description: Option<String>,
     pub seconds: u64,
     pub kind: ContentKind,
+    pub path: PathBuf,
     pub created_at: DateTime<Local>,
 }
 
@@ -21,3 +24,15 @@ pub struct Folder {
     pub description: Option<String>,
     pub created_at: DateTime<Local>,
 }
+
+// #[derive(Clone, Serialize, Deserialize)]
+// pub enum ItemNode {
+//     Content(Content),
+//     Folder(FolderNode),
+// }
+//
+// #[derive(Clone, Serialize, Deserialize)]
+// pub struct FolderNode {
+//     pub folder: Folder,
+//     pub children: Vec<ItemNode>,
+// }

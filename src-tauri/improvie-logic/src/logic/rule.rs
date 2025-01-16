@@ -120,8 +120,8 @@ impl RuleFormatIter for RandomRule {
                 else {
                     done!();
                 };
-                for rule in rules {
-                    for format in rule.0.formats() {
+                for (rule, _) in rules {
+                    for format in rule.formats() {
                         s.yield_with(format);
                     }
                 }

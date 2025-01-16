@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{DateTime, Local};
 use uuid::Uuid;
 
-use crate::constants::content::{ContentKind, ContentVis};
+use crate::constant::content::{ContentKind, ContentVis};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Content {

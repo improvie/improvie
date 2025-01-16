@@ -1,7 +1,7 @@
 pub mod error;
 pub use error::*;
 
-pub mod logics;
-pub mod models;
+pub mod logic;
+pub mod model;
 
-pub mod constants;
+pub mod constant;

@@ -4,7 +4,7 @@ macro_rules! def_constant_enum {
         $pub:ident $enum:ident $name:ident
         { $($variable:ident = $num:literal,)* }
     ) => {
-        $(#[$attr])* $pub $enum $name {
+        $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)] $pub $enum $name {
             $($variable = $num,)*
         }
 
@@ -46,25 +46,6 @@ macro_rules! def_constant_enum {
                 let num = <u8 as sqlx::Decode<sqlx::Sqlite>>::decode(value)?;
 
                 num.try_into().map_err(Into::into)
-            }
-        }
-
-        impl serde::Serialize for $name {
-            fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where
-                S: serde::Serializer,
-            {
-                serializer.serialize_u8(*self as u8)
-            }
-        }
-
-        impl<'de> serde::Deserialize<'de> for $name {
-            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                let deserialized_u8 = u8::deserialize(deserializer)?;
-                deserialized_u8.try_into().map_err(serde::de::Error::custom)
             }
         }
     };

@@ -2132,6 +2132,7 @@ name = "improvie"
 version = "0.1.0"
 dependencies = [
  "fix-path-env",
+ "improvie-app",
  "improvie-domain",
  "improvie-infra",
  "improvie-logic",
@@ -2142,6 +2143,20 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-log",
  "tauri-plugin-opener",
+ "uuid",
+]
+
+[[package]]
+name = "improvie-app"
+version = "0.1.0"
+dependencies = [
+ "improvie-domain",
+ "improvie-infra",
+ "improvie-logic",
+ "log",
+ "serde",
+ "serde_json",
+ "uuid",
 ]
 
 [[package]]

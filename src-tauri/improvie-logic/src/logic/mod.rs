@@ -1,3 +1,3 @@
-pub mod rule;
 pub mod content;
 pub mod playlist;
+pub mod rule;

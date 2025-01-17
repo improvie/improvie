@@ -1,25 +1,26 @@
 use std::sync::Arc;
 
-use improvie_domain::modules::RepositoriesModule;
+use crate::{
+    macros::def_repositories_module, persistence::db::DbPool,
+    repository::health_check::HealthCheckRepositoryImpl,
+};
 
-use crate::{persistence::db::DbPool, repository::health_check::HealthCheckRepositoryImpl};
+pub struct RepositoriesModuleImpl(Arc<RepositoriesModuleImplInner>);
 
-pub struct RepositoriesModuleImpl {
-    health_check_repository: Arc<HealthCheckRepositoryImpl>,
-}
-
-impl RepositoriesModule for RepositoriesModuleImpl {
-    type HealthCheckRepository = HealthCheckRepositoryImpl;
-
-    fn health_check_repository(&self) -> &Self::HealthCheckRepository {
-        &self.health_check_repository
+impl Clone for RepositoriesModuleImpl {
+    fn clone(&self) -> Self {
+        Self(Arc::clone(&self.0))
     }
 }
 
 impl RepositoriesModuleImpl {
     pub fn new(db: DbPool) -> Self {
-        Self {
-            health_check_repository: Arc::new(HealthCheckRepositoryImpl::new(db.clone())),
-        }
+        Self(Arc::new(RepositoriesModuleImplInner::new(db)))
     }
 }
+
+def_repositories_module!(RepositoriesModuleImpl,
+    struct RepositoriesModuleImplInner {
+        health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
+    }
+);

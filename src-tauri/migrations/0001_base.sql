@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS settings (
     id uuid NOT NULL,
+    details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );
@@ -9,6 +10,7 @@ CREATE TABLE IF NOT EXISTS folders (
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
     visibility tinyint unsigned NOT NULL,
+    details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS contents (
     description text DEFAULT NULL,
     seconds int unsigned NOT NULL,
     kind tinyint unsigned NOT NULL,
+    details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );
@@ -47,6 +50,7 @@ CREATE TABLE IF NOT EXISTS playlists (
     id uuid NOT NULL,
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
+    details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );
@@ -56,6 +60,7 @@ CREATE TABLE IF NOT EXISTS plays (
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
     rules json NOT NULL,
+    details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );

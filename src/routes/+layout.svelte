@@ -7,10 +7,13 @@
   import { Separator } from "$lib/components/ui/separator";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
   import SettingsDialog from "$lib/components/settings-dialog.svelte";
+  import { ModeWatcher } from "mode-watcher";
 
   const defaultLanguage = "ja";
   loadTranslations(defaultLanguage, "/");
 </script>
+
+<ModeWatcher />
 
 <Sidebar.Provider>
   <AppSidebar />

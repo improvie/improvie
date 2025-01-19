@@ -6,7 +6,7 @@
   import AppSidebar from "$lib/components/app-sidebar.svelte";
   import { Separator } from "$lib/components/ui/separator";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
-  import NavActions from "$lib/components/nav-actions.svelte";
+  import SettingsDialog from "$lib/components/settings-dialog.svelte";
 
   const defaultLanguage = "ja";
   loadTranslations(defaultLanguage, "/");
@@ -30,7 +30,7 @@
         </Breadcrumb.Root>
       </div>
       <div class="ml-auto px-3">
-        <NavActions />
+        <SettingsDialog />
       </div>
     </header>
 

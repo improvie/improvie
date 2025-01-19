@@ -1,41 +1,40 @@
 <script lang="ts">
-	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-	import type { ComponentProps } from "svelte";
+  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+  import ThemeChanger from "$lib/features/ThemeChanger.svelte";
+  import { MessageCircleQuestion, Palette, Settings2 } from "lucide-svelte";
 
-	let {
-		ref = $bindable(null),
-		items,
-		...restProps
-	}: ComponentProps<typeof Sidebar.Group> & {
-		items: {
-			title: string;
-			url: string;
-			// This should be `Component` after lucide-svelte updates types
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			icon: any;
-			badge?: string;
-		}[];
-	} = $props();
+  let open: boolean = $state(false);
 </script>
 
-<Sidebar.Group bind:ref {...restProps}>
-	<Sidebar.GroupContent>
-		<Sidebar.Menu>
-			{#each items as item (item.title)}
-				<Sidebar.MenuItem>
-					<Sidebar.MenuButton>
-						{#snippet child({ props })}
-							<a href={item.url} {...props}>
-								<item.icon />
-								<span>{item.title}</span>
-							</a>
-						{/snippet}
-					</Sidebar.MenuButton>
-					{#if item.badge}
-						<Sidebar.MenuBadge>{item.badge}</Sidebar.MenuBadge>
-					{/if}
-				</Sidebar.MenuItem>
-			{/each}
-		</Sidebar.Menu>
-	</Sidebar.GroupContent>
+<Sidebar.Group>
+  <Sidebar.GroupContent>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>
+          <Settings2 />
+          <span>Settings</span>
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton
+          onclick={() => {
+            // BUG: Not set false to open on closed
+            // first set false then set true
+            open = false;
+            open = true;
+          }}
+        >
+          <Palette />
+          <span>Theme</span>
+        </Sidebar.MenuButton>
+        <ThemeChanger {open} />
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>
+          <MessageCircleQuestion />
+          <span>Help</span>
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.GroupContent>
 </Sidebar.Group>

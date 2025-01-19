@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS folders (
     id uuid NOT NULL,
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
-    visibility tinyint unsigned NOT NULL,
     details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
@@ -53,6 +52,13 @@ CREATE TABLE IF NOT EXISTS playlists (
     details json DEFAULT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS favorite_playlists (
+    playlist_id uuid NOT NULL,
+    sort_order int unsigned NOT NULL,
+    PRIMARY KEY (playlist_id),
+    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS plays (

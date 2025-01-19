@@ -77,14 +77,13 @@
 /* === Scrollbars === */
 @layer base {
   ::-webkit-scrollbar {
-    @apply w-2;
-    @apply h-2;
+    @apply !w-2 !h-2 !p-1;
   }
 
-  ::-webkit-scrollbar-track {
-    @apply !bg-primary-500;
-  }
   ::-webkit-scrollbar-thumb {
+    @apply !bg-primary-400;
+  }
+  ::-webkit-scrollbar-track {
     @apply !bg-muted-foreground/30 rounded-sm;
   }
 
@@ -102,10 +101,6 @@
 html,
 body {
   @apply h-full overflow-hidden;
-}
-
-.on_center {
-  @apply fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2;
 }
 
 @font-face {

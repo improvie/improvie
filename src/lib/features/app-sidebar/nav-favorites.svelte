@@ -7,11 +7,7 @@
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import StarOff from "lucide-svelte/icons/star-off";
 
-  let {
-    favorites,
-  }: {
-    favorites: Playlist[];
-  } = $props();
+  const favorites: Playlist[] = $state([]);
 
   const sidebar = useSidebar();
 </script>

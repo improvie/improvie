@@ -3,10 +3,10 @@
 
   import { loadTranslations } from "$lib/translations/translations";
   import * as Sidebar from "$lib/components/ui/sidebar";
-  import AppSidebar from "$lib/components/app-sidebar.svelte";
+  import AppSidebar from "$lib/features/app-sidebar/index.svelte";
   import { Separator } from "$lib/components/ui/separator";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
-  import SettingsDialog from "$lib/components/settings-dialog.svelte";
+  import SettingsDialog from "$lib/features/SettingsDialog.svelte";
   import { ModeWatcher } from "mode-watcher";
 
   const defaultLanguage = "ja";

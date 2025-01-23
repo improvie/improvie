@@ -13,6 +13,7 @@ export interface Content {
 
 export type ContentKind = "Video" | "Audio";
 
+// deno-lint-ignore no-empty-interface
 export interface Folder {
   // now is empty
 }

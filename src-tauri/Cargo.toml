@@ -30,7 +30,6 @@ improvie-logic.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 log.workspace = true
-uuid.workspace = true
 
 tauri.workspace = true
 

@@ -1,4 +1,5 @@
 pub mod health_check;
+pub mod items;
 
 pub static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../migrations");
 
@@ -44,6 +45,22 @@ macro_rules! tx_commit {
     };
 }
 
-pub(crate) use tx_check;
-pub(crate) use tx_commit;
-pub(crate) use tx_match;
+macro_rules! def_repository_impl {
+    ($impl:ident) => {
+        pub struct $impl {
+            db: crate::persistence::db::DbPool,
+        }
+
+        impl $impl {
+            pub fn new(db: crate::persistence::db::DbPool) -> Self {
+                Self { db }
+            }
+        }
+    };
+}
+
+pub(super) use tx_check;
+pub(super) use tx_commit;
+pub(super) use tx_match;
+
+pub(super) use def_repository_impl;

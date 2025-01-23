@@ -1,2 +1,2 @@
-pub mod content;
 pub mod health_check;
+pub mod items;

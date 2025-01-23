@@ -2143,7 +2143,6 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-log",
  "tauri-plugin-opener",
- "uuid",
 ]
 
 [[package]]
@@ -2151,12 +2150,11 @@ name = "improvie-app"
 version = "0.1.0"
 dependencies = [
  "improvie-domain",
- "improvie-infra",
  "improvie-logic",
+ "itertools 0.14.0",
  "log",
  "serde",
  "serde_json",
- "uuid",
 ]
 
 [[package]]
@@ -2166,7 +2164,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "improvie-logic",
- "uuid",
+ "itertools 0.14.0",
 ]
 
 [[package]]
@@ -2177,10 +2175,12 @@ dependencies = [
  "chrono",
  "improvie-domain",
  "improvie-logic",
+ "itertools 0.14.0",
  "log",
+ "serde",
+ "serde_json",
  "sqlx",
  "struct-convert",
- "uuid",
 ]
 
 [[package]]
@@ -2266,6 +2266,15 @@ name = "itertools"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1c173a5686ce8bfa551b3563d0c2170bf24ca44da99c7ca4bfdab5418c3fe57"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
 dependencies = [
  "either",
 ]

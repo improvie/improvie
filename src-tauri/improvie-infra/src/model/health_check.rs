@@ -1,8 +1,8 @@
 use chrono::{DateTime, Local};
 use improvie_domain::model::health_check::SettingsModel;
+use improvie_logic::Uuid;
 use sqlx::prelude::FromRow;
 use struct_convert::Convert;
-use uuid::Uuid;
 
 #[derive(FromRow, Convert)]
 #[convert(into = "SettingsModel")]

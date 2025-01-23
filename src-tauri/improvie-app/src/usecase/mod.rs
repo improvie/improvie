@@ -1,2 +1,2 @@
-pub mod content;
 pub mod halth_check;
+pub mod items;

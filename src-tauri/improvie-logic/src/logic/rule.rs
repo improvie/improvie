@@ -2,7 +2,8 @@ use ambassador::{delegatable_trait, Delegate};
 use generator::{done, Generator, Gn};
 use rand::seq::SliceRandom;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+
+use crate::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RuleFormat {

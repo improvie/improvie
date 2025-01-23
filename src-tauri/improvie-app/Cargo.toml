@@ -4,14 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-improvie-infra.workspace = true
 improvie-domain.workspace = true
 improvie-logic.workspace = true
 
 serde.workspace = true
 serde_json.workspace = true
 log.workspace = true
-uuid.workspace = true
+itertools.workspace = true
 
 [lints]
 workspace = true

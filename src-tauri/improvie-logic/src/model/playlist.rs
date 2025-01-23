@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
-use super::rule::Rule;
+use crate::{logic::rule::Rule, Uuid};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Playlist {

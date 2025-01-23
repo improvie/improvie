@@ -42,7 +42,7 @@ impl DbPool {
 
 #[cfg(test)]
 impl DbPool {
-    pub fn with_pool(pool: SqlitePool) -> std::sync::Arc<Self> {
-        std::sync::Arc::new(Self(pool))
+    pub fn with_pool(pool: SqlitePool) -> Self {
+        Self(pool)
     }
 }

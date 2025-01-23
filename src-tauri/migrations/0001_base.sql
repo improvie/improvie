@@ -5,44 +5,55 @@ CREATE TABLE IF NOT EXISTS settings (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS folders (
+CREATE TABLE IF NOT EXISTS items (
     id uuid NOT NULL,
     title varchar(255) NOT NULL,
     description text DEFAULT NULL,
     details json DEFAULT NULL,
+    kind tinyint unsigned NOT NULL,
     created_at timestamp NOT NULL,
+
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS hierarchical_folders (
-    parent_id uuid NOT NULL,
-    child_id uuid NOT NULL,
-    sort_order int unsigned NOT NULL,
-    created_at timestamp NOT NULL,
-    PRIMARY KEY (parent_id, child_id),
-    FOREIGN KEY (parent_id) REFERENCES folders (id) ON DELETE CASCADE,
-    FOREIGN KEY (child_id) REFERENCES folders (id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS folders (
+    item_id uuid NOT NULL,
+    details json DEFAULT NULL,
+
+    PRIMARY KEY (item_id),
+    FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS contents (
-    id uuid NOT NULL,
-    title varchar(255) NOT NULL,
-    description text DEFAULT NULL,
+    item_id uuid NOT NULL,
     seconds int unsigned NOT NULL,
     kind tinyint unsigned NOT NULL,
     details json DEFAULT NULL,
-    created_at timestamp NOT NULL,
-    PRIMARY KEY (id)
+
+    PRIMARY KEY (item_id),
+    FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS folder_contents (
-    folder_id uuid NOT NULL,
-    content_id uuid NOT NULL,
+INSERT INTO items (id, title, kind, created_at) VALUES (
+    '00000000-0000-0000-0000-000000000000',
+    'Root',
+    1,
+    (DATETIME('now', 'localtime'))
+);
+
+INSERT INTO folders (item_id) VALUES (
+    '00000000-0000-0000-0000-000000000000'
+);
+
+CREATE TABLE IF NOT EXISTS hierarchical_items (
+    parent_folder_id uuid NOT NULL,
+    child_id uuid NOT NULL,
     sort_order int unsigned NOT NULL,
     created_at timestamp NOT NULL,
-    PRIMARY KEY (folder_id, content_id),
-    FOREIGN KEY (folder_id) REFERENCES folders (id) ON DELETE CASCADE,
-    FOREIGN KEY (content_id) REFERENCES contents (id) ON DELETE CASCADE
+
+    PRIMARY KEY (parent_folder_id, child_id),
+    FOREIGN KEY (parent_folder_id) REFERENCES folders (item_id) ON DELETE CASCADE,
+    FOREIGN KEY (child_id) REFERENCES items (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS playlists (
@@ -72,11 +83,11 @@ CREATE TABLE IF NOT EXISTS plays (
 );
 
 CREATE TABLE IF NOT EXISTS playlist_plays (
-    playlist_id uuid NOT NULL,
     play_id uuid NOT NULL,
+    playlist_id uuid NOT NULL,
     sort_order int unsigned NOT NULL,
     created_at timestamp NOT NULL,
-    PRIMARY KEY (playlist_id, play_id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE,
-    FOREIGN KEY (play_id) REFERENCES plays (id) ON DELETE CASCADE
+    PRIMARY KEY (play_id, playlist_id),
+    FOREIGN KEY (play_id) REFERENCES plays (id) ON DELETE CASCADE,
+    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE
 );

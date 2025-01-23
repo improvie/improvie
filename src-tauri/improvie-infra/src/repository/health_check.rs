@@ -2,17 +2,11 @@ use improvie_domain::{
     model::health_check::SettingsModel, repository::health_check::HealthCheckRepository,
 };
 
-use crate::{model::health_check::SettingsRow, persistence::db::DbPool};
+use crate::model::health_check::SettingsRow;
 
-pub struct HealthCheckRepositoryImpl {
-    db: DbPool,
-}
+use super::def_repository_impl;
 
-impl HealthCheckRepositoryImpl {
-    pub fn new(db: DbPool) -> Self {
-        Self { db }
-    }
-}
+def_repository_impl!(HealthCheckRepositoryImpl);
 
 #[async_trait::async_trait]
 impl HealthCheckRepository for HealthCheckRepositoryImpl {

@@ -2,10 +2,14 @@ macro_rules! def_constant_enum {
     (
         $(#[$attr:meta])*
         $pub:ident $enum:ident $name:ident
-        { $($variable:ident = $num:literal,)* }
+        { $($(#[$field_attr:meta])* $variable:ident = $num:literal,)* }
     ) => {
-        $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)] $pub $enum $name {
-            $($variable = $num,)*
+        $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)]
+        $pub $enum $name {
+            $(
+                $(#[$field_attr])*
+                $variable = $num,
+            )*
         }
 
         impl TryFrom<u8> for $name {

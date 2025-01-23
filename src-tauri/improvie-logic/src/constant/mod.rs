@@ -1,4 +1,4 @@
-pub mod content;
+pub mod items;
 
 mod macros;
 use macros::*;

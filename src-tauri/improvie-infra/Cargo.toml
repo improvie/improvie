@@ -11,8 +11,10 @@ async-trait.workspace = true
 sqlx.workspace = true
 log.workspace = true
 chrono.workspace = true
-uuid.workspace = true
 struct-convert.workspace = true
+itertools.workspace = true
+serde.workspace = true
+serde_json.workspace = true
 
 [lints]
 workspace = true

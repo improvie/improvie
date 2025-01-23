@@ -1,0 +1,15 @@
+[sqlfluff]
+rules = all
+exclude_rules = ST06
+
+[sqlfluff:rules]
+max_line_length = 120
+tab_space_size = 4
+
+[sqlfluff:indentation]
+indented_joins = False
+indented_using_on = False
+
+[sqlfluff:rules:layout.long_lines]
+ignore_comment_lines = True
+ignore_comment_clauses = True

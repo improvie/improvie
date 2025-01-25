@@ -35,10 +35,7 @@ CREATE TABLE IF NOT EXISTS contents (
 );
 
 INSERT INTO items (id, title, kind, created_at) VALUES (
-    '00000000-0000-0000-0000-000000000000',
-    'Root',
-    1,
-    (DATETIME('now', 'localtime'))
+    '00000000-0000-0000-0000-000000000000', 'Root', 1, (DATETIME('now', 'localtime'))
 );
 
 INSERT INTO folders (item_id) VALUES (
@@ -79,15 +76,9 @@ CREATE TABLE IF NOT EXISTS plays (
     rules json NOT NULL,
     details json DEFAULT NULL,
     created_at timestamp NOT NULL,
-    PRIMARY KEY (id)
-);
 
-CREATE TABLE IF NOT EXISTS playlist_plays (
-    play_id uuid NOT NULL,
     playlist_id uuid NOT NULL,
     sort_order int unsigned NOT NULL,
-    created_at timestamp NOT NULL,
-    PRIMARY KEY (play_id, playlist_id),
-    FOREIGN KEY (play_id) REFERENCES plays (id) ON DELETE CASCADE,
-    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE
+
+    PRIMARY KEY (id)
 );

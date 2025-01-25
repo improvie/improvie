@@ -1,8 +1,10 @@
+use chrono::{DateTime, Local};
+use improvie_logic::model::items::{Content, Folder, Item};
 use improvie_logic::{
-    constant::items::ItemKind,
-    model::items::{FolderNode, ItemNode},
+    constant::items::{ContentKind, ItemKind},
     Uuid,
 };
+use more_convert::Convert;
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct NodeRaw {
@@ -13,14 +15,29 @@ pub struct NodeRaw {
     pub sort_order: u32,
 }
 
-impl From<NodeRaw> for ItemNode {
-    fn from(value: NodeRaw) -> Self {
-        match value.child_kind {
-            ItemKind::Folder => ItemNode::Folder(FolderNode {
-                folder: value.child_id,
-                items: vec![],
-            }),
-            ItemKind::Content => ItemNode::Content(value.child_id),
-        }
-    }
+#[derive(sqlx::FromRow, Debug, Convert)]
+#[convert(into(Item))]
+pub struct ItemRaw {
+    pub id: Uuid,
+    pub title: String,
+    pub description: Option<String>,
+    pub created_at: DateTime<Local>,
+}
+
+#[derive(sqlx::FromRow, Debug, Convert)]
+#[convert(into(Content))]
+pub struct ContentRaw {
+    #[sqlx(flatten)]
+    pub item: ItemRaw,
+
+    pub seconds: u64,
+    pub kind: ContentKind,
+    pub path: String,
+}
+
+#[derive(sqlx::FromRow, Debug, Convert)]
+#[convert(into(Folder))]
+pub struct FolderRaw {
+    #[sqlx(flatten)]
+    pub item: ItemRaw,
 }

@@ -3,12 +3,13 @@ use std::collections::HashMap;
 use improvie_domain::repository::items::ItemsRepository;
 use improvie_logic::{
     constant::items::ItemKind,
-    model::items::{FolderNode, ItemNode},
+    model::items::{Content, Folder, FolderNode, ItemNode},
+    util::into::VecInto,
     AppError, AppResult, Uuid,
 };
 use itertools::Itertools;
 
-use crate::model::items::NodeRaw;
+use crate::model::items::{ContentRaw, NodeRaw};
 
 use super::def_repository_impl;
 
@@ -92,6 +93,16 @@ FROM folder_hierarchy
         }
 
         unreachable!()
+    }
+
+    async fn get_contents(&self) -> AppResult<Vec<Content>> {
+        let row: Vec<ContentRaw> = sqlx::query_as("").fetch_all(&self.db.pool()).await?;
+
+        Ok(row.vec_into())
+    }
+
+    async fn get_folders(&self) -> AppResult<Vec<Folder>> {
+        todo!()
     }
 }
 

@@ -1,4 +1,5 @@
-import type { FolderNode } from "$lib/types/item.ts";
+import type { Content, Folder } from "$lib/types/item.ts";
 import { writable, type Writable } from "svelte/store";
 
-export const items: Writable<FolderNode> = writable();
+export const contents: Writable<Content[]> = writable([]);
+export const folders: Writable<Folder[]> = writable([]);

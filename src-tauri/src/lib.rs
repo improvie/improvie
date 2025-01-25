@@ -1,4 +1,7 @@
-use command::{health_check::health_check, items::get_items_hierarchy};
+use command::{
+    health_check::health_check,
+    items::{get_contents, get_folders, get_items_hierarchy},
+};
 use improvie_infra::persistence::db::DbPool;
 use modules::Modules;
 use tauri::{async_runtime::block_on, Manager};
@@ -49,7 +52,12 @@ pub fn run() {
             app.manage(repositories);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![health_check, get_items_hierarchy])
+        .invoke_handler(tauri::generate_handler![
+            health_check,
+            get_items_hierarchy,
+            get_contents,
+            get_folders
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -15,6 +15,9 @@ pub struct Item {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Content {
+    #[serde(flatten)]
+    pub item: Item,
+
     pub seconds: u64,
     pub kind: ContentKind,
     pub path: PathBuf,
@@ -22,7 +25,8 @@ pub struct Content {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Folder {
-    // now is empty
+    #[serde(flatten)]
+    pub item: Item,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

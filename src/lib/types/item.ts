@@ -5,7 +5,7 @@ export interface Item {
   created_at: Date;
 }
 
-export interface Content {
+export interface Content extends Item {
   seconds: number;
   kind: ContentKind;
   path: string;
@@ -13,10 +13,7 @@ export interface Content {
 
 export type ContentKind = "Video" | "Audio";
 
-// deno-lint-ignore no-empty-interface
-export interface Folder {
-  // now is empty
-}
+export interface Folder extends Item {}
 
 export type ItemKind = "Content" | "Folder";
 

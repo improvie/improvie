@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS settings (
 
 CREATE TABLE IF NOT EXISTS items (
     id uuid NOT NULL,
-    title varchar(255) NOT NULL,
+    title text NOT NULL,
     description text DEFAULT NULL,
     details json DEFAULT NULL,
     kind tinyint unsigned NOT NULL,
@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS contents (
     item_id uuid NOT NULL,
     seconds int unsigned NOT NULL,
     kind tinyint unsigned NOT NULL,
+    content_path text NOT NULL,
     details json DEFAULT NULL,
 
     PRIMARY KEY (item_id),
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS hierarchical_items (
 
 CREATE TABLE IF NOT EXISTS playlists (
     id uuid NOT NULL,
-    title varchar(255) NOT NULL,
+    title text NOT NULL,
     description text DEFAULT NULL,
     details json DEFAULT NULL,
     created_at timestamp NOT NULL,
@@ -71,7 +72,7 @@ CREATE TABLE IF NOT EXISTS favorite_playlists (
 
 CREATE TABLE IF NOT EXISTS plays (
     id uuid NOT NULL,
-    title varchar(255) NOT NULL,
+    title text NOT NULL,
     description text DEFAULT NULL,
     rules json NOT NULL,
     details json DEFAULT NULL,

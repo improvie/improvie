@@ -9,7 +9,7 @@ use improvie_logic::{
 };
 use itertools::Itertools;
 
-use crate::model::items::{ContentRaw, NodeRaw};
+use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
 
 use super::def_repository_impl;
 
@@ -96,13 +96,34 @@ FROM folder_hierarchy
     }
 
     async fn get_contents(&self) -> AppResult<Vec<Content>> {
-        let row: Vec<ContentRaw> = sqlx::query_as("").fetch_all(&self.db.pool()).await?;
+        let row: Vec<ContentRaw> = sqlx::query_as(
+            "
+SELECT 
+    i.id, i.title, i.description, i.created_at,
+    c.seconds, c.kind, c.item_path AS path
+FROM contents AS c
+INNER JOIN items AS i ON c.item_id = i.id
+",
+        )
+        .fetch_all(&self.db.pool())
+        .await?;
 
         Ok(row.vec_into())
     }
 
     async fn get_folders(&self) -> AppResult<Vec<Folder>> {
-        todo!()
+        let row: Vec<FolderRaw> = sqlx::query_as(
+            "
+SELECT 
+    i.id, i.title, i.description, i.created_at
+FROM folders AS f
+INNER JOIN items AS i ON f.item_id = i.id
+",
+        )
+        .fetch_all(&self.db.pool())
+        .await?;
+
+        Ok(row.vec_into())
     }
 }
 

@@ -2,7 +2,10 @@ use std::sync::Arc;
 
 use crate::{
     persistence::db::DbPool,
-    repository::{health_check::HealthCheckRepositoryImpl, items::ItemsRepositoryImpl},
+    repository::{
+        health_check::HealthCheckRepositoryImpl, items::ItemsRepositoryImpl,
+        playlists::PlaylistsRepositoryImpl,
+    },
 };
 
 pub struct RepositoriesModuleImpl(Arc<RepositoriesModuleImplInner>);
@@ -23,6 +26,7 @@ macros::def_repositories_module!(RepositoriesModuleImpl,
     struct RepositoriesModuleImplInner {
         health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
         items_repository: ItemsRepositoryImpl = ItemsRepository,
+        playlists_repository: PlaylistsRepositoryImpl = PlaylistsRepository,
     }
 );
 
@@ -53,7 +57,8 @@ mod macros {
                 }
             )*
         }
-    };
+
+        };
     }
 
     pub(super) use def_repositories_module;

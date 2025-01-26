@@ -1,4 +1,6 @@
-use improvie_app::usecase::{halth_check::HealthCheckUseCase, items::ItemsUseCase};
+use improvie_app::usecase::{
+    halth_check::HealthCheckUseCase, items::ItemsUseCase, playlists::PlaylistsUseCase,
+};
 use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
 
 macros::def_modules!(
@@ -6,6 +8,7 @@ macros::def_modules!(
     pub struct Modules {
         health_check_use_case: HealthCheckUseCase,
         items_use_case: ItemsUseCase,
+        playlists_use_case: PlaylistsUseCase,
     }
 );
 

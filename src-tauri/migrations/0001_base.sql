@@ -81,5 +81,6 @@ CREATE TABLE IF NOT EXISTS plays (
     playlist_id uuid NOT NULL,
     sort_order int unsigned NOT NULL,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE
 );

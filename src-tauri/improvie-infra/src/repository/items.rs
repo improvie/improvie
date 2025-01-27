@@ -5,9 +5,8 @@ use improvie_logic::{
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, ItemNode},
     util::into::VecInto,
-    AppError, AppResult, Uuid,
+    AppResult, Uuid,
 };
-use itertools::Itertools;
 
 use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
 
@@ -17,12 +16,11 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    async fn get_items_hierarchy(&self, folder_id: Uuid) -> AppResult<FolderNode> {
-        let row = sqlx::query_as::<_, NodeRaw>(
+    async fn get_items_hierarchy(&self, folder_id: Uuid) -> AppResult<HashMap<Uuid, FolderNode>> {
+        let rows = sqlx::query_as::<_, NodeRaw>(
             "
-WITH RECURSIVE folder_hierarchy(depth, parent_folder_id, child_id, child_kind, sort_order) AS (
+WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
     SELECT
-        0 AS depth,
         hi.parent_folder_id,
         hi.child_id,
         i.kind AS child_kind,
@@ -34,7 +32,6 @@ WITH RECURSIVE folder_hierarchy(depth, parent_folder_id, child_id, child_kind, s
     UNION ALL
 
     SELECT
-        fh.depth + 1 AS depth,
         hi.parent_folder_id,
         hi.child_id,
         i.kind AS child_kind,
@@ -51,48 +48,30 @@ FROM folder_hierarchy
         .fetch_all(&self.db.pool())
         .await?;
 
-        if row.is_empty() {
-            return Err(AppError::NotFound("folder", folder_id.to_string()));
-        }
-
-        let deps = row
-            .into_iter()
-            .into_group_map_by(|v| v.depth)
-            .into_iter()
-            .sorted_by(|a, b| b.0.cmp(&a.0));
-
-        let mut map = HashMap::<Uuid, Vec<ItemNode>>::new();
-
-        for (depth, mut items) in deps {
-            let mut lookup = HashMap::new();
-
-            items.sort_by_key(|v| v.sort_order);
-
-            for item in items {
-                let val = match item.child_kind {
-                    ItemKind::Folder => ItemNode::Folder(FolderNode {
-                        folder: item.child_id,
-                        items: map.remove(&item.child_id).unwrap_or_default(),
-                    }),
-                    ItemKind::Content => ItemNode::Content(item.child_id),
-                };
-                lookup
-                    .entry(item.parent_folder_id)
-                    .or_insert_with(Vec::new)
-                    .push(val);
-            }
-
-            if depth == 0 {
-                return Ok(FolderNode {
-                    folder: folder_id,
-                    items: lookup.remove(&folder_id).unwrap_or_default(),
+        let mut nodes: HashMap<Uuid, FolderNode> = HashMap::new();
+        for row in rows {
+            let parent = nodes
+                .entry(row.parent_folder_id)
+                .or_insert_with(|| FolderNode {
+                    folder: row.parent_folder_id,
+                    items: vec![],
                 });
+            match row.child_kind {
+                ItemKind::Folder => {
+                    parent.items.push(ItemNode::Folder {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
+                ItemKind::Content => {
+                    parent.items.push(ItemNode::Content {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
             }
-
-            map = lookup;
         }
-
-        unreachable!()
+        Ok(nodes)
     }
 
     async fn get_contents(&self) -> AppResult<Vec<Content>> {
@@ -129,6 +108,8 @@ INNER JOIN items AS i ON f.item_id = i.id
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use improvie_domain::repository::items::ItemsRepository;
     use improvie_logic::{
         model::items::{FolderNode, ItemNode},
@@ -144,21 +125,37 @@ mod tests {
     fn get_items_hierarchy(pool: sqlx::SqlitePool) {
         let repo = ItemsRepositoryImpl::new(DbPool::with_pool(pool));
         let res = repo.get_items_hierarchy(Uuid::nil()).await.unwrap();
-        assert_eq!(
-            res,
+        let mut map = HashMap::new();
+        map.insert(
+            Uuid::nil(),
             FolderNode {
                 folder: Uuid::nil(),
                 items: vec![
-                    ItemNode::Content(uuid!("00000000-0000-0000-0000-000000000004")),
-                    ItemNode::Folder(FolderNode {
-                        folder: uuid!("00000000-0000-0000-0000-000000000002"),
-                        items: vec![ItemNode::Content(uuid!(
-                            "00000000-0000-0000-0000-000000000005"
-                        ))],
-                    }),
-                    ItemNode::Content(uuid!("00000000-0000-0000-0000-000000000003"))
-                ]
-            }
-        )
+                    ItemNode::Folder {
+                        id: uuid!("00000000-0000-0000-0000-000000000002"),
+                        sort_order: 2,
+                    },
+                    ItemNode::Content {
+                        id: uuid!("00000000-0000-0000-0000-000000000003"),
+                        sort_order: 3,
+                    },
+                    ItemNode::Content {
+                        id: uuid!("00000000-0000-0000-0000-000000000004"),
+                        sort_order: 1,
+                    },
+                ],
+            },
+        );
+        map.insert(
+            uuid!("00000000-0000-0000-0000-000000000002"),
+            FolderNode {
+                folder: uuid!("00000000-0000-0000-0000-000000000002"),
+                items: vec![ItemNode::Content {
+                    id: uuid!("00000000-0000-0000-0000-000000000005"),
+                    sort_order: 1,
+                }],
+            },
+        );
+        assert_eq!(res, map)
     }
 }

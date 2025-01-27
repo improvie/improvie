@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use improvie_logic::{
     model::items::{Content, Folder, FolderNode},
     AppResult, Uuid,
@@ -10,7 +12,7 @@ use crate::modules::Modules;
 pub async fn get_items_hierarchy(
     modules: State<'_, Modules>,
     folder_id: Option<Uuid>,
-) -> AppResult<FolderNode> {
+) -> AppResult<HashMap<Uuid, FolderNode>> {
     modules
         .items_use_case()
         .get_items_hierarchy(folder_id.unwrap_or(Uuid::nil()))

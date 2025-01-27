@@ -8,7 +8,6 @@ use more_convert::Convert;
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct NodeRaw {
-    pub depth: u8,
     pub parent_folder_id: Uuid,
     pub child_id: Uuid,
     pub child_kind: ItemKind,

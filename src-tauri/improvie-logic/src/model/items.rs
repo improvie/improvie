@@ -51,8 +51,8 @@ pub struct FolderNode {
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
-#[serde(untagged)]
+#[serde(tag = "type")]
 pub enum ItemNode {
-    Folder(FolderNode),
-    Content(Uuid),
+    Folder { id: Uuid, sort_order: u32 },
+    Content { id: Uuid, sort_order: u32 },
 }

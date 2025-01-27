@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
 use improvie_logic::model::items::{Content, Folder};
 use improvie_logic::{model::items::FolderNode, AppResult, Uuid};
@@ -11,7 +13,10 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         Self { repository }
     }
 
-    pub async fn get_items_hierarchy(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+    pub async fn get_items_hierarchy(
+        &self,
+        folder_id: Uuid,
+    ) -> AppResult<HashMap<Uuid, FolderNode>> {
         self.repository
             .items_repository()
             .get_items_hierarchy(folder_id)

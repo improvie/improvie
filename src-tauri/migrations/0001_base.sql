@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS contents (
     seconds int unsigned NOT NULL,
     kind tinyint unsigned NOT NULL,
     content_path text NOT NULL,
+    thumbnail_path text DEFAULT NULL,
     details json DEFAULT NULL,
 
     PRIMARY KEY (item_id),

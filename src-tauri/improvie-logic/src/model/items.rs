@@ -21,6 +21,7 @@ pub struct Content {
     pub seconds: u64,
     pub kind: ContentKind,
     pub path: PathBuf,
+    pub thumbnail_path: Option<PathBuf>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

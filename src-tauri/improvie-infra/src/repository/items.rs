@@ -4,9 +4,9 @@ use improvie_domain::repository::items::ItemsRepository;
 use improvie_logic::{
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, ItemNode},
-    util::into::VecInto,
     AppResult, Uuid,
 };
+use more_convert::VecInto;
 
 use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
 
@@ -79,7 +79,7 @@ FROM folder_hierarchy
             "
 SELECT 
     i.id, i.title, i.description, i.created_at,
-    c.seconds, c.kind, c.item_path AS path
+    c.seconds, c.kind, c.item_path AS path, c.thumbnail_path
 FROM contents AS c
 INNER JOIN items AS i ON c.item_id = i.id
 ",

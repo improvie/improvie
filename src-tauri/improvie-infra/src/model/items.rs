@@ -32,6 +32,7 @@ pub struct ContentRaw {
     pub seconds: u64,
     pub kind: ContentKind,
     pub path: String,
+    pub thumbnail_path: Option<String>,
 }
 
 #[derive(sqlx::FromRow, Debug, Convert)]

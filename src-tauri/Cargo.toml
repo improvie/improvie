@@ -43,7 +43,8 @@ resolver = "2"
 members = [
     "improvie-infra",
     "improvie-domain",
-    "improvie-logic", "improvie-app",
+    "improvie-logic",
+    "improvie-app",
 ]
 
 [workspace.dependencies]
@@ -71,7 +72,7 @@ chrono = { version = "0.4.39", features = ["serde"] }
 ambassador = "0.4.1"
 generator = "0.8.4"
 rand = "0.8.5"
-more-convert = "0.1"
+more-convert = { version = "0.3", features = ["utils"] }
 
 # macros
 proc-macro2 = "1.0.92"

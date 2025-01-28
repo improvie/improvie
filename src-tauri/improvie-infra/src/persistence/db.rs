@@ -35,7 +35,7 @@ impl DbPool {
         self.0.clone()
     }
 
-    pub async fn tx(&self) -> sqlx::Result<sqlx::Transaction<'static, sqlx::Sqlite>> {
+    pub async fn begin(&self) -> sqlx::Result<sqlx::Transaction<'static, sqlx::Sqlite>> {
         self.0.begin().await
     }
 }

@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{DateTime, Local};
 
@@ -18,10 +16,10 @@ pub struct Content {
     #[serde(flatten)]
     pub item: Item,
 
-    pub seconds: u64,
+    pub seconds: u32,
     pub kind: ContentKind,
-    pub content_path: PathBuf,
-    pub thumbnail_path: Option<PathBuf>,
+    pub content_path: String,
+    pub thumbnail_path: Option<String>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

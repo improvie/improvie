@@ -12,6 +12,9 @@ pub enum AppError {
     #[error("{1} not found in {0}")]
     NotFound(&'static str, String),
 
+    #[error("invalid {1} in {0}")]
+    Invalid(&'static str, String),
+
     #[error("db error: {0}")]
     #[serde(serialize_with = "to_string")]
     Db(#[from] sqlx::Error),
@@ -21,6 +24,7 @@ pub enum AppError {
     Io(#[from] std::io::Error),
 }
 
+#[inline]
 fn to_string<S, T>(t: &T, s: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,

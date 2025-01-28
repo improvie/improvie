@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use serde::{Deserialize, Serialize};
 
 use crate::{logic::rule::Rule, Uuid};
@@ -9,7 +7,7 @@ pub struct Playlist {
     pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
-    pub thumbnail_path: Option<PathBuf>,
+    pub thumbnail_path: Option<String>,
     pub sort_order: u32,
 }
 

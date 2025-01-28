@@ -73,6 +73,7 @@ ambassador = "0.4.1"
 generator = "0.8.4"
 rand = "0.8.5"
 more-convert = { version = "0.3", features = ["utils"] }
+ffmpeg-next = "7.1.0"
 
 # macros
 proc-macro2 = "1.0.92"

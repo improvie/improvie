@@ -1,6 +1,6 @@
 use command::{
     health_check::health_check,
-    items::{get_contents, get_folders, get_items_hierarchy},
+    items::{create_content, create_folder, get_contents, get_folders, get_items_hierarchy},
     playlists::{get_favorite_playlists, get_playlists, get_plays},
 };
 use improvie_infra::persistence::db::DbPool;
@@ -61,6 +61,8 @@ pub fn run() {
             get_playlists,
             get_plays,
             get_favorite_playlists,
+            create_folder,
+            create_content,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

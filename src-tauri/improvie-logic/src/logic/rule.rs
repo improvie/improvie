@@ -8,12 +8,12 @@ use crate::Uuid;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RuleFormat {
     pub content_id: Uuid,
-    pub range_start: Option<u64>,
-    pub range_end: Option<u64>,
+    pub range_start: Option<u32>,
+    pub range_end: Option<u32>,
 }
 
 impl RuleFormat {
-    pub fn new(content_id: Uuid, range_start: Option<u64>, range_end: Option<u64>) -> Self {
+    pub fn new(content_id: Uuid, range_start: Option<u32>, range_end: Option<u32>) -> Self {
         Self {
             content_id,
             range_start,
@@ -54,8 +54,8 @@ impl RuleFormatIter for ContentRule {
 #[derive(Clone, Serialize, Deserialize)]
 pub struct RangeRule {
     pub content_id: Uuid,
-    pub range_start: Option<u64>,
-    pub range_end: Option<u64>,
+    pub range_start: Option<u32>,
+    pub range_end: Option<u32>,
 }
 
 impl RuleFormatIter for RangeRule {

@@ -1,16 +1,20 @@
 use std::collections::HashMap;
 
-use improvie_domain::repository::items::ItemsRepository;
+use chrono::Local;
+use improvie_domain::{
+    model::items::{CreateContentModel, CreateFolderModel},
+    repository::items::ItemsRepository,
+};
 use improvie_logic::{
     constant::items::ItemKind,
-    model::items::{Content, Folder, FolderNode, ItemNode},
-    AppResult, Uuid,
+    model::items::{Content, Folder, FolderNode, Item, ItemNode},
+    AppError, AppResult, Uuid,
 };
 use more_convert::VecInto;
 
 use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
 
-use super::def_repository_impl;
+use super::{def_repository_impl, tx_check};
 
 def_repository_impl!(ItemsRepositoryImpl);
 
@@ -103,6 +107,91 @@ INNER JOIN items AS i ON f.item_id = i.id
         .await?;
 
         Ok(row.vec_into())
+    }
+
+    async fn create_folder(&self, model: CreateFolderModel) -> AppResult<Folder> {
+        let folder = Folder {
+            item: Item {
+                id: Uuid::now(),
+                title: model.item.title,
+                description: model.item.description,
+                created_at: Local::now(),
+            },
+        };
+
+        let mut tx = self.db.begin().await?;
+
+        let item_result = sqlx::query(
+            "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
+        )
+        .bind(folder.item.id)
+        .bind(&folder.item.title)
+        .bind(&folder.item.description)
+        .bind(ItemKind::Folder)
+        .bind(folder.item.created_at)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(item_result, tx);
+
+        let folder_result = sqlx::query("INSERT INTO folders (item_id) VALUES (?)")
+            .bind(folder.item.id)
+            .execute(&mut *tx)
+            .await;
+
+        tx_check!(folder_result, tx);
+
+        Ok(folder)
+    }
+
+    async fn create_content(&self, model: CreateContentModel) -> AppResult<Content> {
+        let context = ffmpeg_next::format::input(&model.content_path)
+            .map_err(|_| AppError::Invalid("content_path", model.content_path.clone()))?;
+
+        let seconds = context.duration() as f64 / f64::from(ffmpeg_next::ffi::AV_TIME_BASE);
+
+        let content = Content {
+            item: Item {
+                id: Uuid::now(),
+                title: model.item.title,
+                description: model.item.description,
+                created_at: Local::now(),
+            },
+            seconds: seconds.round() as u32,
+            kind: model.kind,
+            content_path: model.content_path,
+            thumbnail_path: model.thumbnail_path,
+        };
+
+        let mut tx = self.db.begin().await?;
+
+        let item_result = sqlx::query(
+            "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
+        )
+        .bind(content.item.id)
+        .bind(&content.item.title)
+        .bind(&content.item.description)
+        .bind(ItemKind::Content)
+        .bind(content.item.created_at)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(item_result, tx);
+
+        let content_result = sqlx::query(
+            "INSERT INTO contents (item_id, seconds, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?, ?)"
+        )
+        .bind(content.item.id)
+        .bind(content.seconds)
+        .bind(content.kind)
+        .bind(&content.content_path)
+        .bind(&content.thumbnail_path)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(content_result, tx);
+
+        Ok(content)
     }
 }
 

@@ -29,7 +29,7 @@ pub struct ContentRaw {
     #[sqlx(flatten)]
     pub item: ItemRaw,
 
-    pub seconds: u64,
+    pub seconds: u32,
     pub kind: ContentKind,
     pub content_path: String,
     pub thumbnail_path: Option<String>,

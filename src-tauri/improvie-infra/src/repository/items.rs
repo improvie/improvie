@@ -79,7 +79,7 @@ FROM folder_hierarchy
             "
 SELECT 
     i.id, i.title, i.description, i.created_at,
-    c.seconds, c.kind, c.item_path AS path, c.thumbnail_path
+    c.seconds, c.kind, c.content_path, c.thumbnail_path
 FROM contents AS c
 INNER JOIN items AS i ON c.item_id = i.id
 ",

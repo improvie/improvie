@@ -20,7 +20,7 @@ pub struct Content {
 
     pub seconds: u64,
     pub kind: ContentKind,
-    pub path: PathBuf,
+    pub content_path: PathBuf,
     pub thumbnail_path: Option<PathBuf>,
 }
 

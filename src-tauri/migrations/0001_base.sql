@@ -59,7 +59,11 @@ CREATE TABLE IF NOT EXISTS playlists (
     id uuid NOT NULL,
     title text NOT NULL,
     description text DEFAULT NULL,
+    thumbnail_path text DEFAULT NULL,
     details json DEFAULT NULL,
+
+    sort_order int unsigned NOT NULL,
+
     created_at timestamp NOT NULL,
     PRIMARY KEY (id)
 );

@@ -8,7 +8,8 @@ export interface Item {
 export interface Content extends Item {
   seconds: number;
   kind: ContentKind;
-  path: string;
+  content_path: string;
+  thumbnail_path: string | undefined;
 }
 
 export type ContentKind = "Video" | "Audio";

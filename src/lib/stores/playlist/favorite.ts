@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store";
+import { type Writable, writable } from "svelte/store";
 import { invoke } from "@tauri-apps/api/core";
 
 export const favoritePlaylists: Writable<string[]> = writable([]);

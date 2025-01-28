@@ -1,6 +1,6 @@
-import { writable, type Writable } from "svelte/store";
+import { type Writable, writable } from "svelte/store";
 import { invoke } from "@tauri-apps/api/core";
-import type { Playlist } from "$lib/types/playlist";
+import type { Playlist } from "$lib/types/playlist.ts";
 
 // TODO: playlists
 

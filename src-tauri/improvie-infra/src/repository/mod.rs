@@ -32,20 +32,6 @@ macro_rules! tx_check {
     };
 }
 
-macro_rules! tx_commit {
-    ($result:expr,$tx:expr) => {
-        tx_commit!($result, $tx, {})
-    };
-    ($result:expr,$tx:expr,{$($t:tt)*}) => {
-        $crate::repository::tx_match!($result, $tx, {
-            $($t)*
-            Ok(_) => {
-                return $tx.commit().await.map_err(Into::into);
-            }
-        })
-    };
-}
-
 macro_rules! def_repository_impl {
     ($impl:ident) => {
         pub struct $impl {
@@ -61,7 +47,6 @@ macro_rules! def_repository_impl {
 }
 
 pub(super) use tx_check;
-pub(super) use tx_commit;
 pub(super) use tx_match;
 
 pub(super) use def_repository_impl;

@@ -141,6 +141,22 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         tx_check!(folder_result, tx);
 
+        let hierarchy_result = sqlx::query(
+            "
+INSERT INTO hierarchical_items 
+    (parent_folder_id, child_id, sort_order, created_at)
+VALUES 
+    (?, ?, ?, ?)",
+        )
+        .bind(model.item.parent_folder_id)
+        .bind(folder.item.id)
+        .bind(model.item.sort_order)
+        .bind(Local::now())
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(hierarchy_result, tx);
+
         Ok(folder)
     }
 
@@ -190,6 +206,22 @@ INNER JOIN items AS i ON f.item_id = i.id
         .await;
 
         tx_check!(content_result, tx);
+
+        let hierarchy_result = sqlx::query(
+            "
+INSERT INTO hierarchical_items 
+    (parent_folder_id, child_id, sort_order, created_at)
+VALUES 
+    (?, ?, ?, ?)",
+        )
+        .bind(model.item.parent_folder_id)
+        .bind(content.item.id)
+        .bind(model.item.sort_order)
+        .bind(Local::now())
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(hierarchy_result, tx);
 
         Ok(content)
     }

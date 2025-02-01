@@ -1,11 +1,14 @@
 use improvie_domain::model::items::{CreateBaseItemModel, CreateContentModel, CreateFolderModel};
-use improvie_logic::constant::items::ContentKind;
+use improvie_logic::{constant::items::ContentKind, Uuid};
 use more_convert::Convert;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Convert)]
 #[convert(into(CreateBaseItemModel))]
 pub struct CreateBaseItemDto {
+    pub parent_folder_id: Uuid,
+    pub sort_order: u32,
+
     pub title: String,
     pub description: Option<String>,
 }

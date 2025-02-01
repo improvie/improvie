@@ -3,6 +3,11 @@ import { invoke } from "@tauri-apps/api/core";
 
 export const favoritePlaylists: Writable<string[]> = writable([]);
 
+export async function initFavoritePlaylist() {
+  const ids = await invoke<string[]>("get_favorite_playlists");
+  favoritePlaylists.set(ids);
+}
+
 export async function addFavoritePlaylist(id: string) {
   await invoke("add_favorite_playlist", { id });
   favoritePlaylists.update((ids) => [...ids, id]);

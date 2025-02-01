@@ -2,13 +2,23 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import { useSidebar } from "$lib/components/ui/sidebar/index.js";
-  import { removeFavoritePlaylist } from "$lib/stores/playlist/favorite";
-  import type { Playlist } from "$lib/types/playlist";
+  import { getPlaylist } from "$lib/stores/playlist";
+  import {
+    favoritePlaylists,
+    initFavoritePlaylist,
+    removeFavoritePlaylist,
+  } from "$lib/stores/playlist/favorite";
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import StarOff from "lucide-svelte/icons/star-off";
+  import { derived } from "svelte/store";
 
-  // TODO: favorites
-  const favorites: Playlist[] = $state([]);
+  initFavoritePlaylist();
+
+  const favorites = derived(favoritePlaylists, ($favoritePlaylists) => {
+    return $favoritePlaylists
+      .map((id) => getPlaylist(id))
+      .filter((v) => v != undefined);
+  });
 
   const sidebar = useSidebar();
 </script>
@@ -16,11 +26,10 @@
 <Sidebar.Group class="group-data-[collapsible=icon]:hidden">
   <Sidebar.GroupLabel>Favorites</Sidebar.GroupLabel>
   <Sidebar.Menu>
-    {#each favorites as item (item.id)}
+    {#each $favorites as playlist}
       <Sidebar.MenuItem>
         <Sidebar.MenuButton>
-          <span>{item.emoji || " "}</span>
-          <span>{item.title}</span>
+          <span>{playlist.title}</span>
         </Sidebar.MenuButton>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
@@ -36,7 +45,7 @@
           >
             <DropdownMenu.Item
               onclick={async () => {
-                await removeFavoritePlaylist(item.id);
+                await removeFavoritePlaylist(playlist.id);
               }}
             >
               <StarOff class="text-muted-foreground" />

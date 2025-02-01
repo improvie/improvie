@@ -1,6 +1,6 @@
 use ambassador::{delegatable_trait, Delegate};
 use generator::{done, Generator, Gn};
-use rand::seq::SliceRandom;
+use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
 use crate::Uuid;
@@ -103,7 +103,7 @@ pub struct RandomRule {
 impl RuleFormatIter for RandomRule {
     fn formats(&self) -> Generator<'_, (), RuleFormat> {
         Gn::new_scoped(|mut s| {
-            let rng = &mut rand::thread_rng();
+            let rng = &mut rand::rng();
             if self.duplicate {
                 for _ in 0..self.times {
                     let Ok((rule, _)) = self.rules.choose_weighted(rng, |item| item.1) else {

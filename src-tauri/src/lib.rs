@@ -1,7 +1,7 @@
 use command::{
     health_check::health_check,
     items::{create_content, create_folder, get_contents, get_folders, get_items_hierarchy},
-    playlists::{get_favorite_playlists, get_playlists, get_plays},
+    playlists::{get_favorite_playlists, get_playlists, get_playlist_folders},
 };
 use improvie_infra::persistence::db::DbPool;
 use modules::Modules;
@@ -59,7 +59,7 @@ pub fn run() {
             get_contents,
             get_folders,
             get_playlists,
-            get_plays,
+            get_playlist_folders,
             get_favorite_playlists,
             create_folder,
             create_content,

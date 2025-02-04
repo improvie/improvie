@@ -1,11 +1,13 @@
+use std::collections::HashMap;
+
 use improvie_domain::repository::playlists::PlaylistsRepository;
 use improvie_logic::{
-    model::playlist::{Play, Playlist},
+    model::playlist::{Playlist, PlaylistFolder},
     AppResult, Uuid,
 };
 use more_convert::VecInto;
 
-use crate::model::playlists::{PlaylistsRaw, PlaysRaw};
+use crate::model::playlists::{PlaylistFolderRow, PlaylistRow};
 
 use super::def_repository_impl;
 
@@ -13,32 +15,42 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl PlaylistsRepository for PlaylistsRepositoryImpl {
-    async fn get_playlists(&self) -> AppResult<Vec<Playlist>> {
-        let rows = sqlx::query_as::<_, PlaylistsRaw>(
+    async fn get_playlist_folders(&self) -> AppResult<HashMap<Uuid, Vec<PlaylistFolder>>> {
+        let rows = sqlx::query_as::<_, PlaylistFolderRow>(
             "
 SELECT 
-    id, title, description, thumbnail_path, sort_order
-FROM playlists
-",
-        )
-        .fetch_all(&self.db.pool())
-        .await?;
-
-        Ok(rows.vec_into())
-    }
-
-    async fn get_plays(&self) -> AppResult<Vec<Play>> {
-        let rows = sqlx::query_as::<_, PlaysRaw>(
-            "
-SELECT 
-    id, title, description, rules, sort_order
+    id, title, description, parent_id, sort_order
 FROM plays
 ",
         )
         .fetch_all(&self.db.pool())
         .await?;
 
-        Ok(rows.vec_into())
+        let mut group: HashMap<Uuid, Vec<PlaylistFolder>> = Default::default();
+        for row in rows {
+            group.entry(row.parent_id).or_default().push(row.into());
+        }
+
+        Ok(group)
+    }
+
+    async fn get_playlists(&self) -> AppResult<HashMap<Uuid, Vec<Playlist>>> {
+        let rows = sqlx::query_as::<_, PlaylistRow>(
+            "
+SELECT 
+    id, title, description, thumbnail_path, rules, folder_id, sort_order
+FROM playlists
+",
+        )
+        .fetch_all(&self.db.pool())
+        .await?;
+
+        let mut group: HashMap<Uuid, Vec<Playlist>> = Default::default();
+        for row in rows {
+            group.entry(row.folder_id).or_default().push(row.into());
+        }
+
+        Ok(group)
     }
 
     async fn get_favorite_playlists(&self) -> AppResult<Vec<Uuid>> {

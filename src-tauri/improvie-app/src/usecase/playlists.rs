@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use improvie_domain::{modules::RepositoriesModule, repository::playlists::PlaylistsRepository};
 use improvie_logic::{
-    model::playlist::{Play, Playlist},
+    model::playlist::{Playlist, PlaylistFolder},
     AppResult, Uuid,
 };
 
@@ -13,12 +15,15 @@ impl<R: RepositoriesModule> PlaylistsUseCase<R> {
         Self { repository }
     }
 
-    pub async fn get_playlists(&self) -> AppResult<Vec<Playlist>> {
-        self.repository.playlists_repository().get_playlists().await
+    pub async fn get_playlist_folders(&self) -> AppResult<HashMap<Uuid, Vec<PlaylistFolder>>> {
+        self.repository
+            .playlists_repository()
+            .get_playlist_folders()
+            .await
     }
 
-    pub async fn get_plays(&self) -> AppResult<Vec<Play>> {
-        self.repository.playlists_repository().get_plays().await
+    pub async fn get_playlists(&self) -> AppResult<HashMap<Uuid, Vec<Playlist>>> {
+        self.repository.playlists_repository().get_playlists().await
     }
 
     pub async fn get_favorite_playlists(&self) -> AppResult<Vec<Uuid>> {

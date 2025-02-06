@@ -1,7 +1,7 @@
 use command::{
     health_check::health_check,
     items::{create_content, create_folder, get_contents, get_folders, get_items_hierarchy},
-    playlists::{get_favorite_playlists, get_playlists, get_playlist_folders},
+    playlists::{get_favorite_playlists, get_playlist_folders, get_playlists},
 };
 use improvie_infra::persistence::db::DbPool;
 use modules::Modules;
@@ -26,7 +26,7 @@ pub fn run() {
                     #[cfg(not(feature = "dev"))]
                     log::LevelFilter::Info,
                 )
-                .timezone_strategy(TimezoneStrategy::UseLocal)
+                .timezone_strategy(TimezoneStrategy::UseUtc)
                 .targets(
                     #[cfg(feature = "dev")]
                     [

@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS contents (
 );
 
 INSERT INTO items (id, title, kind, created_at) VALUES (
-    '00000000-0000-0000-0000-000000000000', 'Root', 1, (DATETIME('now', 'localtime'))
+    '00000000-0000-0000-0000-000000000000', 'Root', 1, (DATETIME('now'))
 );
 
 INSERT INTO folders (item_id) VALUES (

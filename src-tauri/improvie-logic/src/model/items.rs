@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::types::chrono::{DateTime, Local};
+use sqlx::types::chrono::{DateTime, Utc};
 
 use crate::{constant::items::ContentKind, Uuid};
 
@@ -8,7 +8,7 @@ pub struct Item {
     pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
-    pub created_at: DateTime<Local>,
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

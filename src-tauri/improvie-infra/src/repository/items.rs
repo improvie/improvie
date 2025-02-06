@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use chrono::Local;
+use chrono::Utc;
 use improvie_domain::{
     model::items::{CreateContentModel, CreateFolderModel},
     repository::items::ItemsRepository,
@@ -115,7 +115,7 @@ INNER JOIN items AS i ON f.item_id = i.id
                 id: Uuid::now(),
                 title: model.item.title,
                 description: model.item.description,
-                created_at: Local::now(),
+                created_at: Utc::now(),
             },
         };
 
@@ -151,7 +151,7 @@ VALUES
         .bind(model.item.parent_folder_id)
         .bind(folder.item.id)
         .bind(model.item.sort_order)
-        .bind(Local::now())
+        .bind(Utc::now())
         .execute(&mut *tx)
         .await;
 
@@ -171,7 +171,7 @@ VALUES
                 id: Uuid::now(),
                 title: model.item.title,
                 description: model.item.description,
-                created_at: Local::now(),
+                created_at: Utc::now(),
             },
             seconds: seconds.round() as u32,
             kind: model.kind,
@@ -217,7 +217,7 @@ VALUES
         .bind(model.item.parent_folder_id)
         .bind(content.item.id)
         .bind(model.item.sort_order)
-        .bind(Local::now())
+        .bind(Utc::now())
         .execute(&mut *tx)
         .await;
 

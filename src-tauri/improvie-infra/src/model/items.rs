@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Utc};
 use improvie_logic::model::items::{Content, Folder, Item};
 use improvie_logic::{
     constant::items::{ContentKind, ItemKind},
@@ -20,7 +20,7 @@ pub struct ItemRaw {
     pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
-    pub created_at: DateTime<Local>,
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(sqlx::FromRow, Debug, Convert)]

@@ -1,7 +1,7 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Utc};
 use improvie_logic::Uuid;
 
 pub struct SettingsModel {
     pub id: Uuid,
-    pub created_at: DateTime<Local>,
+    pub created_at: DateTime<Utc>,
 }

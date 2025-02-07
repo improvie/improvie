@@ -107,13 +107,13 @@
   }
 }
 
-html,
-body {
-  @apply h-full overflow-hidden;
-}
-
 @font-face {
   font-family: "Mamelon";
   src: url("/fonts/Mamelon-5-Hi-Regular.woff2");
   font-display: swap;
+}
+
+html,
+body {
+  @apply h-full overflow-hidden font-main;
 }

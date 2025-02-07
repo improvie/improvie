@@ -1,4 +1,3 @@
-import { skeleton } from "@skeletonlabs/tw-plugin";
 import defaultTheme from "tailwindcss/defaultTheme";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
@@ -93,25 +92,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    skeleton({
-      themes: {
-        preset: [
-          { name: "crimson", enhancements: true },
-          { name: "gold-nouveau", enhancements: true },
-          { name: "hamlindigo", enhancements: true },
-          { name: "modern", enhancements: true },
-          { name: "rocket", enhancements: true },
-          { name: "sahara", enhancements: true },
-          { name: "seafoam", enhancements: true },
-          { name: "skeleton", enhancements: true },
-          { name: "vintage", enhancements: true },
-          { name: "wintry", enhancements: true },
-        ],
-      },
-    }),
-  ],
+  plugins: [tailwindcssAnimate],
 };
 
 export default config;

@@ -1,7 +1,6 @@
 {
   "version": "4",
   "specifiers": {
-    "npm:@skeletonlabs/tw-plugin@0.4": "0.4.0_tailwindcss@3.4.16__postcss@8.4.49",
     "npm:@sveltejs/adapter-static@^3.0.6": "3.0.8_@sveltejs+kit@2.15.1__@sveltejs+vite-plugin-svelte@5.0.3___svelte@5.16.1____acorn@8.14.0___vite@6.0.3___vite@6.0.3____@types+node@22.10.2___@types+node@22.10.2__svelte@5.16.1___acorn@8.14.0__vite@6.0.3__vite@6.0.3___@types+node@22.10.2__@types+node@22.10.2_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.16.1___acorn@8.14.0__vite@6.0.3__vite@6.0.3___@types+node@22.10.2__@types+node@22.10.2_svelte@5.16.1__acorn@8.14.0_vite@6.0.3_@types+node@22.10.2",
     "npm:@sveltejs/kit@^2.9.0": "2.15.1_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.16.1___acorn@8.14.0__vite@6.0.3__vite@6.0.3___@types+node@22.10.2__@types+node@22.10.2_svelte@5.16.1__acorn@8.14.0_vite@6.0.3_vite@6.0.3__@types+node@22.10.2_@types+node@22.10.2",
     "npm:@sveltejs/vite-plugin-svelte@5": "5.0.3_svelte@5.16.1__acorn@8.14.0_vite@6.0.3_vite@6.0.3__@types+node@22.10.2_@types+node@22.10.2",
@@ -247,12 +246,6 @@
     },
     "@rollup/rollup-win32-x64-msvc@4.28.1": {
       "integrity": "sha512-ZvK2jBafvttJjoIdKm/Q/Bh7IJ1Ose9IBOwpOXcOvW3ikGTQGmKDgxTC6oCAzW6PynbkKP8+um1du81XJHZ0JA=="
-    },
-    "@skeletonlabs/tw-plugin@0.4.0_tailwindcss@3.4.16__postcss@8.4.49": {
-      "integrity": "sha512-v6Y4deBq9ByRx3kTRGgekhhYkWEYgNNNu8UXOwJngCStB7w8SwmbNFSeHkluxMbgCgMnJyp220EMpw9nj/rEsQ==",
-      "dependencies": [
-        "tailwindcss"
-      ]
     },
     "@sveltejs/adapter-static@3.0.8_@sveltejs+kit@2.15.1__@sveltejs+vite-plugin-svelte@5.0.3___svelte@5.16.1____acorn@8.14.0___vite@6.0.3___vite@6.0.3____@types+node@22.10.2___@types+node@22.10.2__svelte@5.16.1___acorn@8.14.0__vite@6.0.3__vite@6.0.3___@types+node@22.10.2__@types+node@22.10.2_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.16.1___acorn@8.14.0__vite@6.0.3__vite@6.0.3___@types+node@22.10.2__@types+node@22.10.2_svelte@5.16.1__acorn@8.14.0_vite@6.0.3_@types+node@22.10.2": {
       "integrity": "sha512-YaDrquRpZwfcXbnlDsSrBQNCChVOT9MGuSg+dMAyfsAa1SmiAhrA5jUYUiIMC59G92kIbY/AaQOWcBdq+lh+zg==",
@@ -1349,7 +1342,6 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@skeletonlabs/tw-plugin@0.4",
         "npm:@sveltejs/adapter-static@^3.0.6",
         "npm:@sveltejs/kit@^2.9.0",
         "npm:@sveltejs/vite-plugin-svelte@5",

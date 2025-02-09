@@ -10,7 +10,9 @@ export const folder_nodes: Writable<Map<string, FolderNode>> = writable(
 );
 
 export function init_items() {
-  invoke<Map<string, FolderNode>>("get_items_hierarchy").then((v) => folder_nodes.set(v));
+  invoke<Map<string, FolderNode>>("get_items_hierarchy").then((v) =>
+    folder_nodes.set(v),
+  );
 
   invoke<Map<string, Content>>("get_contents").then((v) => contents.set(v));
   invoke<Map<string, Folder>>("get_folders").then((v) => folders.set(v));

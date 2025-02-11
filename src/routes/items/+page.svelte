@@ -1,7 +1,10 @@
-<script>
-  import { TreeNode } from "$lib/features/tree/items";
-  import { UUID_NIL } from "$lib/utils";
+<script lang="ts">
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+  import { ItemPageBreadcrumb } from "./Breadcrumb.svelte";
+  import { ItemPageButtons } from "./Buttons.svelte";
 </script>
 
-<span>Items Page</span>
-<TreeNode folder_id={UUID_NIL} />
+<ItemPageButtons />
+<Separator />
+<ItemPageBreadcrumb />
+<Separator />

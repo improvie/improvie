@@ -1,3 +1,4 @@
 {
-  "welcome": "improvieアプリへようこそ！"
+  "welcome": "improvieアプリへようこそ！",
+  "items.import.auto_title": "import時に空ならfilenameが付けられます"
 }

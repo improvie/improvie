@@ -3,7 +3,7 @@ import { UUID_NIL } from "$lib/utils";
 import { invoke } from "@tauri-apps/api/core";
 import { type Writable, writable } from "svelte/store";
 
-export const current_folder: Writable<string[]> = writable([UUID_NIL]);
+export const current_folder_ids: Writable<string[]> = writable([UUID_NIL]);
 
 export const contents: Writable<Map<string, Content>> = writable(new Map());
 export const folders: Writable<Map<string, Folder>> = writable(new Map());

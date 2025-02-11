@@ -60,6 +60,7 @@ tauri = { version = "2.2.1", features = [] }
 tokio = { version = "1.42.0", features = ["full"] }
 crossbeam-utils = "0.8.21"
 async-trait = "0.1.85"
+tracing = "0.1.41"
 
 # ser/de
 serde = { version = "1.0.217", features = ["derive"] }

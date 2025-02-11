@@ -1,0 +1,50 @@
+<script lang="ts">
+  import Self from "./node.svelte";
+  import { slide } from "svelte/transition";
+  import { TreeContent, TreeFolder } from ".";
+  import { folder_nodes, folders } from "$lib/stores/items";
+  import type { ItemNode } from "$lib/types/item";
+
+  let {
+    expanded = true,
+    folder_id,
+  }: { expanded?: boolean; folder_id: string } = $props();
+
+  let folder = $derived($folders.get(folder_id));
+  let children: ItemNode[] = $derived(
+    $folder_nodes
+      .get(folder_id)
+      ?.items.sort((a, b) => a.sort_order - b.sort_order) || [],
+  );
+</script>
+
+{#if folder != undefined}
+  <TreeFolder {expanded} {folder} />
+
+  {#if expanded}
+    <ul transition:slide={{ duration: 300 }}>
+      {#each children as child}
+        <li>
+          {#if child.type === "Folder"}
+            <Self folder_id={child.id} />
+          {:else if child.type == "Content"}
+            <TreeContent content_id={child.id} /> -->
+          {/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+{/if}
+
+<style>
+  ul {
+    padding: 0.2em 0 0 0.5em;
+    margin: 0 0 0 0.5em;
+    list-style: none;
+    border-left: 2px solid #555353;
+  }
+
+  li {
+    padding: 0.2em 1px;
+  }
+</style>

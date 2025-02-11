@@ -1,12 +1,13 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-  import { main_menu_store, type MainMenuType } from "$lib/stores/MainMenu";
   import { Files, House, Icon, ListMusic, Search } from "lucide-svelte";
 
-  const types: [MainMenuType, typeof Icon][] = [
-    ["home", House],
-    ["items", Files],
-    ["playlists", ListMusic],
+  const types: [string, typeof Icon, string][] = [
+    ["home", House, "/"],
+    ["items", Files, "/items"],
+    ["playlists", ListMusic, "/playlists"],
   ];
 </script>
 
@@ -18,13 +19,15 @@
     </Sidebar.MenuButton>
   </Sidebar.MenuItem>
   <Sidebar.MenuItem>
-    {#each types as [type, icon]}
+    {#each types as [name, icon, path]}
       <Sidebar.MenuButton
-        isActive={$main_menu_store == type}
-        onclick={() => ($main_menu_store = type)}
+        isActive={page.url.pathname == path}
+        onclick={() => {
+          goto(path);
+        }}
       >
-        <svelte:component this={icon} />
-        <span class="capitalize">{type}</span>
+        <icon></icon>
+        <span class="capitalize">{name}</span>
       </Sidebar.MenuButton>
     {/each}
   </Sidebar.MenuItem>

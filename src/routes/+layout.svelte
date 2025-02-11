@@ -5,9 +5,11 @@
   import * as Sidebar from "$lib/components/ui/sidebar";
   import AppSidebar from "$lib/features/app-sidebar/index.svelte";
   import SettingsDialog from "$lib/features/SettingsDialog.svelte";
-  import { ModeWatcher } from "mode-watcher";
   import { onMount } from "svelte";
   import { init_items } from "$lib/stores/items";
+  import { ModeWatcher } from "mode-watcher";
+
+  let { children } = $props();
 
   const defaultLanguage = "ja";
   loadTranslations(defaultLanguage, "/");
@@ -32,7 +34,7 @@
     </header>
 
     <div class="flex flex-1 flex-col gap-4 px-4 py-10">
-      <slot />
+      {@render children?.()}
     </div>
   </Sidebar.Inset>
 </Sidebar.Provider>

@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { contents } from "$lib/stores/items";
   import { FileMusicIcon } from "lucide-svelte";
 
-  export let name;
+  let { content_id }: { content_id: string } = $props();
+
+  let content = $derived($contents.get(content_id));
 </script>
 
-<span><FileMusicIcon /> {name}</span>
+{#if content != undefined}
+  <span><FileMusicIcon /> {content_id}</span>
+{/if}
 
 <style>
   span {

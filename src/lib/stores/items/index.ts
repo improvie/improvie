@@ -10,10 +10,16 @@ export const folder_nodes: Writable<Map<string, FolderNode>> = writable(
 );
 
 export function init_items() {
-  invoke<Map<string, FolderNode>>("get_items_hierarchy").then((v) =>
-    folder_nodes.set(v),
-  );
+  invoke<object>("get_items_hierarchy").then((v) => {
+    folder_nodes.set(new Map(Object.entries(v)));
+  });
 
-  invoke<Map<string, Content>>("get_contents").then((v) => contents.set(v));
-  invoke<Map<string, Folder>>("get_folders").then((v) => folders.set(v));
+  invoke<Content[]>("get_contents").then((v) => {
+    const b = v.map((obj) => [obj.id, obj] as const);
+    contents.set(new Map(b));
+  });
+  invoke<Folder[]>("get_folders").then((v) => {
+    const b = v.map((obj) => [obj.id, obj] as const);
+    folders.set(new Map(b));
+  });
 }

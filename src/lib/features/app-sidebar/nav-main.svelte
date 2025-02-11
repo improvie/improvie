@@ -19,14 +19,14 @@
     </Sidebar.MenuButton>
   </Sidebar.MenuItem>
   <Sidebar.MenuItem>
-    {#each types as [name, icon, path]}
+    {#each types as [name, Icon, path]}
       <Sidebar.MenuButton
         isActive={page.url.pathname == path}
         onclick={() => {
           goto(path);
         }}
       >
-        <icon></icon>
+        <Icon></Icon>
         <span class="capitalize">{name}</span>
       </Sidebar.MenuButton>
     {/each}

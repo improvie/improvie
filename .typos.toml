@@ -1,6 +1,8 @@
 [files]
 extend-exclude = [
     "Cargo.lock",
+    "bun.lock",
+    "package-lock.json",
     "*.svg",
     "*.png",
     "*.jpg",

@@ -1,8 +1,8 @@
-import { action_create_contents } from "$lib/action/items/content";
-import type { Content } from "$lib/types/item";
-import type { CreateContent } from "$lib/types/item/create";
-import type { Writable } from "svelte/store";
-import { writable } from "svelte/store";
+import { action_create_contents } from '$lib/action/items/content';
+import type { Content } from '$lib/types/item';
+import type { CreateContent } from '$lib/types/item/create';
+import type { Writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 export const contents: Writable<Map<string, Content>> = writable(new Map());
 

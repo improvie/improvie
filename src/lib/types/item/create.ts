@@ -9,7 +9,7 @@ export type CreateBaseItem = {
 export type CreateFolder = CreateBaseItem & {};
 
 export type CreateContent = CreateBaseItem & {
-  kind: "Video" | "Audio";
+  kind: 'Video' | 'Audio';
   content_path: string;
   thumbnail_path: string | undefined;
 };

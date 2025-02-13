@@ -1,4 +1,4 @@
-import Folder from "./folder.svelte";
-import Content from "./content.svelte";
+import Content from './content.svelte';
+import Folder from './folder.svelte';
 
-export { Folder as HierarchyFolder, Content as HierarchyContent };
+export { Content as HierarchyContent, Folder as HierarchyFolder };

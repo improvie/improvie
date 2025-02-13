@@ -1,20 +1,16 @@
 <script lang="ts">
-  import Self from "./node.svelte";
-  import { slide } from "svelte/transition";
-  import { TreeContent, TreeFolder } from ".";
-  import { folder_nodes, folders } from "$lib/stores/items";
-  import type { ItemNode } from "$lib/types/item";
+  import Self from './node.svelte';
+  import { slide } from 'svelte/transition';
+  import { TreeContent, TreeFolder } from '.';
+  import { folder_nodes } from '$lib/stores/items';
+  import type { ItemNode } from '$lib/types/item';
+  import { folders } from '$lib/stores/items/folder';
 
-  let {
-    expanded = true,
-    folder_id,
-  }: { expanded?: boolean; folder_id: string } = $props();
+  let { expanded = true, folder_id }: { expanded?: boolean; folder_id: string } = $props();
 
   let folder = $derived($folders.get(folder_id));
   let children: ItemNode[] = $derived(
-    $folder_nodes
-      .get(folder_id)
-      ?.items.sort((a, b) => a.sort_order - b.sort_order) || [],
+    $folder_nodes.get(folder_id)?.items.sort((a, b) => a.sort_order - b.sort_order) || [],
   );
 </script>
 
@@ -25,9 +21,9 @@
     <ul transition:slide={{ duration: 300 }}>
       {#each children as child}
         <li>
-          {#if child.type === "Folder"}
+          {#if child.type === 'Folder'}
             <Self folder_id={child.id} />
-          {:else if child.type == "Content"}
+          {:else if child.type == 'Content'}
             <TreeContent content_id={child.id} /> -->
           {/if}
         </li>

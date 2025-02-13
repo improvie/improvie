@@ -1,23 +1,21 @@
 <script lang="ts">
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-  import { useSidebar } from "$lib/components/ui/sidebar/index.js";
-  import { getPlaylist } from "$lib/stores/playlist";
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+  import { useSidebar } from '$lib/components/ui/sidebar/index.js';
+  import { getPlaylist } from '$lib/stores/playlist';
   import {
     favoritePlaylists,
     initFavoritePlaylist,
     removeFavoritePlaylist,
-  } from "$lib/stores/playlist/favorite";
-  import Ellipsis from "lucide-svelte/icons/ellipsis";
-  import StarOff from "lucide-svelte/icons/star-off";
-  import { derived } from "svelte/store";
+  } from '$lib/stores/playlist/favorite';
+  import Ellipsis from 'lucide-svelte/icons/ellipsis';
+  import StarOff from 'lucide-svelte/icons/star-off';
+  import { derived } from 'svelte/store';
 
   initFavoritePlaylist();
 
   const favorites = derived(favoritePlaylists, ($favoritePlaylists) => {
-    return $favoritePlaylists
-      .map((id) => getPlaylist(id))
-      .filter((v) => v != undefined);
+    return $favoritePlaylists.map((id) => getPlaylist(id)).filter((v) => v != undefined);
   });
 
   const sidebar = useSidebar();
@@ -40,8 +38,8 @@
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
             class="w-56 rounded-lg"
-            side={sidebar.isMobile ? "bottom" : "right"}
-            align={sidebar.isMobile ? "end" : "start"}
+            side={sidebar.isMobile ? 'bottom' : 'right'}
+            align={sidebar.isMobile ? 'end' : 'start'}
           >
             <DropdownMenu.Item
               onclick={async () => {

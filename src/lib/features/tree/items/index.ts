@@ -1,5 +1,5 @@
-import Node from "./node.svelte";
-import Folder from "./folder.svelte";
-import Content from "./content.svelte";
+import Content from './content.svelte';
+import Folder from './folder.svelte';
+import Node from './node.svelte';
 
-export { Node as TreeNode, Content as TreeContent, Folder as TreeFolder };
+export { Content as TreeContent, Folder as TreeFolder, Node as TreeNode };

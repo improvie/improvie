@@ -1,18 +1,18 @@
 <script lang="ts">
-  import "../app.css";
+  import '../app.css';
 
-  import { loadTranslations } from "$lib/translations/translations";
-  import * as Sidebar from "$lib/components/ui/sidebar";
-  import AppSidebar from "$lib/features/app-sidebar/index.svelte";
-  import SettingsDialog from "$lib/features/SettingsDialog.svelte";
-  import { onMount } from "svelte";
-  import { init_items } from "$lib/stores/items";
-  import { ModeWatcher } from "mode-watcher";
+  import { loadTranslations } from '$lib/translations/translations';
+  import * as Sidebar from '$lib/components/ui/sidebar';
+  import AppSidebar from '$lib/features/app-sidebar/index.svelte';
+  import SettingsDialog from '$lib/features/SettingsDialog.svelte';
+  import { onMount } from 'svelte';
+  import { init_items } from '$lib/stores/items';
+  import { ModeWatcher } from 'mode-watcher';
 
   let { children } = $props();
 
-  const defaultLanguage = "ja";
-  loadTranslations(defaultLanguage, "/");
+  const defaultLanguage = 'ja';
+  loadTranslations(defaultLanguage, '/');
 
   onMount(() => {
     init_items();

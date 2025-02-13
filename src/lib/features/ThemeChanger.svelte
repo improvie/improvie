@@ -1,7 +1,7 @@
 <script lang="ts">
-  import LightSwitch from "$lib/components/LightSwitch.svelte";
-  import * as Dialog from "$lib/components/ui/dialog";
-  import Separator from "$lib/components/ui/separator/separator.svelte";
+  import LightSwitch from '$lib/components/LightSwitch.svelte';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import Separator from '$lib/components/ui/separator/separator.svelte';
 
   let { open }: { open: boolean } = $props();
 </script>

@@ -108,8 +108,8 @@
 }
 
 @font-face {
-  font-family: "Mamelon";
-  src: url("/fonts/Mamelon-5-Hi-Regular.woff2");
+  font-family: 'Mamelon';
+  src: url('/fonts/Mamelon-5-Hi-Regular.woff2');
   font-display: swap;
 }
 

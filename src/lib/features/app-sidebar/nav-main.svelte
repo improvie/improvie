@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
-  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-  import { Files, House, Icon, ListMusic, Search } from "lucide-svelte";
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+  import { Files, House, Icon, ListMusic, Search } from 'lucide-svelte';
 
   const types: [string, typeof Icon, string][] = [
-    ["home", House, "/"],
-    ["items", Files, "/items"],
-    ["playlists", ListMusic, "/playlists"],
+    ['home', House, '/'],
+    ['items', Files, '/items'],
+    ['playlists', ListMusic, '/playlists'],
   ];
 </script>
 

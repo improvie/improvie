@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Folder } from "$lib/types/item";
-  import { FolderIcon, FolderOpenIcon } from "lucide-svelte";
+  import type { Folder } from '$lib/types/item/index';
+  import { FolderIcon, FolderOpenIcon } from 'lucide-svelte';
 
   let { expanded, folder }: { expanded: boolean; folder: Folder } = $props();
 

@@ -1,11 +1,11 @@
 <script module>
-  export { default as ItemPageBreadcrumb } from "./Breadcrumb.svelte";
+  export { default as ItemPageBreadcrumb } from './Breadcrumb.svelte';
 </script>
 
 <script lang="ts">
-  import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
-  import { current_folder_ids } from "$lib/stores/items";
-  import { folders } from "$lib/stores/items/folder";
+  import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
+  import { current_folder_ids } from '$lib/stores/items';
+  import { folders } from '$lib/stores/items/folder';
 </script>
 
 <Breadcrumb.Root class="px-4">

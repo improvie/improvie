@@ -1,0 +1,7 @@
+# Ignore artifacts:
+build
+coverage
+
+# shadcn-svelte
+src/lib/components/ui
+src-tauri/

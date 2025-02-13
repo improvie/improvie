@@ -12,22 +12,24 @@ export interface Content extends Item {
   thumbnail_path: string | undefined;
 }
 
-export type ContentKind = "Video" | "Audio";
+export type ContentKind = 'Video' | 'Audio';
 
-export interface Folder extends Item {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Folder extends Item {
+  // currency empty
+}
 
-export type ItemKind = "Content" | "Folder";
+export type ItemKind = 'Content' | 'Folder';
 
 export type ItemDetail = Item &
-  ({ kind: "Content"; detail: Content } | { kind: "Folder"; detail: Folder });
+  ({ kind: 'Content'; detail: Content } | { kind: 'Folder'; detail: Folder });
 
 export interface FolderNode {
   folder: string;
   items: ItemNode[];
 }
 
-export type ItemNode = ({ type: "Content" } | { type: "Folder" }) & {
+export type ItemNode = ({ type: 'Content' } | { type: 'Folder' }) & {
   id: string;
   sort_order: number;
 };
-

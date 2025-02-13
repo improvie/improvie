@@ -18,6 +18,7 @@ pub fn run() {
     let dev_data_dir = std::path::Path::new(std::env!("CARGO_MANIFEST_DIR")).join("dev");
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(
             tauri_plugin_log::Builder::new()
                 .level(

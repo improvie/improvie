@@ -10,6 +10,7 @@
   let title_value: string = $state("");
   let description_value: string | null = $state(null);
   let file_value: string | null = $state(null);
+  let thumbnail_path: string | null = $state(null);
 
   async function submit() {
     // TODO: call create_content function
@@ -31,6 +32,20 @@
     if (file != null && title_value == "") {
       title_value = file.replace(/^.*[\\/]/, "");
     }
+  }
+
+  async function select_thumbnail() {
+    thumbnail_path = await open({
+      title: "Image",
+      multiple: false,
+      directory: false,
+      filters: [
+        {
+          name: "Image",
+          extensions: ["png", "jpeg", "gif"],
+        },
+      ],
+    });
   }
 </script>
 
@@ -74,6 +89,18 @@
           onclick={() => select_file()}
         >
           {file_value ? file_value : "Select file"}
+        </Button>
+      </div>
+
+      <div class="grid grid-cols-5 items-center gap-4">
+        <Label for="file" class="text-right">Thumbnail</Label>
+        <Button
+          variant="outline"
+          id="file"
+          class="col-span-4"
+          onclick={() => select_thumbnail()}
+        >
+          {thumbnail_path ? thumbnail_path : "Select Thumbnail (Option)"}
         </Button>
       </div>
     </div>

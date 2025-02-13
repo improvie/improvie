@@ -4,7 +4,8 @@
 
 <script lang="ts">
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
-  import { current_folder_ids, folders } from "$lib/stores/items";
+  import { current_folder_ids } from "$lib/stores/items";
+  import { folders } from "$lib/stores/items/folder";
 </script>
 
 <Breadcrumb.Root class="px-4">

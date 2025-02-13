@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { contents } from "$lib/stores/items";
+  import { contents } from "$lib/stores/items/content";
   import { FileMusicIcon } from "lucide-svelte";
 
   const { content_id }: { content_id: string } = $props();

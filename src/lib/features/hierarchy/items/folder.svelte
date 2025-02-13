@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { folders } from "$lib/stores/items";
+  import { folders } from "$lib/stores/items/folder";
   import * as ContextMenu from "$lib/components/ui/context-menu/index.js";
 
   const { folder_id }: { folder_id: string } = $props();

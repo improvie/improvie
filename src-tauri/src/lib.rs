@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
-use improvie_app::command::{health_check, items, playlists};
 use improvie_app::modules::Modules;
 use improvie_app::state::AppState;
 use improvie_infra::persistence::db::DbPool;
 use tauri::{async_runtime::block_on, Manager};
 
+mod handler;
 mod init;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -27,17 +27,7 @@ pub fn run() {
             app.manage(app_state);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![
-            health_check::health_check,
-            items::get_items_hierarchy,
-            items::get_contents,
-            items::get_folders,
-            items::create_folder,
-            items::create_content,
-            playlists::get_playlists,
-            playlists::get_playlist_folders,
-            playlists::get_favorite_playlists,
-        ])
+        .invoke_handler(crate::handler::generate_handler())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

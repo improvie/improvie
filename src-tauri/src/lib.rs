@@ -1,69 +1,42 @@
-use command::{
-    health_check::health_check,
-    items::{create_content, create_folder, get_contents, get_folders, get_items_hierarchy},
-    playlists::{get_favorite_playlists, get_playlist_folders, get_playlists},
-};
-use improvie_infra::persistence::db::DbPool;
-use modules::Modules;
-use tauri::{async_runtime::block_on, Manager};
-use tauri_plugin_log::{Target, TargetKind, TimezoneStrategy};
+use std::sync::Arc;
 
-mod command;
-mod modules;
+use improvie_app::command::{health_check, items, playlists};
+use improvie_app::modules::Modules;
+use improvie_app::state::AppState;
+use improvie_infra::persistence::db::DbPool;
+use tauri::{async_runtime::block_on, Manager};
+
+mod init;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    #[cfg(feature = "dev")]
-    #[allow(clippy::unwrap_used)]
-    let dev_data_dir = std::path::Path::new(std::env!("CARGO_MANIFEST_DIR")).join("dev");
-
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(
-            tauri_plugin_log::Builder::new()
-                .level(
-                    #[cfg(feature = "dev")]
-                    log::LevelFilter::Debug,
-                    #[cfg(not(feature = "dev"))]
-                    log::LevelFilter::Info,
-                )
-                .timezone_strategy(TimezoneStrategy::UseUtc)
-                .targets(
-                    #[cfg(feature = "dev")]
-                    [
-                        Target::new(TargetKind::Stdout),
-                        Target::new(TargetKind::Folder {
-                            path: dev_data_dir.clone(),
-                            file_name: Some(String::from("dev")),
-                        }),
-                        Target::new(TargetKind::Webview),
-                    ],
-                    #[cfg(not(feature = "dev"))]
-                    [Target::new(TargetKind::LogDir { file_name: None })],
-                )
-                .build(),
-        )
+        .plugin(init::log::init_log_plugin())
         .plugin(tauri_plugin_opener::init())
         .setup(move |app| {
-            #[cfg(feature = "dev")]
-            let data_dir = dev_data_dir.clone();
-            #[cfg(not(feature = "dev"))]
+            #[cfg(debug_assertions)]
+            let data_dir = init::dev_folder();
+            #[cfg(not(debug_assertions))]
             let data_dir = app.path().app_data_dir()?;
+
             let db = block_on(DbPool::new(data_dir))?;
-            let repositories = Modules::new(db);
-            app.manage(repositories);
+            let modules = Modules::new(db);
+            let modules = Arc::new(modules);
+            let app_state = AppState { modules };
+            app.manage(app_state);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            health_check,
-            get_items_hierarchy,
-            get_contents,
-            get_folders,
-            get_playlists,
-            get_playlist_folders,
-            get_favorite_playlists,
-            create_folder,
-            create_content,
+            health_check::health_check,
+            items::get_items_hierarchy,
+            items::get_contents,
+            items::get_folders,
+            items::create_folder,
+            items::create_content,
+            playlists::get_playlists,
+            playlists::get_playlist_folders,
+            playlists::get_favorite_playlists,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

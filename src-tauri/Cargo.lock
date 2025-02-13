@@ -2232,13 +2232,16 @@ dependencies = [
 name = "improvie-app"
 version = "0.1.0"
 dependencies = [
+ "cfg-if",
  "improvie-domain",
+ "improvie-infra",
  "improvie-logic",
  "itertools 0.14.0",
  "log",
  "more-convert",
  "serde",
  "serde_json",
+ "tauri",
 ]
 
 [[package]]

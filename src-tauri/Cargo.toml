@@ -19,7 +19,7 @@ name = "improvie_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "=2.0", features = [] }
 
 [dependencies]
 improvie-app.workspace = true
@@ -34,10 +34,10 @@ log.workspace = true
 tauri.workspace = true
 
 # tauri plugin and config
-tauri-plugin-opener = "2.2.2"
+tauri-plugin-opener = "=2.2.5"
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
-tauri-plugin-log = "2.2.0"
-tauri-plugin-dialog = "2"
+tauri-plugin-log = "=2.2.1"
+tauri-plugin-dialog = "=2.2.0"
 
 [workspace]
 resolver = "2"
@@ -55,44 +55,44 @@ improvie-domain = { path = "improvie-domain" }
 improvie-logic = { path = "improvie-logic" }
 
 # tauri
-tauri = { version = "2.2.1", features = [] }
+tauri = { version = "=2.2.5", features = [] }
 
 # async/concurrency/parallelism
-tokio = { version = "1.42.0", features = ["full"] }
-crossbeam-utils = "0.8.21"
-async-trait = "0.1.85"
-tracing = "0.1.41"
+tokio = { version = "=1.43.0", features = ["full"] }
+crossbeam-utils = "=0.8.21"
+async-trait = "=0.1"
+tracing = "=0.1.41"
 
 # ser/de
-serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.134"
+serde = { version = "=1.0", features = ["derive"] }
+serde_json = "=1.0"
 
 # utils
-thiserror = "2.0.9"
-itertools = "0.14.0"
-chrono = { version = "0.4.39", features = ["serde"] }
-ambassador = "0.4.1"
-generator = "0.8.4"
-rand = "0.9.0"
-more-convert = { version = "0.5", features = ["utils"] }
-ffmpeg-next = "7.1.0"
-cfg-if = "1.0.0"
+thiserror = "=2.0"
+itertools = "=0.14.0"
+chrono = { version = "=0.4.39", features = ["serde"] }
+ambassador = "=0.4.1"
+generator = "=0.8.4"
+rand = "=0.9.0"
+more-convert = { version = "=0.5", features = ["utils"] }
+ffmpeg-next = "=7.1.0"
+cfg-if = "=1.0.0"
 
 # macros
-proc-macro2 = "1.0.92"
-quote = "1.0.38"
-syn = "2.0.93"
-seq-macro = "0.3.5"
+proc-macro2 = "=1.0"
+quote = "=1.0"
+syn = "=2.0"
+seq-macro = "=0.3.5"
 
 # others
-log = "0.4.22"
-uuid = { version = "1.10.0", features = [
+log = "=0.4.25"
+uuid = { version = "=1.13.1", features = [
     "v7",
     "fast-rng",
     "macro-diagnostics",
     "serde",
 ] }
-sqlx = { version = "0.8.2", features = [
+sqlx = { version = "=0.8.3", features = [
     "sqlite",
     "runtime-tokio-native-tls",
     "chrono",

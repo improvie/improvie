@@ -2277,6 +2277,7 @@ version = "0.1.0"
 dependencies = [
  "ambassador",
  "generator",
+ "more-convert",
  "rand 0.9.0",
  "serde",
  "sqlx",
@@ -2683,9 +2684,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert"
-version = "0.4.1"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e86c5c88ff91f8a77855e1c8f934ec9e9f7c390b6798ea5688f95d72f22b3fad"
+checksum = "dc2fcdc6955c147acaeac2fc44f4b47ca5577e901a0eaf8869a0ccc3c6a60ac8"
 dependencies = [
  "cfg-if",
  "more-convert-derive",
@@ -2695,9 +2696,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert-derive"
-version = "0.1.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb3b1bdc91e53e39991c02af74a2ca4b1e5bbf1579f692789f065318c0a9b9c9"
+checksum = "7283cd5912c8f652f385d7dc80deac7670b09a954b0ad55a7dc86cb154740415"
 dependencies = [
  "more-convert-derive-internal",
  "syn 2.0.92",
@@ -2705,10 +2706,11 @@ dependencies = [
 
 [[package]]
 name = "more-convert-derive-internal"
-version = "0.1.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4974eaafd76ac7a353cb0eaa89549aa8e0268c8183c0c30a7fb4ae377667eca"
+checksum = "2538b83bd650ae0511b647c631d7113bb263a4902d5c93b1daae7e3435242c03"
 dependencies = [
+ "ident_case",
  "proc-macro2",
  "quote",
  "syn 2.0.92",
@@ -2906,7 +2908,7 @@ version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af1844ef2428cc3e1cb900be36181049ef3d3193c63e43026cfe202983b27a56"
 dependencies = [
- "proc-macro-crate 2.0.0",
+ "proc-macro-crate 3.2.0",
  "proc-macro2",
  "quote",
  "syn 2.0.92",

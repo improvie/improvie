@@ -11,6 +11,7 @@ ambassador.workspace = true
 serde.workspace = true
 generator.workspace = true
 rand.workspace = true
+more-convert.workspace = true
 
 [lints]
 workspace = true

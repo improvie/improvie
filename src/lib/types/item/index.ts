@@ -14,7 +14,6 @@ export interface Content extends Item {
 
 export type ContentKind = 'Video' | 'Audio';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Folder extends Item {
   // currency empty
 }

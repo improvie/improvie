@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
   import {
     action_select_content_dialog,
     action_select_thumbnail_dialog,
@@ -52,61 +52,62 @@
 
 <Dialog.Root bind:open>
   <Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-    <ImportIcon class="mr-2 size-4" />Add Item
+    <ImportIcon class='mr-2 size-4' />Add Item
   </Dialog.Trigger>
   <Dialog.Content>
-    <form method="POST" use:enhance onsubmit={handleSubmit}>
+    <form method='POST' use:enhance onsubmit={handleSubmit}>
       <Dialog.Header>
         <Dialog.Title>Add Item</Dialog.Title>
         <Dialog.Description>Import audio or video</Dialog.Description>
       </Dialog.Header>
-      <div class="grid gap-4 py-4">
-        <Form.Field {form} name="title">
+      <div class='grid gap-4 py-4'>
+        <Form.Field {form} name='title'>
           <Form.Control>
             {#snippet children({ props })}
-              <div class="grid grid-cols-5 items-center gap-4">
-                <Form.Label class="text-right">Title</Form.Label>
+              <div class='grid grid-cols-5 items-center gap-4'>
+                <Form.Label class='text-right'>Title</Form.Label>
                 <Input
-                  class="col-span-4"
+                  class='col-span-4'
                   placeholder={$t('common.items.add_content.auto_title')}
                   {...props}
                   bind:value={$formData.title}
-                  spellcheck="false"
+                  spellcheck='false'
                 />
               </div>
             {/snippet}
           </Form.Control>
         </Form.Field>
 
-        <Form.Field {form} name="description">
+        <Form.Field {form} name='description'>
           <Form.Control>
             {#snippet children({ props })}
-              <div class="grid grid-cols-5 items-center gap-4">
-                <Form.Label class="text-right">Description</Form.Label>
+              <div class='grid grid-cols-5 items-center gap-4'>
+                <Form.Label class='text-right'>Description</Form.Label>
                 <Input
-                  class="col-span-4"
-                  placeholder="Option"
+                  class='col-span-4'
+                  placeholder='Option'
                   {...props}
                   bind:value={$formData.description}
-                  spellcheck="false"
+                  spellcheck='false'
                 />
               </div>
             {/snippet}
           </Form.Control>
         </Form.Field>
 
-        <Form.Field {form} name="content">
+        <Form.Field {form} name='content'>
           <Form.Control>
-            <div class="grid grid-cols-5 items-center gap-4">
-              <Form.Label class="text-right">Content</Form.Label>
+            <div class='grid grid-cols-5 items-center gap-4'>
+              <Form.Label class='text-right'>Content</Form.Label>
               <Button
-                variant="outline"
-                class="col-span-4"
+                variant='outline'
+                class='col-span-4'
                 onclick={async () => {
                   const res = await action_select_content_dialog();
                   if (!res) {
                     $formData.content = '';
-                  } else {
+                  }
+                  else {
                     $formData.content = res.path;
 
                     if (!$formData.title) {
@@ -121,18 +122,18 @@
           </Form.Control>
         </Form.Field>
 
-        <Form.Field {form} name="thumbnail">
+        <Form.Field {form} name='thumbnail'>
           <Form.Control>
-            <div class="grid grid-cols-5 items-center gap-4">
-              <Form.Label class="text-right">Thumbnail</Form.Label>
+            <div class='grid grid-cols-5 items-center gap-4'>
+              <Form.Label class='text-right'>Thumbnail</Form.Label>
               <Button
-                variant="outline"
-                class="col-span-4"
+                variant='outline'
+                class='col-span-4'
                 onclick={async () => {
                   $formData.thumbnail = (await action_select_thumbnail_dialog())?.path;
                 }}
               >
-                <span class="text-muted-foreground">
+                <span class='text-muted-foreground'>
                   {$formData.thumbnail ? $formData.thumbnail : 'Select Thumbnail (Option)'}
                 </span>
               </Button>
@@ -140,9 +141,9 @@
           </Form.Control>
         </Form.Field>
       </div>
-      <Dialog.Footer class="flex-col items-center">
+      <Dialog.Footer class='flex-col items-center'>
         <FormError {form} />
-        <Button type="submit">Submit</Button>
+        <Button type='submit'>Submit</Button>
       </Dialog.Footer>
     </form>
   </Dialog.Content>

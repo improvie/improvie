@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
   import type { Folder } from '$lib/types/item/index';
   import { FolderIcon, FolderOpenIcon } from 'lucide-svelte';
 
@@ -9,7 +9,7 @@
   }
 </script>
 
-<button onclick={toggle} class="font-medium">
+<button onclick={toggle} class='font-medium'>
   {#if expanded}
     <FolderOpenIcon />
   {:else}

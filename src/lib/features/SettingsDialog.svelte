@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
   import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -39,14 +39,14 @@
 <Dialog.Root bind:open>
   <Dialog.Trigger>
     {#snippet child({ props })}
-      <Button size="sm" {...props}>Open Dialog</Button>
+      <Button size='sm' {...props}>Open Dialog</Button>
     {/snippet}
   </Dialog.Trigger>
-  <Dialog.Content class="overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
-    <Dialog.Title class="sr-only">Settings</Dialog.Title>
-    <Dialog.Description class="sr-only">Customize your settings here.</Dialog.Description>
-    <Sidebar.Provider class="items-start">
-      <Sidebar.Root collapsible="none" class="hidden md:flex">
+  <Dialog.Content class='overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]'>
+    <Dialog.Title class='sr-only'>Settings</Dialog.Title>
+    <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
+    <Sidebar.Provider class='items-start'>
+      <Sidebar.Root collapsible='none' class='hidden md:flex'>
         <Sidebar.Content>
           <Sidebar.Group>
             <Sidebar.GroupContent>
@@ -55,7 +55,7 @@
                   <Sidebar.MenuItem>
                     <Sidebar.MenuButton isActive={item.name === 'Messages & media'}>
                       {#snippet child({ props })}
-                        <a href="##" {...props}>
+                        <a href='##' {...props}>
                           <item.icon />
                           <span>{item.name}</span>
                         </a>
@@ -68,17 +68,17 @@
           </Sidebar.Group>
         </Sidebar.Content>
       </Sidebar.Root>
-      <main class="flex h-[480px] flex-1 flex-col overflow-hidden">
+      <main class='flex h-[480px] flex-1 flex-col overflow-hidden'>
         <header
-          class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+          class='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'
         >
-          <div class="flex items-center gap-2 px-4">
+          <div class='flex items-center gap-2 px-4'>
             <Breadcrumb.Root>
               <Breadcrumb.List>
-                <Breadcrumb.Item class="hidden md:block">
-                  <Breadcrumb.Link href="#">Settings</Breadcrumb.Link>
+                <Breadcrumb.Item class='hidden md:block'>
+                  <Breadcrumb.Link href='#'>Settings</Breadcrumb.Link>
                 </Breadcrumb.Item>
-                <Breadcrumb.Separator class="hidden md:block" />
+                <Breadcrumb.Separator class='hidden md:block' />
                 <Breadcrumb.Item>
                   <Breadcrumb.Page>Messages & media</Breadcrumb.Page>
                 </Breadcrumb.Item>
@@ -86,9 +86,9 @@
             </Breadcrumb.Root>
           </div>
         </header>
-        <div class="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
+        <div class='flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0'>
           {#each Array.from({ length: 10 }) as _, i (i)}
-            <div class="bg-muted/50 aspect-video max-w-3xl rounded-xl"></div>
+            <div class='bg-muted/50 aspect-video max-w-3xl rounded-xl'></div>
           {/each}
         </div>
       </main>

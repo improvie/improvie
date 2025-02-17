@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
@@ -21,13 +21,13 @@
   <Sidebar.MenuItem>
     {#each types as [name, Icon, path]}
       <Sidebar.MenuButton
-        isActive={page.url.pathname == path}
+        isActive={page.url.pathname === path}
         onclick={() => {
           goto(path);
         }}
       >
         <Icon></Icon>
-        <span class="capitalize">{name}</span>
+        <span class='capitalize'>{name}</span>
       </Sidebar.MenuButton>
     {/each}
   </Sidebar.MenuItem>

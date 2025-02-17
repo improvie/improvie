@@ -1,5 +1,6 @@
+import type { Writable } from 'svelte/store';
 import { invoke } from '@tauri-apps/api/core';
-import { type Writable, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 export const favoritePlaylists: Writable<string[]> = writable([]);
 
@@ -10,12 +11,12 @@ export async function initFavoritePlaylist() {
 
 export async function addFavoritePlaylist(id: string) {
   await invoke('add_favorite_playlist', { id });
-  favoritePlaylists.update((ids) => [...ids, id]);
+  favoritePlaylists.update(ids => [...ids, id]);
 }
 
 export async function removeFavoritePlaylist(id: string) {
   await invoke('remove_favorite_playlist', { id });
-  favoritePlaylists.update((ids) => ids.filter((i) => i !== id));
+  favoritePlaylists.update(ids => ids.filter(i => i !== id));
 }
 
 // TODO: use this

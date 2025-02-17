@@ -1,44 +1,14 @@
-import { includeIgnoreFile } from '@eslint/compat';
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
-import svelte from 'eslint-plugin-svelte';
-import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import ts from 'typescript-eslint';
+import antfu from '@antfu/eslint-config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const gitignorePath = path.resolve(__dirname, '.gitignore');
-
-export default ts.config(
-  includeIgnoreFile(gitignorePath),
-  {
-    ignores: ['src-tauri/target/**', 'src/lib/components/ui'],
+export default antfu({
+  ignores: ['src-tauri', 'src/lib/components/ui', 'src/lib/hooks'],
+  stylistic: {
+    indent: 2,
+    semi: true,
+    quotes: 'single',
   },
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  ...svelte.configs['flat/recommended'],
-  prettier,
-  ...svelte.configs['flat/prettier'],
-  {
-    rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
+  rules: {
+    'import/no-self-import': 'off',
   },
-  {
-    files: ['**/*.svelte'],
-
-    languageOptions: {
-      parserOptions: {
-        parser: ts.parser,
-      },
-    },
-  },
-);
+  svelte: true,
+});

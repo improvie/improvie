@@ -1,13 +1,13 @@
-<script lang="ts">
+<script lang='ts'>
   import { contents } from '$lib/stores/items/content';
   import { FileMusicIcon } from 'lucide-svelte';
 
-  let { content_id }: { content_id: string } = $props();
+  const { content_id }: { content_id: string } = $props();
 
-  let content = $derived($contents.get(content_id));
+  const content = $derived($contents.get(content_id));
 </script>
 
-{#if content != undefined}
+{#if content !== undefined}
   <span><FileMusicIcon /> {content_id}</span>
 {/if}
 

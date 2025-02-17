@@ -16,4 +16,5 @@ const config = {
   ],
 };
 
+// eslint-disable-next-line new-cap
 export const { t, locale, locales, loading, loadTranslations } = new i18n(config);

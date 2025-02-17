@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { useSidebar } from '$lib/components/ui/sidebar/index.js';
@@ -15,13 +15,15 @@
   initFavoritePlaylist();
 
   const favorites = derived(favoritePlaylists, ($favoritePlaylists) => {
-    return $favoritePlaylists.map((id) => getPlaylist(id)).filter((v) => v != undefined);
+    return $favoritePlaylists
+      .map(id => getPlaylist(id))
+      .filter(v => v !== undefined);
   });
 
   const sidebar = useSidebar();
 </script>
 
-<Sidebar.Group class="group-data-[collapsible=icon]:hidden">
+<Sidebar.Group class='group-data-[collapsible=icon]:hidden'>
   <Sidebar.GroupLabel>Favorites</Sidebar.GroupLabel>
   <Sidebar.Menu>
     {#each $favorites as playlist}
@@ -33,11 +35,11 @@
           <DropdownMenu.Trigger>
             <Sidebar.MenuAction showOnHover>
               <Ellipsis />
-              <span class="sr-only">More</span>
+              <span class='sr-only'>More</span>
             </Sidebar.MenuAction>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
-            class="w-56 rounded-lg"
+            class='w-56 rounded-lg'
             side={sidebar.isMobile ? 'bottom' : 'right'}
             align={sidebar.isMobile ? 'end' : 'start'}
           >
@@ -46,7 +48,7 @@
                 await removeFavoritePlaylist(playlist.id);
               }}
             >
-              <StarOff class="text-muted-foreground" />
+              <StarOff class='text-muted-foreground' />
               <span>Remove from Favorites</span>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
@@ -54,7 +56,7 @@
       </Sidebar.MenuItem>
     {:else}
       <Sidebar.MenuItem>
-        <Sidebar.MenuButton class="text-sidebar-foreground/70" aria-disabled>
+        <Sidebar.MenuButton class='text-sidebar-foreground/70' aria-disabled>
           <span>Empty</span>
         </Sidebar.MenuButton>
       </Sidebar.MenuItem>

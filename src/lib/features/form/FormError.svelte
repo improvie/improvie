@@ -1,15 +1,16 @@
-<script lang="ts" module>
+<script lang='ts' module>
   import type { FormPath as _FormPath } from 'sveltekit-superforms';
+
   type T = Record<string, unknown>;
   type U = _FormPath<T>;
 </script>
 
-<script lang="ts" generics="T extends Record<string, unknown>, U extends _FormPath<T>">
+<script lang='ts' generics='T extends Record<string, unknown>, U extends _FormPath<T>'>
   import type { FsSuperForm } from 'formsnap';
   import type { ClassValue } from 'svelte/elements';
   import { cn } from '$lib/utils';
 
-  let {
+  const {
     form,
     class: className,
   }: {
@@ -17,7 +18,7 @@
     class?: ClassValue | undefined | null;
   } = $props();
 
-  let allErrors = $derived(form.allErrors);
+  const allErrors = $derived(form.allErrors);
 </script>
 
 {#if $allErrors.length}

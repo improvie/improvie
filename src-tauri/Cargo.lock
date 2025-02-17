@@ -2703,9 +2703,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc2fcdc6955c147acaeac2fc44f4b47ca5577e901a0eaf8869a0ccc3c6a60ac8"
+checksum = "8792f49cbdfbdef19aee78dfa45886a76ecfce223cf1709ceda0cc211e40e79b"
 dependencies = [
  "cfg-if",
  "more-convert-derive",

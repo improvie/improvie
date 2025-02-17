@@ -1,4 +1,6 @@
 {
   "welcome": "improvieアプリへようこそ！",
-  "items.import.auto_title": "import時に空ならfilenameが付けられます"
+  "items.add_content.no_title": "タイトルは必須です",
+  "items.add_content.no_content": "コンテントは必須です",
+  "items.add_content.auto_title": "コンテント選択時に空ならファイル名が付けられます"
 }

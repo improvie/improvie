@@ -15,6 +15,7 @@ log.workspace = true
 itertools.workspace = true
 more-convert.workspace = true
 cfg-if.workspace = true
+tauri-plugin-dialog.workspace = true
 
 [dev-dependencies]
 tauri = { workspace = true, features = ["test"] }

@@ -32,12 +32,12 @@ serde_json.workspace = true
 log.workspace = true
 
 tauri.workspace = true
+tauri-plugin-dialog.workspace = true
 
 # tauri plugin and config
 tauri-plugin-opener = "=2.2.5"
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "=2.2.1"
-tauri-plugin-dialog = "=2.2.0"
 
 [workspace]
 resolver = "2"
@@ -56,6 +56,7 @@ improvie-logic = { path = "improvie-logic" }
 
 # tauri
 tauri = { version = "=2.2.5", features = [] }
+tauri-plugin-dialog = "=2.2.0"
 
 # async/concurrency/parallelism
 tokio = { version = "=1.43.0", features = ["full"] }

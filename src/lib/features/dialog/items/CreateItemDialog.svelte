@@ -1,101 +1,149 @@
 <script lang="ts">
+  import {
+    action_select_content_dialog,
+    action_select_thumbnail_dialog,
+  } from '$lib/action/dialog/file';
   import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { open } from '@tauri-apps/plugin-dialog';
-  import { Label } from '$lib/components/ui/label/index.js';
+  import FormError from '$lib/features/form/FormError.svelte';
   import { t } from '$lib/translations/translations';
+  import { debug } from '@tauri-apps/plugin-log';
   import { ImportIcon } from 'lucide-svelte';
+  import { defaults, superForm } from 'sveltekit-superforms';
+  import { zod } from 'sveltekit-superforms/adapters';
+  import { z } from 'zod';
 
-  let title_value: string = $state('');
-  let description_value: string | null = $state(null);
-  let file_value: string | null = $state(null);
-  let thumbnail_path: string | null = $state(null);
+  let open = $state(false);
 
-  async function submit() {
-    // TODO: call create_content function
-  }
+  const formSchema = z.object({
+    title: z.string().nonempty($t('common.items.add_content.no_title')),
+    description: z.string().optional(),
+    content: z.string().nonempty($t('common.items.add_content.no_content')),
+    thumbnail: z.string().optional(),
+  });
 
-  async function select_file() {
-    const file = await open({
-      title: 'Audio or Video',
-      multiple: false,
-      directory: false,
-      filters: [
-        {
-          name: 'Audio or Video',
-          extensions: ['mp4', 'mp3', 'wav'],
-        },
-      ],
-    });
-    file_value = file;
-    if (file != null && title_value == '') {
-      title_value = file.replace(/^.*[\\/]/, '');
+  const form = superForm(defaults(zod(formSchema)), {
+    SPA: true,
+    validators: zod(formSchema),
+    resetForm: false,
+  });
+
+  const { form: formData, enhance, validateForm } = form;
+
+  $effect(() => {
+    if (!open) {
+      form.reset();
     }
-  }
+  });
 
-  async function select_thumbnail() {
-    thumbnail_path = await open({
-      title: 'Image',
-      multiple: false,
-      directory: false,
-      filters: [
-        {
-          name: 'Image',
-          extensions: ['png', 'jpeg', 'gif'],
-        },
-      ],
-    });
+  async function handleSubmit(event: Event) {
+    event.preventDefault();
+    const result = await validateForm();
+
+    if (!result.valid) {
+      return;
+    }
+
+    debug(`Form data: ${JSON.stringify($formData)}`);
   }
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
   <Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
     <ImportIcon class="mr-2 size-4" />Add Item
   </Dialog.Trigger>
   <Dialog.Content>
-    <Dialog.Header>
-      <Dialog.Title>Add Item</Dialog.Title>
-      <Dialog.Description>Import audio or video</Dialog.Description>
-    </Dialog.Header>
-    <div class="grid gap-4 py-4">
-      <div class="grid grid-cols-5 items-center gap-4">
-        <Label for="title" class="text-right">Title</Label>
-        <Input
-          spellcheck="false"
-          id="title"
-          bind:value={title_value}
-          placeholder={$t('common.items.import.auto_title')}
-          class="col-span-4"
-        />
-      </div>
-      <div class="grid grid-cols-5 items-center gap-4">
-        <Label for="description" class="text-right">Description</Label>
-        <Input
-          spellcheck="false"
-          id="description"
-          bind:value={description_value}
-          placeholder="Option"
-          class="col-span-4"
-        />
-      </div>
+    <form method="POST" use:enhance onsubmit={handleSubmit}>
+      <Dialog.Header>
+        <Dialog.Title>Add Item</Dialog.Title>
+        <Dialog.Description>Import audio or video</Dialog.Description>
+      </Dialog.Header>
+      <div class="grid gap-4 py-4">
+        <Form.Field {form} name="title">
+          <Form.Control>
+            {#snippet children({ props })}
+              <div class="grid grid-cols-5 items-center gap-4">
+                <Form.Label class="text-right">Title</Form.Label>
+                <Input
+                  class="col-span-4"
+                  placeholder={$t('common.items.add_content.auto_title')}
+                  {...props}
+                  bind:value={$formData.title}
+                  spellcheck="false"
+                />
+              </div>
+            {/snippet}
+          </Form.Control>
+        </Form.Field>
 
-      <div class="grid grid-cols-5 items-center gap-4">
-        <Label for="file" class="text-right">File</Label>
-        <Button variant="outline" id="file" class="col-span-4" onclick={() => select_file()}>
-          {file_value ? file_value : 'Select file'}
-        </Button>
-      </div>
+        <Form.Field {form} name="description">
+          <Form.Control>
+            {#snippet children({ props })}
+              <div class="grid grid-cols-5 items-center gap-4">
+                <Form.Label class="text-right">Description</Form.Label>
+                <Input
+                  class="col-span-4"
+                  placeholder="Option"
+                  {...props}
+                  bind:value={$formData.description}
+                  spellcheck="false"
+                />
+              </div>
+            {/snippet}
+          </Form.Control>
+        </Form.Field>
 
-      <div class="grid grid-cols-5 items-center gap-4">
-        <Label for="file" class="text-right">Thumbnail</Label>
-        <Button variant="outline" id="file" class="col-span-4" onclick={() => select_thumbnail()}>
-          {thumbnail_path ? thumbnail_path : 'Select Thumbnail (Option)'}
-        </Button>
+        <Form.Field {form} name="content">
+          <Form.Control>
+            <div class="grid grid-cols-5 items-center gap-4">
+              <Form.Label class="text-right">Content</Form.Label>
+              <Button
+                variant="outline"
+                class="col-span-4"
+                onclick={async () => {
+                  const res = await action_select_content_dialog();
+                  if (!res) {
+                    $formData.content = '';
+                  } else {
+                    $formData.content = res.path;
+
+                    if (!$formData.title) {
+                      $formData.title = res.name;
+                    }
+                  }
+                }}
+              >
+                {$formData.content ? $formData.content : 'Select content'}
+              </Button>
+            </div>
+          </Form.Control>
+        </Form.Field>
+
+        <Form.Field {form} name="thumbnail">
+          <Form.Control>
+            <div class="grid grid-cols-5 items-center gap-4">
+              <Form.Label class="text-right">Thumbnail</Form.Label>
+              <Button
+                variant="outline"
+                class="col-span-4"
+                onclick={async () => {
+                  $formData.thumbnail = (await action_select_thumbnail_dialog())?.path;
+                }}
+              >
+                <span class="text-muted-foreground">
+                  {$formData.thumbnail ? $formData.thumbnail : 'Select Thumbnail (Option)'}
+                </span>
+              </Button>
+            </div>
+          </Form.Control>
+        </Form.Field>
       </div>
-    </div>
-    <Dialog.Footer>
-      <Button type="submit" onclick={async () => await submit()}>Submit</Button>
-    </Dialog.Footer>
+      <Dialog.Footer class="flex-col items-center">
+        <FormError {form} />
+        <Button type="submit">Submit</Button>
+      </Dialog.Footer>
+    </form>
   </Dialog.Content>
 </Dialog.Root>

@@ -7,7 +7,7 @@ export async function action_get_contents(): Promise<Content[]> {
   return contents;
 }
 
-export async function action_create_contents(data: CreateContent): Promise<Content> {
-  const content = await invoke<Content>('create_contents', data);
+export async function action_create_content(data: CreateContent): Promise<Content> {
+  const content = await invoke<Content>('create_content', { dto: data });
   return content;
 }

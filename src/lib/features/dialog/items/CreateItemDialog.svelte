@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import type { CreateContent } from '$lib/types/item/create';
   import {
     action_select_content_dialog,
     action_select_thumbnail_dialog,
@@ -8,14 +9,17 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import FormError from '$lib/features/form/FormError.svelte';
+  import { current_folder_ids } from '$lib/stores/items';
+  import { create_content } from '$lib/stores/items/content';
   import { t } from '$lib/translations/translations';
-  import { debug } from '@tauri-apps/plugin-log';
   import { ImportIcon } from 'lucide-svelte';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
 
   let open = $state(false);
+
+  let content_kind: 'Audio' | 'Video' | undefined = $state();
 
   const formSchema = z.object({
     title: z.string().nonempty($t('common.items.add_content.no_title')),
@@ -42,11 +46,21 @@
     event.preventDefault();
     const result = await validateForm();
 
-    if (!result.valid) {
+    if (!result.valid || content_kind === undefined) {
       return;
     }
 
-    debug(`Form data: ${JSON.stringify($formData)}`);
+    const req: CreateContent = {
+      title: $formData.title,
+      description: $formData.description,
+      content_path: $formData.content,
+      thumbnail_path: $formData.thumbnail,
+      parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
+      kind: content_kind,
+      sort_order: 1,
+    };
+
+    await create_content(req);
   }
 </script>
 
@@ -106,9 +120,11 @@
                   const res = await action_select_content_dialog();
                   if (!res) {
                     $formData.content = '';
+                    content_kind = undefined;
                   }
                   else {
                     $formData.content = res.path;
+                    content_kind = res.kind;
 
                     if (!$formData.title) {
                       $formData.title = res.name;

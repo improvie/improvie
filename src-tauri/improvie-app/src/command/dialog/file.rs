@@ -1,14 +1,14 @@
 use tauri::{AppHandle, Runtime};
 use tauri_plugin_dialog::DialogExt;
 
-use crate::model::dialog::FileDialogResponse;
+use crate::model::dialog::{FileDialogResponse, NotAllowUrlOnFileDialog};
 
 // TODO: check when paste an online url on windows
 
 #[tauri::command]
 pub async fn open_select_content_dialog<R: Runtime>(
     app: AppHandle<R>,
-) -> Option<FileDialogResponse> {
+) -> Result<Option<FileDialogResponse>, NotAllowUrlOnFileDialog> {
     let path = app
         .dialog()
         .file()
@@ -16,13 +16,13 @@ pub async fn open_select_content_dialog<R: Runtime>(
         .add_filter("Audio or Video", &["mp3", "wav", "mp4"])
         .blocking_pick_file();
 
-    path.map(FileDialogResponse::new)
+    path.map(FileDialogResponse::new).transpose()
 }
 
 #[tauri::command]
 pub async fn open_select_thumbnail_dialog<R: Runtime>(
     app: AppHandle<R>,
-) -> Option<FileDialogResponse> {
+) -> Result<Option<FileDialogResponse>, NotAllowUrlOnFileDialog> {
     let path = app
         .dialog()
         .file()
@@ -30,5 +30,5 @@ pub async fn open_select_thumbnail_dialog<R: Runtime>(
         .add_filter("Image", &["png", "jpeg", "gif"])
         .blocking_pick_file();
 
-    path.map(FileDialogResponse::new)
+    path.map(FileDialogResponse::new).transpose()
 }

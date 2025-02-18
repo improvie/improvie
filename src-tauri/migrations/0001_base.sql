@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS folders (
 
 CREATE TABLE IF NOT EXISTS contents (
     item_id uuid NOT NULL,
-    seconds int unsigned NOT NULL,
     kind tinyint unsigned NOT NULL,
     content_path text NOT NULL,
     thumbnail_path text DEFAULT NULL,

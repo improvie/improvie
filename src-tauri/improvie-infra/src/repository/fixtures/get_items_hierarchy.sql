@@ -7,10 +7,10 @@ INSERT INTO items (id, title, kind, created_at) VALUES
 INSERT INTO folders (item_id) VALUES
 ('00000000-0000-0000-0000-000000000002');
 
-INSERT INTO contents (item_id, seconds, kind, content_path) VALUES
-('00000000-0000-0000-0000-000000000003', 300, 2, 'content/a.txt'),
-('00000000-0000-0000-0000-000000000004', 500, 2, 'content/b.txt'),
-('00000000-0000-0000-0000-000000000005', 200, 2, 'sub/file.txt');
+INSERT INTO contents (item_id, kind, content_path) VALUES
+('00000000-0000-0000-0000-000000000003', 2, 'content/a.txt'),
+('00000000-0000-0000-0000-000000000004', 2, 'content/b.txt'),
+('00000000-0000-0000-0000-000000000005', 2, 'sub/file.txt');
 
 INSERT INTO hierarchical_items (parent_folder_id, child_id, sort_order, created_at) VALUES
 ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000002', 2, '2025-01-01 10:00:00'),

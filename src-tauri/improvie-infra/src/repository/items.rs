@@ -83,7 +83,7 @@ FROM folder_hierarchy
             "
 SELECT 
     i.id, i.title, i.description, i.created_at,
-    c.seconds, c.kind, c.content_path, c.thumbnail_path
+    c.kind, c.content_path, c.thumbnail_path
 FROM contents AS c
 INNER JOIN items AS i ON c.item_id = i.id
 ",
@@ -161,11 +161,6 @@ VALUES
     }
 
     async fn create_content(&self, model: CreateContentModel) -> AppResult<Content> {
-        let context = ffmpeg_next::format::input(&model.content_path)
-            .map_err(|_| AppError::Invalid("content_path", model.content_path.clone()))?;
-
-        let seconds = context.duration() as f64 / f64::from(ffmpeg_next::ffi::AV_TIME_BASE);
-
         let content = Content {
             item: Item {
                 id: Uuid::now(),
@@ -173,7 +168,6 @@ VALUES
                 description: model.item.description,
                 created_at: Utc::now(),
             },
-            seconds: seconds.round() as u32,
             kind: model.kind,
             content_path: model.content_path,
             thumbnail_path: model.thumbnail_path,
@@ -195,10 +189,9 @@ VALUES
         tx_check!(item_result, tx);
 
         let content_result = sqlx::query(
-            "INSERT INTO contents (item_id, seconds, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO contents (item_id, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?, ?)"
         )
         .bind(content.item.id)
-        .bind(content.seconds)
         .bind(content.kind)
         .bind(&content.content_path)
         .bind(&content.thumbnail_path)

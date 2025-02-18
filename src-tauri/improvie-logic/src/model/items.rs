@@ -16,7 +16,6 @@ pub struct Content {
     #[serde(flatten)]
     pub item: Item,
 
-    pub seconds: u32,
     pub kind: ContentKind,
     pub content_path: String,
     pub thumbnail_path: Option<String>,

@@ -2255,6 +2255,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-plugin-dialog",
+ "thiserror 2.0.11",
 ]
 
 [[package]]
@@ -2706,9 +2707,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8792f49cbdfbdef19aee78dfa45886a76ecfce223cf1709ceda0cc211e40e79b"
+checksum = "d47ac8ebc83f45416399c0957841fbe6de735ddf0f9f788fdf55d316e05bdf50"
 dependencies = [
  "cfg-if",
  "more-convert-derive",
@@ -2718,9 +2719,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert-derive"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "78c660b5890da2d4b5bb7f4b05a46b0af4e8fadca21acbeebf92e860fb2f5f2b"
+checksum = "3b696052ecc41558d12395cab7964785d36872496ccc22b8cbbfb85f891a9fd4"
 dependencies = [
  "more-convert-derive-internal",
  "syn 2.0.98",
@@ -2728,9 +2729,9 @@ dependencies = [
 
 [[package]]
 name = "more-convert-derive-internal"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79279094ec9642408a82b85f665c0519cbfca091459a86c8bf86cb21a15ce79b"
+checksum = "5d4cc674b23567cbd0e4a3eaa0f4cc171aab5ef08db1eb5b5372bb983d874a67"
 dependencies = [
  "ident_case",
  "proc-macro2",
@@ -5302,9 +5303,9 @@ dependencies = [
 
 [[package]]
 name = "tempfile"
-version = "3.17.0"
+version = "3.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a40f762a77d2afa88c2d919489e390a12bdd261ed568e60cfa7e48d4e20f0d33"
+checksum = "22e5a0acb1f3f55f65cc4a866c361b2fb2a0ff6366785ae6fbb5f85df07ba230"
 dependencies = [
  "cfg-if",
  "fastrand",
@@ -5801,9 +5802,9 @@ dependencies = [
 
 [[package]]
 name = "uuid-macro-internal"
-version = "1.13.1"
+version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d28dd23acb5f2fa7bd2155ab70b960e770596b3bb6395119b40476c3655dfba4"
+checksum = "f02e7142329d47ebfcb5fc40e357b867f971230181e6f78744e52d9325d8f052"
 dependencies = [
  "proc-macro2",
  "quote",

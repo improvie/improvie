@@ -6,7 +6,6 @@ export interface Item {
 }
 
 export interface Content extends Item {
-  seconds: number;
   kind: ContentKind;
   content_path: string;
   thumbnail_path: string | undefined;

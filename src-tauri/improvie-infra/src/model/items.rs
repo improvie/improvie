@@ -7,6 +7,13 @@ use improvie_logic::{
 use more_convert::Convert;
 
 #[derive(sqlx::FromRow, Debug)]
+pub struct CurrentNodeRaw {
+    pub child_id: Uuid,
+    pub child_kind: ItemKind,
+    pub sort_order: u32,
+}
+
+#[derive(sqlx::FromRow, Debug)]
 pub struct NodeRaw {
     pub parent_folder_id: Uuid,
     pub child_id: Uuid,

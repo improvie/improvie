@@ -12,7 +12,7 @@ use improvie_logic::{
 };
 use more_convert::VecInto;
 
-use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
+use crate::model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw};
 
 use super::{def_repository_impl, tx_check};
 
@@ -20,7 +20,48 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    async fn get_items_hierarchy(&self, folder_id: Uuid) -> AppResult<HashMap<Uuid, FolderNode>> {
+    async fn get_items_hierarchy_current(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+        let rows = sqlx::query_as::<_, CurrentNodeRaw>(
+            "
+SELECT 
+    hi.child_id, i.kind AS child_kind, hi.sort_order
+FROM hierarchical_items AS hi
+INNER JOIN items AS i ON i.id = hi.child_id
+WHERE hi.parent_folder_id = ?
+",
+        )
+        .bind(folder_id)
+        .fetch_all(&self.db.pool())
+        .await?;
+
+        let mut items: Vec<ItemNode> = vec![];
+        for row in rows {
+            match row.child_kind {
+                ItemKind::Folder => {
+                    items.push(ItemNode::Folder {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
+                ItemKind::Content => {
+                    items.push(ItemNode::Content {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
+            }
+        }
+
+        Ok(FolderNode {
+            folder: folder_id,
+            items,
+        })
+    }
+
+    async fn get_items_hierarchy_loop(
+        &self,
+        folder_id: Uuid,
+    ) -> AppResult<HashMap<Uuid, FolderNode>> {
         let rows = sqlx::query_as::<_, NodeRaw>(
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
@@ -242,7 +283,7 @@ mod tests {
     #[sqlx::test(migrator = "MIGRATOR", fixtures("get_items_hierarchy"))]
     fn get_items_hierarchy(pool: sqlx::SqlitePool) {
         let repo = ItemsRepositoryImpl::new(DbPool::with_pool(pool));
-        let res = repo.get_items_hierarchy(Uuid::nil()).await.unwrap();
+        let res = repo.get_items_hierarchy_loop(Uuid::nil()).await.unwrap();
         let mut map = HashMap::new();
         map.insert(
             Uuid::nil(),

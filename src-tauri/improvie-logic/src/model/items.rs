@@ -3,7 +3,7 @@ use sqlx::types::chrono::{DateTime, Utc};
 
 use crate::{constant::items::ContentKind, Uuid};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Item {
     pub id: Uuid,
     pub title: String,
@@ -11,7 +11,7 @@ pub struct Item {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Content {
     #[serde(flatten)]
     pub item: Item,

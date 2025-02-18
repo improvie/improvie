@@ -27,7 +27,8 @@ export interface FolderNode {
   items: ItemNode[];
 }
 
-export type ItemNode = ({ type: 'Content' } | { type: 'Folder' }) & {
+export interface ItemNode {
+  kind: ItemKind;
   id: string;
   sort_order: number;
 };

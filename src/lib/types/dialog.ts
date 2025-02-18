@@ -1,3 +1,5 @@
+import type { ContentKind } from './item';
+
 export type FileDialogResponse =
   | undefined
   | {
@@ -5,5 +7,5 @@ export type FileDialogResponse =
     name: string;
   };
 
-export type ContentFileDialogResponse = FileDialogResponse & { kind: 'Audio' | 'Video' };
+export type ContentFileDialogResponse = FileDialogResponse & { kind: ContentKind };
 export type ImageFileDialogResponse = FileDialogResponse & { kind: 'Image' };

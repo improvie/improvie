@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import type { ContentKind } from '$lib/types/item';
   import type { CreateContent } from '$lib/types/item/create';
   import {
     action_select_content_dialog,
@@ -19,7 +20,7 @@
 
   let open = $state(false);
 
-  let content_kind: 'Audio' | 'Video' | undefined = $state();
+  let content_kind: ContentKind | undefined = $state();
 
   const formSchema = z.object({
     title: z.string().nonempty($t('common.items.add_content.no_title')),

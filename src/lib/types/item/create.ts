@@ -1,3 +1,5 @@
+import type { ContentKind } from '.';
+
 export interface CreateBaseItem {
   parent_folder_id: string;
   sort_order: number;
@@ -9,7 +11,7 @@ export interface CreateBaseItem {
 export type CreateFolder = CreateBaseItem & {};
 
 export type CreateContent = CreateBaseItem & {
-  kind: 'Video' | 'Audio';
+  kind: ContentKind;
   content_path: string;
   thumbnail_path: string | undefined;
 };

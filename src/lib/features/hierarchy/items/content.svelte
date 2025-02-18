@@ -8,5 +8,8 @@
 </script>
 
 {#if content !== undefined}
-  <span><FileMusicIcon /> {content_id}</span>
+  <div class='flex'>
+    <FileMusicIcon />
+    <span>{content.title}</span>
+  </div>
 {/if}

@@ -60,7 +60,13 @@
       sort_order: 1,
     };
 
-    await create_content(req);
+    try {
+      await create_content(req);
+      open = false;
+    }
+    catch (e) {
+      console.error(e);
+    }
   }
 </script>
 

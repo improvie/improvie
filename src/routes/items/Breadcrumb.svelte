@@ -16,7 +16,6 @@
         {#if folder === undefined}
           <Breadcrumb.Ellipsis />
         {:else}
-          <!-- class="text-foreground truncate max-w-20" -->
           <button
             class='truncate max-w-20'
             onclick={() => {

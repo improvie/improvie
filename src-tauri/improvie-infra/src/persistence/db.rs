@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{fs::OpenOptions, path::PathBuf};
 
 use improvie_logic::{AppError, AppResult};
 use sqlx::SqlitePool;
@@ -17,7 +17,11 @@ impl DbPool {
     pub async fn new(data_dir: PathBuf) -> AppResult<Self> {
         std::fs::create_dir_all(&data_dir)?;
         let join = data_dir.join("data.sql");
-        std::fs::File::create(&join)?;
+        OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .open(&join)?;
         match join.to_str() {
             Some(path) => {
                 let connect = SqlitePool::connect(path).await?;

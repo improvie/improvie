@@ -157,6 +157,8 @@ VALUES
 
         tx_check!(hierarchy_result, tx);
 
+        tx.commit().await?;
+
         Ok(folder)
     }
 
@@ -189,7 +191,7 @@ VALUES
         tx_check!(item_result, tx);
 
         let content_result = sqlx::query(
-            "INSERT INTO contents (item_id, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO contents (item_id, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?)"
         )
         .bind(content.item.id)
         .bind(content.kind)
@@ -215,6 +217,8 @@ VALUES
         .await;
 
         tx_check!(hierarchy_result, tx);
+
+        tx.commit().await?;
 
         Ok(content)
     }

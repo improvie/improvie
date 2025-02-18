@@ -23,7 +23,7 @@
         {#if child.type === 'Folder'}
           <HierarchyFolder folder_id={child.id} />
         {:else if child.type === 'Content'}
-          <HierarchyContent content_id={child.id} /> -->
+          <HierarchyContent content_id={child.id} />
         {/if}
       {:else}
         <p>Empty</p>

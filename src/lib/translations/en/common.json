@@ -1,4 +1,6 @@
 {
   "welcome": "Welcome to improvie App!",
+  "items.add_content.no_title": "Title is required.",
+  "items.add_content.no_content": "Content is required.",
   "items.import.auto_title": "If empty at import time, filename will be added."
 }

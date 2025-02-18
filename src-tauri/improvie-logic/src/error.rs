@@ -49,7 +49,7 @@ mod macros {
         ($error:ident) => {
             impl $crate::DynAppError for $error {
                 fn error_kind(&self) -> &'static str {
-                    stringify!($kind)
+                    stringify!($error)
                 }
             }
         };

@@ -243,6 +243,20 @@ VALUES
 
         tx_check!(content_result, tx);
 
+        let shift_result = sqlx::query(
+            "
+UPDATE hierarchical_items
+SET sort_order = sort_order + 1
+WHERE parent_folder_id = ? AND sort_order >= ?
+",
+        )
+        .bind(model.item.parent_folder_id)
+        .bind(model.item.sort_order)
+        .execute(&mut *tx)
+        .await;
+
+        shift_result?;
+
         let hierarchy_result = sqlx::query(
             "
 INSERT INTO hierarchical_items 

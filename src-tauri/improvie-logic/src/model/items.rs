@@ -49,7 +49,7 @@ pub struct FolderNode {
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
-#[serde(tag = "type")]
+#[serde(tag = "kind")]
 pub enum ItemNode {
     Folder { id: Uuid, sort_order: u32 },
     Content { id: Uuid, sort_order: u32 },

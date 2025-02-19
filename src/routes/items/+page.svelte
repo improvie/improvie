@@ -24,9 +24,9 @@
     <Separator class='my-2' />
     <div class='px-2'>
       {#each node as child}
-        {#if child.type === 'Folder'}
+        {#if child.kind === 'Folder'}
           <HierarchyFolder folder_id={child.id} />
-        {:else if child.type === 'Content'}
+        {:else if child.kind === 'Content'}
           <HierarchyContent content_id={child.id} />
         {/if}
       {:else}

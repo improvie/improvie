@@ -45,20 +45,29 @@ where
 
 mod macros {
     #[macro_export]
-    macro_rules! impl_unit_dyn_app_error {
-        ($error:ident) => {
-            impl $crate::DynAppError for $error {
+    macro_rules! def_unit_dyn_app_error {
+        (
+            $(#[$attr:meta])*
+            $vis:vis struct $ident:ident = $error:literal;
+        ) => {
+            #[derive(Debug)] $(#[$($attr)*])*
+            $vis struct $ident;
+
+            impl $crate::DynAppError for $ident {
                 fn error_kind(&self) -> &'static str {
-                    stringify!($error)
+                    stringify!($ident)
                 }
             }
-        };
-        ($error:ident, $kind:literal) => {
-            impl $crate::DynAppError for $error {
-                fn error_kind(&self) -> &'static str {
-                    $kind
+
+            impl std::error::Error for $ident {}
+
+            impl std::fmt::Display for $ident {
+                fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                    formatter.write_str($error)
                 }
             }
+
+            $crate::impl_serialize_for_dyn_app_error!($ident);
         };
     }
 

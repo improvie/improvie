@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 
-use improvie_logic::{serializeble_dyn_app_error, unit_dyn_app_error};
+use improvie_logic::{impl_serialize_for_dyn_app_error, impl_unit_dyn_app_error};
 use tauri_plugin_dialog::FilePath;
 
 #[derive(Debug, thiserror::Error)]
 #[error("Not allow url on file dialog")]
 pub struct NotAllowUrlOnFileDialog;
 
-unit_dyn_app_error!(NotAllowUrlOnFileDialog);
-serializeble_dyn_app_error!(NotAllowUrlOnFileDialog);
+impl_unit_dyn_app_error!(NotAllowUrlOnFileDialog);
+impl_serialize_for_dyn_app_error!(NotAllowUrlOnFileDialog);
 
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub enum FileDialogKind {

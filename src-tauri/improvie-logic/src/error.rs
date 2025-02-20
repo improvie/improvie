@@ -20,7 +20,7 @@ pub enum AppError {
     Io(#[from] std::io::Error),
 }
 
-crate::serializeble_dyn_app_error!(AppError);
+crate::impl_serialize_for_dyn_app_error!(AppError);
 
 pub trait DynAppError: std::error::Error + Send + Sync + 'static {
     fn error_kind(&self) -> &'static str;
@@ -45,7 +45,7 @@ where
 
 mod macros {
     #[macro_export]
-    macro_rules! unit_dyn_app_error {
+    macro_rules! impl_unit_dyn_app_error {
         ($error:ident) => {
             impl $crate::DynAppError for $error {
                 fn error_kind(&self) -> &'static str {
@@ -63,7 +63,7 @@ mod macros {
     }
 
     #[macro_export]
-    macro_rules! serializeble_dyn_app_error {
+    macro_rules! impl_serialize_for_dyn_app_error {
         ($error:ident) => {
             impl serde::Serialize for $error {
                 fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

@@ -21,9 +21,9 @@
     <ul transition:slide={{ duration: 300 }}>
       {#each children as child}
         <li>
-          {#if child.type === 'Folder'}
+          {#if child.kind === 'Folder'}
             <Self folder_id={child.id} />
-          {:else if child.type === 'Content'}
+          {:else if child.kind === 'Content'}
             <TreeContent content_id={child.id} /> -->
           {/if}
         </li>

@@ -6,7 +6,12 @@ members = [
     "src-tauri/improvie-logic",
     "src-tauri/improvie-app",
 ]
-resolver = "2"
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["moriyoshi-kasuga"]
 
 [workspace.dependencies]
 improvie-app = { path = "src-tauri/improvie-app" }

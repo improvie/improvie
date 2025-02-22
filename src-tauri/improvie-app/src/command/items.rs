@@ -5,8 +5,8 @@ use crate::{
     state::TauriAppState,
 };
 use improvie_logic::{
-    model::items::{Content, Folder, FolderNode},
     AppResult, Uuid,
+    model::items::{Content, Folder, FolderNode},
 };
 
 #[tauri::command]

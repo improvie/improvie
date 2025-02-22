@@ -1,5 +1,5 @@
-use ambassador::{delegatable_trait, Delegate};
-use generator::{done, Generator, Gn};
+use ambassador::{Delegate, delegatable_trait};
+use generator::{Generator, Gn, done};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 

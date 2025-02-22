@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use improvie_domain::{modules::RepositoriesModule, repository::playlists::PlaylistsRepository};
 use improvie_logic::{
-    model::playlist::{Playlist, PlaylistFolder},
     AppResult, Uuid,
+    model::playlist::{Playlist, PlaylistFolder},
 };
 
 pub struct PlaylistsUseCase<R: RepositoriesModule> {

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
 use improvie_logic::model::items::{Content, Folder};
-use improvie_logic::{model::items::FolderNode, AppResult, Uuid};
+use improvie_logic::{AppResult, Uuid, model::items::FolderNode};
 
 use crate::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
 

@@ -23,7 +23,7 @@ pub mod tests {
     use std::sync::Arc;
 
     use improvie_infra::persistence::db::DbPool;
-    use tauri::{test::MockRuntime, Manager};
+    use tauri::{Manager, test::MockRuntime};
 
     use crate::modules::Modules;
 

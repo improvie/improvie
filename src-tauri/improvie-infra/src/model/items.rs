@@ -1,8 +1,8 @@
 use chrono::{DateTime, Utc};
 use improvie_logic::model::items::{Content, Folder, Item};
 use improvie_logic::{
-    constant::items::{ContentKind, ItemKind},
     Uuid,
+    constant::items::{ContentKind, ItemKind},
 };
 use more_convert::Convert;
 

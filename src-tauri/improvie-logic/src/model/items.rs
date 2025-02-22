@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{DateTime, Utc};
 
-use crate::{constant::items::ContentKind, Uuid};
+use crate::{Uuid, constant::items::ContentKind};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Item {

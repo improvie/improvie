@@ -1,7 +1,7 @@
 use improvie_logic::{
+    Uuid,
     logic::rule::Rule,
     model::playlist::{Playlist, PlaylistFolder},
-    Uuid,
 };
 use more_convert::Convert;
 

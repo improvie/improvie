@@ -1,10 +1,13 @@
 <script lang='ts'>
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
+  import CreateItemDialog from '$lib/features/dialog/items/CreateItemDialog.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
+  import { ImportIcon } from 'lucide-svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
-  import { ItemPageButtons } from './Buttons.svelte';
+
+  let open = $state(false);
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
   const node = $derived.by(() => {
@@ -16,12 +19,13 @@
   });
 </script>
 
+<CreateItemDialog bind:open />
+
+<Separator class='my-2' />
+<ItemPageBreadcrumb />
+<Separator class='my-2' />
 <ContextMenu.Root>
   <ContextMenu.Trigger class='h-full w-full'>
-    <ItemPageButtons />
-    <Separator class='my-2' />
-    <ItemPageBreadcrumb />
-    <Separator class='my-2' />
     <div class='px-2'>
       {#each node as child}
         {#if child.kind === 'Folder'}
@@ -35,7 +39,11 @@
     </div>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item>Profile</ContextMenu.Item>
+    <ContextMenu.Item onclick={() => {
+      open = true;
+    }} class='flex items-center'>
+      <ImportIcon class='mr-2 size-4' />Add Item
+    </ContextMenu.Item>
     <ContextMenu.Item>Billing</ContextMenu.Item>
     <ContextMenu.Item>Team</ContextMenu.Item>
     <ContextMenu.Item>Subscription</ContextMenu.Item>

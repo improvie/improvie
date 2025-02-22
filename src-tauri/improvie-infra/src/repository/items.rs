@@ -6,13 +6,16 @@ use improvie_domain::{
     repository::items::ItemsRepository,
 };
 use improvie_logic::{
+    AppResult, Uuid,
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
-    AppResult, Uuid,
 };
 use more_convert::VecInto;
 
-use crate::model::items::{ContentRaw, FolderRaw, NodeRaw};
+use crate::{
+    model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
+    persistence::db::DbTx,
+};
 
 use super::{def_repository_impl, tx_check};
 
@@ -20,7 +23,48 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    async fn get_items_hierarchy(&self, folder_id: Uuid) -> AppResult<HashMap<Uuid, FolderNode>> {
+    async fn get_items_hierarchy_current(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+        let rows = sqlx::query_as::<_, CurrentNodeRaw>(
+            "
+SELECT 
+    hi.child_id, i.kind AS child_kind, hi.sort_order
+FROM hierarchical_items AS hi
+INNER JOIN items AS i ON i.id = hi.child_id
+WHERE hi.parent_folder_id = ?
+",
+        )
+        .bind(folder_id)
+        .fetch_all(&self.db.pool())
+        .await?;
+
+        let mut items: Vec<ItemNode> = vec![];
+        for row in rows {
+            match row.child_kind {
+                ItemKind::Folder => {
+                    items.push(ItemNode::Folder {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
+                ItemKind::Content => {
+                    items.push(ItemNode::Content {
+                        id: row.child_id,
+                        sort_order: row.sort_order,
+                    });
+                }
+            }
+        }
+
+        Ok(FolderNode {
+            folder: folder_id,
+            items,
+        })
+    }
+
+    async fn get_items_hierarchy_loop(
+        &self,
+        folder_id: Uuid,
+    ) -> AppResult<HashMap<Uuid, FolderNode>> {
         let rows = sqlx::query_as::<_, NodeRaw>(
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
@@ -121,18 +165,7 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         let mut tx = self.db.begin().await?;
 
-        let item_result = sqlx::query(
-            "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
-        )
-        .bind(folder.item.id)
-        .bind(&folder.item.title)
-        .bind(&folder.item.description)
-        .bind(ItemKind::Folder)
-        .bind(folder.item.created_at)
-        .execute(&mut *tx)
-        .await;
-
-        tx_check!(item_result, tx);
+        add_item(&mut tx, &folder.item, ItemKind::Folder).await?;
 
         let folder_result = sqlx::query("INSERT INTO folders (item_id) VALUES (?)")
             .bind(folder.item.id)
@@ -141,21 +174,13 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         tx_check!(folder_result, tx);
 
-        let hierarchy_result = sqlx::query(
-            "
-INSERT INTO hierarchical_items 
-    (parent_folder_id, child_id, sort_order, created_at)
-VALUES 
-    (?, ?, ?, ?)",
+        add_hierarchy(
+            &mut tx,
+            model.item.parent_folder_id,
+            folder.item.id,
+            model.item.sort_order,
         )
-        .bind(model.item.parent_folder_id)
-        .bind(folder.item.id)
-        .bind(model.item.sort_order)
-        .bind(Utc::now())
-        .execute(&mut *tx)
-        .await;
-
-        tx_check!(hierarchy_result, tx);
+        .await?;
 
         tx.commit().await?;
 
@@ -177,18 +202,7 @@ VALUES
 
         let mut tx = self.db.begin().await?;
 
-        let item_result = sqlx::query(
-            "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
-        )
-        .bind(content.item.id)
-        .bind(&content.item.title)
-        .bind(&content.item.description)
-        .bind(ItemKind::Content)
-        .bind(content.item.created_at)
-        .execute(&mut *tx)
-        .await;
-
-        tx_check!(item_result, tx);
+        add_item(&mut tx, &content.item, ItemKind::Content).await?;
 
         let content_result = sqlx::query(
             "INSERT INTO contents (item_id, kind, content_path, thumbnail_path) VALUES (?, ?, ?, ?)"
@@ -202,26 +216,74 @@ VALUES
 
         tx_check!(content_result, tx);
 
-        let hierarchy_result = sqlx::query(
-            "
-INSERT INTO hierarchical_items 
-    (parent_folder_id, child_id, sort_order, created_at)
-VALUES 
-    (?, ?, ?, ?)",
+        add_hierarchy(
+            &mut tx,
+            model.item.parent_folder_id,
+            content.item.id,
+            model.item.sort_order,
         )
-        .bind(model.item.parent_folder_id)
-        .bind(content.item.id)
-        .bind(model.item.sort_order)
-        .bind(Utc::now())
-        .execute(&mut *tx)
-        .await;
-
-        tx_check!(hierarchy_result, tx);
+        .await?;
 
         tx.commit().await?;
 
         Ok(content)
     }
+}
+
+async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {
+    let item_result = sqlx::query(
+        "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
+    )
+    .bind(item.id)
+    .bind(&item.title)
+    .bind(&item.description)
+    .bind(kind)
+    .bind(item.created_at)
+    .execute(&mut **tx)
+    .await;
+
+    tx_check!(item_result, tx);
+
+    Ok(())
+}
+
+async fn add_hierarchy(
+    tx: &mut DbTx,
+    parent_folder_id: Uuid,
+    item_id: Uuid,
+    sort_order: u32,
+) -> AppResult<()> {
+    let shift_result = sqlx::query(
+        "
+UPDATE hierarchical_items
+SET sort_order = sort_order + 1
+WHERE parent_folder_id = ? AND sort_order >= ?
+",
+    )
+    .bind(parent_folder_id)
+    .bind(sort_order)
+    .execute(&mut **tx)
+    .await;
+
+    shift_result?;
+
+    let hierarchy_result = sqlx::query(
+        "
+INSERT INTO hierarchical_items 
+    (parent_folder_id, child_id, sort_order, created_at)
+VALUES 
+    (?, ?, ?, ?)",
+    )
+    .bind(parent_folder_id)
+    .bind(item_id)
+    .bind(sort_order)
+    .bind(Utc::now())
+    .execute(&mut **tx)
+    .await;
+
+    tx_check!(hierarchy_result, tx);
+
+    Ok(())
 }
 
 #[cfg(test)]
@@ -230,19 +292,20 @@ mod tests {
 
     use improvie_domain::repository::items::ItemsRepository;
     use improvie_logic::{
+        Uuid,
         model::items::{FolderNode, ItemNode},
-        uuid, Uuid,
+        uuid,
     };
 
     use crate::{
         persistence::db::DbPool,
-        repository::{items::ItemsRepositoryImpl, MIGRATOR},
+        repository::{MIGRATOR, items::ItemsRepositoryImpl},
     };
 
     #[sqlx::test(migrator = "MIGRATOR", fixtures("get_items_hierarchy"))]
     fn get_items_hierarchy(pool: sqlx::SqlitePool) {
         let repo = ItemsRepositoryImpl::new(DbPool::with_pool(pool));
-        let res = repo.get_items_hierarchy(Uuid::nil()).await.unwrap();
+        let res = repo.get_items_hierarchy_loop(Uuid::nil()).await.unwrap();
         let mut map = HashMap::new();
         map.insert(
             Uuid::nil(),

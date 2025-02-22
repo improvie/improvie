@@ -47,27 +47,31 @@ mod macros {
     #[macro_export]
     macro_rules! def_unit_dyn_app_error {
         (
-            $(#[$attr:meta])*
-            $vis:vis struct $ident:ident = $error:literal;
+            $(
+                $(#[$attr:meta])*
+                $vis:vis struct $ident:ident = $error:literal;
+            )+
         ) => {
-            #[derive(Debug)] $(#[$($attr)*])*
-            $vis struct $ident;
+            $(
+                #[derive(Debug)] $(#[$($attr)*])*
+                $vis struct $ident;
 
-            impl $crate::DynAppError for $ident {
-                fn error_kind(&self) -> &'static str {
-                    stringify!($ident)
+                impl $crate::DynAppError for $ident {
+                    fn error_kind(&self) -> &'static str {
+                        stringify!($ident)
+                    }
                 }
-            }
 
-            impl std::error::Error for $ident {}
+                impl std::error::Error for $ident {}
 
-            impl std::fmt::Display for $ident {
-                fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-                    formatter.write_str($error)
+                impl std::fmt::Display for $ident {
+                    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                        formatter.write_str($error)
+                    }
                 }
-            }
 
-            $crate::impl_serialize_for_dyn_app_error!($ident);
+                $crate::impl_serialize_for_dyn_app_error!($ident);
+            )+
         };
     }
 

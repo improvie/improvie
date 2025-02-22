@@ -1,7 +1,7 @@
 use improvie_app::command::{dialog, health_check, items, playlists};
 
-pub fn generate_handler<R: tauri::Runtime>(
-) -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
+pub fn generate_handler<R: tauri::Runtime>()
+-> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
     tauri::generate_handler![
         health_check::health_check,
         dialog::file::open_select_content_dialog,

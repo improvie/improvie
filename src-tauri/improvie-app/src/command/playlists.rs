@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use improvie_logic::{
-    model::playlist::{Playlist, PlaylistFolder},
     AppResult, Uuid,
+    model::playlist::{Playlist, PlaylistFolder},
 };
 
 use crate::state::TauriAppState;

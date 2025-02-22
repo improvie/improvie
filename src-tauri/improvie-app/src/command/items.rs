@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 use crate::{
-    model::items::{CreateContentDto, CreateFolderDto},
+    model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto},
     state::TauriAppState,
 };
 use improvie_logic::{
-    model::items::{Content, Folder, FolderNode},
     AppResult, Uuid,
+    model::items::{Content, Folder, FolderNode},
 };
 
 #[tauri::command]
@@ -17,7 +17,7 @@ pub async fn get_items_hierarchy(
     state
         .modules
         .items_use_case()
-        .get_items_hierarchy(folder_id.unwrap_or(Uuid::nil()))
+        .get_items_hierarchy_loop(folder_id.unwrap_or(Uuid::nil()))
         .await
 }
 
@@ -37,6 +37,9 @@ pub async fn create_folder(state: TauriAppState<'_>, dto: CreateFolderDto) -> Ap
 }
 
 #[tauri::command]
-pub async fn create_content(state: TauriAppState<'_>, dto: CreateContentDto) -> AppResult<Content> {
+pub async fn create_content(
+    state: TauriAppState<'_>,
+    dto: CreateContentDto,
+) -> AppResult<CreateContentResponse> {
     state.modules.items_use_case().create_content(dto).await
 }

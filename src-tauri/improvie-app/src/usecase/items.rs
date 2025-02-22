@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
 use improvie_logic::model::items::{Content, Folder};
-use improvie_logic::{model::items::FolderNode, AppResult, Uuid};
+use improvie_logic::{AppResult, Uuid, model::items::FolderNode};
 
-use crate::model::items::{CreateContentDto, CreateFolderDto};
+use crate::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
 
 pub struct ItemsUseCase<R: RepositoriesModule> {
     repository: R,
@@ -15,13 +15,20 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         Self { repository }
     }
 
-    pub async fn get_items_hierarchy(
+    pub async fn get_items_hierarchy_loop(
         &self,
         folder_id: Uuid,
     ) -> AppResult<HashMap<Uuid, FolderNode>> {
         self.repository
             .items_repository()
-            .get_items_hierarchy(folder_id)
+            .get_items_hierarchy_loop(folder_id)
+            .await
+    }
+
+    pub async fn get_items_hierarchy_current(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+        self.repository
+            .items_repository()
+            .get_items_hierarchy_current(folder_id)
             .await
     }
 
@@ -40,10 +47,27 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
             .await
     }
 
-    pub async fn create_content(&self, model: CreateContentDto) -> AppResult<Content> {
-        self.repository
+    pub async fn create_content(
+        &self,
+        model: CreateContentDto,
+    ) -> AppResult<CreateContentResponse> {
+        let parent_folder_id = model.item.parent_folder_id;
+
+        let content = self
+            .repository
             .items_repository()
             .create_content(model.into())
-            .await
+            .await?;
+
+        let folder_node = self
+            .repository
+            .items_repository()
+            .get_items_hierarchy_current(parent_folder_id)
+            .await?;
+
+        Ok(CreateContentResponse {
+            content,
+            folder_node,
+        })
     }
 }

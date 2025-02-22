@@ -8,12 +8,10 @@ macro_rules! tx_match {
     ($result:expr,$tx:expr,{$($t:tt)*}) => {
         match $result {
             Ok(r) if r.rows_affected() == 0 => {
-                $tx.rollback().await?;
                 return Err(improvie_logic::AppError::Db(sqlx::Error::RowNotFound));
             }
             $($t)*
             Err(err) => {
-                $tx.rollback().await?;
                 return Err(err.into());
             }
         }

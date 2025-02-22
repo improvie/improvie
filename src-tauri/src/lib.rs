@@ -3,7 +3,7 @@ use std::sync::Arc;
 use improvie_app::modules::Modules;
 use improvie_app::state::AppState;
 use improvie_infra::persistence::db::DbPool;
-use tauri::{async_runtime::block_on, Manager};
+use tauri::{Manager, async_runtime::block_on};
 
 mod handler;
 mod init;

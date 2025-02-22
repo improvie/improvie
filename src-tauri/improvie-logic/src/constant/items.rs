@@ -5,9 +5,7 @@ def_constant_enum!(
         Folder = 1,
         Content = 2,
     }
-);
 
-def_constant_enum!(
     pub enum ContentKind {
         Video = 1,
         Audio = 2,

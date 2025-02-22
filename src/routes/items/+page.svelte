@@ -7,9 +7,13 @@
   import { ItemPageButtons } from './Buttons.svelte';
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
-  const node = $derived(
-    $folder_nodes.get(current_folder_id)?.items.sort((a, b) => a.sort_order - b.sort_order) || [],
-  );
+  const node = $derived.by(() => {
+    const nodes = $folder_nodes.get(current_folder_id);
+    if (!nodes) {
+      return [];
+    }
+    return nodes.items.sort((a, b) => a.sort_order - b.sort_order);
+  });
 </script>
 
 <ContextMenu.Root>
@@ -20,9 +24,9 @@
     <Separator class='my-2' />
     <div class='px-2'>
       {#each node as child}
-        {#if child.type === 'Folder'}
+        {#if child.kind === 'Folder'}
           <HierarchyFolder folder_id={child.id} />
-        {:else if child.type === 'Content'}
+        {:else if child.kind === 'Content'}
           <HierarchyContent content_id={child.id} />
         {/if}
       {:else}

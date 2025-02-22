@@ -5,6 +5,8 @@ use sqlx::SqlitePool;
 
 use crate::repository::MIGRATOR;
 
+pub type DbTx = sqlx::Transaction<'static, sqlx::Sqlite>;
+
 pub struct DbPool(SqlitePool);
 
 impl Clone for DbPool {

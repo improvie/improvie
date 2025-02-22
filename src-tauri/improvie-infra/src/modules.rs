@@ -22,7 +22,8 @@ impl RepositoriesModuleImpl {
     }
 }
 
-macros::def_repositories_module!(RepositoriesModuleImpl,
+macros::def_repositories_module!(
+    RepositoriesModuleImpl,
     struct RepositoriesModuleImplInner {
         health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
         items_repository: ItemsRepositoryImpl = ItemsRepository,

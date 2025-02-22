@@ -1,4 +1,4 @@
-use tauri::{plugin::TauriPlugin, Runtime};
+use tauri::{Runtime, plugin::TauriPlugin};
 use tauri_plugin_log::{Target, TargetKind};
 
 pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {

@@ -2,10 +2,10 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize, Serializer};
 use sqlx::{
+    Decode, Encode, Sqlite, Type,
     encode::IsNull,
     error::BoxDynError,
     sqlite::{SqliteArgumentValue, SqliteTypeInfo, SqliteValueRef},
-    Decode, Encode, Sqlite, Type,
 };
 use uuid::fmt::Hyphenated;
 

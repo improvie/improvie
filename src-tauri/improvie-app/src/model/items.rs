@@ -11,7 +11,6 @@ use uuid::Uuid;
 #[convert(into(CreateBaseItemModel))]
 pub struct CreateBaseItemDto {
     pub parent_folder_id: Uuid,
-    pub sort_order: u32,
 
     pub title: String,
     pub description: Option<String>,

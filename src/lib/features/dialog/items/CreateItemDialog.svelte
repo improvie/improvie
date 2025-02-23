@@ -57,7 +57,6 @@
       thumbnail_path: $formData.thumbnail,
       parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
       kind: content_kind,
-      sort_order: 1,
     };
 
     try {

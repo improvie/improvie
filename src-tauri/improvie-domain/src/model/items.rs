@@ -1,4 +1,5 @@
-use improvie_logic::{Uuid, constant::items::ContentKind};
+use improvie_logic::constant::items::ContentKind;
+use uuid::Uuid;
 
 pub struct CreateBaseItemModel {
     pub parent_folder_id: Uuid,

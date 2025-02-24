@@ -6,11 +6,12 @@ use improvie_domain::{
     repository::items::ItemsRepository,
 };
 use improvie_logic::{
-    AppResult, Uuid,
+    AppResult,
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
 use more_convert::VecInto;
+use uuid::Uuid;
 
 use crate::{
     model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
@@ -289,13 +290,11 @@ VALUES
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use uuid::uuid;
 
     use improvie_domain::repository::items::ItemsRepository;
-    use improvie_logic::{
-        Uuid,
-        model::items::{FolderNode, ItemNode},
-        uuid,
-    };
+    use improvie_logic::model::items::{FolderNode, ItemNode};
+    use uuid::Uuid;
 
     use crate::{
         persistence::db::DbPool,

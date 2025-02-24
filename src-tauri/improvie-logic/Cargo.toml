@@ -5,9 +5,11 @@ authors.workspace = true
 edition.workspace = true
 
 [dependencies]
-thiserror.workspace = true
 uuid.workspace = true
+
+thiserror.workspace = true
 sqlx.workspace = true
+chrono.workspace = true
 ambassador.workspace = true
 serde.workspace = true
 generator.workspace = true

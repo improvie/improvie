@@ -6,6 +6,7 @@ edition.workspace = true
 
 [dependencies]
 improvie-logic.workspace = true
+uuid.workspace = true
 
 async-trait.workspace = true
 chrono.workspace = true

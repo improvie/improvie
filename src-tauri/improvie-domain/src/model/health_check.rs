@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use improvie_logic::Uuid;
+use uuid::Uuid;
 
 pub struct SettingsModel {
     pub id: Uuid,

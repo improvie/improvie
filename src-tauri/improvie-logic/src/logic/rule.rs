@@ -3,7 +3,7 @@ use generator::{Generator, Gn, done};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
-use crate::Uuid;
+use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RuleFormat {

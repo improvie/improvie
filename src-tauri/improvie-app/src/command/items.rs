@@ -5,9 +5,10 @@ use crate::{
     state::TauriAppState,
 };
 use improvie_logic::{
-    AppResult, Uuid,
+    AppResult,
     model::items::{Content, Folder, FolderNode},
 };
+use uuid::Uuid;
 
 #[tauri::command]
 pub async fn get_items_hierarchy(

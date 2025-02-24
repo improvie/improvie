@@ -1,10 +1,8 @@
 use chrono::{DateTime, Utc};
+use improvie_logic::constant::items::{ContentKind, ItemKind};
 use improvie_logic::model::items::{Content, Folder, Item};
-use improvie_logic::{
-    Uuid,
-    constant::items::{ContentKind, ItemKind},
-};
 use more_convert::Convert;
+use uuid::Uuid;
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct CurrentNodeRaw {

@@ -8,6 +8,7 @@ edition.workspace = true
 improvie-domain.workspace = true
 improvie-logic.workspace = true
 improvie-infra.workspace = true
+uuid.workspace = true
 
 tauri.workspace = true
 serde.workspace = true

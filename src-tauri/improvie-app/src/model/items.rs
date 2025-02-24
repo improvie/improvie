@@ -1,11 +1,11 @@
 use improvie_domain::model::items::{CreateBaseItemModel, CreateContentModel, CreateFolderModel};
 use improvie_logic::{
-    Uuid,
     constant::items::ContentKind,
     model::items::{Content, FolderNode},
 };
 use more_convert::Convert;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Debug, Deserialize, Convert)]
 #[convert(into(CreateBaseItemModel))]

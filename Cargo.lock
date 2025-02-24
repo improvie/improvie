@@ -613,7 +613,7 @@ checksum = "d38f2da7a0a2c4ccf0065be06397cc26a81f4e528be095826eee9d4adbb8c60f"
 dependencies = [
  "byteorder",
  "fnv",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -2187,6 +2187,7 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.11",
+ "uuid 0.1.0",
 ]
 
 [[package]]
@@ -2197,6 +2198,7 @@ dependencies = [
  "chrono",
  "improvie-logic",
  "itertools 0.14.0",
+ "uuid 0.1.0",
 ]
 
 [[package]]
@@ -2213,6 +2215,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sqlx",
+ "uuid 0.1.0",
 ]
 
 [[package]]
@@ -2220,13 +2223,14 @@ name = "improvie-logic"
 version = "0.1.0"
 dependencies = [
  "ambassador",
+ "chrono",
  "generator",
  "more-convert",
  "rand 0.9.0",
  "serde",
  "sqlx",
  "thiserror 2.0.11",
- "uuid",
+ "uuid 0.1.0",
 ]
 
 [[package]]
@@ -3923,7 +3927,7 @@ dependencies = [
  "rkyv_derive",
  "seahash",
  "tinyvec",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -4092,7 +4096,7 @@ dependencies = [
  "serde",
  "serde_json",
  "url",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -4537,7 +4541,7 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "url",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -4619,7 +4623,7 @@ dependencies = [
  "stringprep",
  "thiserror 2.0.11",
  "tracing",
- "uuid",
+ "uuid 1.14.0",
  "whoami",
 ]
 
@@ -4658,7 +4662,7 @@ dependencies = [
  "stringprep",
  "thiserror 2.0.11",
  "tracing",
- "uuid",
+ "uuid 1.14.0",
  "whoami",
 ]
 
@@ -4684,7 +4688,7 @@ dependencies = [
  "sqlx-core",
  "tracing",
  "url",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -4978,7 +4982,7 @@ dependencies = [
  "thiserror 2.0.11",
  "time",
  "url",
- "uuid",
+ "uuid 1.14.0",
  "walkdir",
 ]
 
@@ -5051,7 +5055,7 @@ dependencies = [
  "thiserror 2.0.11",
  "toml 0.8.20",
  "url",
- "uuid",
+ "uuid 1.14.0",
 ]
 
 [[package]]
@@ -5176,7 +5180,7 @@ dependencies = [
  "toml 0.8.20",
  "url",
  "urlpattern",
- "uuid",
+ "uuid 1.14.0",
  "walkdir",
 ]
 
@@ -5679,9 +5683,18 @@ checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 
 [[package]]
 name = "uuid"
-version = "1.13.1"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "sqlx",
+ "uuid 1.14.0",
+]
+
+[[package]]
+name = "uuid"
+version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ced87ca4be083373936a67f8de945faa23b6b42384bd5b64434850802c6dccd0"
+checksum = "93d59ca99a559661b96bf898d8fce28ed87935fd2bea9f05983c1464dd6c71b1"
 dependencies = [
  "getrandom 0.3.1",
  "rand 0.9.0",

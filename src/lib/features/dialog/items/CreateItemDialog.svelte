@@ -5,7 +5,7 @@
     action_select_content_dialog,
     action_select_thumbnail_dialog,
   } from '$lib/action/dialog/file';
-  import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
@@ -13,12 +13,11 @@
   import { current_folder_ids } from '$lib/stores/items';
   import { create_content } from '$lib/stores/items/content';
   import { t } from '$lib/translations/translations';
-  import { ImportIcon } from 'lucide-svelte';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
 
-  let open = $state(false);
+  let { open = $bindable() }: { open: boolean } = $props();
 
   let content_kind: ContentKind | undefined = $state();
 
@@ -58,7 +57,6 @@
       thumbnail_path: $formData.thumbnail,
       parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
       kind: content_kind,
-      sort_order: 1,
     };
 
     try {
@@ -72,9 +70,6 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-    <ImportIcon class='mr-2 size-4' />Add Item
-  </Dialog.Trigger>
   <Dialog.Content>
     <form method='POST' use:enhance onsubmit={handleSubmit}>
       <Dialog.Header>

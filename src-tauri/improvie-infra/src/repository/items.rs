@@ -175,13 +175,7 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         tx_check!(folder_result, tx);
 
-        add_hierarchy(
-            &mut tx,
-            model.item.parent_folder_id,
-            folder.item.id,
-            model.item.sort_order,
-        )
-        .await?;
+        add_hierarchy(&mut tx, model.item.parent_folder_id, folder.item.id).await?;
 
         tx.commit().await?;
 
@@ -217,13 +211,7 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         tx_check!(content_result, tx);
 
-        add_hierarchy(
-            &mut tx,
-            model.item.parent_folder_id,
-            content.item.id,
-            model.item.sort_order,
-        )
-        .await?;
+        add_hierarchy(&mut tx, model.item.parent_folder_id, content.item.id).await?;
 
         tx.commit().await?;
 
@@ -248,12 +236,21 @@ async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {
     Ok(())
 }
 
-async fn add_hierarchy(
-    tx: &mut DbTx,
-    parent_folder_id: Uuid,
-    item_id: Uuid,
-    sort_order: u32,
-) -> AppResult<()> {
+async fn add_hierarchy(tx: &mut DbTx, parent_folder_id: Uuid, item_id: Uuid) -> AppResult<()> {
+    let sort_order: u32 = sqlx::query_scalar(
+        "
+SELECT 
+    MAX(sort_order)
+FROM hierarchical_items
+WHERE parent_folder_id = ?
+",
+    )
+    .bind(parent_folder_id)
+    .fetch_one(&mut **tx)
+    .await?;
+
+    let sort_order = sort_order + 1;
+
     let shift_result = sqlx::query(
         "
 UPDATE hierarchical_items

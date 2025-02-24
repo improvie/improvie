@@ -2,7 +2,6 @@ import type { Content, ContentKind, FolderNode } from '.';
 
 export interface CreateBaseItem {
   parent_folder_id: string;
-  sort_order: number;
 
   title: string;
   description: string | undefined;

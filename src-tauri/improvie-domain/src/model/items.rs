@@ -3,7 +3,6 @@ use uuid::Uuid;
 
 pub struct CreateBaseItemModel {
     pub parent_folder_id: Uuid,
-    pub sort_order: u32,
 
     pub title: String,
     pub description: Option<String>,

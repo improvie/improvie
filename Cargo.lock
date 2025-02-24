@@ -2175,10 +2175,7 @@ name = "improvie"
 version = "0.1.0"
 dependencies = [
  "fix-path-env",
- "improvie-app",
- "improvie-domain",
- "improvie-infra",
- "improvie-logic",
+ "improvie-command",
  "log",
  "serde",
  "serde_json",
@@ -2193,9 +2190,7 @@ dependencies = [
 name = "improvie-app"
 version = "0.1.0"
 dependencies = [
- "cfg-if",
  "improvie-domain",
- "improvie-infra",
  "improvie-logic",
  "itertools 0.14.0",
  "log",
@@ -2205,6 +2200,22 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.11",
+ "uuid 0.1.0",
+]
+
+[[package]]
+name = "improvie-command"
+version = "0.1.0"
+dependencies = [
+ "cfg-if",
+ "improvie-app",
+ "improvie-domain",
+ "improvie-infra",
+ "improvie-logic",
+ "log",
+ "serde",
+ "tauri",
+ "tauri-plugin-dialog",
  "uuid 0.1.0",
 ]
 

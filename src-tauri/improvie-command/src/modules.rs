@@ -5,7 +5,7 @@ use improvie_app::usecase::{
 };
 use improvie_infra::{
     modules::RepositoriesModuleImpl,
-    persistence::db::{CreateDbError, DbPool},
+    persistence::db::{InitDbError, DbPool},
 };
 
 macros::def_modules!(
@@ -18,7 +18,7 @@ macros::def_modules!(
 );
 
 impl Modules {
-    pub async fn new_with_db(data_dir: PathBuf) -> Result<Arc<Self>, CreateDbError> {
+    pub async fn new_with_db(data_dir: PathBuf) -> Result<Arc<Self>, InitDbError> {
         let db = DbPool::new(data_dir).await?;
         let modules = Self::new(db);
         let modules = Arc::new(modules);

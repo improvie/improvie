@@ -15,7 +15,7 @@ impl Clone for DbPool {
 }
 
 #[derive(Debug, thiserror::Error, more_convert::EnumName)]
-pub enum CreateDbError {
+pub enum InitDbError {
     #[error("create database error: {0}")]
     Db(#[from] sqlx::Error),
     #[error("create database error with io: {0}")]
@@ -23,7 +23,7 @@ pub enum CreateDbError {
 }
 
 impl DbPool {
-    pub async fn new(data_dir: PathBuf) -> Result<Self, CreateDbError> {
+    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         std::fs::create_dir_all(&data_dir)?;
         let join = data_dir.join("data.sql");
         OpenOptions::new()

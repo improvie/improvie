@@ -10,6 +10,7 @@ improvie-logic.workspace = true
 uuid.workspace = true
 
 async-trait.workspace = true
+thiserror.workspace = true
 sqlx.workspace = true
 log.workspace = true
 chrono.workspace = true

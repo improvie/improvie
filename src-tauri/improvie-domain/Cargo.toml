@@ -8,6 +8,7 @@ edition.workspace = true
 improvie-logic.workspace = true
 uuid.workspace = true
 
+thiserror.workspace = true
 async-trait.workspace = true
 chrono.workspace = true
 itertools.workspace = true

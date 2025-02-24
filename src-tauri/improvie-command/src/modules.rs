@@ -3,8 +3,10 @@ use std::{path::PathBuf, sync::Arc};
 use improvie_app::usecase::{
     halth_check::HealthCheckUseCase, items::ItemsUseCase, playlists::PlaylistsUseCase,
 };
-use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
-use improvie_logic::AppResult;
+use improvie_infra::{
+    modules::RepositoriesModuleImpl,
+    persistence::db::{CreateDbError, DbPool},
+};
 
 macros::def_modules!(
     RepositoriesModuleImpl,
@@ -16,7 +18,7 @@ macros::def_modules!(
 );
 
 impl Modules {
-    pub async fn new_with_db(data_dir: PathBuf) -> AppResult<Arc<Self>> {
+    pub async fn new_with_db(data_dir: PathBuf) -> Result<Arc<Self>, CreateDbError> {
         let db = DbPool::new(data_dir).await?;
         let modules = Self::new(db);
         let modules = Arc::new(modules);

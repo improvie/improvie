@@ -19,6 +19,9 @@ improvie-infra = { path = "src-tauri/improvie-infra" }
 improvie-domain = { path = "src-tauri/improvie-domain" }
 improvie-logic = { path = "src-tauri/improvie-logic" }
 
+# external
+uuid = { path = "src-tauri/external_crate/uuid" }
+
 # tauri
 tauri = { version = "=2.2.5", features = [] }
 tauri-plugin-dialog = "=2.2.0"
@@ -53,17 +56,10 @@ seq-macro = "=0.3.5"
 
 # others
 log = "=0.4.25"
-uuid = { version = "=1.13.1", features = [
-    "v7",
-    "fast-rng",
-    "macro-diagnostics",
-    "serde",
-] }
 sqlx = { version = "=0.8.3", features = [
     "sqlite",
     "runtime-tokio-native-tls",
     "chrono",
-    "uuid",
 ] }
 
 [workspace.lints.rust]

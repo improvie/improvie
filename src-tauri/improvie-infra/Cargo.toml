@@ -7,6 +7,7 @@ edition.workspace = true
 [dependencies]
 improvie-domain.workspace = true
 improvie-logic.workspace = true
+uuid.workspace = true
 
 async-trait.workspace = true
 sqlx.workspace = true

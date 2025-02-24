@@ -1,9 +1,9 @@
 use improvie_logic::{
-    Uuid,
     logic::rule::Rule,
     model::playlist::{Playlist, PlaylistFolder},
 };
 use more_convert::Convert;
+use uuid::Uuid;
 
 #[derive(sqlx::FromRow, Debug, Convert)]
 #[convert(into(PlaylistFolder))]

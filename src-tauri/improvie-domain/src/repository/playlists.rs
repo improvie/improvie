@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
 use improvie_logic::{
-    AppResult, Uuid,
+    AppResult,
     model::playlist::{Playlist, PlaylistFolder},
 };
+use uuid::Uuid;
 
 #[async_trait::async_trait]
 pub trait PlaylistsRepository {

@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
 use improvie_logic::{
-    AppResult, Uuid,
+    AppResult,
     model::items::{Content, Folder, FolderNode},
 };
+use uuid::Uuid;
 
 use crate::model::items::{CreateContentModel, CreateFolderModel};
 

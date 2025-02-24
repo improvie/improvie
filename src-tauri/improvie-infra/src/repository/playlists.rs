@@ -2,10 +2,11 @@ use std::collections::HashMap;
 
 use improvie_domain::repository::playlists::PlaylistsRepository;
 use improvie_logic::{
-    AppResult, Uuid,
+    AppResult,
     model::playlist::{Playlist, PlaylistFolder},
 };
 use more_convert::VecInto;
+use uuid::Uuid;
 
 use crate::model::playlists::{PlaylistFolderRow, PlaylistRow};
 

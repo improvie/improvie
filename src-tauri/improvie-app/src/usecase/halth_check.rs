@@ -3,15 +3,9 @@ use improvie_domain::{
 };
 use improvie_logic::AppResult;
 
-pub struct HealthCheckUseCase<R: RepositoriesModule> {
-    repository: R,
-}
+super::def_use_case!(HealthCheckUseCase);
 
 impl<R: RepositoriesModule> HealthCheckUseCase<R> {
-    pub fn new(repository: R) -> Self {
-        Self { repository }
-    }
-
     pub async fn health_check(&self) -> AppResult<bool> {
         self.repository
             .health_check_repository()

@@ -7,15 +7,9 @@ use improvie_logic::{
 };
 use uuid::Uuid;
 
-pub struct PlaylistsUseCase<R: RepositoriesModule> {
-    repository: R,
-}
+super::def_use_case!(PlaylistsUseCase);
 
 impl<R: RepositoriesModule> PlaylistsUseCase<R> {
-    pub fn new(repository: R) -> Self {
-        Self { repository }
-    }
-
     pub async fn get_playlist_folders(&self) -> AppResult<HashMap<Uuid, Vec<PlaylistFolder>>> {
         self.repository
             .playlists_repository()

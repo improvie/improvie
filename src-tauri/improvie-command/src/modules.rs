@@ -5,7 +5,7 @@ use improvie_app::usecase::{
 };
 use improvie_infra::{
     modules::RepositoriesModuleImpl,
-    persistence::db::{InitDbError, DbPool},
+    persistence::db::{DbPool, InitDbError},
 };
 
 macros::def_modules!(

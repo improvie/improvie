@@ -2,7 +2,7 @@ use crate::repository::{
     health_check::HealthCheckRepository, items::ItemsRepository, playlists::PlaylistsRepository,
 };
 
-pub trait RepositoriesModule {
+pub trait RepositoriesModule: Clone + Send + Sync + Sized + 'static {
     type HealthCheckRepository: HealthCheckRepository;
     type ItemsRepository: ItemsRepository;
     type PlaylistsRepository: PlaylistsRepository;

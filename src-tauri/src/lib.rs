@@ -1,8 +1,5 @@
-use std::sync::Arc;
-
-use improvie_app::modules::Modules;
-use improvie_app::state::AppState;
-use improvie_infra::persistence::db::DbPool;
+use improvie_command::modules::Modules;
+use improvie_command::state::AppState;
 use tauri::{Manager, async_runtime::block_on};
 
 mod handler;
@@ -20,9 +17,7 @@ pub fn run() {
             #[cfg(not(debug_assertions))]
             let data_dir = app.path().app_data_dir()?;
 
-            let db = block_on(DbPool::new(data_dir))?;
-            let modules = Modules::new(db);
-            let modules = Arc::new(modules);
+            let modules = block_on(Modules::new_with_db(data_dir))?;
             let app_state = AppState { modules };
             app.manage(app_state);
             Ok(())

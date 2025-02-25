@@ -1,7 +1,12 @@
-use crate::usecase::{
+use std::{path::PathBuf, sync::Arc};
+
+use improvie_app::usecase::{
     halth_check::HealthCheckUseCase, items::ItemsUseCase, playlists::PlaylistsUseCase,
 };
-use improvie_infra::{modules::RepositoriesModuleImpl, persistence::db::DbPool};
+use improvie_infra::{
+    modules::RepositoriesModuleImpl,
+    persistence::db::{DbPool, InitDbError},
+};
 
 macros::def_modules!(
     RepositoriesModuleImpl,
@@ -11,6 +16,15 @@ macros::def_modules!(
         playlists_use_case: PlaylistsUseCase,
     }
 );
+
+impl Modules {
+    pub async fn new_with_db(data_dir: PathBuf) -> Result<Arc<Self>, InitDbError> {
+        let db = DbPool::new(data_dir).await?;
+        let modules = Self::new(db);
+        let modules = Arc::new(modules);
+        Ok(modules)
+    }
+}
 
 mod macros {
     macro_rules! def_modules {

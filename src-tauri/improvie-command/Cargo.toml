@@ -1,0 +1,21 @@
+[package]
+name = "improvie-command"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+improvie-domain.workspace = true
+improvie-logic.workspace = true
+improvie-infra.workspace = true
+improvie-app.workspace = true
+uuid.workspace = true
+
+thiserror.workspace = true
+cfg-if.workspace = true
+tauri.workspace = true
+serde.workspace = true
+log.workspace = true
+tauri-plugin-dialog.workspace = true
+
+[lints]
+workspace = true

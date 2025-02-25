@@ -7,7 +7,6 @@ edition.workspace = true
 [dependencies]
 improvie-domain.workspace = true
 improvie-logic.workspace = true
-improvie-infra.workspace = true
 uuid.workspace = true
 
 tauri.workspace = true
@@ -16,7 +15,6 @@ serde_json.workspace = true
 log.workspace = true
 itertools.workspace = true
 more-convert.workspace = true
-cfg-if.workspace = true
 tauri-plugin-dialog.workspace = true
 thiserror.workspace = true
 

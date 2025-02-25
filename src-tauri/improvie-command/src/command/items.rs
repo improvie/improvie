@@ -1,14 +1,13 @@
 use std::collections::HashMap;
 
-use crate::{
-    model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto},
-    state::TauriAppState,
-};
+use improvie_app::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
 use improvie_logic::{
     AppResult,
     model::items::{Content, Folder, FolderNode},
 };
 use uuid::Uuid;
+
+use crate::state::TauriAppState;
 
 #[tauri::command]
 pub async fn get_items_hierarchy(

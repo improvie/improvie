@@ -7,15 +7,9 @@ use uuid::Uuid;
 
 use crate::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
 
-pub struct ItemsUseCase<R: RepositoriesModule> {
-    repository: R,
-}
+super::def_use_case!(ItemsUseCase);
 
 impl<R: RepositoriesModule> ItemsUseCase<R> {
-    pub fn new(repository: R) -> Self {
-        Self { repository }
-    }
-
     pub async fn get_items_hierarchy_loop(
         &self,
         folder_id: Uuid,

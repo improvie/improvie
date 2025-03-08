@@ -1,6 +1,5 @@
 import i18n from 'sveltekit-i18n';
 
-/** @typedef {import('sveltekit-i18n').Config} */
 const config = {
   loaders: [
     {

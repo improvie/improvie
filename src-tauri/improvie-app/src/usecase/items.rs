@@ -5,7 +5,9 @@ use improvie_logic::model::items::{Content, Folder};
 use improvie_logic::{AppResult, model::items::FolderNode};
 use uuid::Uuid;
 
-use crate::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
+use crate::model::items::{
+    CreateContentDto, CreateContentResponse, CreateFolderDto, CreateFolderResponse,
+};
 
 super::def_use_case!(ItemsUseCase);
 
@@ -35,11 +37,25 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         self.repository.items_repository().get_folders().await
     }
 
-    pub async fn create_folder(&self, model: CreateFolderDto) -> AppResult<Folder> {
-        self.repository
+    pub async fn create_folder(&self, model: CreateFolderDto) -> AppResult<CreateFolderResponse> {
+        let parent_folder_id = model.item.parent_folder_id;
+
+        let folder = self
+            .repository
             .items_repository()
             .create_folder(model.into())
-            .await
+            .await?;
+
+        let folder_node = self
+            .repository
+            .items_repository()
+            .get_items_hierarchy_current(parent_folder_id)
+            .await?;
+
+        Ok(CreateFolderResponse {
+            folder,
+            folder_node,
+        })
     }
 
     pub async fn create_content(

@@ -21,7 +21,7 @@ pub struct Content {
     pub thumbnail_path: Option<String>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Folder {
     #[serde(flatten)]
     pub item: Item,

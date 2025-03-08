@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use improvie_app::model::items::{CreateContentDto, CreateContentResponse, CreateFolderDto};
+use improvie_app::model::items::{
+    CreateContentDto, CreateContentResponse, CreateFolderDto, CreateFolderResponse,
+};
 use improvie_logic::{
     AppResult,
     model::items::{Content, Folder, FolderNode},
@@ -32,7 +34,10 @@ pub async fn get_folders(state: TauriAppState<'_>) -> AppResult<Vec<Folder>> {
 }
 
 #[tauri::command]
-pub async fn create_folder(state: TauriAppState<'_>, dto: CreateFolderDto) -> AppResult<Folder> {
+pub async fn create_folder(
+    state: TauriAppState<'_>,
+    dto: CreateFolderDto,
+) -> AppResult<CreateFolderResponse> {
     state.modules.items_use_case().create_folder(dto).await
 }
 

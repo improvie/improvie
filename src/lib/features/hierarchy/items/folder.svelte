@@ -1,6 +1,7 @@
 <script lang='ts'>
-  import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
+  import * as Table from '$lib/components/ui/table/index.js';
   import { folders } from '$lib/stores/items/folder';
+  import { FolderIcon } from 'lucide-svelte';
 
   const { folder_id }: { folder_id: string } = $props();
 
@@ -8,14 +9,18 @@
 </script>
 
 {#if folder !== undefined}
-  <ContextMenu.Root>
-    <ContextMenu.Trigger class='h-full w-full'>
-      <p>{folder.title}</p>
-    </ContextMenu.Trigger>
-    <ContextMenu.Content>
-      <ContextMenu.Item>Rename</ContextMenu.Item>
-      <ContextMenu.Separator />
-      <ContextMenu.Item class='text-destructive'>Remove</ContextMenu.Item>
-    </ContextMenu.Content>
-  </ContextMenu.Root>
+  <Table.Row>
+    <Table.Cell><FolderIcon /></Table.Cell>
+    <Table.Cell>{folder.title}</Table.Cell>
+    <Table.Cell class='text-right'>{folder.created_at}</Table.Cell>
+  </Table.Row>
+  <!-- <ContextMenu.Root> -->
+  <!--   <ContextMenu.Trigger> -->
+  <!--   </ContextMenu.Trigger> -->
+  <!--   <ContextMenu.Content> -->
+  <!--     <ContextMenu.Item>Rename</ContextMenu.Item> -->
+  <!--     <ContextMenu.Separator /> -->
+  <!--     <ContextMenu.Item class='text-destructive'>Remove</ContextMenu.Item> -->
+  <!--   </ContextMenu.Content> -->
+  <!-- </ContextMenu.Root> -->
 {/if}

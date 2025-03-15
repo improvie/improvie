@@ -1,6 +1,7 @@
 <script lang='ts'>
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
+  import * as Table from '$lib/components/ui/table/index.js';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import CreateItemDialog from '$lib/features/dialog/items/CreateItemDialog.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
@@ -29,17 +30,27 @@
 <Separator class='my-2' />
 <ContextMenu.Root>
   <ContextMenu.Trigger class='h-full w-full'>
-    <div class='px-2'>
-      {#each node as child}
-        {#if child.kind === 'Folder'}
-          <HierarchyFolder folder_id={child.id} />
-        {:else if child.kind === 'Content'}
-          <HierarchyContent content_id={child.id} />
-        {/if}
-      {:else}
-        <p>Empty</p>
-      {/each}
-    </div>
+    <Table.Root class='table-fixed'>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head class='w-8'>Name</Table.Head>
+          <Table.Head></Table.Head>
+          <!-- <Table.Head>Description</Table.Head> -->
+          <Table.Head class='text-right'>CreatedAt</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {#each node as child}
+          {#if child.kind === 'Folder'}
+            <HierarchyFolder folder_id={child.id} />
+          {:else if child.kind === 'Content'}
+            <HierarchyContent content_id={child.id} />
+          {/if}
+        {:else}
+          <p>Empty</p>
+        {/each}
+      </Table.Body>
+    </Table.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => {
@@ -52,8 +63,5 @@
     }} class='flex items-center'>
       <FolderIcon class='mr-2 size-4' />Add Folder
     </ContextMenu.Item>
-    <ContextMenu.Item>Billing</ContextMenu.Item>
-    <ContextMenu.Item>Team</ContextMenu.Item>
-    <ContextMenu.Item>Subscription</ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

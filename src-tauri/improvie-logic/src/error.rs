@@ -1,8 +1,8 @@
-use more_convert::EnumName;
+use more_convert::VariantName;
 
 pub type AppResult<T> = std::result::Result<T, AppError>;
 
-#[derive(Debug, thiserror::Error, more_convert::EnumName)]
+#[derive(Debug, thiserror::Error, more_convert::VariantName)]
 pub enum AppError {
     #[error("db error: {0}")]
     Db(#[from] sqlx::Error),
@@ -24,10 +24,10 @@ pub trait DynAppError: std::error::Error + Send + Sync + 'static {
 
 impl<T> DynAppError for T
 where
-    T: std::error::Error + Send + Sync + 'static + EnumName,
+    T: std::error::Error + Send + Sync + 'static + VariantName,
 {
     fn error_kind(&self) -> &'static str {
-        self.enum_name()
+        self.variant_name()
     }
 }
 

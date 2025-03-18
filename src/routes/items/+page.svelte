@@ -28,29 +28,27 @@
 <Separator class='my-2' />
 <ItemPageBreadcrumb />
 <Separator class='my-2' />
+<Table.Root class='table-fixed select-none'>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head class='w-8'>Name</Table.Head>
+      <Table.Head></Table.Head>
+      <!-- <Table.Head>Description</Table.Head> -->
+      <Table.Head class='text-right'>CreatedAt</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {#each node as child}
+      {#if child.kind === 'Folder'}
+        <HierarchyFolder folder_id={child.id} />
+      {:else if child.kind === 'Content'}
+        <HierarchyContent content_id={child.id} />
+      {/if}
+    {/each}
+  </Table.Body>
+</Table.Root>
 <ContextMenu.Root>
-  <ContextMenu.Trigger class='h-full w-full'>
-    <Table.Root class='table-fixed'>
-      <Table.Header>
-        <Table.Row>
-          <Table.Head class='w-8'>Name</Table.Head>
-          <Table.Head></Table.Head>
-          <!-- <Table.Head>Description</Table.Head> -->
-          <Table.Head class='text-right'>CreatedAt</Table.Head>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {#each node as child}
-          {#if child.kind === 'Folder'}
-            <HierarchyFolder folder_id={child.id} />
-          {:else if child.kind === 'Content'}
-            <HierarchyContent content_id={child.id} />
-          {/if}
-        {:else}
-          <p>Empty</p>
-        {/each}
-      </Table.Body>
-    </Table.Root>
+  <ContextMenu.Trigger class='w-full h-[-webkit-fill-available]'>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => {

@@ -4,6 +4,7 @@
   import * as Table from '$lib/components/ui/table/index.js';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import CreateItemDialog from '$lib/features/dialog/items/CreateItemDialog.svelte';
+  import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
@@ -11,6 +12,7 @@
 
   let content_open = $state(false);
   let folder_open = $state(false);
+  let selected_content = $state(undefined);
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
   const node = $derived.by(() => {
@@ -22,6 +24,7 @@
   });
 </script>
 
+<AudioInspector bind:content={selected_content} />
 <CreateItemDialog bind:open={content_open} />
 <CreateFolderDialog bind:open={folder_open} />
 
@@ -42,7 +45,7 @@
       {#if child.kind === 'Folder'}
         <HierarchyFolder folder_id={child.id} />
       {:else if child.kind === 'Content'}
-        <HierarchyContent content_id={child.id} />
+        <HierarchyContent content_id={child.id} bind:audio_inspector_content={selected_content} />
       {/if}
     {/each}
   </Table.Body>

@@ -33,4 +33,10 @@
   <!--     <ContextMenu.Item class='text-destructive'>Remove</ContextMenu.Item> -->
   <!--   </ContextMenu.Content> -->
   <!-- </ContextMenu.Root> -->
+{:else}
+  <Table.Row>
+    <Table.Cell><FolderIcon /></Table.Cell>
+    <Table.Cell>Loading...</Table.Cell>
+    <Table.Cell class='text-right'>...</Table.Cell>
+  </Table.Row>
 {/if}

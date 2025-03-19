@@ -7,7 +7,7 @@
 
   const { folder_id }: { folder_id: string } = $props();
 
-  const folder = $folders.get(folder_id);
+  const folder = $derived($folders.get(folder_id));
 
   function dblclick() {
     current_folder_ids.update((v) => {

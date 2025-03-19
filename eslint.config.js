@@ -17,6 +17,7 @@ export default antfu({
   },
   rules: {
     'import/no-self-import': 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
   svelte: true,
 });

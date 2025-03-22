@@ -2,16 +2,16 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import * as Table from '$lib/components/ui/table/index.js';
+  import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
-  import CreateItemDialog from '$lib/features/dialog/items/CreateItemDialog.svelte';
   import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
 
-  let content_open = $state(false);
-  let folder_open = $state(false);
+  let is_open_create_content = $state(false);
+  let is_open_create_folder = $state(false);
   let selected_content = $state(undefined);
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
@@ -25,8 +25,8 @@
 </script>
 
 <AudioInspector bind:content={selected_content} />
-<CreateItemDialog bind:open={content_open} />
-<CreateFolderDialog bind:open={folder_open} />
+<CreateContentDialog bind:open={is_open_create_content} />
+<CreateFolderDialog bind:open={is_open_create_folder} />
 
 <Separator class='my-2' />
 <ItemPageBreadcrumb />
@@ -55,12 +55,12 @@
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => {
-      content_open = true;
+      is_open_create_content = true;
     }} class='flex items-center'>
       <ImportIcon class='mr-2 size-4' />Add Item
     </ContextMenu.Item>
     <ContextMenu.Item onclick={() => {
-      folder_open = true;
+      is_open_create_folder = true;
     }} class='flex items-center'>
       <FolderIcon class='mr-2 size-4' />Add Folder
     </ContextMenu.Item>

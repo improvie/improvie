@@ -1,6 +1,6 @@
 {
   "welcome": "improvieアプリへようこそ！",
-  "items.add_content.no_title": "タイトルは必須です",
-  "items.add_content.no_content": "コンテントは必須です",
-  "items.add_content.auto_title": "コンテント選択時に空ならファイル名が付けられます"
+  "form.no_title": "タイトルは必須です",
+  "form.no_content": "コンテントは必須です",
+  "form.content.auto_title": "コンテント選択時に空ならファイル名が付けられます"
 }

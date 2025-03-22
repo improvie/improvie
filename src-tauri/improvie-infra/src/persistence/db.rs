@@ -14,7 +14,7 @@ impl Clone for DbPool {
     }
 }
 
-#[derive(Debug, thiserror::Error, more_convert::EnumName)]
+#[derive(Debug, thiserror::Error, more_convert::VariantName)]
 pub enum InitDbError {
     #[error("create database error: {0}")]
     Db(#[from] sqlx::Error),

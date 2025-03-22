@@ -25,11 +25,11 @@ improvie-command = { path = "src-tauri/improvie-command" }
 uuid = { path = "src-tauri/external_crate/uuid" }
 
 # tauri
-tauri = { version = "=2.2.5", features = [] }
+tauri = { version = "=2.3.1", features = [] }
 tauri-plugin-dialog = "=2.2.0"
 
 # async/concurrency/parallelism
-tokio = { version = "=1.43.0", features = ["full"] }
+tokio = { version = "=1.44.1", features = ["full"] }
 crossbeam-utils = "=0.8.21"
 async-trait = "=0.1"
 tracing = "=0.1.41"
@@ -41,7 +41,7 @@ serde_json = "=1.0"
 # utils
 thiserror = "=2.0"
 itertools = "=0.14.0"
-chrono = { version = "=0.4.39", features = ["serde"] }
+chrono = { version = "=0.4.40", features = ["serde"] }
 ambassador = "=0.4.1"
 generator = "=0.8.4"
 rand = "=0.9.0"
@@ -54,7 +54,7 @@ cfg-if = "=1.0.0"
 proc-macro2 = "=1.0"
 quote = "=1.0"
 syn = "=2.0"
-seq-macro = "=0.3.5"
+seq-macro = "=0.3.6"
 
 # others
 log = "=0.4.26"

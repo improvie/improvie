@@ -1,4 +1,4 @@
-import type { Content, ContentKind, FolderNode } from '.';
+import type { Content, ContentKind, Folder, FolderNode } from '.';
 
 export interface CreateBaseItem {
   parent_folder_id: string;
@@ -17,5 +17,10 @@ export type CreateContent = CreateBaseItem & {
 
 export interface CreateContentResponse {
   content: Content;
+  folder_node: FolderNode;
+}
+
+export interface CreateFolderResponse {
+  folder: Folder;
   folder_node: FolderNode;
 }

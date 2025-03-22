@@ -22,9 +22,9 @@
   let content_kind: ContentKind | undefined = $state();
 
   const formSchema = z.object({
-    title: z.string().nonempty($t('common.items.add_content.no_title')),
+    title: z.string().nonempty($t('common.form.no_title')),
     description: z.string().optional(),
-    content: z.string().nonempty($t('common.items.add_content.no_content')),
+    content: z.string().nonempty($t('common.form.no_content')),
     thumbnail: z.string().optional(),
   });
 
@@ -84,7 +84,7 @@
                 <Form.Label class='text-right'>Title</Form.Label>
                 <Input
                   class='col-span-4'
-                  placeholder={$t('common.items.add_content.auto_title')}
+                  placeholder={$t('common.form.content.auto_title')}
                   {...props}
                   bind:value={$formData.title}
                   spellcheck='false'

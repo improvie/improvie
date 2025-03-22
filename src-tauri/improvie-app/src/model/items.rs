@@ -1,7 +1,7 @@
 use improvie_domain::model::items::{CreateBaseItemModel, CreateContentModel, CreateFolderModel};
 use improvie_logic::{
     constant::items::ContentKind,
-    model::items::{Content, FolderNode},
+    model::items::{Content, Folder, FolderNode},
 };
 use more_convert::Convert;
 use serde::{Deserialize, Serialize};
@@ -37,5 +37,11 @@ pub struct CreateContentDto {
 #[derive(Debug, Serialize)]
 pub struct CreateContentResponse {
     pub content: Content,
+    pub folder_node: FolderNode,
+}
+
+#[derive(Debug, Serialize)]
+pub struct CreateFolderResponse {
+    pub folder: Folder,
     pub folder_node: FolderNode,
 }

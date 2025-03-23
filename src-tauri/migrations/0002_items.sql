@@ -2,7 +2,6 @@ CREATE TABLE IF NOT EXISTS items (
     id uuid NOT NULL,
     title text NOT NULL,
     description text DEFAULT NULL,
-    details json DEFAULT NULL,
     kind tinyint unsigned NOT NULL,
     created_at timestamp NOT NULL,
 
@@ -11,7 +10,6 @@ CREATE TABLE IF NOT EXISTS items (
 
 CREATE TABLE IF NOT EXISTS folders (
     item_id uuid NOT NULL,
-    details json DEFAULT NULL,
 
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE
@@ -22,7 +20,6 @@ CREATE TABLE IF NOT EXISTS contents (
     kind tinyint unsigned NOT NULL,
     content_path text NOT NULL,
     thumbnail_path text DEFAULT NULL,
-    details json DEFAULT NULL,
 
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE

@@ -74,7 +74,7 @@ mod macros {
                     use serde::ser::SerializeStruct;
                     use $crate::DynAppError;
 
-                    let mut serde_state = serializer.serialize_struct("DynAppError", 2)?;
+                    let mut serde_state = serializer.serialize_struct(stringify!($error), 2)?;
                     serde_state.serialize_field("kind", self.error_kind())?;
                     serde_state.serialize_field("message", &self.to_string())?;
                     serde_state.end()

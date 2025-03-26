@@ -1,20 +1,27 @@
+use chrono::{DateTime, Utc};
 use improvie_logic::{
+    constant::plays::PlayItemKind,
     logic::rule::Rule,
-    model::playlist::{Playlist, PlaylistFolder},
+    model::plays::{PlayFolder, PlayItem, Playlist},
 };
 use more_convert::Convert;
 use uuid::Uuid;
 
 #[derive(sqlx::FromRow, Debug, Convert)]
-#[convert(into(PlaylistFolder))]
-pub struct PlaylistFolderRow {
+#[convert(into(PlayItem))]
+pub struct PlayItemRaw {
     pub id: Uuid,
     pub title: String,
     pub description: Option<String>,
+    pub created_at: DateTime<Utc>,
+}
 
-    #[convert(ignore)]
-    pub parent_id: Uuid,
-    pub sort_order: u32,
+#[derive(sqlx::FromRow, Debug, Convert)]
+#[convert(into(PlayFolder))]
+pub struct PlayFolderRow {
+    pub id: Uuid,
+    pub title: String,
+    pub description: Option<String>,
 }
 
 #[derive(sqlx::FromRow, Convert)]
@@ -26,8 +33,19 @@ pub struct PlaylistRow {
     pub thumbnail_path: Option<String>,
     #[sqlx(json)]
     pub rules: Vec<Rule>,
+}
 
-    #[convert(ignore)]
-    pub folder_id: Uuid,
+#[derive(sqlx::FromRow)]
+pub struct PlayCurrentNodeRaw {
+    pub child_id: Uuid,
+    pub child_kind: PlayItemKind,
+    pub sort_order: u32,
+}
+
+#[derive(sqlx::FromRow, Debug)]
+pub struct PlayNodeRaw {
+    pub parent_folder_id: Uuid,
+    pub child_id: Uuid,
+    pub child_kind: PlayItemKind,
     pub sort_order: u32,
 }

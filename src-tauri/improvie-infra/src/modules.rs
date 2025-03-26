@@ -27,7 +27,7 @@ macros::def_repositories_module!(
     struct RepositoriesModuleImplInner {
         health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
         items_repository: ItemsRepositoryImpl = ItemsRepository,
-        playlists_repository: PlaylistsRepositoryImpl = PlaylistsRepository,
+        playsts_repository: PlaylistsRepositoryImpl = PlaystsRepository,
     }
 );
 

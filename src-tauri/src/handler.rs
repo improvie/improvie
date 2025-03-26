@@ -14,5 +14,7 @@ pub fn generate_handler<R: tauri::Runtime>()
         playlists::get_playlists,
         playlists::get_playlist_folders,
         playlists::get_favorite_playlists,
+        playlists::get_plays_hierarchy_current,
+        playlists::get_plays_hierarchy_loop,
     ]
 }

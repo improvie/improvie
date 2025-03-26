@@ -1,2 +1,2 @@
 pub mod items;
-pub mod playlist;
+pub mod plays;

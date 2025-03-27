@@ -2,22 +2,15 @@ use std::collections::HashMap;
 
 use improvie_logic::{
     AppResult,
-    model::{
-        items::FolderNode,
-        plays::{PlayFolder, PlayFolderNode, Playlist},
-    },
+    model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
 use uuid::Uuid;
 
 use crate::state::TauriAppState;
 
 #[tauri::command]
-pub async fn get_playlist_folders(state: TauriAppState<'_>) -> AppResult<Vec<PlayFolder>> {
-    state
-        .modules
-        .playsts_use_case()
-        .get_playlist_folders()
-        .await
+pub async fn get_play_folders(state: TauriAppState<'_>) -> AppResult<Vec<PlayFolder>> {
+    state.modules.playsts_use_case().get_play_folders().await
 }
 
 #[tauri::command]

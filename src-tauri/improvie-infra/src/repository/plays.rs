@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use improvie_domain::repository::playlists::PlaystsRepository;
+use improvie_domain::repository::plays::PlaystsRepository;
 use improvie_logic::{
     AppResult,
     constant::plays::PlayItemKind,
@@ -9,7 +9,7 @@ use improvie_logic::{
 use more_convert::VecInto;
 use uuid::Uuid;
 
-use crate::model::playlists::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow};
+use crate::model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow};
 
 use super::def_repository_impl;
 

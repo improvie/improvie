@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use improvie_domain::{modules::RepositoriesModule, repository::playlists::PlaystsRepository};
+use improvie_domain::{modules::RepositoriesModule, repository::plays::PlaystsRepository};
 use improvie_logic::{
     AppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
@@ -27,7 +27,7 @@ impl<R: RepositoriesModule> PlaystsUseCase<R> {
             .await
     }
 
-    pub async fn get_playlist_folders(&self) -> AppResult<Vec<PlayFolder>> {
+    pub async fn get_play_folders(&self) -> AppResult<Vec<PlayFolder>> {
         self.repository
             .playsts_repository()
             .get_play_folders()

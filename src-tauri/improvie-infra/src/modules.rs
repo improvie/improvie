@@ -4,7 +4,7 @@ use crate::{
     persistence::db::DbPool,
     repository::{
         health_check::HealthCheckRepositoryImpl, items::ItemsRepositoryImpl,
-        playlists::PlaylistsRepositoryImpl,
+        plays::PlaylistsRepositoryImpl,
     },
 };
 

@@ -1,7 +1,7 @@
 use std::{path::PathBuf, sync::Arc};
 
 use improvie_app::usecase::{
-    halth_check::HealthCheckUseCase, items::ItemsUseCase, playlists::PlaystsUseCase,
+    halth_check::HealthCheckUseCase, items::ItemsUseCase, plays::PlaystsUseCase,
 };
 use improvie_infra::{
     modules::RepositoriesModuleImpl,

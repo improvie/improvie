@@ -1,4 +1,4 @@
-use improvie_command::command::{dialog, health_check, items, playlists};
+use improvie_command::command::{dialog, health_check, items, plays};
 
 pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
@@ -11,10 +11,10 @@ pub fn generate_handler<R: tauri::Runtime>()
         items::get_folders,
         items::create_folder,
         items::create_content,
-        playlists::get_playlists,
-        playlists::get_playlist_folders,
-        playlists::get_favorite_playlists,
-        playlists::get_plays_hierarchy_current,
-        playlists::get_plays_hierarchy_loop,
+        plays::get_playlists,
+        plays::get_play_folders,
+        plays::get_favorite_playlists,
+        plays::get_plays_hierarchy_current,
+        plays::get_plays_hierarchy_loop,
     ]
 }

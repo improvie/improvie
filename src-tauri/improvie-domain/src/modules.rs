@@ -1,5 +1,5 @@
 use crate::repository::{
-    health_check::HealthCheckRepository, items::ItemsRepository, playlists::PlaystsRepository,
+    health_check::HealthCheckRepository, items::ItemsRepository, plays::PlaystsRepository,
 };
 
 pub trait RepositoriesModule: Clone + Send + Sync + Sized + 'static {

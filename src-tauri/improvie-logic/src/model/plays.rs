@@ -12,13 +12,13 @@ pub struct PlayItem {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayFolder {
     #[serde(flatten)]
     pub item: PlayItem,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Playlist {
     #[serde(flatten)]
     pub item: PlayItem,

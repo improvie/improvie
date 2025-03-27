@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+use improvie_app::model::plays::{
+    CreatePlayFolderDto, CreatePlayFolderResponse, CreatePlaylistDto, CreatePlaylistResponse,
+};
 use improvie_logic::{
     AppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
@@ -40,13 +43,21 @@ pub async fn get_plays_hierarchy(
 }
 
 #[tauri::command]
-pub async fn create_folder(
+pub async fn create_play_folder(
     state: TauriAppState<'_>,
     dto: CreatePlayFolderDto,
-) -> AppResult<HashMap<Uuid, PlayFolderNode>> {
-    // state
-    //     .modules
-    //     .playsts_use_case()
-    //     .get_playlists_hierarchy_loop(folder_id.unwrap_or(Uuid::nil()))
-    //     .await
+) -> AppResult<CreatePlayFolderResponse> {
+    state
+        .modules
+        .playsts_use_case()
+        .create_play_folder(dto)
+        .await
+}
+
+#[tauri::command]
+pub async fn create_playlist(
+    state: TauriAppState<'_>,
+    dto: CreatePlaylistDto,
+) -> AppResult<CreatePlaylistResponse> {
+    state.modules.playsts_use_case().create_playlist(dto).await
 }

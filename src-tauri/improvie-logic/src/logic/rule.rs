@@ -22,7 +22,7 @@ impl RuleFormat {
     }
 }
 
-#[derive(Clone, Delegate, Serialize, Deserialize)]
+#[derive(Debug, Clone, Delegate, Serialize, Deserialize)]
 #[delegate(RuleFormatIter)]
 #[serde(tag = "type", content = "data")]
 pub enum Rule {
@@ -37,7 +37,7 @@ pub trait RuleFormatIter {
     fn formats(&self) -> Generator<'_, (), RuleFormat>;
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ContentRule {
     pub content_id: Uuid,
 }
@@ -51,7 +51,7 @@ impl RuleFormatIter for ContentRule {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RangeRule {
     pub content_id: Uuid,
     pub range_start: Option<u32>,
@@ -71,7 +71,7 @@ impl RuleFormatIter for RangeRule {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LoopRule {
     pub rules: Vec<Rule>,
     pub times: u8,
@@ -92,7 +92,7 @@ impl RuleFormatIter for LoopRule {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RandomRule {
     // u8 is the weight
     pub rules: Vec<(Rule, u8)>,

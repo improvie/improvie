@@ -14,7 +14,8 @@ pub fn generate_handler<R: tauri::Runtime>()
         plays::get_playlists,
         plays::get_play_folders,
         plays::get_favorite_playlists,
-        plays::get_plays_hierarchy_current,
-        plays::get_plays_hierarchy_loop,
+        plays::get_plays_hierarchy,
+        plays::create_play_folder,
+        plays::create_playlist,
     ]
 }

@@ -19,17 +19,15 @@ pub struct PlayItemRaw {
 #[derive(sqlx::FromRow, Debug, Convert)]
 #[convert(into(PlayFolder))]
 pub struct PlayFolderRow {
-    pub id: Uuid,
-    pub title: String,
-    pub description: Option<String>,
+    #[sqlx(flatten)]
+    pub item: PlayItemRaw,
 }
 
 #[derive(sqlx::FromRow, Convert)]
 #[convert(into(Playlist))]
 pub struct PlaylistRow {
-    pub id: Uuid,
-    pub title: String,
-    pub description: Option<String>,
+    #[sqlx(flatten)]
+    pub item: PlayItemRaw,
     pub thumbnail_path: Option<String>,
     #[sqlx(json)]
     pub rules: Vec<Rule>,

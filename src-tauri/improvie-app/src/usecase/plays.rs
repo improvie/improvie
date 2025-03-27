@@ -7,6 +7,10 @@ use improvie_logic::{
 };
 use uuid::Uuid;
 
+use crate::model::plays::{
+    CreatePlayFolderDto, CreatePlayFolderResponse, CreatePlaylistDto, CreatePlaylistResponse,
+};
+
 super::def_use_case!(PlaystsUseCase);
 
 impl<R: RepositoriesModule> PlaystsUseCase<R> {
@@ -43,5 +47,53 @@ impl<R: RepositoriesModule> PlaystsUseCase<R> {
             .playsts_repository()
             .get_favorite_playlists()
             .await
+    }
+
+    pub async fn create_play_folder(
+        &self,
+        model: CreatePlayFolderDto,
+    ) -> AppResult<CreatePlayFolderResponse> {
+        let parent_folder_id = model.item.parent_folder_id;
+
+        let folder = self
+            .repository
+            .playsts_repository()
+            .create_play_folder(model.into())
+            .await?;
+
+        let folder_node = self
+            .repository
+            .playsts_repository()
+            .get_plays_hierarchy_current(parent_folder_id)
+            .await?;
+
+        Ok(CreatePlayFolderResponse {
+            folder,
+            folder_node,
+        })
+    }
+
+    pub async fn create_playlist(
+        &self,
+        model: CreatePlaylistDto,
+    ) -> AppResult<CreatePlaylistResponse> {
+        let parent_folder_id = model.item.parent_folder_id;
+
+        let playlist = self
+            .repository
+            .playsts_repository()
+            .create_playlist(model.into())
+            .await?;
+
+        let folder_node = self
+            .repository
+            .playsts_repository()
+            .get_plays_hierarchy_current(parent_folder_id)
+            .await?;
+
+        Ok(CreatePlaylistResponse {
+            playlist,
+            folder_node,
+        })
     }
 }

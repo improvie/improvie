@@ -4,7 +4,7 @@ export interface RuleFormat {
   range_end?: number;
 }
 
-export type Rule = { type: 'Content'; data: ContentRule }
+export type RuleType = { type: 'Content'; data: ContentRule }
   | { type: 'Range'; data: RangeRule }
   | { type: 'Loop'; data: LoopRule }
   | { type: 'Random'; data: RandomRule };
@@ -20,12 +20,12 @@ export interface RangeRule {
 }
 
 export interface LoopRule {
-  rules: Rule[];
+  rules: RuleType[];
   times: number;
 }
 
 export interface RandomRule {
-  rules: [Rule, number][];
+  rules: [RuleType, number][];
   times: number;
   duplicate: boolean;
 }

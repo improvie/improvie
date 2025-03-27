@@ -1,4 +1,4 @@
-use improvie_command::command::{dialog, health_check, items, plays};
+use improvie_command::command::{dialog, health_check, items, plays, rules};
 
 pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
@@ -17,5 +17,6 @@ pub fn generate_handler<R: tauri::Runtime>()
         plays::get_plays_hierarchy,
         plays::create_play_folder,
         plays::create_playlist,
+        rules::get_rules,
     ]
 }

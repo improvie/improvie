@@ -3,8 +3,8 @@ import type { CreatePlaylist, CreatePlaylistResponse } from '$lib/types/plays/cr
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_playlists(): Promise<Playlist[]> {
-  const contents = await invoke<Playlist[]>('get_playlists');
-  return contents;
+  const playlists = await invoke<Playlist[]>('get_playlists');
+  return playlists;
 }
 
 export async function action_create_playlist(data: CreatePlaylist): Promise<CreatePlaylistResponse> {

@@ -29,9 +29,9 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
         let rows = sqlx::query_as::<_, PlayFolderRow>(
             "
 SELECT 
-    pi.id, pi.title, pi.description
+    pi.id, pi.title, pi.description, pi.created_at
 FROM play_folders AS pf
-INNER JOIN play_items AS pi ON pi.id = pf.id
+INNER JOIN play_items AS pi ON pi.id = pf.item_id
 ",
         )
         .fetch_all(&self.db.pool())
@@ -44,9 +44,9 @@ INNER JOIN play_items AS pi ON pi.id = pf.id
         let rows = sqlx::query_as::<_, PlaylistRow>(
             "
 SELECT
-    pi.id, pi.title, pi.description, pl.thumbnail_path, pl.rules
+    pi.id, pi.title, pi.description, pl.thumbnail_path, pl.rules, pi.created_at
 FROM playlists AS pl
-INNER JOIN play_items AS pi ON pi.id = pl.id
+INNER JOIN play_items AS pi ON pi.id = pl.item_id
 ",
         )
         .fetch_all(&self.db.pool())
@@ -121,7 +121,7 @@ WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_ord
         i.kind AS child_kind,
         hi.sort_order
     FROM hierarchical_play_items AS hi
-    INNER JOIN items AS i ON i.id = hi.child_id
+    INNER JOIN play_items AS i ON i.id = hi.child_id
     WHERE hi.parent_folder_id = ?
 
     UNION ALL
@@ -133,7 +133,7 @@ WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_ord
         hi.sort_order
     FROM hierarchical_play_items AS hi
     INNER JOIN folder_hierarchy AS fh ON hi.parent_folder_id = fh.child_id
-    INNER JOIN items AS i ON hi.child_id = i.id
+    INNER JOIN play_items AS i ON hi.child_id = i.id
 )
 SELECT *
 FROM folder_hierarchy

@@ -22,7 +22,7 @@ export type PlayItemDetail = PlayItem &
 
 export interface PlayFolderNode {
   folder: string;
-  items: PlayItemNode[];
+  children: PlayItemNode[];
 }
 
 export interface PlayItemNode {

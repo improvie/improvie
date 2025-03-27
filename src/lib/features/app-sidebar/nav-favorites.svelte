@@ -2,21 +2,20 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { useSidebar } from '$lib/components/ui/sidebar/index.js';
-  import { getPlaylist } from '$lib/stores/playlist';
-  import {
-    favoritePlaylists,
-    initFavoritePlaylist,
-    removeFavoritePlaylist,
-  } from '$lib/stores/playlist/favorite';
+  import { favoritePlaylists, initFavoritePlaylist, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
+  import { playlists } from '$lib/stores/plays/playlist';
   import Ellipsis from 'lucide-svelte/icons/ellipsis';
   import StarOff from 'lucide-svelte/icons/star-off';
+  import { onMount } from 'svelte';
   import { derived } from 'svelte/store';
 
-  initFavoritePlaylist();
+  onMount(() => {
+    initFavoritePlaylist();
+  });
 
   const favorites = derived(favoritePlaylists, ($favoritePlaylists) => {
     return $favoritePlaylists
-      .map(id => getPlaylist(id))
+      .map(id => $playlists.get(id))
       .filter(v => v !== undefined);
   });
 

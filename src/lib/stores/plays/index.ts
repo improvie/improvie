@@ -15,15 +15,21 @@ export const play_folder_nodes: Writable<Map<string, PlayFolderNode>> = writable
 export function init_play_items() {
   action_get_plays_hierarchy().then((v) => {
     play_folder_nodes.set(v);
+  }).catch((e) => {
+    console.error(e);
   });
 
   action_get_playlists().then((v) => {
     const b = v.map(obj => [obj.id, obj] as const);
     playlists.set(new Map(b));
+  }).catch((e) => {
+    console.error(e);
   });
 
   action_get_play_folders().then((v) => {
     const b = v.map(obj => [obj.id, obj] as const);
     play_folders.set(new Map(b));
+  }).catch((e) => {
+    console.error(e);
   });
 }

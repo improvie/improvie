@@ -3,11 +3,8 @@
 
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
   import SettingsDialog from '$lib/features/SettingsDialog.svelte';
-  import { init_items } from '$lib/stores/items';
-  import { init_play_items } from '$lib/stores/plays';
   import { loadTranslations } from '$lib/translations/translations';
   import { ModeWatcher } from 'mode-watcher';
-  import { onMount } from 'svelte';
   import '../app.css';
 
   const { children } = $props();
@@ -15,10 +12,6 @@
   const defaultLanguage = 'ja';
   loadTranslations(defaultLanguage, '/');
 
-  onMount(() => {
-    init_items();
-    init_play_items();
-  });
 </script>
 
 <ModeWatcher />

@@ -8,7 +8,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import FormError from '$lib/features/form/FormError.svelte';
-  import { current_folder_ids } from '$lib/stores/items';
+  import { current_play_folder_ids } from '$lib/stores/plays';
   import { create_playlist } from '$lib/stores/plays/playlist';
   import { t } from '$lib/translations/translations';
   import { defaults, superForm } from 'sveltekit-superforms';
@@ -49,7 +49,7 @@
       title: $formData.title,
       description: $formData.description,
       thumbnail_path: $formData.thumbnail,
-      parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
+      parent_folder_id: $current_play_folder_ids[$current_play_folder_ids.length - 1],
     };
 
     try {

@@ -1,12 +1,12 @@
 <script lang='ts'>
-  import type { CreateFolder } from '$lib/types/item/create';
+  import type { CreatePlayFolder } from '$lib/types/plays/create';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import FormError from '$lib/features/form/FormError.svelte';
-  import { current_folder_ids } from '$lib/stores/items';
-  import { create_folder } from '$lib/stores/items/folder';
+  import { current_play_folder_ids } from '$lib/stores/plays';
+  import { create_play_folder } from '$lib/stores/plays/folder';
   import { t } from '$lib/translations/translations';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
@@ -41,14 +41,14 @@
       return;
     }
 
-    const req: CreateFolder = {
+    const req: CreatePlayFolder = {
       title: $formData.title,
       description: $formData.description,
-      parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
+      parent_folder_id: $current_play_folder_ids[$current_play_folder_ids.length - 1],
     };
 
     try {
-      await create_folder(req);
+      await create_play_folder(req);
       open = false;
     }
     catch (e) {

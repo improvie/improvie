@@ -1,16 +1,16 @@
 <script lang='ts'>
   import * as Table from '$lib/components/ui/table/index.js';
-  import { current_folder_ids } from '$lib/stores/items';
-  import { folders } from '$lib/stores/items/folder';
+  import { current_play_folder_ids } from '$lib/stores/plays';
+  import { play_folders } from '$lib/stores/plays/folder';
   import { DateTimeFormat } from '$lib/utils';
   import { FolderIcon, FolderXIcon } from 'lucide-svelte';
 
   const { folder_id }: { folder_id: string } = $props();
 
-  const folder = $derived($folders.get(folder_id));
+  const folder = $derived($play_folders.get(folder_id));
 
   function dblclick() {
-    current_folder_ids.update((v) => {
+    current_play_folder_ids.update((v) => {
       v.push(folder_id);
       return v;
     });
@@ -24,15 +24,6 @@
     <Table.Cell>{folder.title}</Table.Cell>
     <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, folder.created_at)}</Table.Cell>
   </Table.Row>
-  <!-- <ContextMenu.Root> -->
-  <!--   <ContextMenu.Trigger> -->
-  <!--   </ContextMenu.Trigger> -->
-  <!--   <ContextMenu.Content> -->
-  <!--     <ContextMenu.Item>Rename</ContextMenu.Item> -->
-  <!--     <ContextMenu.Separator /> -->
-  <!--     <ContextMenu.Item class='text-destructive'>Remove</ContextMenu.Item> -->
-  <!--   </ContextMenu.Content> -->
-  <!-- </ContextMenu.Root> -->
 {:else}
   <Table.Row>
     <Table.Cell><FolderXIcon /></Table.Cell>

@@ -1,6 +1,6 @@
 pub mod halth_check;
 pub mod items;
-pub mod playlists;
+pub mod plays;
 
 macro_rules! def_use_case {
     ($ident:ident) => {

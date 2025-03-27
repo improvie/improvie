@@ -6,9 +6,14 @@
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
-  import { current_folder_ids, folder_nodes } from '$lib/stores/items';
+  import { current_folder_ids, folder_nodes, init_items } from '$lib/stores/items';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
+  import { onMount } from 'svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
+
+  onMount(() => {
+    init_items();
+  });
 
   let is_open_create_content = $state(false);
   let is_open_create_folder = $state(false);

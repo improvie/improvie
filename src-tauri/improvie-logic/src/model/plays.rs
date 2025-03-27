@@ -14,16 +14,15 @@ pub struct PlayItem {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct PlayFolder {
-    pub id: Uuid,
-    pub title: String,
-    pub description: Option<String>,
+    #[serde(flatten)]
+    pub item: PlayItem,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Playlist {
-    pub id: Uuid,
-    pub title: String,
-    pub description: Option<String>,
+    #[serde(flatten)]
+    pub item: PlayItem,
+
     pub thumbnail_path: Option<String>,
     pub rules: Vec<Rule>,
 }

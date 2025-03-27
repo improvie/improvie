@@ -1,15 +1,23 @@
 use std::collections::HashMap;
 
-use improvie_domain::repository::plays::PlaystsRepository;
+use chrono::Utc;
+use improvie_domain::{
+    model::plays::{CreatePlayFolderModel, CreatePlaylistModel},
+    repository::plays::PlaystsRepository,
+};
 use improvie_logic::{
     AppResult,
     constant::plays::PlayItemKind,
-    model::plays::{PlayFolder, PlayFolderNode, PlayItemNode, Playlist},
+    model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
 use uuid::Uuid;
 
-use crate::model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow};
+use crate::{
+    model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow},
+    persistence::db::DbTx,
+    repository::tx_check,
+};
 
 use super::def_repository_impl;
 
@@ -160,4 +168,130 @@ FROM folder_hierarchy
         }
         Ok(nodes)
     }
+
+    async fn create_play_folder(&self, model: CreatePlayFolderModel) -> AppResult<PlayFolder> {
+        let folder = PlayFolder {
+            item: PlayItem {
+                id: Uuid::now(),
+                title: model.item.title,
+                description: model.item.description,
+                created_at: Utc::now(),
+            },
+        };
+
+        let mut tx = self.db.begin().await?;
+
+        add_play_item(&mut tx, &folder.item, PlayItemKind::Folder).await?;
+
+        let folder_result = sqlx::query("INSERT INTO play_folders (item_id) VALUES (?)")
+            .bind(folder.item.id)
+            .execute(&mut *tx)
+            .await;
+
+        tx_check!(folder_result, tx);
+
+        add_play_hierarchy(&mut tx, model.item.parent_folder_id, folder.item.id).await?;
+
+        tx.commit().await?;
+
+        Ok(folder)
+    }
+
+    async fn create_playlist(&self, model: CreatePlaylistModel) -> AppResult<Playlist> {
+        let content = Playlist {
+            item: PlayItem {
+                id: Uuid::now(),
+                title: model.item.title,
+                description: model.item.description,
+                created_at: Utc::now(),
+            },
+            thumbnail_path: model.thumbnail_path,
+            rules: vec![],
+        };
+
+        let mut tx = self.db.begin().await?;
+
+        add_play_item(&mut tx, &content.item, PlayItemKind::Playlist).await?;
+
+        let playlist_result =
+            sqlx::query("INSERT INTO playlists (item_id, thumbnail_path, rules) VALUES (?, ?, ?)")
+                .bind(content.item.id)
+                .bind(&content.thumbnail_path)
+                .bind(sqlx::types::Json(content.rules.as_slice()))
+                .execute(&mut *tx)
+                .await;
+
+        tx_check!(playlist_result, tx);
+
+        add_play_hierarchy(&mut tx, model.item.parent_folder_id, content.item.id).await?;
+
+        tx.commit().await?;
+
+        Ok(content)
+    }
+}
+
+async fn add_play_item(tx: &mut DbTx, item: &PlayItem, kind: PlayItemKind) -> AppResult<()> {
+    let item_result = sqlx::query(
+        "INSERT INTO play_items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
+    )
+    .bind(item.id)
+    .bind(&item.title)
+    .bind(&item.description)
+    .bind(kind)
+    .bind(item.created_at)
+    .execute(&mut **tx)
+    .await;
+
+    tx_check!(item_result, tx);
+
+    Ok(())
+}
+
+async fn add_play_hierarchy(tx: &mut DbTx, parent_folder_id: Uuid, item_id: Uuid) -> AppResult<()> {
+    let sort_order: u32 = sqlx::query_scalar(
+        "
+SELECT 
+    MAX(sort_order)
+FROM hierarchical_play_items
+WHERE parent_folder_id = ?
+",
+    )
+    .bind(parent_folder_id)
+    .fetch_one(&mut **tx)
+    .await?;
+
+    let sort_order = sort_order + 1;
+
+    let shift_result = sqlx::query(
+        "
+UPDATE hierarchical_play_items
+SET sort_order = sort_order + 1
+WHERE parent_folder_id = ? AND sort_order >= ?
+",
+    )
+    .bind(parent_folder_id)
+    .bind(sort_order)
+    .execute(&mut **tx)
+    .await;
+
+    shift_result?;
+
+    let hierarchy_result = sqlx::query(
+        "
+INSERT INTO hierarchical_play_items 
+    (parent_folder_id, child_id, sort_order, created_at)
+VALUES 
+    (?, ?, ?, ?)",
+    )
+    .bind(parent_folder_id)
+    .bind(item_id)
+    .bind(sort_order)
+    .bind(Utc::now())
+    .execute(&mut **tx)
+    .await;
+
+    tx_check!(hierarchy_result, tx);
+
+    Ok(())
 }

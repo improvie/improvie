@@ -6,6 +6,8 @@ use improvie_logic::{
 };
 use uuid::Uuid;
 
+use crate::model::plays::{CreatePlayFolderModel, CreatePlaylistModel};
+
 #[async_trait::async_trait]
 pub trait PlaystsRepository {
     async fn get_plays_hierarchy_current(&self, folder_id: Uuid) -> AppResult<PlayFolderNode>;
@@ -20,4 +22,8 @@ pub trait PlaystsRepository {
     async fn get_playlists(&self) -> AppResult<Vec<Playlist>>;
 
     async fn get_favorite_playlists(&self) -> AppResult<Vec<Uuid>>;
+
+    async fn create_play_folder(&self, model: CreatePlayFolderModel) -> AppResult<PlayFolder>;
+
+    async fn create_playlist(&self, model: CreatePlaylistModel) -> AppResult<Playlist>;
 }

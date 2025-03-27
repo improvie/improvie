@@ -8,6 +8,7 @@ use improvie_domain::{
 use improvie_logic::{
     AppResult,
     constant::plays::PlayItemKind,
+    logic::rule::Rule,
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
@@ -44,7 +45,7 @@ INNER JOIN play_items AS pi ON pi.id = pf.item_id
         let rows = sqlx::query_as::<_, PlaylistRow>(
             "
 SELECT
-    pi.id, pi.title, pi.description, pl.thumbnail_path, pl.rules, pi.created_at
+    pi.id, pi.title, pi.description, pl.thumbnail_path, pi.created_at
 FROM playlists AS pl
 INNER JOIN play_items AS pi ON pi.id = pl.item_id
 ",
@@ -206,7 +207,6 @@ FROM folder_hierarchy
                 created_at: Utc::now(),
             },
             thumbnail_path: model.thumbnail_path,
-            rules: vec![],
         };
 
         let mut tx = self.db.begin().await?;
@@ -217,7 +217,7 @@ FROM folder_hierarchy
             sqlx::query("INSERT INTO playlists (item_id, thumbnail_path, rules) VALUES (?, ?, ?)")
                 .bind(content.item.id)
                 .bind(&content.thumbnail_path)
-                .bind(sqlx::types::Json(content.rules.as_slice()))
+                .bind(sqlx::types::Json(Vec::<Rule>::new()))
                 .execute(&mut *tx)
                 .await;
 

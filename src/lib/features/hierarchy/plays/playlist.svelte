@@ -1,5 +1,6 @@
 <script lang='ts'>
   import * as Table from '$lib/components/ui/table/index.js';
+  import { select_playlist } from '$lib/stores/plays';
   import { playlists } from '$lib/stores/plays/playlist';
   import { DateTimeFormat } from '$lib/utils';
   import { ListMusicIcon, ListXIcon } from 'lucide-svelte';
@@ -13,7 +14,9 @@
 </script>
 
 {#if playlist !== undefined}
-  <Table.Row>
+  <Table.Row ondblclick={() => {
+    select_playlist(playlist.id);
+  }}>
     <Table.Cell><ListMusicIcon /></Table.Cell>
 
     <Table.Cell>{playlist.title}</Table.Cell>

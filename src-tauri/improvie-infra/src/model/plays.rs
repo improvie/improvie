@@ -1,7 +1,6 @@
 use chrono::{DateTime, Utc};
 use improvie_logic::{
     constant::plays::PlayItemKind,
-    logic::rule::Rule,
     model::plays::{PlayFolder, PlayItem, Playlist},
 };
 use more_convert::Convert;
@@ -29,8 +28,6 @@ pub struct PlaylistRow {
     #[sqlx(flatten)]
     pub item: PlayItemRaw,
     pub thumbnail_path: Option<String>,
-    #[sqlx(json)]
-    pub rules: Vec<Rule>,
 }
 
 #[derive(sqlx::FromRow)]

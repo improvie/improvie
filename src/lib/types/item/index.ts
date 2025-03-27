@@ -19,9 +19,6 @@ export interface Folder extends Item {
 
 export type ItemKind = 'Content' | 'Folder';
 
-export type ItemDetail = Item &
-  ({ kind: 'Content'; detail: Content } | { kind: 'Folder'; detail: Folder });
-
 export interface FolderNode {
   folder: string;
   items: ItemNode[];

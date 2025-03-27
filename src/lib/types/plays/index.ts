@@ -7,8 +7,6 @@ export interface PlayItem {
 
 export interface Playlist extends PlayItem {
   thumbnail_path: string | undefined;
-  // TODO: rules
-  rules: string;
 }
 
 export interface PlayFolder extends PlayItem {
@@ -16,9 +14,6 @@ export interface PlayFolder extends PlayItem {
 }
 
 export type PlayItemKind = 'Playlist' | 'Folder';
-
-export type PlayItemDetail = PlayItem &
-  ({ kind: 'Playlist'; detail: Playlist } | { kind: 'Folder'; detail: PlayFolder });
 
 export interface PlayFolderNode {
   folder: string;

@@ -1,6 +1,7 @@
 pub mod halth_check;
 pub mod items;
 pub mod plays;
+pub mod rules;
 
 macro_rules! def_use_case {
     ($ident:ident) => {

@@ -2,6 +2,7 @@ use std::{path::PathBuf, sync::Arc};
 
 use improvie_app::usecase::{
     halth_check::HealthCheckUseCase, items::ItemsUseCase, plays::PlaystsUseCase,
+    rules::RulesUseCase,
 };
 use improvie_infra::{
     modules::RepositoriesModuleImpl,
@@ -14,6 +15,7 @@ macros::def_modules!(
         health_check_use_case: HealthCheckUseCase,
         items_use_case: ItemsUseCase,
         playsts_use_case: PlaystsUseCase,
+        rules_use_case: RulesUseCase,
     }
 );
 

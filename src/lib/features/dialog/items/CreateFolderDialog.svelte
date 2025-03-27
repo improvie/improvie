@@ -59,10 +59,10 @@
 
 <Dialog.Root bind:open>
   <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>Add Folder</Dialog.Title>
+    </Dialog.Header>
     <form method='POST' use:enhance onsubmit={handleSubmit}>
-      <Dialog.Header>
-        <Dialog.Title>Add Folder</Dialog.Title>
-      </Dialog.Header>
       <div class='grid gap-4 py-4'>
         <Form.Field {form} name='title'>
           <Form.Control>

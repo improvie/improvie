@@ -2,15 +2,12 @@
   import type { RuleType } from '$lib/types/rules';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
+  import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
 
-  let { target = $bindable(undefined) }: { target: RuleType[] | undefined } = $props();
+  let { target = $bindable(), open = $bindable() }: { target: { rules: RuleType[] }; open: boolean } = $props();
 </script>
 
-<Dialog.Root open={target !== undefined} onOpenChange={(value) => {
-  if (!value) {
-    target = undefined;
-  }
-}}>
+<Dialog.Root bind:open>
   <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title class='text-center'>Create Rule</Dialog.Title>
@@ -22,7 +19,9 @@
         <Tabs.Trigger value='loop'>Loop</Tabs.Trigger>
         <Tabs.Trigger value='random'>Random</Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content value='content'>Make changes to your account here.</Tabs.Content>
+      <Tabs.Content value='content'>
+        <RuleContentForm bind:target />
+      </Tabs.Content>
       <Tabs.Content value='range'>Change your password here.</Tabs.Content>
       <Tabs.Content value='loop'>Change your password here.</Tabs.Content>
       <Tabs.Content value='random'>Change your password here.</Tabs.Content>

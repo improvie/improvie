@@ -2,10 +2,11 @@ import type { PlayFolder } from '$lib/types/plays';
 import type { CreatePlayFolder } from '$lib/types/plays/create';
 import type { Writable } from 'svelte/store';
 import { action_create_play_folder } from '$lib/action/plays/folder';
+import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
 import { play_folder_nodes } from '.';
 
-export const play_folders: Writable<Map<string, PlayFolder>> = writable(new Map());
+export const play_folders: Writable<SvelteMap<string, PlayFolder>> = writable(new SvelteMap());
 
 export async function create_play_folder(data: CreatePlayFolder): Promise<void> {
   const res = await action_create_play_folder(data);

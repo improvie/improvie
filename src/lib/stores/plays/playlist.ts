@@ -2,10 +2,11 @@ import type { Playlist } from '$lib/types/plays';
 import type { CreatePlaylist } from '$lib/types/plays/create';
 import type { Writable } from 'svelte/store';
 import { action_create_playlist } from '$lib/action/plays/playlists';
+import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
 import { play_folder_nodes } from '.';
 
-export const playlists: Writable<Map<string, Playlist>> = writable(new Map());
+export const playlists: Writable<SvelteMap<string, Playlist>> = writable(new SvelteMap());
 
 export async function create_playlist(data: CreatePlaylist): Promise<void> {
   const res = await action_create_playlist(data);

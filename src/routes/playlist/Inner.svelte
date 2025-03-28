@@ -10,12 +10,12 @@
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { ListPlusIcon } from 'lucide-svelte';
 
-  // TODO: reference array になっていない rulesに変更が適用されていない
-  let { playlist = $bindable(), rules = $bindable() }: { playlist: Playlist; rules: { rules: RuleType[] } } = $props();
+  let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
+  let rules = $state(prop_rules);
   let open = $state(false);
 </script>
 
-<CreateRuleDialog bind:target={rules} bind:open />
+<CreateRuleDialog bind:rules bind:open />
 
 <Card.Root class='container w-2/3 mx-auto'>
   <Card.Header>
@@ -29,8 +29,8 @@
       <h2 class='text-2xl'>Rules</h2>
       <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
     </div>
-    {#each rules.rules as _, i}
-      <RuleNode bind:rule={rules.rules[i]} />
+    {#each rules as _, i}
+      <RuleNode bind:rule={rules[i]} />
     {/each}
   </Card.Content>
 </Card.Root>

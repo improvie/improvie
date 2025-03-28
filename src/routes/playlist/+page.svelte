@@ -21,7 +21,7 @@
   {#await playlist[1]}
     <div class='w-full h-full flex justify-center items-center'>Loading...</div>
   {:then rules}
-    <PlaylistInner playlist={playlist[0]} rules={{ rules }} />
+    <PlaylistInner playlist={playlist[0]} rules={rules} />
   {:catch e}
     {console.error(e)}
     <div class='w-full h-full flex justify-center items-center'>Your request failed. Please try again later.</div>

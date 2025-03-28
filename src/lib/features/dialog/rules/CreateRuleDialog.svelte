@@ -4,7 +4,9 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
 
-  let { target = $bindable(), open = $bindable() }: { target: { rules: RuleType[] }; open: boolean } = $props();
+  let { rules = $bindable(), open = $bindable() }: { rules: RuleType[]; open: boolean } = $props();
+
+  $inspect(rules, open);
 </script>
 
 <Dialog.Root bind:open>
@@ -20,7 +22,7 @@
         <Tabs.Trigger value='random'>Random</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value='content'>
-        <RuleContentForm bind:target />
+        <RuleContentForm bind:rules />
       </Tabs.Content>
       <Tabs.Content value='range'>Change your password here.</Tabs.Content>
       <Tabs.Content value='loop'>Change your password here.</Tabs.Content>

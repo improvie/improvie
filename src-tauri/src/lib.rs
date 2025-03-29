@@ -18,7 +18,10 @@ pub fn run() {
             let data_dir = app.path().app_data_dir()?;
 
             let modules = block_on(Modules::new_with_db(data_dir))?;
-            let app_state = AppState { modules };
+            let app_state = AppState {
+                modules,
+                current_rules: Default::default(),
+            };
             app.manage(app_state);
             Ok(())
         })

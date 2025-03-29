@@ -1,5 +1,5 @@
 use improvie_domain::{modules::RepositoriesModule, repository::rules::RulesRepository};
-use improvie_logic::{AppResult, logic::rule::Rule};
+use improvie_logic::{AppResult, logic::rule::Rule, rules::RuleResult};
 use uuid::Uuid;
 
 super::def_use_case!(RulesUseCase);

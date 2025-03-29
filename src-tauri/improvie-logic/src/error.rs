@@ -1,8 +1,11 @@
 use more_convert::VariantName;
 
+pub mod rules;
+
 pub type AppResult<T> = std::result::Result<T, AppError>;
 
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
+#[variant_name(prefix = "App")]
 pub enum AppError {
     #[error("db error: {0}")]
     Db(#[from] sqlx::Error),

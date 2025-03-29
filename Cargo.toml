@@ -25,7 +25,7 @@ improvie-command = { path = "src-tauri/improvie-command" }
 uuid = { path = "src-tauri/external_crate/uuid" }
 
 # tauri
-tauri = { version = "=2.3.1", features = [] }
+tauri = { version = "=2.4.0", features = [] }
 tauri-plugin-dialog = "=2.2.0"
 
 # async/concurrency/parallelism
@@ -57,7 +57,7 @@ syn = "=2.0"
 seq-macro = "=0.3.6"
 
 # others
-log = "=0.4.26"
+log = "=0.4.27"
 sqlx = { version = "=0.8.3", features = [
     "sqlite",
     "runtime-tokio-native-tls",

@@ -16,7 +16,7 @@
     <Dialog.Header>
       <Dialog.Title class='text-center'>Create Rule</Dialog.Title>
     </Dialog.Header>
-    <Tabs.Root value='rule' class='min-h-80 text-center'>
+    <Tabs.Root value='content' class='min-h-80 text-center'>
       <Tabs.List>
         <Tabs.Trigger value='content'>Content</Tabs.Trigger>
         <Tabs.Trigger value='range'>Range</Tabs.Trigger>

@@ -1,4 +1,4 @@
-import type { RuleType } from '$lib/types/rules';
+import type { RuleFormat, RuleType } from '$lib/types/rules';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_rules(playlist_id: string): Promise<RuleType[]> {
@@ -11,4 +11,9 @@ export async function action_update_rules(playlist_id: string, rules: RuleType[]
     playlistId: playlist_id,
     rules,
   });
+}
+
+export async function action_get_rules_format(rules: RuleType[]): Promise<RuleFormat[]> {
+  const format = await invoke<RuleFormat[]>('get_rules_format', { rules });
+  return format;
 }

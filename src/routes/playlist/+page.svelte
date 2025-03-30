@@ -13,6 +13,7 @@
     }
     return [playlist, action_get_rules(playlist.id)];
   });
+
 </script>
 
 {#if playlist === undefined}

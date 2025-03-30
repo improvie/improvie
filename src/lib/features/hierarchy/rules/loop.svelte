@@ -14,7 +14,7 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<Card.Root>
+<Card.Root class='min-w-80'>
   <Card.Content>
     <div class='flex'>
       <RepeatIcon />

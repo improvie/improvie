@@ -1,7 +1,9 @@
 <script lang='ts'>
-  import * as Sidebar from '$lib/components/ui/sidebar';
+  import type { Snippet } from 'svelte';
 
+  import * as Sidebar from '$lib/components/ui/sidebar';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
+  import { initSlots } from '$lib/stores/index.svelte';
   // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
@@ -10,7 +12,7 @@
   import { onMount } from 'svelte';
   import '../app.css';
 
-  const { children } = $props();
+  const { children }: { children: Snippet } = $props();
 
   const defaultLanguage = 'ja';
   loadTranslations(defaultLanguage, '/');
@@ -20,6 +22,7 @@
     init_play_items();
   });
 
+  const slots = initSlots();
 </script>
 
 <ModeWatcher />
@@ -31,9 +34,7 @@
       <div class='flex flex-1 items-center gap-2 px-3'>
         <Sidebar.Trigger class='h-10 w-10' />
       </div>
-      <!-- <div class='ml-auto px-3'> -->
-      <!--   <SettingsDialog /> -->
-      <!-- </div> -->
+      {@render slots.header?.()}
     </header>
 
     {@render children?.()}

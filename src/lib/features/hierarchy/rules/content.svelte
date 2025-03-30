@@ -10,7 +10,7 @@
   });
 </script>
 
-<Card.Root>
+<Card.Root class='min-w-80'>
   <Card.Content>
     <div class='flex'>
       <HeadphonesIcon />

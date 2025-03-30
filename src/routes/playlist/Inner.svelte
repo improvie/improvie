@@ -6,14 +6,17 @@
   import type { Playlist } from '$lib/types/plays';
   import type { RuleType } from '$lib/types/rules';
   import { action_update_rules } from '$lib/action/rules';
+  import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
-  import { ListPlusIcon } from 'lucide-svelte';
+  import { setSlots } from '$lib/stores/index.svelte';
+  import { ListPlusIcon, SquareMenuIcon } from 'lucide-svelte';
+  import { PlaylistPlayer } from './Player.svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
-  const rules = $state(prop_rules);
+  let rules = $state(prop_rules);
   $effect(() => {
     action_update_rules(playlist.id, rules);
   });
@@ -21,26 +24,47 @@
     rules.push(new_rule);
   }
   let open = $state(false);
+  let player_open = $state(false);
+
+  setSlots({ header });
 </script>
+
+{#snippet header()}
+  <Button
+    type='button'
+    onclick={() => {
+      player_open = !player_open;
+    }}
+    variant='ghost'
+    size='icon'
+    class='mr-2'
+  >
+    <SquareMenuIcon />
+  </Button>
+{/snippet}
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<Card.Root class='container w-2/3 mx-auto select-none h-[90dvh]'>
-  <Card.Header>
-    <Card.Title>Title: {playlist.title}</Card.Title>
-    {#if playlist.description}
-      <Card.Description>Desc: {playlist.description}</Card.Description>
-    {/if}
-  </Card.Header>
-  <Card.Content class='h-full'>
-    <div class='flex items-center my-2'>
-      <h2 class='text-2xl'>Rules</h2>
-      <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
-    </div>
-    <ScrollArea class='h-[70dvh]'>
-      {#each rules as _, i}
-        <RuleNode bind:rule={rules[i]} />
-      {/each}
-    </ScrollArea>
-  </Card.Content>
-</Card.Root>
+<div class='flex transition-all mx-4'>
+  <Card.Root class='container w-2/3 select-none h-[90dvh] transition-all'>
+    <Card.Header>
+      <Card.Title>Title: {playlist.title}</Card.Title>
+      {#if playlist.description}
+        <Card.Description>Desc: {playlist.description}</Card.Description>
+      {/if}
+    </Card.Header>
+    <Card.Content class='h-full'>
+      <div class='flex items-center my-2'>
+        <h2 class='text-2xl'>Rules</h2>
+        <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
+      </div>
+      <ScrollArea class='h-[70dvh]' orientation='both'>
+        {#each rules as _, i}
+          <RuleNode bind:rule={rules[i]} />
+        {/each}
+      </ScrollArea>
+    </Card.Content>
+  </Card.Root>
+
+  <PlaylistPlayer bind:playlist bind:open={player_open} bind:rules />
+</div>

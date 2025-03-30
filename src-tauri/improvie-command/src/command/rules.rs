@@ -19,6 +19,6 @@ pub async fn get_current_rules(state: TauriAppState<'_>) -> RuleResult<Vec<Rule>
         .lock()
         .await
         .as_ref()
-        .map(|rules| rules.clone())
-        .ok_or_else(|| RuleError::NotFoundCurrent)
+        .cloned()
+        .ok_or(RuleError::NotFoundCurrent)
 }

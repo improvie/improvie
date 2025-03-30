@@ -9,7 +9,7 @@
   import { z } from 'zod';
   import FormError from '../FormError.svelte';
 
-  let { rules = $bindable() }: { rules: RuleType[] } = $props();
+  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
 
   const formSchema = z.object({
     content_id: z.string().nonempty(),
@@ -39,7 +39,7 @@
       return;
     }
 
-    rules.push({
+    add_rule({
       type: 'Content',
       data: {
         content_id: $formData.content_id,

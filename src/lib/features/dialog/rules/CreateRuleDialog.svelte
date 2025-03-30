@@ -6,9 +6,8 @@
   import RuleLoopForm from '$lib/features/form/rules/RuleLoopForm.svelte';
   import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
 
-  let { rules = $bindable(), open = $bindable() }: { rules: RuleType[]; open: boolean } = $props();
+  let { add_rule = $bindable(), open = $bindable() }: { add_rule: (new_rule: RuleType) => void; open: boolean } = $props();
 
-  $inspect(rules, open);
 </script>
 
 <Dialog.Root bind:open>
@@ -24,13 +23,13 @@
         <Tabs.Trigger value='random'>Random</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value='content'>
-        <RuleContentForm bind:rules />
+        <RuleContentForm bind:add_rule />
       </Tabs.Content>
       <Tabs.Content value='range'>
-        <RuleRangeForm bind:rules />
+        <RuleRangeForm bind:add_rule />
       </Tabs.Content>
       <Tabs.Content value='loop'>
-        <RuleLoopForm bind:rules />
+        <RuleLoopForm bind:add_rule />
       </Tabs.Content>
       <Tabs.Content value='random'>Change your password here.</Tabs.Content>
     </Tabs.Root>

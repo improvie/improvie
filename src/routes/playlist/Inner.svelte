@@ -11,13 +11,16 @@
   import { ListPlusIcon } from 'lucide-svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
-  let rules = $state(prop_rules);
+  const rules = $state(prop_rules);
+  function add_rule(new_rule: RuleType) {
+    rules.push(new_rule);
+  }
   let open = $state(false);
 </script>
 
-<CreateRuleDialog bind:rules bind:open />
+<CreateRuleDialog add_rule={add_rule} bind:open />
 
-<Card.Root class='container w-2/3 mx-auto'>
+<Card.Root class='container w-2/3 mx-auto select-none'>
   <Card.Header>
     <Card.Title>Title: {playlist.title}</Card.Title>
     {#if playlist.description}

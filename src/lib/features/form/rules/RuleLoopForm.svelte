@@ -8,10 +8,10 @@
   import { z } from 'zod';
   import FormError from '../FormError.svelte';
 
-  let { rules = $bindable() }: { rules: RuleType[] } = $props();
+  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
 
   const formSchema = z.object({
-    times: z.number().int().nonnegative(),
+    times: z.number().int().nonnegative().default('' as unknown as number),
   });
 
   const form = superForm(defaults(zod(formSchema)), {
@@ -29,7 +29,7 @@
       return;
     }
 
-    rules.push({
+    add_rule({
       type: 'Loop',
       data: {
         times: $formData.times,

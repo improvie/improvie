@@ -5,6 +5,7 @@
 <script lang='ts'>
   import type { Playlist } from '$lib/types/plays';
   import type { RuleType } from '$lib/types/rules';
+  import { action_update_rules } from '$lib/action/rules';
   import * as Card from '$lib/components/ui/card/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
@@ -13,6 +14,9 @@
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
   const rules = $state(prop_rules);
+  $effect(() => {
+    action_update_rules(playlist.id, rules);
+  });
   function add_rule(new_rule: RuleType) {
     rules.push(new_rule);
   }

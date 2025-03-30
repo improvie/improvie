@@ -18,5 +18,6 @@ pub fn generate_handler<R: tauri::Runtime>()
         plays::create_play_folder,
         plays::create_playlist,
         rules::get_rules,
+        rules::update_rules,
     ]
 }

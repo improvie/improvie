@@ -11,4 +11,11 @@ impl<R: RepositoriesModule> RulesUseCase<R> {
             .get_rules(playlist_id)
             .await
     }
+
+    pub async fn update_rules(&self, playlist_id: Uuid, rules: Vec<Rule>) -> AppResult<()> {
+        self.repository
+            .rules_repository()
+            .update_rules(playlist_id, rules)
+            .await
+    }
 }

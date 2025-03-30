@@ -20,4 +20,20 @@ WHERE item_id = ?
 
         Ok(row.0)
     }
+
+    async fn update_rules(&self, playlist_id: uuid::Uuid, rules: Vec<Rule>) -> AppResult<()> {
+        sqlx::query(
+            "
+UPDATE playlists
+SET rules = ?
+WHERE item_id = ?
+",
+        )
+        .bind(Json(rules))
+        .bind(playlist_id)
+        .execute(&self.db.pool())
+        .await?;
+
+        Ok(())
+    }
 }

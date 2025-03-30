@@ -13,6 +13,19 @@ pub async fn get_rules(state: TauriAppState<'_>, playlist_id: Uuid) -> AppResult
 }
 
 #[tauri::command]
+pub async fn update_rules(
+    state: TauriAppState<'_>,
+    playlist_id: Uuid,
+    rules: Vec<Rule>,
+) -> AppResult<()> {
+    state
+        .modules
+        .rules_use_case()
+        .update_rules(playlist_id, rules)
+        .await
+}
+
+#[tauri::command]
 pub async fn get_current_rules(state: TauriAppState<'_>) -> RuleResult<Vec<Rule>> {
     state
         .current_rules

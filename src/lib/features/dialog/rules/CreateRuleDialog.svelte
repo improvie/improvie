@@ -3,6 +3,7 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
+  import RuleLoopForm from '$lib/features/form/rules/RuleLoopForm.svelte';
   import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
 
   let { rules = $bindable(), open = $bindable() }: { rules: RuleType[]; open: boolean } = $props();
@@ -28,7 +29,9 @@
       <Tabs.Content value='range'>
         <RuleRangeForm bind:rules />
       </Tabs.Content>
-      <Tabs.Content value='loop'>Change your password here.</Tabs.Content>
+      <Tabs.Content value='loop'>
+        <RuleLoopForm bind:rules />
+      </Tabs.Content>
       <Tabs.Content value='random'>Change your password here.</Tabs.Content>
     </Tabs.Root>
   </Dialog.Content>

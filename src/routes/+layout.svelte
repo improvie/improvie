@@ -2,7 +2,7 @@
   import * as Sidebar from '$lib/components/ui/sidebar';
 
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
-  import SettingsDialog from '$lib/features/SettingsDialog.svelte';
+  // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
   import { loadTranslations } from '$lib/translations/translations';
@@ -31,9 +31,9 @@
       <div class='flex flex-1 items-center gap-2 px-3'>
         <Sidebar.Trigger class='h-10 w-10' />
       </div>
-      <div class='ml-auto px-3'>
-        <SettingsDialog />
-      </div>
+      <!-- <div class='ml-auto px-3'> -->
+      <!--   <SettingsDialog /> -->
+      <!-- </div> -->
     </header>
 
     {@render children?.()}

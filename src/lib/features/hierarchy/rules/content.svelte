@@ -12,7 +12,9 @@
 
 <Card.Root>
   <Card.Content>
-    <HeadphonesIcon />
-    <p>{content?.title || 'Loading...'}</p>
+    <div class='flex'>
+      <HeadphonesIcon />
+      <p>{content?.title || 'Loading...'}</p>
+    </div>
   </Card.Content>
 </Card.Root>

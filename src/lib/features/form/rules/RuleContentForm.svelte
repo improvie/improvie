@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import type { PickItem } from '$lib/types/item';
   import type { RuleType } from '$lib/types/rules';
   import { Button } from '$lib/components/ui/button';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -9,8 +10,6 @@
   import FormError from '../FormError.svelte';
 
   let { rules = $bindable() }: { rules: RuleType[] } = $props();
-
-  $inspect(rules);
 
   const formSchema = z.object({
     content_id: z.string().nonempty(),
@@ -23,6 +22,15 @@
   });
 
   const { form: formData, enhance, validateForm } = form;
+
+  let open = $state(false);
+  let pick_content = $state<PickItem | undefined>();
+
+  $effect(() => {
+    if (pick_content) {
+      $formData.content_id = pick_content.id;
+    }
+  });
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
@@ -40,12 +48,22 @@
   }
 </script>
 
+<ContentPicker bind:content={pick_content} bind:open />
+
 <form method='POST' use:enhance onsubmit={handleSubmit}>
   <Form.Field {form} name='content_id'>
     <Form.Control>
-      {#snippet children()}
-        <Form.Label class='text-right'>Content</Form.Label>
-        <ContentPicker bind:value={$formData.content_id} />
+      {#snippet children({ props })}
+        <div class='grid grid-cols-5 items-center gap-4'>
+          <Form.Label class='text-right'>Content</Form.Label>
+          <Button
+            class='col-span-4'
+            variant='outline'
+            {...props}
+            onclick={() => open = true}
+          >{pick_content?.hierarchy_name || 'Select content'}
+          </Button>
+        </div>
       {/snippet}
     </Form.Control>
   </Form.Field>

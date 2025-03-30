@@ -29,3 +29,8 @@ export interface ItemNode {
   id: string;
   sort_order: number;
 };
+
+export interface PickItem {
+  id: string;
+  hierarchy_name: string;
+}

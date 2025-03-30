@@ -25,7 +25,7 @@
     {/if}
   </Card.Header>
   <Card.Content>
-    <div class='flex items-center'>
+    <div class='flex items-center my-2'>
       <h2 class='text-2xl'>Rules</h2>
       <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
     </div>

@@ -19,6 +19,7 @@
   <Card.Content>
     <div class='flex'>
       <ShuffleIcon />
+      <Separator orientation='vertical' class='mx-1' />
       {#if rule.duplicate}
         <CopyCheckIcon />
       {:else}
@@ -26,8 +27,8 @@
       {/if}
       <Separator orientation='vertical' class='mx-1' />
       <RepeatIcon />
-      <p class='mx-2'>{rule.times}</p>
-      <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon />Add Rule</button>
+      <p class='mx-1'>{rule.times}</p>
+      <button onclick={() => open = true} class='flex ml-8'><ListPlusIcon />Add Rule</button>
     </div>
     <div class='block mt-2'>
       {#each rule.rules as _, i}

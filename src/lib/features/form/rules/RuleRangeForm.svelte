@@ -72,7 +72,7 @@
       {/snippet}
     </Form.Control>
   </Form.Field>
-  <Form.Field {form} name='range_start'>
+  <Form.Field {form} name='range_start' class='my-4'>
     <Form.Control>
       {#snippet children({ props })}
         <div class='grid grid-cols-5 items-center gap-4'>

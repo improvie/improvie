@@ -4,6 +4,7 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
   import RuleLoopForm from '$lib/features/form/rules/RuleLoopForm.svelte';
+  import RuleRandomForm from '$lib/features/form/rules/RuleRandomForm.svelte';
   import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
 
   let { add_rule = $bindable(), open = $bindable() }: { add_rule: (new_rule: RuleType) => void; open: boolean } = $props();
@@ -31,7 +32,9 @@
       <Tabs.Content value='loop'>
         <RuleLoopForm bind:add_rule />
       </Tabs.Content>
-      <Tabs.Content value='random'>Change your password here.</Tabs.Content>
+      <Tabs.Content value='random'>
+        <RuleRandomForm bind:add_rule />
+      </Tabs.Content>
     </Tabs.Root>
   </Dialog.Content>
 </Dialog.Root>

@@ -1,6 +1,6 @@
 use improvie_logic::{
     AppResult,
-    logic::rule::Rule,
+    logic::rule::{Rule, RuleFormat, RuleFormatIter},
     rules::{RuleError, RuleResult},
 };
 use uuid::Uuid;
@@ -34,4 +34,9 @@ pub async fn get_current_rules(state: TauriAppState<'_>) -> RuleResult<Vec<Rule>
         .as_ref()
         .cloned()
         .ok_or(RuleError::NotFoundCurrent)
+}
+
+#[tauri::command]
+pub async fn get_rules_format(rules: Vec<Rule>) -> Vec<RuleFormat> {
+    rules.iter().flat_map(|rule| rule.formats()).collect()
 }

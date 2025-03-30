@@ -19,5 +19,6 @@ pub fn generate_handler<R: tauri::Runtime>()
         plays::create_playlist,
         rules::get_rules,
         rules::update_rules,
+        rules::get_rules_format,
     ]
 }

@@ -3,6 +3,7 @@
   import type { RuleType } from '$lib/types/rules';
   import { Button } from '$lib/components/ui/button';
   import * as Form from '$lib/components/ui/form/index.js';
+  import { Input } from '$lib/components/ui/input';
   import ContentPicker from '$lib/features/combobox/ContentPicker.svelte';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
@@ -13,6 +14,8 @@
 
   const formSchema = z.object({
     content_id: z.string().nonempty(),
+    range_start: z.number().int().nonnegative(),
+    range_end: z.number().int().nonnegative(),
   });
 
   const form = superForm(defaults(zod(formSchema)), {
@@ -40,9 +43,11 @@
     }
 
     rules.push({
-      type: 'Content',
+      type: 'Range',
       data: {
         content_id: $formData.content_id,
+        range_start: $formData.range_start,
+        range_end: $formData.range_end,
       },
     });
   }
@@ -63,6 +68,26 @@
             onclick={() => open = true}
           >{pick_content?.hierarchy_name || 'Select content'}
           </Button>
+        </div>
+      {/snippet}
+    </Form.Control>
+  </Form.Field>
+  <Form.Field {form} name='range_start'>
+    <Form.Control>
+      {#snippet children({ props })}
+        <div class='grid grid-cols-5 items-center gap-4'>
+          <Form.Label class='text-right col-span-2'>Range Start</Form.Label>
+          <Input class='col-span-3' bind:value={$formData.range_start} type='number' {...props} />
+        </div>
+      {/snippet}
+    </Form.Control>
+  </Form.Field>
+  <Form.Field {form} name='range_end'>
+    <Form.Control>
+      {#snippet children({ props })}
+        <div class='grid grid-cols-5 items-center gap-4'>
+          <Form.Label class='text-right col-span-2'>Range End</Form.Label>
+          <Input class='col-span-3' bind:value={$formData.range_end} type='number' {...props} />
         </div>
       {/snippet}
     </Form.Control>

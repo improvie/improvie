@@ -50,7 +50,7 @@
 </script>
 
 <Command.Dialog bind:open>
-  <Command.Input placeholder='Search framework...' />
+  <Command.Input placeholder='Search contents...' />
   <Command.List>
     <Command.Empty>No content found.</Command.Empty>
     <Command.Group>

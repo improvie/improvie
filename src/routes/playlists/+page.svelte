@@ -5,14 +5,9 @@
   import CreatePlayFolderDialog from '$lib/features/dialog/plays/CreatePlayFolderDialog.svelte';
   import CreatePlaylistDialog from '$lib/features/dialog/plays/CreatePlaylistDialog.svelte';
   import { HierarchyPlayerFolder, HierarchyPlaylist } from '$lib/features/hierarchy/plays';
-  import { current_play_folder_ids, init_play_items, play_folder_nodes } from '$lib/stores/plays';
+  import { current_play_folder_ids, play_folder_nodes } from '$lib/stores/plays';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
-  import { onMount } from 'svelte';
   import { PlayPageBreadcrumb } from './Breadcrumb.svelte';
-
-  onMount(() => {
-    init_play_items();
-  });
 
   let is_open_create_playlist = $state(false);
   let is_open_create_play_folder = $state(false);

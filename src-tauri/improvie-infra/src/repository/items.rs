@@ -217,6 +217,58 @@ INNER JOIN items AS i ON f.item_id = i.id
 
         Ok(content)
     }
+
+    async fn delete_item(&self, item_id: Uuid) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+
+        let hierarchy_result = sqlx::query(
+            "
+DELETE FROM hierarchical_items
+WHERE parent_folder_id = ? OR child_id = ?
+",
+        )
+        .bind(item_id)
+        .bind(item_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(hierarchy_result, tx);
+
+        let item_result = sqlx::query(
+            "
+DELETE FROM items
+WHERE id = ?
+",
+        )
+        .bind(item_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(item_result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
+    }
+
+    async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+        let result = sqlx::query(
+            "
+UPDATE items
+SET title = ?
+WHERE id = ?
+",
+        )
+        .bind(&new_name)
+        .bind(item_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        Ok(())
+    }
 }
 
 async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {

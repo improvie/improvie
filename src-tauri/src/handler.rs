@@ -11,6 +11,8 @@ pub fn generate_handler<R: tauri::Runtime>()
         items::get_folders,
         items::create_folder,
         items::create_content,
+        items::delete_item,
+        items::update_item_name,
         plays::get_playlists,
         plays::get_play_folders,
         plays::get_favorite_playlists,

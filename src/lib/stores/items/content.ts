@@ -25,6 +25,7 @@ export async function update_content_name(id: string, name: string): Promise<voi
     const c = v.get(id);
     if (c) {
       c.title = name;
+      v.set(id, c);
     }
     return v;
   });

@@ -60,7 +60,9 @@
       </div>
       <ScrollArea class='h-[70dvh]' orientation='both'>
         {#each rules as _, i}
-          <RuleNode bind:rule={rules[i]} />
+          <RuleNode bind:rule={rules[i]} remove_rule={() => {
+            rules = rules.filter((_, j) => i !== j);
+          }} />
         {/each}
       </ScrollArea>
     </Card.Content>

@@ -1,23 +1,31 @@
 <script lang='ts'>
   import type { RangeRule } from '$lib/types/rules';
   import * as Card from '$lib/components/ui/card/index.js';
+  import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { contents } from '$lib/stores/items/content';
   import { ChevronsUpIcon } from 'lucide-svelte';
 
-  let { rule = $bindable() }: { rule: RangeRule } = $props();
+  let { rule = $bindable(), remove_rule }: { rule: RangeRule; remove_rule: () => void } = $props();
   const content = $derived.by(() => {
     return $contents.get(rule.content_id);
   });
 </script>
 
-<Card.Root class='min-w-80'>
-  <Card.Content>
-    <div class='flex'>
-      <ChevronsUpIcon />
-      <p>{content?.title || 'Loading...'}</p>
-      <Separator orientation='vertical' class='mx-1' />
-      <p>{rule.range_start}s - {rule.range_end}s</p>
-    </div>
-  </Card.Content>
-</Card.Root>
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card.Root class='min-w-80'>
+      <Card.Content>
+        <div class='flex'>
+          <ChevronsUpIcon />
+          <p>{content?.title || 'Loading...'}</p>
+          <Separator orientation='vertical' class='mx-1' />
+          <p>{rule.range_start}s - {rule.range_end}s</p>
+        </div>
+      </Card.Content>
+    </Card.Root>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item onclick={remove_rule}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>

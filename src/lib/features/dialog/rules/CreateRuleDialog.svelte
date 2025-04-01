@@ -7,7 +7,7 @@
   import RuleRandomForm from '$lib/features/form/rules/RuleRandomForm.svelte';
   import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
 
-  let { add_rule = $bindable(), open = $bindable() }: { add_rule: (new_rule: RuleType) => void; open: boolean } = $props();
+  let { add_rule, open = $bindable() }: { add_rule: (new_rule: RuleType) => void; open: boolean } = $props();
 
 </script>
 

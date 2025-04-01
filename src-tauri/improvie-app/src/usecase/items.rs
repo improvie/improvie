@@ -89,10 +89,10 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
             .await
     }
 
-    pub async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()> {
+    pub async fn update_item_name(&self, item_id: Uuid, name: String) -> AppResult<()> {
         self.repository
             .items_repository()
-            .update_item_name(item_id, new_name)
+            .update_item_name(item_id, name)
             .await
     }
 }

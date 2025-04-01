@@ -294,6 +294,8 @@ WHERE id = ?
 
         tx_check!(result, tx);
 
+        tx.commit().await?;
+
         Ok(())
     }
 }

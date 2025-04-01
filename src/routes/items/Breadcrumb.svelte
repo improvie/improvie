@@ -17,7 +17,7 @@
           <Breadcrumb.Ellipsis />
         {:else}
           <button
-            class='truncate max-w-20'
+            class='truncate max-w-60'
             onclick={() => {
               current_folder_ids.update((v) => {
                 const new_v = [];

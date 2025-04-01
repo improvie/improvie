@@ -58,11 +58,11 @@ pub async fn delete_item(state: TauriAppState<'_>, item_id: Uuid) -> AppResult<V
 pub async fn update_item_name(
     state: TauriAppState<'_>,
     item_id: Uuid,
-    new_name: String,
+    name: String,
 ) -> AppResult<()> {
     state
         .modules
         .items_use_case()
-        .update_item_name(item_id, new_name)
+        .update_item_name(item_id, name)
         .await
 }

@@ -25,6 +25,7 @@ export async function update_playlist_name(id: string, name: string): Promise<vo
     const p = v.get(id);
     if (p) {
       p.title = name;
+      v.set(id, p);
     }
     return v;
   });

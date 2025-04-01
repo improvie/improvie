@@ -25,6 +25,7 @@ export async function update_folder_name(id: string, name: string): Promise<void
     const f = v.get(id);
     if (f) {
       f.title = name;
+      v.set(id, f);
     }
     return v;
   });

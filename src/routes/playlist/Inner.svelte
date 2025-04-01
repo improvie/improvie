@@ -66,5 +66,5 @@
     </Card.Content>
   </Card.Root>
 
-  <PlaylistPlayer bind:playlist bind:open={player_open} bind:rules />
+  <PlaylistPlayer bind:open={player_open} bind:rules />
 </div>

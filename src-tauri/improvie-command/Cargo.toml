@@ -9,6 +9,7 @@ improvie-logic.workspace = true
 improvie-infra.workspace = true
 improvie-app.workspace = true
 uid.workspace = true
+improvie-yt = { path = "../integration/youtube" }
 
 thiserror.workspace = true
 cfg-if.workspace = true
@@ -16,9 +17,6 @@ tauri.workspace = true
 serde.workspace = true
 log.workspace = true
 tauri-plugin-dialog.workspace = true
-
-# yt-dlp = "1.3"
-
 
 [lints]
 workspace = true

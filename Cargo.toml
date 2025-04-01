@@ -6,6 +6,8 @@ members = [
     "src-tauri/improvie-command",
     "src-tauri/improvie-logic",
     "src-tauri/improvie-app",
+    "src-tauri/external_crate/uid",
+    "src-tauri/integration/youtube",
 ]
 resolver = "3"
 
@@ -59,7 +61,7 @@ seq-macro = "=0.3.6"
 
 # others
 log = "=0.4.27"
-sqlx = { version = "=0.8.3", features = [
+sqlx = { version = "=0.8.3", git = "https://github.com/moriyoshi-kasuga/sqlx.git", features = [
     "sqlite",
     "runtime-tokio-native-tls",
     "chrono",

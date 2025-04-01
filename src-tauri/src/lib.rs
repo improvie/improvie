@@ -1,4 +1,3 @@
-use improvie_command::modules::Modules;
 use improvie_command::state::AppState;
 use tauri::{Manager, async_runtime::block_on};
 
@@ -17,8 +16,7 @@ pub fn run() {
             #[cfg(not(debug_assertions))]
             let data_dir = app.path().app_data_dir()?;
 
-            let modules = block_on(Modules::new_with_db(data_dir))?;
-            let app_state = AppState { modules };
+            let app_state = block_on(AppState::new(data_dir))?;
             app.manage(app_state);
             Ok(())
         })

@@ -1,0 +1,11 @@
+[package]
+name = "improvie-yt"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[dependencies]
+tokio.workspace = true
+log.workspace = true
+
+yt-dlp = "=1.3.2"

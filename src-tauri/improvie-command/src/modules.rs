@@ -1,4 +1,4 @@
-use std::{path::PathBuf, sync::Arc};
+use std::path::PathBuf;
 
 use improvie_app::usecase::{
     halth_check::HealthCheckUseCase, items::ItemsUseCase, plays::PlaysUseCase, rules::RulesUseCase,
@@ -19,10 +19,9 @@ macros::def_modules!(
 );
 
 impl Modules {
-    pub async fn new_with_db(data_dir: PathBuf) -> Result<Arc<Self>, InitDbError> {
+    pub async fn new_with_db(data_dir: PathBuf) -> Result<Self, InitDbError> {
         let db = DbPool::new(data_dir).await?;
         let modules = Self::new(db);
-        let modules = Arc::new(modules);
         Ok(modules)
     }
 }

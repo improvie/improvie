@@ -4,6 +4,7 @@
   import * as Table from '$lib/components/ui/table/index.js';
   import CreatePlayFolderDialog from '$lib/features/dialog/plays/CreatePlayFolderDialog.svelte';
   import CreatePlaylistDialog from '$lib/features/dialog/plays/CreatePlaylistDialog.svelte';
+  import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
   import { HierarchyPlayerFolder, HierarchyPlaylist } from '$lib/features/hierarchy/plays';
   import { current_play_folder_ids, play_folder_nodes } from '$lib/stores/plays';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
@@ -20,10 +21,13 @@
     }
     return nodes.children.sort((a, b) => a.sort_order - b.sort_order);
   });
+
+  let rename_data = $state(undefined);
 </script>
 
 <CreatePlaylistDialog bind:open={is_open_create_playlist} />
 <CreatePlayFolderDialog bind:open={is_open_create_play_folder} />
+<RenameDialog bind:data={rename_data} />
 
 <Separator class='my-2' />
 <PlayPageBreadcrumb />
@@ -40,9 +44,9 @@
   <Table.Body>
     {#each node as child}
       {#if child.kind === 'Folder'}
-        <HierarchyPlayerFolder folder_id={child.id} />
+        <HierarchyPlayerFolder folder_id={child.id} bind:rename_data />
       {:else if child.kind === 'Playlist'}
-        <HierarchyPlaylist playlist_id={child.id} />
+        <HierarchyPlaylist playlist_id={child.id} bind:rename_data />
       {/if}
     {/each}
   </Table.Body>

@@ -11,6 +11,7 @@ use improvie_logic::{
     logic::rule::Rule,
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
+use itertools::Itertools;
 use more_convert::VecInto;
 use uuid::Uuid;
 
@@ -228,6 +229,79 @@ FROM folder_hierarchy
         tx.commit().await?;
 
         Ok(content)
+    }
+
+    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+
+        // TODO: sqlは正しいけどrustのコードが間違っている
+        let mut play_item_uids = sqlx::query_scalar::<_, Uuid>(
+            "
+WITH RECURSIVE item_hierarchy(child_id) AS (
+    SELECT
+        hi.child_id
+    FROM hierarchical_play_items AS hi
+    WHERE hi.parent_folder_id = ?
+
+    UNION ALL
+
+    SELECT
+        hi.child_id
+    FROM hierarchical_play_items AS hi
+    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
+)
+SELECT child_id
+FROM item_hierarchy
+",
+        )
+        .bind(play_id)
+        .fetch_all(&mut *tx)
+        .await?;
+
+        log::debug!("play_item_uids: {:?}", play_item_uids);
+
+        play_item_uids.push(play_id);
+
+        let item_result = sqlx::query(
+            "
+DELETE FROM play_items
+WHERE id IN (?)
+",
+        )
+        .bind(
+            play_item_uids
+                .into_iter()
+                .map(|uuid| uuid.to_string())
+                .collect_vec()
+                .join(", "),
+        )
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(item_result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
+    }
+
+    async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+        let result = sqlx::query(
+            "
+UPDATE play_items
+SET title = ?
+WHERE id = ?
+",
+        )
+        .bind(&name)
+        .bind(play_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        Ok(())
     }
 }
 

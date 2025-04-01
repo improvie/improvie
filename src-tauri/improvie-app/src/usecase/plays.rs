@@ -96,4 +96,18 @@ impl<R: RepositoriesModule> PlaystsUseCase<R> {
             folder_node,
         })
     }
+
+    pub async fn delete_play_item(&self, play_id: Uuid) -> AppResult<()> {
+        self.repository
+            .playsts_repository()
+            .delete_play_item(play_id)
+            .await
+    }
+
+    pub async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+        self.repository
+            .playsts_repository()
+            .update_play_item_name(play_id, name)
+            .await
+    }
 }

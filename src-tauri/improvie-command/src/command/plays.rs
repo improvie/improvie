@@ -61,3 +61,28 @@ pub async fn create_playlist(
 ) -> AppResult<CreatePlaylistResponse> {
     state.modules.playsts_use_case().create_playlist(dto).await
 }
+
+#[tauri::command]
+pub async fn delete_play_item(
+    state: TauriAppState<'_>,
+    play_id: Uuid,
+) -> AppResult<()> {
+    state
+        .modules
+        .playsts_use_case()
+        .delete_play_item(play_id)
+        .await
+}
+
+#[tauri::command]
+pub async fn update_play_item_name(
+    state: TauriAppState<'_>,
+    play_id: Uuid,
+    name: String,
+) -> AppResult<()> {
+    state
+        .modules
+        .playsts_use_case()
+        .update_play_item_name(play_id, name)
+        .await
+}

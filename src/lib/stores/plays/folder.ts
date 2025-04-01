@@ -1,12 +1,32 @@
 import type { PlayFolder } from '$lib/types/plays';
 import type { CreatePlayFolder } from '$lib/types/plays/create';
 import type { Writable } from 'svelte/store';
+import { action_delete_play_item, action_update_play_item_name } from '$lib/action/plays';
 import { action_create_play_folder } from '$lib/action/plays/folder';
 import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
 import { play_folder_nodes } from '.';
 
 export const play_folders: Writable<SvelteMap<string, PlayFolder>> = writable(new SvelteMap());
+
+export async function delete_play_folder(id: string): Promise<void> {
+  await action_delete_play_item(id);
+  play_folders.update((v) => {
+    v.delete(id);
+    return v;
+  });
+}
+
+export async function update_play_folder_name(id: string, name: string): Promise<void> {
+  await action_update_play_item_name(id, name);
+  play_folders.update((v) => {
+    const f = v.get(id);
+    if (f) {
+      f.title = name;
+    }
+    return v;
+  });
+}
 
 export async function create_play_folder(data: CreatePlayFolder): Promise<void> {
   const res = await action_create_play_folder(data);

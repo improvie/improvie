@@ -1,7 +1,7 @@
 import type { Content } from '$lib/types/item';
 import type { CreateContent } from '$lib/types/item/create';
 import type { Writable } from 'svelte/store';
-import { action_delete_item } from '$lib/action/items';
+import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
 import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
@@ -13,6 +13,17 @@ export async function delete_content(id: string): Promise<void> {
   await action_delete_item(id);
   contents.update((v) => {
     v.delete(id);
+    return v;
+  });
+}
+
+export async function update_content_name(id: string, name: string): Promise<void> {
+  await action_update_item_name(id, name);
+  contents.update((v) => {
+    const c = v.get(id);
+    if (c) {
+      c.title = name;
+    }
     return v;
   });
 }

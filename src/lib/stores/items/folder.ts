@@ -1,7 +1,7 @@
 import type { Folder } from '$lib/types/item';
 import type { CreateFolder } from '$lib/types/item/create';
 import type { Writable } from 'svelte/store';
-import { action_delete_item } from '$lib/action/items';
+import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_folder } from '$lib/action/items/folder';
 import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
@@ -13,6 +13,17 @@ export async function delete_folder(id: string): Promise<void> {
   await action_delete_item(id);
   folders.update((v) => {
     v.delete(id);
+    return v;
+  });
+}
+
+export async function update_folder_name(id: string, name: string): Promise<void> {
+  await action_update_item_name(id, name);
+  folders.update((v) => {
+    const f = v.get(id);
+    if (f) {
+      f.title = name;
+    }
     return v;
   });
 }

@@ -1,9 +1,8 @@
 <script lang='ts'>
-  import { action_update_item_name } from '$lib/action/items';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
   import { current_folder_ids } from '$lib/stores/items';
-  import { delete_folder, folders } from '$lib/stores/items/folder';
+  import { delete_folder, folders, update_folder_name } from '$lib/stores/items/folder';
   import { DateTimeFormat } from '$lib/utils';
   import { FolderIcon } from 'lucide-svelte';
 
@@ -24,7 +23,7 @@
       update_fn: (name: string) => {
         if (folder !== undefined) {
           folder.title = name;
-          action_update_item_name(folder.id, name);
+          update_folder_name(folder.id, name);
         }
       },
     };

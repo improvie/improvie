@@ -1,12 +1,11 @@
 <script lang='ts'>
   import type { Content } from '$lib/types/item';
-  import { action_update_item_name } from '$lib/action/items';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { contents } from '$lib/stores/items/content';
+  import { contents, update_content_name } from '$lib/stores/items/content';
   import { delete_folder } from '$lib/stores/items/folder';
   import { DateTimeFormat } from '$lib/utils';
-  import { FileMusicIcon,  FileVideoIcon } from 'lucide-svelte';
+  import { FileMusicIcon, FileVideoIcon } from 'lucide-svelte';
 
   let { content_id, audio_inspector_content = $bindable(), rename_data = $bindable() }: {
     content_id: string;
@@ -28,7 +27,7 @@
       update_fn: (name: string) => {
         if (content !== undefined) {
           content.title = name;
-          action_update_item_name(content.id, name);
+          update_content_name(content.id, name);
         }
       },
     };

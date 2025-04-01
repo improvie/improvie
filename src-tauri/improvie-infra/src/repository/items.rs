@@ -10,6 +10,7 @@ use improvie_logic::{
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
+use itertools::Itertools;
 use more_convert::VecInto;
 use uuid::Uuid;
 
@@ -221,26 +222,47 @@ INNER JOIN items AS i ON f.item_id = i.id
     async fn delete_item(&self, item_id: Uuid) -> AppResult<()> {
         let mut tx = self.db.begin().await?;
 
-        let hierarchy_result = sqlx::query(
+        // TODO: sqlは正しいけどrustのコードが間違っている
+        let mut item_uids = sqlx::query_scalar::<_, Uuid>(
             "
-DELETE FROM hierarchical_items
-WHERE parent_folder_id = ? OR child_id = ?
+WITH RECURSIVE item_hierarchy(child_id) AS (
+    SELECT
+        hi.child_id
+    FROM hierarchical_items AS hi
+    WHERE hi.parent_folder_id = ?
+
+    UNION ALL
+
+    SELECT
+        hi.child_id
+    FROM hierarchical_items AS hi
+    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
+)
+SELECT child_id
+FROM item_hierarchy
 ",
         )
         .bind(item_id)
-        .bind(item_id)
-        .execute(&mut *tx)
-        .await;
+        .fetch_all(&mut *tx)
+        .await?;
 
-        tx_check!(hierarchy_result, tx);
+        log::debug!("item_uids: {:?}", item_uids);
+
+        item_uids.push(item_id);
 
         let item_result = sqlx::query(
             "
 DELETE FROM items
-WHERE id = ?
+WHERE id IN (?)
 ",
         )
-        .bind(item_id)
+        .bind(
+            item_uids
+                .into_iter()
+                .map(|uuid| uuid.to_string())
+                .collect_vec()
+                .join(", "),
+        )
         .execute(&mut *tx)
         .await;
 

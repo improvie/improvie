@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 
-export async function action_delete_item(item_id: string): Promise<void> {
-  await invoke<void>('delete_item', {
+export async function action_delete_item(item_id: string): Promise<string[]> {
+  return await invoke<string[]>('delete_item', {
     itemId: item_id,
   });
 }

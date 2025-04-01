@@ -11,8 +11,8 @@ use improvie_logic::{
     logic::rule::Rule,
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
-use itertools::Itertools;
 use more_convert::VecInto;
+use sqlx::QueryBuilder;
 use uuid::Uuid;
 
 use crate::{
@@ -231,10 +231,9 @@ FROM folder_hierarchy
         Ok(content)
     }
 
-    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<()> {
+    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
         let mut tx = self.db.begin().await?;
 
-        // TODO: sqlは正しいけどrustのコードが間違っている
         let mut play_item_uids = sqlx::query_scalar::<_, Uuid>(
             "
 WITH RECURSIVE item_hierarchy(child_id) AS (
@@ -258,31 +257,25 @@ FROM item_hierarchy
         .fetch_all(&mut *tx)
         .await?;
 
-        log::debug!("play_item_uids: {:?}", play_item_uids);
-
         play_item_uids.push(play_id);
 
-        let item_result = sqlx::query(
+        let mut builder = QueryBuilder::new(
             "
 DELETE FROM play_items
-WHERE id IN (?)
+WHERE id IN (
 ",
-        )
-        .bind(
-            play_item_uids
-                .into_iter()
-                .map(|uuid| uuid.to_string())
-                .collect_vec()
-                .join(", "),
-        )
-        .execute(&mut *tx)
-        .await;
+        );
+        let mut separated = builder.separated(", ");
+        for id in &play_item_uids {
+            separated.push_bind(id);
+        }
+        separated.push_unseparated(")");
 
-        tx_check!(item_result, tx);
+        builder.build().execute(&mut *tx).await?;
 
         tx.commit().await?;
 
-        Ok(())
+        Ok(play_item_uids)
     }
 
     async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {

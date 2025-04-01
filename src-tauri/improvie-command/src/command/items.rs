@@ -50,7 +50,7 @@ pub async fn create_content(
 }
 
 #[tauri::command]
-pub async fn delete_item(state: TauriAppState<'_>, item_id: Uuid) -> AppResult<()> {
+pub async fn delete_item(state: TauriAppState<'_>, item_id: Uuid) -> AppResult<Vec<Uuid>> {
     state.modules.items_use_case().delete_item(item_id).await
 }
 
@@ -60,5 +60,9 @@ pub async fn update_item_name(
     item_id: Uuid,
     new_name: String,
 ) -> AppResult<()> {
-    state.modules.items_use_case().update_item_name(item_id, new_name).await
+    state
+        .modules
+        .items_use_case()
+        .update_item_name(item_id, new_name)
+        .await
 }

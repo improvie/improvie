@@ -10,9 +10,11 @@ import { play_folder_nodes } from '.';
 export const playlists: Writable<SvelteMap<string, Playlist>> = writable(new SvelteMap());
 
 export async function delete_playlist(id: string): Promise<void> {
-  await action_delete_play_item(id);
+  const uids = await action_delete_play_item(id);
   playlists.update((v) => {
-    v.delete(id);
+    for (const uid of uids) {
+      v.delete(uid);
+    }
     return v;
   });
 }

@@ -10,9 +10,11 @@ import { folder_nodes } from '.';
 export const contents: Writable<SvelteMap<string, Content>> = writable(new SvelteMap());
 
 export async function delete_content(id: string): Promise<void> {
-  await action_delete_item(id);
+  const uids = await action_delete_item(id);
   contents.update((v) => {
-    v.delete(id);
+    for (const uid of uids) {
+      v.delete(uid);
+    }
     return v;
   });
 }

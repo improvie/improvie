@@ -10,8 +10,8 @@ use improvie_logic::{
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
-use itertools::Itertools;
 use more_convert::VecInto;
+use sqlx::QueryBuilder;
 use uuid::Uuid;
 
 use crate::{
@@ -219,10 +219,9 @@ INNER JOIN items AS i ON f.item_id = i.id
         Ok(content)
     }
 
-    async fn delete_item(&self, item_id: Uuid) -> AppResult<()> {
+    async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>> {
         let mut tx = self.db.begin().await?;
 
-        // TODO: sqlは正しいけどrustのコードが間違っている
         let mut item_uids = sqlx::query_scalar::<_, Uuid>(
             "
 WITH RECURSIVE item_hierarchy(child_id) AS (
@@ -246,31 +245,25 @@ FROM item_hierarchy
         .fetch_all(&mut *tx)
         .await?;
 
-        log::debug!("item_uids: {:?}", item_uids);
-
         item_uids.push(item_id);
 
-        let item_result = sqlx::query(
+        let mut builder = QueryBuilder::new(
             "
 DELETE FROM items
-WHERE id IN (?)
+WHERE id IN (
 ",
-        )
-        .bind(
-            item_uids
-                .into_iter()
-                .map(|uuid| uuid.to_string())
-                .collect_vec()
-                .join(", "),
-        )
-        .execute(&mut *tx)
-        .await;
+        );
+        let mut separated = builder.separated(", ");
+        for id in &item_uids {
+            separated.push_bind(id);
+        }
+        separated.push_unseparated(")");
 
-        tx_check!(item_result, tx);
+        builder.build().execute(&mut *tx).await?;
 
         tx.commit().await?;
 
-        Ok(())
+        Ok(item_uids)
     }
 
     async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()> {

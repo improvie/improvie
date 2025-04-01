@@ -97,7 +97,7 @@ impl<R: RepositoriesModule> PlaystsUseCase<R> {
         })
     }
 
-    pub async fn delete_play_item(&self, play_id: Uuid) -> AppResult<()> {
+    pub async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
         self.repository
             .playsts_repository()
             .delete_play_item(play_id)

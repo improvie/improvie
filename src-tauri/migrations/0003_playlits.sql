@@ -48,5 +48,5 @@ CREATE TABLE IF NOT EXISTS favorite_playlists (
     playlist_id uuid NOT NULL,
     sort_order int unsigned NOT NULL,
     PRIMARY KEY (playlist_id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists (id) ON DELETE CASCADE
+    FOREIGN KEY (playlist_id) REFERENCES playlists (item_id) ON DELETE CASCADE
 );

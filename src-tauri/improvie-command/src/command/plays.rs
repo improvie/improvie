@@ -66,7 +66,7 @@ pub async fn create_playlist(
 pub async fn delete_play_item(
     state: TauriAppState<'_>,
     play_id: Uuid,
-) -> AppResult<()> {
+) -> AppResult<Vec<Uuid>> {
     state
         .modules
         .playsts_use_case()

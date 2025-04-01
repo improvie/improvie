@@ -25,7 +25,7 @@ pub trait ItemsRepository {
 
     async fn create_content(&self, model: CreateContentModel) -> AppResult<Content>;
 
-    async fn delete_item(&self, item_id: Uuid) -> AppResult<()>;
+    async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>>;
 
     async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()>;
 }

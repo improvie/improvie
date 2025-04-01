@@ -13,7 +13,7 @@ use improvie_logic::{
 };
 use more_convert::VecInto;
 use sqlx::QueryBuilder;
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::{
     model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow},
@@ -57,22 +57,22 @@ INNER JOIN play_items AS pi ON pi.id = pl.item_id
         Ok(rows.vec_into())
     }
 
-    async fn get_favorite_playlists(&self) -> AppResult<Vec<Uuid>> {
-        let rows = sqlx::query_scalar::<_, Uuid>(
+    async fn get_favorite_playlists(&self) -> AppResult<Vec<Uid>> {
+        let rows = sqlx::query_scalar::<_, Uid>(
             "
 SELECT playlist_id
 FROM favorite_playlists
 ORDER BY sort_order
 ",
         )
-        .bind(Uuid::nil())
+        .bind(Uid::nil())
         .fetch_all(&self.db.pool())
         .await?;
 
         Ok(rows.vec_into())
     }
 
-    async fn get_plays_hierarchy_current(&self, folder_id: Uuid) -> AppResult<PlayFolderNode> {
+    async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> AppResult<PlayFolderNode> {
         let rows = sqlx::query_as::<_, PlayCurrentNodeRaw>(
             "
 SELECT 
@@ -112,8 +112,8 @@ WHERE hpi.parent_folder_id = ?
 
     async fn get_plays_hierarchy_loop(
         &self,
-        folder_id: Uuid,
-    ) -> AppResult<HashMap<Uuid, PlayFolderNode>> {
+        folder_id: Uid,
+    ) -> AppResult<HashMap<Uid, PlayFolderNode>> {
         let rows = sqlx::query_as::<_, PlayNodeRaw>(
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
@@ -145,7 +145,7 @@ FROM folder_hierarchy
         .fetch_all(&self.db.pool())
         .await?;
 
-        let mut nodes: HashMap<Uuid, PlayFolderNode> = HashMap::new();
+        let mut nodes: HashMap<Uid, PlayFolderNode> = HashMap::new();
         for row in rows {
             let parent = nodes
                 .entry(row.parent_folder_id)
@@ -174,7 +174,7 @@ FROM folder_hierarchy
     async fn create_play_folder(&self, model: CreatePlayFolderModel) -> AppResult<PlayFolder> {
         let folder = PlayFolder {
             item: PlayItem {
-                id: Uuid::now(),
+                id: Uid::now(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -202,7 +202,7 @@ FROM folder_hierarchy
     async fn create_playlist(&self, model: CreatePlaylistModel) -> AppResult<Playlist> {
         let content = Playlist {
             item: PlayItem {
-                id: Uuid::now(),
+                id: Uid::now(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -231,10 +231,10 @@ FROM folder_hierarchy
         Ok(content)
     }
 
-    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
+    async fn delete_play_item(&self, play_id: Uid) -> AppResult<Vec<Uid>> {
         let mut tx = self.db.begin().await?;
 
-        let mut play_item_uids = sqlx::query_scalar::<_, Uuid>(
+        let mut play_item_uids = sqlx::query_scalar::<_, Uid>(
             "
 WITH RECURSIVE item_hierarchy(child_id) AS (
     SELECT
@@ -278,7 +278,7 @@ WHERE id IN (
         Ok(play_item_uids)
     }
 
-    async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+    async fn update_play_item_name(&self, play_id: Uid, name: String) -> AppResult<()> {
         let mut tx = self.db.begin().await?;
         let result = sqlx::query(
             "
@@ -317,7 +317,7 @@ async fn add_play_item(tx: &mut DbTx, item: &PlayItem, kind: PlayItemKind) -> Ap
     Ok(())
 }
 
-async fn add_play_hierarchy(tx: &mut DbTx, parent_folder_id: Uuid, item_id: Uuid) -> AppResult<()> {
+async fn add_play_hierarchy(tx: &mut DbTx, parent_folder_id: Uid, item_id: Uid) -> AppResult<()> {
     let sort_order: u32 = sqlx::query_scalar(
         "
 SELECT 

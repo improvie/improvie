@@ -1,10 +1,10 @@
 [package]
-name = "uuid"
+name = "uid"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-uuid = { version = "=1.14.0", features = [
+uuid = { version = "=1.16.0", features = [
     "v7",
     "fast-rng",
     "macro-diagnostics",

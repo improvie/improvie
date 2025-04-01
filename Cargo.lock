@@ -613,7 +613,7 @@ checksum = "d38f2da7a0a2c4ccf0065be06397cc26a81f4e528be095826eee9d4adbb8c60f"
 dependencies = [
  "byteorder",
  "fnv",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -2126,7 +2126,7 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
- "uuid 0.1.0",
+ "uid",
 ]
 
 [[package]]
@@ -2143,7 +2143,7 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
- "uuid 0.1.0",
+ "uid",
 ]
 
 [[package]]
@@ -2155,7 +2155,7 @@ dependencies = [
  "improvie-logic",
  "itertools 0.14.0",
  "thiserror 2.0.12",
- "uuid 0.1.0",
+ "uid",
 ]
 
 [[package]]
@@ -2173,7 +2173,7 @@ dependencies = [
  "serde_json",
  "sqlx",
  "thiserror 2.0.12",
- "uuid 0.1.0",
+ "uid",
 ]
 
 [[package]]
@@ -2188,7 +2188,7 @@ dependencies = [
  "serde",
  "sqlx",
  "thiserror 2.0.12",
- "uuid 0.1.0",
+ "uid",
 ]
 
 [[package]]
@@ -3768,7 +3768,7 @@ dependencies = [
  "rkyv_derive",
  "seahash",
  "tinyvec",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -3901,7 +3901,7 @@ dependencies = [
  "serde",
  "serde_json",
  "url",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -4340,7 +4340,7 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "url",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -4422,7 +4422,7 @@ dependencies = [
  "stringprep",
  "thiserror 2.0.12",
  "tracing",
- "uuid 1.14.0",
+ "uuid",
  "whoami",
 ]
 
@@ -4461,7 +4461,7 @@ dependencies = [
  "stringprep",
  "thiserror 2.0.12",
  "tracing",
- "uuid 1.14.0",
+ "uuid",
  "whoami",
 ]
 
@@ -4487,7 +4487,7 @@ dependencies = [
  "sqlx-core",
  "tracing",
  "url",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -4783,7 +4783,7 @@ dependencies = [
  "thiserror 2.0.12",
  "time",
  "url",
- "uuid 1.14.0",
+ "uuid",
  "walkdir",
 ]
 
@@ -4856,7 +4856,7 @@ dependencies = [
  "thiserror 2.0.12",
  "toml",
  "url",
- "uuid 1.14.0",
+ "uuid",
 ]
 
 [[package]]
@@ -4984,7 +4984,7 @@ dependencies = [
  "toml",
  "url",
  "urlpattern",
- "uuid 1.14.0",
+ "uuid",
  "walkdir",
 ]
 
@@ -5334,6 +5334,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "uid"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "sqlx",
+ "uuid",
+]
+
+[[package]]
 name = "unic-char-property"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5457,18 +5466,9 @@ checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 
 [[package]]
 name = "uuid"
-version = "0.1.0"
-dependencies = [
- "serde",
- "sqlx",
- "uuid 1.14.0",
-]
-
-[[package]]
-name = "uuid"
-version = "1.14.0"
+version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93d59ca99a559661b96bf898d8fce28ed87935fd2bea9f05983c1464dd6c71b1"
+checksum = "458f7a779bf54acc9f347480ac654f68407d3aab21269a6e3c9f922acd9e2da9"
 dependencies = [
  "getrandom 0.3.2",
  "rand 0.9.0",

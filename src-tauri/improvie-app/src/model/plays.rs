@@ -4,12 +4,12 @@ use improvie_domain::model::plays::{
 use improvie_logic::model::plays::{PlayFolder, PlayFolderNode, Playlist};
 use more_convert::Convert;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(Debug, Deserialize, Convert)]
 #[convert(into(CreateBasePlayItemModel))]
 pub struct CreateBasePlayItemDto {
-    pub parent_folder_id: Uuid,
+    pub parent_folder_id: Uid,
 
     pub title: String,
     pub description: Option<String>,

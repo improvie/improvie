@@ -3,17 +3,17 @@ use generator::{Generator, Gn, done};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RuleFormat {
-    pub content_id: Uuid,
+    pub content_id: Uid,
     pub range_start: Option<u32>,
     pub range_end: Option<u32>,
 }
 
 impl RuleFormat {
-    pub fn new(content_id: Uuid, range_start: Option<u32>, range_end: Option<u32>) -> Self {
+    pub fn new(content_id: Uid, range_start: Option<u32>, range_end: Option<u32>) -> Self {
         Self {
             content_id,
             range_start,
@@ -39,7 +39,7 @@ pub trait RuleFormatIter {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ContentRule {
-    pub content_id: Uuid,
+    pub content_id: Uid,
 }
 
 impl RuleFormatIter for ContentRule {
@@ -53,7 +53,7 @@ impl RuleFormatIter for ContentRule {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RangeRule {
-    pub content_id: Uuid,
+    pub content_id: Uid,
     pub range_start: Option<u32>,
     pub range_end: Option<u32>,
 }

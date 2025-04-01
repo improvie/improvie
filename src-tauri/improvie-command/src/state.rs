@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
-use improvie_logic::logic::rule::Rule;
-use tauri::{State, async_runtime::Mutex};
+use tauri::State;
 
 use crate::modules::Modules;
 
@@ -15,7 +14,6 @@ cfg_if::cfg_if!(
 
 pub struct AppState {
     pub modules: Arc<Modules>,
-    pub current_rules: Arc<Mutex<Option<Vec<Rule>>>>,
 }
 
 pub type TauriAppState<'a> = State<'a, AppState>;
@@ -44,10 +42,7 @@ pub mod tests {
             let modules = Modules::new(DbPool::new(test_dir()).await.unwrap());
             let modules = Arc::new(modules);
 
-            let state = AppState {
-                modules,
-                current_rules: Default::default(),
-            };
+            let state = AppState { modules };
             app.manage(state);
             Self { app }
         }

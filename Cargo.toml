@@ -22,7 +22,7 @@ improvie-logic = { path = "src-tauri/improvie-logic" }
 improvie-command = { path = "src-tauri/improvie-command" }
 
 # external
-uuid = { path = "src-tauri/external_crate/uuid" }
+uid = { path = "src-tauri/external_crate/uid" }
 
 # tauri
 tauri = { version = "=2.4.0", features = ["protocol-asset"] }

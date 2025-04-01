@@ -7,19 +7,19 @@ use improvie_logic::{
     AppResult,
     model::items::{Content, Folder, FolderNode},
 };
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::state::TauriAppState;
 
 #[tauri::command]
 pub async fn get_items_hierarchy(
     state: TauriAppState<'_>,
-    folder_id: Option<Uuid>,
-) -> AppResult<HashMap<Uuid, FolderNode>> {
+    folder_id: Option<Uid>,
+) -> AppResult<HashMap<Uid, FolderNode>> {
     state
         .modules
         .items_use_case()
-        .get_items_hierarchy_loop(folder_id.unwrap_or(Uuid::nil()))
+        .get_items_hierarchy_loop(folder_id.unwrap_or(Uid::nil()))
         .await
 }
 
@@ -50,14 +50,14 @@ pub async fn create_content(
 }
 
 #[tauri::command]
-pub async fn delete_item(state: TauriAppState<'_>, item_id: Uuid) -> AppResult<Vec<Uuid>> {
+pub async fn delete_item(state: TauriAppState<'_>, item_id: Uid) -> AppResult<Vec<Uid>> {
     state.modules.items_use_case().delete_item(item_id).await
 }
 
 #[tauri::command]
 pub async fn update_item_name(
     state: TauriAppState<'_>,
-    item_id: Uuid,
+    item_id: Uid,
     name: String,
 ) -> AppResult<()> {
     state

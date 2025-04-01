@@ -1,28 +1,55 @@
 <script lang='ts'>
+  import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { playlists } from '$lib/stores/plays/playlist';
+  import { select_playlist } from '$lib/stores/plays';
+  import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
   import { DateTimeFormat } from '$lib/utils';
-  import { ListMusicIcon, ListXIcon } from 'lucide-svelte';
+  import { ListMusicIcon } from 'lucide-svelte';
 
-  const { playlist_id }: {
+  let { playlist_id, rename_data = $bindable() }: {
     playlist_id: string;
+    rename_data: { now_name: string; update_fn: (name: string) => void } | undefined;
   } = $props();
 
-  const playlist = $derived($playlists.get(playlist_id));
+  const playlist = $derived.by(() => $playlists.get(playlist_id));
+
+  function rename() {
+    rename_data = {
+      now_name: playlist!.title,
+      update_fn: (name: string) => {
+        if (playlist !== undefined) {
+          update_playlist_name(playlist.id, name);
+          playlists.update((v) => {
+            v.set(playlist.id, { ...playlist, title: name });
+            return v;
+          });
+        }
+      },
+    };
+  }
+
+  function delete_item() {
+    delete_playlist(playlist_id);
+  }
 
 </script>
 
 {#if playlist !== undefined}
-  <Table.Row>
-    <Table.Cell><ListMusicIcon /></Table.Cell>
+  <ContextMenu.Root>
+    <ContextMenu.Trigger class='contents'>
+      <Table.Row ondblclick={() => {
+        select_playlist(playlist.id);
+      }}>
+        <Table.Cell><ListMusicIcon /></Table.Cell>
 
-    <Table.Cell>{playlist.title}</Table.Cell>
-    <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, playlist.created_at)}</Table.Cell>
-  </Table.Row>
-{:else}
-  <Table.Row>
-    <Table.Cell><ListXIcon /></Table.Cell>
-    <Table.Cell>Loading...</Table.Cell>
-    <Table.Cell class='text-right'>...</Table.Cell>
-  </Table.Row>
+        <Table.Cell>{playlist.title}</Table.Cell>
+        <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, playlist.created_at)}</Table.Cell>
+      </Table.Row>
+    </ContextMenu.Trigger>
+    <ContextMenu.Content>
+      <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>
+      <ContextMenu.Separator />
+      <ContextMenu.Item onclick={delete_item}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+    </ContextMenu.Content>
+  </ContextMenu.Root>
 {/if}

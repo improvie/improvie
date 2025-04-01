@@ -81,4 +81,18 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
             folder_node,
         })
     }
+
+    pub async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>> {
+        self.repository
+            .items_repository()
+            .delete_item(item_id)
+            .await
+    }
+
+    pub async fn update_item_name(&self, item_id: Uuid, name: String) -> AppResult<()> {
+        self.repository
+            .items_repository()
+            .update_item_name(item_id, name)
+            .await
+    }
 }

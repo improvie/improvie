@@ -27,21 +27,6 @@ pub struct Folder {
     pub item: Item,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-#[serde(tag = "kind", content = "detail")]
-pub enum ItemDetailKind {
-    Content(Content),
-    Folder(Folder),
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct ItemDetail {
-    #[serde(flatten)]
-    pub item: Item,
-    #[serde(flatten)]
-    pub kind: ItemDetailKind,
-}
-
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct FolderNode {
     pub folder: Uuid,

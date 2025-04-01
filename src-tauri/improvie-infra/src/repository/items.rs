@@ -11,6 +11,7 @@ use improvie_logic::{
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
 use more_convert::VecInto;
+use sqlx::QueryBuilder;
 use uuid::Uuid;
 
 use crate::{
@@ -216,6 +217,74 @@ INNER JOIN items AS i ON f.item_id = i.id
         tx.commit().await?;
 
         Ok(content)
+    }
+
+    async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>> {
+        let mut tx = self.db.begin().await?;
+
+        let mut item_uids = sqlx::query_scalar::<_, Uuid>(
+            "
+WITH RECURSIVE item_hierarchy(child_id) AS (
+    SELECT
+        hi.child_id
+    FROM hierarchical_items AS hi
+    WHERE hi.parent_folder_id = ?
+
+    UNION ALL
+
+    SELECT
+        hi.child_id
+    FROM hierarchical_items AS hi
+    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
+)
+SELECT child_id
+FROM item_hierarchy
+",
+        )
+        .bind(item_id)
+        .fetch_all(&mut *tx)
+        .await?;
+
+        item_uids.push(item_id);
+
+        let mut builder = QueryBuilder::new(
+            "
+DELETE FROM items
+WHERE id IN (
+",
+        );
+        let mut separated = builder.separated(", ");
+        for id in &item_uids {
+            separated.push_bind(id);
+        }
+        separated.push_unseparated(")");
+
+        builder.build().execute(&mut *tx).await?;
+
+        tx.commit().await?;
+
+        Ok(item_uids)
+    }
+
+    async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+        let result = sqlx::query(
+            "
+UPDATE items
+SET title = ?
+WHERE id = ?
+",
+        )
+        .bind(&new_name)
+        .bind(item_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
     }
 }
 

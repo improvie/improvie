@@ -22,19 +22,21 @@ pub struct FileDialogResponse {
 }
 
 impl FileDialogResponse {
-    // filtered on file dialog, so unwrap and panic is unthinkable
-    #[allow(clippy::unwrap_used)]
     pub fn new(path: FilePath) -> Result<Self, NotAllowUrlOnFileDialog> {
         match path {
             FilePath::Url(_) => Err(NotAllowUrlOnFileDialog),
             FilePath::Path(path_buf) => {
-                let kind = match path_buf.extension().unwrap().to_string_lossy().as_ref() {
+                let Some(ext) = path_buf.extension() else {
+                    return Err(NotAllowUrlOnFileDialog);
+                };
+                let kind = match ext.to_string_lossy().as_ref() {
                     "mp3" | "wav" => FileDialogKind::Audio,
                     "mp4" => FileDialogKind::Video,
                     "png" | "jpeg" | "gif" => FileDialogKind::Image,
                     _ => unreachable!(),
                 };
 
+                #[allow(clippy::unwrap_used)]
                 let name = path_buf.file_stem().unwrap().to_string_lossy().to_string();
 
                 Ok(Self {

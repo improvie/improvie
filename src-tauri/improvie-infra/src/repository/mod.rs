@@ -1,6 +1,7 @@
 pub mod health_check;
 pub mod items;
 pub mod plays;
+pub mod rules;
 
 pub static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../migrations");
 

@@ -1,10 +1,12 @@
 use std::sync::Arc;
 
+use improvie_domain::modules::RepositoriesModule;
+
 use crate::{
     persistence::db::DbPool,
     repository::{
         health_check::HealthCheckRepositoryImpl, items::ItemsRepositoryImpl,
-        plays::PlaylistsRepositoryImpl,
+        plays::PlaylistsRepositoryImpl, rules::RulesRepositoryImpl,
     },
 };
 
@@ -23,11 +25,13 @@ impl RepositoriesModuleImpl {
 }
 
 macros::def_repositories_module!(
+    RepositoriesModule,
     RepositoriesModuleImpl,
     struct RepositoriesModuleImplInner {
         health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
         items_repository: ItemsRepositoryImpl = ItemsRepository,
         playsts_repository: PlaylistsRepositoryImpl = PlaystsRepository,
+        rules_repository: RulesRepositoryImpl = RulesRepository,
     }
 );
 
@@ -35,7 +39,7 @@ mod macros {
 
     macro_rules! def_repositories_module {
     (
-        $module:ident, $struct:ident $name:ident
+        $trait:ident, $module:ident, $struct:ident $name:ident
         { $($variable:ident: $impl:ident = $repository:ident,)* }
     ) => {
         $struct $name {
@@ -50,7 +54,7 @@ mod macros {
             }
         }
 
-        impl improvie_domain::modules::RepositoriesModule for $module {
+        impl $trait for $module {
             $(
                 type $repository = $impl;
                 fn $variable(&self) -> &Self::$repository {

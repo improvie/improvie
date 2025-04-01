@@ -1,11 +1,35 @@
 import type { Content } from '$lib/types/item';
 import type { CreateContent } from '$lib/types/item/create';
 import type { Writable } from 'svelte/store';
+import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
+import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
 import { folder_nodes } from '.';
 
-export const contents: Writable<Map<string, Content>> = writable(new Map());
+export const contents: Writable<SvelteMap<string, Content>> = writable(new SvelteMap());
+
+export async function delete_content(id: string): Promise<void> {
+  const uids = await action_delete_item(id);
+  contents.update((v) => {
+    for (const uid of uids) {
+      v.delete(uid);
+    }
+    return v;
+  });
+}
+
+export async function update_content_name(id: string, name: string): Promise<void> {
+  await action_update_item_name(id, name);
+  contents.update((v) => {
+    const c = v.get(id);
+    if (c) {
+      c.title = name;
+      v.set(id, c);
+    }
+    return v;
+  });
+}
 
 export async function create_content(data: CreateContent): Promise<void> {
   const res = await action_create_content(data);

@@ -8,9 +8,11 @@ use improvie_domain::{
 use improvie_logic::{
     AppResult,
     constant::plays::PlayItemKind,
+    logic::rule::Rule,
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
+use sqlx::QueryBuilder;
 use uuid::Uuid;
 
 use crate::{
@@ -44,7 +46,7 @@ INNER JOIN play_items AS pi ON pi.id = pf.item_id
         let rows = sqlx::query_as::<_, PlaylistRow>(
             "
 SELECT
-    pi.id, pi.title, pi.description, pl.thumbnail_path, pl.rules, pi.created_at
+    pi.id, pi.title, pi.description, pl.thumbnail_path, pi.created_at
 FROM playlists AS pl
 INNER JOIN play_items AS pi ON pi.id = pl.item_id
 ",
@@ -206,7 +208,6 @@ FROM folder_hierarchy
                 created_at: Utc::now(),
             },
             thumbnail_path: model.thumbnail_path,
-            rules: vec![],
         };
 
         let mut tx = self.db.begin().await?;
@@ -217,7 +218,7 @@ FROM folder_hierarchy
             sqlx::query("INSERT INTO playlists (item_id, thumbnail_path, rules) VALUES (?, ?, ?)")
                 .bind(content.item.id)
                 .bind(&content.thumbnail_path)
-                .bind(sqlx::types::Json(content.rules.as_slice()))
+                .bind(sqlx::types::Json(Vec::<Rule>::new()))
                 .execute(&mut *tx)
                 .await;
 
@@ -228,6 +229,74 @@ FROM folder_hierarchy
         tx.commit().await?;
 
         Ok(content)
+    }
+
+    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
+        let mut tx = self.db.begin().await?;
+
+        let mut play_item_uids = sqlx::query_scalar::<_, Uuid>(
+            "
+WITH RECURSIVE item_hierarchy(child_id) AS (
+    SELECT
+        hi.child_id
+    FROM hierarchical_play_items AS hi
+    WHERE hi.parent_folder_id = ?
+
+    UNION ALL
+
+    SELECT
+        hi.child_id
+    FROM hierarchical_play_items AS hi
+    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
+)
+SELECT child_id
+FROM item_hierarchy
+",
+        )
+        .bind(play_id)
+        .fetch_all(&mut *tx)
+        .await?;
+
+        play_item_uids.push(play_id);
+
+        let mut builder = QueryBuilder::new(
+            "
+DELETE FROM play_items
+WHERE id IN (
+",
+        );
+        let mut separated = builder.separated(", ");
+        for id in &play_item_uids {
+            separated.push_bind(id);
+        }
+        separated.push_unseparated(")");
+
+        builder.build().execute(&mut *tx).await?;
+
+        tx.commit().await?;
+
+        Ok(play_item_uids)
+    }
+
+    async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+        let result = sqlx::query(
+            "
+UPDATE play_items
+SET title = ?
+WHERE id = ?
+",
+        )
+        .bind(&name)
+        .bind(play_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
     }
 }
 

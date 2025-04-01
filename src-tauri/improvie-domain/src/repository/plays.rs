@@ -26,4 +26,8 @@ pub trait PlaystsRepository {
     async fn create_play_folder(&self, model: CreatePlayFolderModel) -> AppResult<PlayFolder>;
 
     async fn create_playlist(&self, model: CreatePlaylistModel) -> AppResult<Playlist>;
+
+    async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>>;
+
+    async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()>;
 }

@@ -11,9 +11,9 @@ use crate::model::plays::{
     CreatePlayFolderDto, CreatePlayFolderResponse, CreatePlaylistDto, CreatePlaylistResponse,
 };
 
-super::def_use_case!(PlaystsUseCase);
+super::def_use_case!(PlaysUseCase);
 
-impl<R: RepositoriesModule> PlaystsUseCase<R> {
+impl<R: RepositoriesModule> PlaysUseCase<R> {
     pub async fn get_plays_hierarchy_current(&self, folder_id: Uuid) -> AppResult<PlayFolderNode> {
         self.repository
             .playsts_repository()
@@ -95,5 +95,19 @@ impl<R: RepositoriesModule> PlaystsUseCase<R> {
             playlist,
             folder_node,
         })
+    }
+
+    pub async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
+        self.repository
+            .playsts_repository()
+            .delete_play_item(play_id)
+            .await
+    }
+
+    pub async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+        self.repository
+            .playsts_repository()
+            .update_play_item_name(play_id, name)
+            .await
     }
 }

@@ -1,7 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::logic::rule::Rule;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,7 +23,6 @@ pub struct Playlist {
     pub item: PlayItem,
 
     pub thumbnail_path: Option<String>,
-    pub rules: Vec<Rule>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]

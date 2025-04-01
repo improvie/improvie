@@ -4,16 +4,12 @@
   import * as Table from '$lib/components/ui/table/index.js';
   import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
+  import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
   import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
-  import { current_folder_ids, folder_nodes, init_items } from '$lib/stores/items';
+  import { current_folder_ids, folder_nodes } from '$lib/stores/items';
   import { FolderIcon, ImportIcon } from 'lucide-svelte';
-  import { onMount } from 'svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
-
-  onMount(() => {
-    init_items();
-  });
 
   let is_open_create_content = $state(false);
   let is_open_create_folder = $state(false);
@@ -27,11 +23,14 @@
     }
     return nodes.items.sort((a, b) => a.sort_order - b.sort_order);
   });
+
+  let rename_data = $state(undefined);
 </script>
 
 <AudioInspector bind:content={selected_content} />
 <CreateContentDialog bind:open={is_open_create_content} />
 <CreateFolderDialog bind:open={is_open_create_folder} />
+<RenameDialog bind:data={rename_data} />
 
 <Separator class='my-2' />
 <ItemPageBreadcrumb />
@@ -48,9 +47,9 @@
   <Table.Body>
     {#each node as child}
       {#if child.kind === 'Folder'}
-        <HierarchyFolder folder_id={child.id} />
+        <HierarchyFolder folder_id={child.id} bind:rename_data />
       {:else if child.kind === 'Content'}
-        <HierarchyContent content_id={child.id} bind:audio_inspector_content={selected_content} />
+        <HierarchyContent content_id={child.id} bind:audio_inspector_content={selected_content} bind:rename_data />
       {/if}
     {/each}
   </Table.Body>

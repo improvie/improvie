@@ -10,7 +10,9 @@
   import { buttonVariants } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+  import { contents } from '$lib/stores/items/content';
   import { cn } from '$lib/utils';
+  import { convertFileSrc } from '@tauri-apps/api/core';
   import { CirclePlayIcon, CircleStopIcon, ListRestartIcon } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
@@ -25,6 +27,19 @@
       tracks = res;
     });
   }
+
+  function reset() {
+    current_track = 0;
+    is_playing = false;
+    init_tracks();
+  }
+
+  const content = $derived.by(() => {
+    if (tracks.length === 0) {
+      return undefined;
+    }
+    return $contents.get(tracks[current_track].content_id);
+  });
 
   onMount(() => {
     init_tracks();
@@ -58,11 +73,7 @@
       </Tooltip.Provider>
       <Tooltip.Provider>
         <Tooltip.Root>
-          <Tooltip.Trigger class={buttonVariants({ variant: 'outline', size: 'icon' })} onclick={() => {
-            current_track = 0;
-            is_playing = false;
-            init_tracks();
-          }}>
+          <Tooltip.Trigger class={buttonVariants({ variant: 'outline', size: 'icon' })} onclick={reset}>
             <ListRestartIcon />
           </Tooltip.Trigger>
           <Tooltip.Content>
@@ -71,5 +82,14 @@
         </Tooltip.Root>
       </Tooltip.Provider>
     </div>
+    {#if content === undefined}
+      <p>Loading...</p>
+    {:else}
+      <h2>{content.title}</h2>
+      {#if content.description}
+        <p>{content.description}</p>
+      {/if}
+      <audio controls src={convertFileSrc(content.content_path)}>{content.title}</audio>
+    {/if}
   </Card.Content>
 </Card.Root>

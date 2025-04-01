@@ -24,7 +24,7 @@
     rules.push(new_rule);
   }
   let open = $state(false);
-  let player_open = $state(false);
+  let player_open = $state(true);
 
   setSlots({ header });
 </script>

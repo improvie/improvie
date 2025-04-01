@@ -25,8 +25,9 @@ improvie-command = { path = "src-tauri/improvie-command" }
 uuid = { path = "src-tauri/external_crate/uuid" }
 
 # tauri
-tauri = { version = "=2.4.0", features = [] }
+tauri = { version = "=2.4.0", features = ["protocol-asset"] }
 tauri-plugin-dialog = "=2.2.0"
+tauri-plugin-fs = "2.2.0"
 
 # async/concurrency/parallelism
 tokio = { version = "=1.44.1", features = ["full"] }

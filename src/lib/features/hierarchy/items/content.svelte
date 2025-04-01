@@ -3,6 +3,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
+  import { current_track } from '$lib/stores/track';
   import { DateTimeFormat } from '$lib/utils';
   import { FileMusicIcon, FileVideoIcon } from 'lucide-svelte';
 
@@ -15,8 +16,9 @@
   const content = $derived.by(() => $contents.get(content_id));
 
   function dblclick() {
-    if (content !== undefined && content.kind === 'Audio') {
-      audio_inspector_content = content;
+    if (content !== undefined) {
+      $current_track = content;
+    // audio_inspector_content = content;
     }
   }
 

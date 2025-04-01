@@ -3,6 +3,7 @@
 
   import * as Sidebar from '$lib/components/ui/sidebar';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
+  import TrackPlayer from '$lib/features/track-player/index.svelte';
   import { initSlots } from '$lib/stores/index.svelte';
   // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
@@ -38,6 +39,7 @@
     </header>
 
     {@render children?.()}
+    <TrackPlayer />
   </Sidebar.Inset>
 </Sidebar.Provider>
 

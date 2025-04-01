@@ -5,10 +5,11 @@
 <script lang='ts'>
   import type { RuleFormat, RuleType } from '$lib/types/rules';
   import { action_get_rules_format } from '$lib/action/rules';
-
   import { buttonVariants } from '$lib/components/ui/button';
+
   import * as Card from '$lib/components/ui/card/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
+  import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { contents } from '$lib/stores/items/content';
   import { cn } from '$lib/utils';
@@ -22,6 +23,10 @@
   let is_looping = $state(false);
   let tracks = $state<RuleFormat[]>([]);
   let current_track = $state(0);
+
+  let currentTime = $state(0);
+
+  let tabValue = $state<'audio' | 'video'>('audio');
 
   function init_tracks() {
     action_get_rules_format(rules).then((res) => {
@@ -47,6 +52,7 @@
   });
 
   function onended() {
+    currentTime = 0;
     if (current_track + 1 < tracks.length) {
       current_track += 1;
       paused = false;
@@ -124,7 +130,23 @@
       {#if content.description}
         <p>{content.description}</p>
       {/if}
-      <audio controls bind:paused src={convertFileSrc(content.content_path)} onended={onended}>{content.title}</audio>
+
+      <!-- TODO: 下にfixedのbarでyoutube musicみたいにtrackを表示しよう、でもちろん右に上矢印で現在のplaylistのtrack編集のページにいく -->
+      <Tabs.Root bind:value={tabValue} class='w-full'>
+        <Tabs.List>
+          <Tabs.Trigger value='audio'>Audio</Tabs.Trigger>
+          <Tabs.Trigger value='video'>Video</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value='audio'>
+          <audio controls bind:currentTime bind:paused src={convertFileSrc(content.content_path)} onended={onended}>{content.title}</audio>
+        </Tabs.Content>
+        <Tabs.Content value='video'>
+          <video controls bind:currentTime bind:paused src={convertFileSrc(content.content_path)} onended={onended}>
+            {content.title}
+            <track kind='captions' />
+          </video>
+        </Tabs.Content>
+      </Tabs.Root>
     {/if}
   </Card.Content>
 </Card.Root>

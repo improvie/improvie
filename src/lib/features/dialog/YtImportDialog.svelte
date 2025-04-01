@@ -58,7 +58,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content class='sm:max-w-[425px]'>
+  <Dialog.Content class='sm:max-w-xl'>
     <form method='POST' use:enhance onsubmit={handleSubmit}>
       <Dialog.Header>
         <Dialog.Title>Import Youtube Video</Dialog.Title>

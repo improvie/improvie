@@ -4,12 +4,12 @@ use improvie_logic::{
     model::plays::{PlayFolder, PlayItem, Playlist},
 };
 use more_convert::Convert;
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(sqlx::FromRow, Debug, Convert)]
 #[convert(into(PlayItem))]
 pub struct PlayItemRaw {
-    pub id: Uuid,
+    pub id: Uid,
     pub title: String,
     pub description: Option<String>,
     pub created_at: DateTime<Utc>,
@@ -32,15 +32,15 @@ pub struct PlaylistRow {
 
 #[derive(sqlx::FromRow)]
 pub struct PlayCurrentNodeRaw {
-    pub child_id: Uuid,
+    pub child_id: Uid,
     pub child_kind: PlayItemKind,
     pub sort_order: u32,
 }
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct PlayNodeRaw {
-    pub parent_folder_id: Uuid,
-    pub child_id: Uuid,
+    pub parent_folder_id: Uid,
+    pub child_id: Uid,
     pub child_kind: PlayItemKind,
     pub sort_order: u32,
 }

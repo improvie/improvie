@@ -9,6 +9,10 @@ pub type AppResult<T> = std::result::Result<T, AppError>;
 pub enum AppError {
     #[error("db error: {0}")]
     Db(#[from] sqlx::Error),
+    #[error("not ready on {0}: {1}")]
+    NotReady(&'static str, String),
+    #[error("errored on {0}: {1}")]
+    Errored(&'static str, String),
 }
 
 crate::impl_serialize_for_dyn_app_error!(AppError);

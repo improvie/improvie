@@ -1,21 +1,20 @@
 use improvie_logic::{
     AppResult,
     logic::rule::{Rule, RuleFormat, RuleFormatIter},
-    rules::{RuleError, RuleResult},
 };
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::state::TauriAppState;
 
 #[tauri::command]
-pub async fn get_rules(state: TauriAppState<'_>, playlist_id: Uuid) -> AppResult<Vec<Rule>> {
+pub async fn get_rules(state: TauriAppState<'_>, playlist_id: Uid) -> AppResult<Vec<Rule>> {
     state.modules.rules_use_case().get_rules(playlist_id).await
 }
 
 #[tauri::command]
 pub async fn update_rules(
     state: TauriAppState<'_>,
-    playlist_id: Uuid,
+    playlist_id: Uid,
     rules: Vec<Rule>,
 ) -> AppResult<()> {
     state
@@ -23,17 +22,6 @@ pub async fn update_rules(
         .rules_use_case()
         .update_rules(playlist_id, rules)
         .await
-}
-
-#[tauri::command]
-pub async fn get_current_rules(state: TauriAppState<'_>) -> RuleResult<Vec<Rule>> {
-    state
-        .current_rules
-        .lock()
-        .await
-        .as_ref()
-        .cloned()
-        .ok_or(RuleError::NotFoundCurrent)
 }
 
 #[tauri::command]

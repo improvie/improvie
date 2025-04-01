@@ -1,7 +1,8 @@
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 
-use improvie_logic::logic::rule::Rule;
-use tauri::{State, async_runtime::Mutex};
+use improvie_infra::persistence::db::InitDbError;
+use improvie_yt::YtStore;
+use tauri::{State, async_runtime::RwLock};
 
 use crate::modules::Modules;
 
@@ -15,19 +16,31 @@ cfg_if::cfg_if!(
 
 pub struct AppState {
     pub modules: Arc<Modules>,
-    pub current_rules: Arc<Mutex<Option<Vec<Rule>>>>,
+    pub yt: Arc<RwLock<YtStore>>,
+}
+
+impl AppState {
+    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
+        let modules = Modules::new_with_db(data_dir.clone()).await?;
+        let yt = Arc::new(RwLock::new(YtStore::Loading));
+        let captured_yt = yt.clone();
+
+        std::thread::spawn(move || {
+            improvie_yt::YtIntegration::new_background(data_dir, captured_yt);
+        });
+
+        Ok(Self {
+            modules: Arc::new(modules),
+            yt,
+        })
+    }
 }
 
 pub type TauriAppState<'a> = State<'a, AppState>;
 
 #[cfg(test)]
 pub mod tests {
-    use std::sync::Arc;
-
-    use improvie_infra::persistence::db::DbPool;
     use tauri::{Manager, test::MockRuntime};
-
-    use crate::modules::Modules;
 
     use super::{AppState, TauriAppState};
 
@@ -41,13 +54,7 @@ pub mod tests {
                 .build(tauri::test::mock_context(tauri::test::noop_assets()))
                 .unwrap();
 
-            let modules = Modules::new(DbPool::new(test_dir()).await.unwrap());
-            let modules = Arc::new(modules);
-
-            let state = AppState {
-                modules,
-                current_rules: Default::default(),
-            };
+            let state = AppState::new(test_dir()).await.unwrap();
             app.manage(state);
             Self { app }
         }

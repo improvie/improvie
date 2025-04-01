@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
 use improvie_logic::model::items::{Content, Folder};
 use improvie_logic::{AppResult, model::items::FolderNode};
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::model::items::{
     CreateContentDto, CreateContentResponse, CreateFolderDto, CreateFolderResponse,
@@ -14,15 +14,15 @@ super::def_use_case!(ItemsUseCase);
 impl<R: RepositoriesModule> ItemsUseCase<R> {
     pub async fn get_items_hierarchy_loop(
         &self,
-        folder_id: Uuid,
-    ) -> AppResult<HashMap<Uuid, FolderNode>> {
+        folder_id: Uid,
+    ) -> AppResult<HashMap<Uid, FolderNode>> {
         self.repository
             .items_repository()
             .get_items_hierarchy_loop(folder_id)
             .await
     }
 
-    pub async fn get_items_hierarchy_current(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+    pub async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode> {
         self.repository
             .items_repository()
             .get_items_hierarchy_current(folder_id)
@@ -82,14 +82,14 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         })
     }
 
-    pub async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>> {
+    pub async fn delete_item(&self, item_id: Uid) -> AppResult<Vec<Uid>> {
         self.repository
             .items_repository()
             .delete_item(item_id)
             .await
     }
 
-    pub async fn update_item_name(&self, item_id: Uuid, name: String) -> AppResult<()> {
+    pub async fn update_item_name(&self, item_id: Uid, name: String) -> AppResult<()> {
         self.repository
             .items_repository()
             .update_item_name(item_id, name)

@@ -5,7 +5,7 @@ authors.workspace = true
 edition.workspace = true
 
 [dependencies]
-uuid.workspace = true
+uid.workspace = true
 
 thiserror.workspace = true
 sqlx.workspace = true

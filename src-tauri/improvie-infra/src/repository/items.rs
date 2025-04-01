@@ -12,7 +12,7 @@ use improvie_logic::{
 };
 use more_convert::VecInto;
 use sqlx::QueryBuilder;
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::{
     model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
@@ -25,7 +25,7 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    async fn get_items_hierarchy_current(&self, folder_id: Uuid) -> AppResult<FolderNode> {
+    async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode> {
         let rows = sqlx::query_as::<_, CurrentNodeRaw>(
             "
 SELECT 
@@ -65,8 +65,8 @@ WHERE hi.parent_folder_id = ?
 
     async fn get_items_hierarchy_loop(
         &self,
-        folder_id: Uuid,
-    ) -> AppResult<HashMap<Uuid, FolderNode>> {
+        folder_id: Uid,
+    ) -> AppResult<HashMap<Uid, FolderNode>> {
         let rows = sqlx::query_as::<_, NodeRaw>(
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
@@ -98,7 +98,7 @@ FROM folder_hierarchy
         .fetch_all(&self.db.pool())
         .await?;
 
-        let mut nodes: HashMap<Uuid, FolderNode> = HashMap::new();
+        let mut nodes: HashMap<Uid, FolderNode> = HashMap::new();
         for row in rows {
             let parent = nodes
                 .entry(row.parent_folder_id)
@@ -158,7 +158,7 @@ INNER JOIN items AS i ON f.item_id = i.id
     async fn create_folder(&self, model: CreateFolderModel) -> AppResult<Folder> {
         let folder = Folder {
             item: Item {
-                id: Uuid::now(),
+                id: Uid::now(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -186,7 +186,7 @@ INNER JOIN items AS i ON f.item_id = i.id
     async fn create_content(&self, model: CreateContentModel) -> AppResult<Content> {
         let content = Content {
             item: Item {
-                id: Uuid::now(),
+                id: Uid::now(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -219,10 +219,10 @@ INNER JOIN items AS i ON f.item_id = i.id
         Ok(content)
     }
 
-    async fn delete_item(&self, item_id: Uuid) -> AppResult<Vec<Uuid>> {
+    async fn delete_item(&self, item_id: Uid) -> AppResult<Vec<Uid>> {
         let mut tx = self.db.begin().await?;
 
-        let mut item_uids = sqlx::query_scalar::<_, Uuid>(
+        let mut item_uids = sqlx::query_scalar::<_, Uid>(
             "
 WITH RECURSIVE item_hierarchy(child_id) AS (
     SELECT
@@ -266,7 +266,7 @@ WHERE id IN (
         Ok(item_uids)
     }
 
-    async fn update_item_name(&self, item_id: Uuid, new_name: String) -> AppResult<()> {
+    async fn update_item_name(&self, item_id: Uid, new_name: String) -> AppResult<()> {
         let mut tx = self.db.begin().await?;
         let result = sqlx::query(
             "
@@ -305,7 +305,7 @@ async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {
     Ok(())
 }
 
-async fn add_hierarchy(tx: &mut DbTx, parent_folder_id: Uuid, item_id: Uuid) -> AppResult<()> {
+async fn add_hierarchy(tx: &mut DbTx, parent_folder_id: Uid, item_id: Uid) -> AppResult<()> {
     let sort_order: u32 = sqlx::query_scalar(
         "
 SELECT 
@@ -356,11 +356,11 @@ VALUES
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use uuid::uuid;
+    use uid::uid;
 
     use improvie_domain::repository::items::ItemsRepository;
     use improvie_logic::model::items::{FolderNode, ItemNode};
-    use uuid::Uuid;
+    use uid::Uid;
 
     use crate::{
         persistence::db::DbPool,
@@ -370,34 +370,34 @@ mod tests {
     #[sqlx::test(migrator = "MIGRATOR", fixtures("get_items_hierarchy"))]
     fn get_items_hierarchy(pool: sqlx::SqlitePool) {
         let repo = ItemsRepositoryImpl::new(DbPool::with_pool(pool));
-        let res = repo.get_items_hierarchy_loop(Uuid::nil()).await.unwrap();
+        let res = repo.get_items_hierarchy_loop(Uid::nil()).await.unwrap();
         let mut map = HashMap::new();
         map.insert(
-            Uuid::nil(),
+            Uid::nil(),
             FolderNode {
-                folder: Uuid::nil(),
+                folder: Uid::nil(),
                 items: vec![
                     ItemNode::Folder {
-                        id: uuid!("00000000-0000-0000-0000-000000000002"),
+                        id: uid!("00000000-0000-0000-0000-000000000002"),
                         sort_order: 2,
                     },
                     ItemNode::Content {
-                        id: uuid!("00000000-0000-0000-0000-000000000003"),
+                        id: uid!("00000000-0000-0000-0000-000000000003"),
                         sort_order: 3,
                     },
                     ItemNode::Content {
-                        id: uuid!("00000000-0000-0000-0000-000000000004"),
+                        id: uid!("00000000-0000-0000-0000-000000000004"),
                         sort_order: 1,
                     },
                 ],
             },
         );
         map.insert(
-            uuid!("00000000-0000-0000-0000-000000000002"),
+            uid!("00000000-0000-0000-0000-000000000002"),
             FolderNode {
-                folder: uuid!("00000000-0000-0000-0000-000000000002"),
+                folder: uid!("00000000-0000-0000-0000-000000000002"),
                 items: vec![ItemNode::Content {
-                    id: uuid!("00000000-0000-0000-0000-000000000005"),
+                    id: uid!("00000000-0000-0000-0000-000000000005"),
                     sort_order: 1,
                 }],
             },

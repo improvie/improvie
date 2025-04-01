@@ -6,7 +6,7 @@ super::def_repository_impl!(RulesRepositoryImpl);
 
 #[async_trait::async_trait]
 impl RulesRepository for RulesRepositoryImpl {
-    async fn get_rules(&self, playlist_id: uuid::Uuid) -> AppResult<Vec<Rule>> {
+    async fn get_rules(&self, playlist_id: uid::Uid) -> AppResult<Vec<Rule>> {
         let row = sqlx::query_scalar::<_, Json<Vec<Rule>>>(
             "
 SELECT rules
@@ -21,7 +21,7 @@ WHERE item_id = ?
         Ok(row.0)
     }
 
-    async fn update_rules(&self, playlist_id: uuid::Uuid, rules: Vec<Rule>) -> AppResult<()> {
+    async fn update_rules(&self, playlist_id: uid::Uid, rules: Vec<Rule>) -> AppResult<()> {
         sqlx::query(
             "
 UPDATE playlists

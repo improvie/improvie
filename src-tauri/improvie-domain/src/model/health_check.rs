@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
-use uuid::Uuid;
+use uid::Uid;
 
 pub struct SettingsModel {
-    pub id: Uuid,
+    pub id: Uid,
     pub created_at: DateTime<Utc>,
 }

@@ -5,12 +5,12 @@ use improvie_logic::{
 };
 use more_convert::Convert;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(Debug, Deserialize, Convert)]
 #[convert(into(CreateBaseItemModel))]
 pub struct CreateBaseItemDto {
-    pub parent_folder_id: Uuid,
+    pub parent_folder_id: Uid,
 
     pub title: String,
     pub description: Option<String>,

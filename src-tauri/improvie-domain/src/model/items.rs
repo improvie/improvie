@@ -1,8 +1,8 @@
 use improvie_logic::constant::items::ContentKind;
-use uuid::Uuid;
+use uid::Uid;
 
 pub struct CreateBaseItemModel {
-    pub parent_folder_id: Uuid,
+    pub parent_folder_id: Uid,
 
     pub title: String,
     pub description: Option<String>,

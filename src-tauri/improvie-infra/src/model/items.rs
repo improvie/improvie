@@ -2,19 +2,19 @@ use chrono::{DateTime, Utc};
 use improvie_logic::constant::items::{ContentKind, ItemKind};
 use improvie_logic::model::items::{Content, Folder, Item};
 use more_convert::Convert;
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct CurrentNodeRaw {
-    pub child_id: Uuid,
+    pub child_id: Uid,
     pub child_kind: ItemKind,
     pub sort_order: u32,
 }
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct NodeRaw {
-    pub parent_folder_id: Uuid,
-    pub child_id: Uuid,
+    pub parent_folder_id: Uid,
+    pub child_id: Uid,
     pub child_kind: ItemKind,
     pub sort_order: u32,
 }
@@ -22,7 +22,7 @@ pub struct NodeRaw {
 #[derive(sqlx::FromRow, Debug, Convert)]
 #[convert(into(Item))]
 pub struct ItemRaw {
-    pub id: Uuid,
+    pub id: Uid,
     pub title: String,
     pub description: Option<String>,
     pub created_at: DateTime<Utc>,

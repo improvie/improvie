@@ -1,7 +1,7 @@
-use uuid::Uuid;
+use uid::Uid;
 
 pub struct CreateBasePlayItemModel {
-    pub parent_folder_id: Uuid,
+    pub parent_folder_id: Uid,
 
     pub title: String,
     pub description: Option<String>,

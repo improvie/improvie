@@ -5,7 +5,7 @@ use improvie_logic::{
     AppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::model::plays::{
     CreatePlayFolderDto, CreatePlayFolderResponse, CreatePlaylistDto, CreatePlaylistResponse,
@@ -14,7 +14,7 @@ use crate::model::plays::{
 super::def_use_case!(PlaysUseCase);
 
 impl<R: RepositoriesModule> PlaysUseCase<R> {
-    pub async fn get_plays_hierarchy_current(&self, folder_id: Uuid) -> AppResult<PlayFolderNode> {
+    pub async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> AppResult<PlayFolderNode> {
         self.repository
             .playsts_repository()
             .get_plays_hierarchy_current(folder_id)
@@ -23,8 +23,8 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
 
     pub async fn get_plays_hierarchy_loop(
         &self,
-        folder_id: Uuid,
-    ) -> AppResult<HashMap<Uuid, PlayFolderNode>> {
+        folder_id: Uid,
+    ) -> AppResult<HashMap<Uid, PlayFolderNode>> {
         self.repository
             .playsts_repository()
             .get_plays_hierarchy_loop(folder_id)
@@ -42,7 +42,7 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
         self.repository.playsts_repository().get_playlists().await
     }
 
-    pub async fn get_favorite_playlists(&self) -> AppResult<Vec<Uuid>> {
+    pub async fn get_favorite_playlists(&self) -> AppResult<Vec<Uid>> {
         self.repository
             .playsts_repository()
             .get_favorite_playlists()
@@ -97,14 +97,14 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
         })
     }
 
-    pub async fn delete_play_item(&self, play_id: Uuid) -> AppResult<Vec<Uuid>> {
+    pub async fn delete_play_item(&self, play_id: Uid) -> AppResult<Vec<Uid>> {
         self.repository
             .playsts_repository()
             .delete_play_item(play_id)
             .await
     }
 
-    pub async fn update_play_item_name(&self, play_id: Uuid, name: String) -> AppResult<()> {
+    pub async fn update_play_item_name(&self, play_id: Uid, name: String) -> AppResult<()> {
         self.repository
             .playsts_repository()
             .update_play_item_name(play_id, name)

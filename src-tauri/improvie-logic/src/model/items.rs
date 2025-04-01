@@ -1,11 +1,11 @@
 use crate::constant::items::ContentKind;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Item {
-    pub id: Uuid,
+    pub id: Uid,
     pub title: String,
     pub description: Option<String>,
     pub created_at: DateTime<Utc>,
@@ -29,13 +29,13 @@ pub struct Folder {
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct FolderNode {
-    pub folder: Uuid,
+    pub folder: Uid,
     pub items: Vec<ItemNode>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(tag = "kind")]
 pub enum ItemNode {
-    Folder { id: Uuid, sort_order: u32 },
-    Content { id: Uuid, sort_order: u32 },
+    Folder { id: Uid, sort_order: u32 },
+    Content { id: Uid, sort_order: u32 },
 }

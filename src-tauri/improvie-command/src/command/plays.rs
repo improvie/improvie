@@ -7,7 +7,7 @@ use improvie_logic::{
     AppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
-use uuid::Uuid;
+use uid::Uid;
 
 use crate::state::TauriAppState;
 
@@ -22,7 +22,7 @@ pub async fn get_playlists(state: TauriAppState<'_>) -> AppResult<Vec<Playlist>>
 }
 
 #[tauri::command]
-pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<Uuid>> {
+pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<Uid>> {
     state
         .modules
         .plays_use_case()
@@ -33,12 +33,12 @@ pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<U
 #[tauri::command]
 pub async fn get_plays_hierarchy(
     state: TauriAppState<'_>,
-    folder_id: Option<Uuid>,
-) -> AppResult<HashMap<Uuid, PlayFolderNode>> {
+    folder_id: Option<Uid>,
+) -> AppResult<HashMap<Uid, PlayFolderNode>> {
     state
         .modules
         .plays_use_case()
-        .get_plays_hierarchy_loop(folder_id.unwrap_or(Uuid::nil()))
+        .get_plays_hierarchy_loop(folder_id.unwrap_or(Uid::nil()))
         .await
 }
 
@@ -59,7 +59,7 @@ pub async fn create_playlist(
 }
 
 #[tauri::command]
-pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uuid) -> AppResult<Vec<Uuid>> {
+pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uid) -> AppResult<Vec<Uid>> {
     state
         .modules
         .plays_use_case()
@@ -70,7 +70,7 @@ pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uuid) -> AppRes
 #[tauri::command]
 pub async fn update_play_item_name(
     state: TauriAppState<'_>,
-    play_id: Uuid,
+    play_id: Uid,
     name: String,
 ) -> AppResult<()> {
     state

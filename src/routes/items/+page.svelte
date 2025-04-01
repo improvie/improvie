@@ -1,14 +1,17 @@
 <script lang='ts'>
+  import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import * as Table from '$lib/components/ui/table/index.js';
   import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
+  import YtImportDialog from '$lib/features/dialog/YtImportDialog.svelte';
   import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
+  import { setSlots } from '$lib/stores/index.svelte';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
-  import { FolderIcon, ImportIcon } from 'lucide-svelte';
+  import { CloudDownloadIcon, FolderIcon, ImportIcon } from 'lucide-svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
 
   let is_open_create_content = $state(false);
@@ -25,7 +28,27 @@
   });
 
   let rename_data = $state(undefined);
+
+  let yt_open = $state(false);
+
+  setSlots({ header });
 </script>
+
+<YtImportDialog bind:open={yt_open} parent_folder_id={current_folder_id} />
+
+{#snippet header()}
+  <Button
+    type='button'
+    onclick={() => {
+      yt_open = true;
+    }}
+    variant='ghost'
+    size='icon'
+    class='mr-2'
+  >
+    <CloudDownloadIcon />
+  </Button>
+{/snippet}
 
 <AudioInspector bind:content={selected_content} />
 <CreateContentDialog bind:open={is_open_create_content} />

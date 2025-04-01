@@ -11,11 +11,11 @@ use uuid::fmt::Hyphenated;
 
 // ref: [uuid crate](https://github.com/uuid-rs/uuid/blob/main/src/macros.rs)
 #[macro_export]
-macro_rules! uuid {
-    ($uuid:expr) => {{
-        const OUTPUT: $crate::Uuid = match $crate::Uuid::try_parse($uuid) {
+macro_rules! uid {
+    ($uid:expr) => {{
+        const OUTPUT: $crate::Uid = match $crate::Uid::try_parse($uid) {
             Ok(u) => u,
-            Err(_) => panic!("invalid UUID"),
+            Err(_) => panic!("invalid UID"),
         };
         OUTPUT
     }};
@@ -23,15 +23,15 @@ macro_rules! uuid {
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
-pub struct Uuid(uuid::Uuid);
+pub struct Uid(uuid::Uuid);
 
-impl fmt::Display for Uuid {
+impl fmt::Display for Uid {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.0.as_hyphenated().fmt(f)
     }
 }
 
-impl Uuid {
+impl Uid {
     pub fn now() -> Self {
         Self(uuid::Uuid::now_v7())
     }
@@ -52,7 +52,7 @@ impl Uuid {
         self.0.as_u128()
     }
 
-    pub const fn try_parse(s: &str) -> Result<Uuid, uuid::Error> {
+    pub const fn try_parse(s: &str) -> Result<Uid, uuid::Error> {
         match uuid::Uuid::try_parse(s) {
             Ok(v) => Ok(Self(v)),
             Err(e) => Err(e),
@@ -60,25 +60,25 @@ impl Uuid {
     }
 }
 
-impl From<uuid::Uuid> for Uuid {
+impl From<uuid::Uuid> for Uid {
     fn from(value: uuid::Uuid) -> Self {
         Self(value)
     }
 }
 
-impl From<Uuid> for uuid::Uuid {
-    fn from(value: Uuid) -> Self {
+impl From<Uid> for uuid::Uuid {
+    fn from(value: Uid) -> Self {
         value.0
     }
 }
 
-impl Serialize for Uuid {
+impl Serialize for Uid {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         self.0.as_hyphenated().serialize(serializer)
     }
 }
 
-impl<'de> Deserialize<'de> for Uuid {
+impl<'de> Deserialize<'de> for Uid {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -87,13 +87,13 @@ impl<'de> Deserialize<'de> for Uuid {
     }
 }
 
-impl Type<Sqlite> for Uuid {
+impl Type<Sqlite> for Uid {
     fn type_info() -> SqliteTypeInfo {
         Hyphenated::type_info()
     }
 }
 
-impl<'q> Encode<'q, Sqlite> for Uuid {
+impl<'q> Encode<'q, Sqlite> for Uid {
     fn encode_by_ref(
         &self,
         args: &mut Vec<SqliteArgumentValue<'q>>,
@@ -102,7 +102,7 @@ impl<'q> Encode<'q, Sqlite> for Uuid {
     }
 }
 
-impl Decode<'_, Sqlite> for Uuid {
+impl Decode<'_, Sqlite> for Uid {
     fn decode(value: SqliteValueRef<'_>) -> Result<Self, BoxDynError> {
         Hyphenated::decode(value).map(|v| Self(v.into_uuid()))
     }

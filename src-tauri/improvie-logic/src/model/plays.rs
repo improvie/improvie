@@ -1,11 +1,11 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use uuid::Uuid;
+use uid::Uid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlayItem {
-    pub id: Uuid,
+    pub id: Uid,
     pub title: String,
     pub description: Option<String>,
     pub created_at: DateTime<Utc>,
@@ -27,13 +27,13 @@ pub struct Playlist {
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct PlayFolderNode {
-    pub folder: Uuid,
+    pub folder: Uid,
     pub children: Vec<PlayItemNode>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(tag = "kind")]
 pub enum PlayItemNode {
-    Folder { id: Uuid, sort_order: u32 },
-    Playlist { id: Uuid, sort_order: u32 },
+    Folder { id: Uid, sort_order: u32 },
+    Playlist { id: Uid, sort_order: u32 },
 }

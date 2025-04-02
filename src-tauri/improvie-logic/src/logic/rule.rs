@@ -1,5 +1,4 @@
 use ambassador::{Delegate, delegatable_trait};
-use generator::{Generator, Gn, done};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
@@ -34,7 +33,7 @@ pub enum Rule {
 
 #[delegatable_trait]
 pub trait RuleFormatIter {
-    fn formats(&self) -> Generator<'_, (), RuleFormat>;
+    fn formats(&self) -> Vec<RuleFormat>;
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -43,11 +42,8 @@ pub struct ContentRule {
 }
 
 impl RuleFormatIter for ContentRule {
-    fn formats(&self) -> Generator<'_, (), RuleFormat> {
-        Gn::new_scoped(|mut s| {
-            s.yield_with(RuleFormat::new(self.content_id, None, None));
-            done!();
-        })
+    fn formats(&self) -> Vec<RuleFormat> {
+        vec![RuleFormat::new(self.content_id, None, None)]
     }
 }
 
@@ -59,15 +55,12 @@ pub struct RangeRule {
 }
 
 impl RuleFormatIter for RangeRule {
-    fn formats(&self) -> Generator<(), RuleFormat> {
-        Gn::new_scoped(|mut s| {
-            s.yield_with(RuleFormat::new(
-                self.content_id,
-                self.range_start,
-                self.range_end,
-            ));
-            done!();
-        })
+    fn formats(&self) -> Vec<RuleFormat> {
+        vec![RuleFormat::new(
+            self.content_id,
+            self.range_start,
+            self.range_end,
+        )]
     }
 }
 
@@ -78,17 +71,14 @@ pub struct LoopRule {
 }
 
 impl RuleFormatIter for LoopRule {
-    fn formats(&self) -> Generator<'_, (), RuleFormat> {
-        Gn::new_scoped(|mut s| {
-            for _ in 0..self.times {
-                for rule in &self.rules {
-                    for format in rule.formats() {
-                        s.yield_with(format);
-                    }
-                }
+    fn formats(&self) -> Vec<RuleFormat> {
+        let mut formats = Vec::new();
+        for _ in 0..self.times {
+            for rule in &self.rules {
+                formats.extend(rule.formats());
             }
-            done!();
-        })
+        }
+        formats
     }
 }
 
@@ -101,33 +91,33 @@ pub struct RandomRule {
 }
 
 impl RuleFormatIter for RandomRule {
-    fn formats(&self) -> Generator<'_, (), RuleFormat> {
-        Gn::new_scoped(|mut s| {
-            let rng = &mut rand::rng();
-            if self.duplicate {
-                for _ in 0..self.times {
-                    let Ok((rule, _)) = self.rules.choose_weighted(rng, |item| item.1) else {
-                        done!();
-                    };
-
-                    for format in rule.formats() {
-                        s.yield_with(format);
-                    }
-                }
-            } else {
-                let Ok(rules) =
-                    self.rules
-                        .choose_multiple_weighted(rng, self.times as usize, |item| item.1)
-                else {
-                    done!();
+    fn formats(&self) -> Vec<RuleFormat> {
+        let rng = &mut rand::rng();
+        let mut formats = Vec::new();
+        if self.duplicate {
+            for _ in 0..self.times {
+                let Ok((rule, _)) = self.rules.choose_weighted(rng, |item| item.1) else {
+                    return formats;
                 };
-                for (rule, _) in rules {
-                    for format in rule.formats() {
-                        s.yield_with(format);
-                    }
+
+                for format in rule.formats() {
+                    formats.push(format);
                 }
             }
-            done!();
-        })
+        } else {
+            let Ok(rules) = self
+                .rules
+                .choose_multiple_weighted(rng, self.times as usize, |item| item.1)
+            else {
+                return formats;
+            };
+            for (rule, _) in rules {
+                for format in rule.formats() {
+                    formats.push(format);
+                }
+            }
+        }
+
+        formats
     }
 }

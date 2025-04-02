@@ -46,7 +46,6 @@ thiserror = "=2.0"
 itertools = "=0.14.0"
 chrono = { version = "=0.4.40", features = ["serde"] }
 ambassador = "=0.4.1"
-generator = "=0.8.4"
 rand = "=0.9.0"
 
 # this is my crate (I'm going to update it quite a bit.)

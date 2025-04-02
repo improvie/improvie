@@ -4,6 +4,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+  import { getLocalStorageDefault, setLocalStorage } from '$lib/local-storage';
   import { TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
@@ -20,8 +21,10 @@
 
   let is_looping = $state(false);
 
-  // TODO: save volume in local storage
-  let volume = $state(1);
+  let volume = $state(Number(getLocalStorageDefault('volume', '0.5')));
+  $effect(() => {
+    setLocalStorage('volume', volume.toString());
+  });
 
   let sliderCurrentTime = $state(0);
 

@@ -68,7 +68,7 @@
           <PauseIcon />
         {/if}
       </Button>
-      <p class='text-primary text-sm'>{to_readable_time(currentTime)} / {to_readable_time(duration)}</p>
+      <p class='text-primary text-sm font-mono'>{to_readable_time(currentTime)} / {to_readable_time(duration)}</p>
     </div>
     <div class='gap-4 items-center h-full flex py-4'>
       {#if track.thumbnail_path}

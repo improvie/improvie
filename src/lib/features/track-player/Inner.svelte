@@ -11,8 +11,6 @@
 
   let { track = $bindable() }: { track: Content } = $props();
 
-  $inspect(track);
-
   let paused = $state(true);
 
   let duration = $state(0);

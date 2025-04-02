@@ -7,7 +7,6 @@
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
   import YtImportDialog from '$lib/features/dialog/YtImportDialog.svelte';
-  import AudioInspector from '$lib/features/drawer/items/AudioInspector.svelte';
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
   import { setSlots } from '$lib/stores/index.svelte';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
@@ -16,7 +15,6 @@
 
   let is_open_create_content = $state(false);
   let is_open_create_folder = $state(false);
-  let selected_content = $state(undefined);
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
   const node = $derived.by(() => {
@@ -50,7 +48,6 @@
   </Button>
 {/snippet}
 
-<AudioInspector bind:content={selected_content} />
 <CreateContentDialog bind:open={is_open_create_content} />
 <CreateFolderDialog bind:open={is_open_create_folder} />
 <RenameDialog bind:data={rename_data} />
@@ -72,7 +69,7 @@
       {#if child.kind === 'Folder'}
         <HierarchyFolder folder_id={child.id} bind:rename_data />
       {:else if child.kind === 'Content'}
-        <HierarchyContent content_id={child.id} bind:audio_inspector_content={selected_content} bind:rename_data />
+        <HierarchyContent content_id={child.id} bind:rename_data />
       {/if}
     {/each}
   </Table.Body>

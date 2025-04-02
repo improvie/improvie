@@ -1,5 +1,4 @@
 <script lang='ts'>
-  import type { Content } from '$lib/types/item';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
@@ -7,9 +6,8 @@
   import { DateTimeFormat } from '$lib/utils';
   import { FileMusicIcon, FileVideoIcon } from 'lucide-svelte';
 
-  let { content_id, audio_inspector_content = $bindable(), rename_data = $bindable() }: {
+  let { content_id, rename_data = $bindable() }: {
     content_id: string;
-    audio_inspector_content: Content | undefined;
     rename_data: { now_name: string; update_fn: (name: string) => void } | undefined;
   } = $props();
 
@@ -17,8 +15,7 @@
 
   function dblclick() {
     if (content !== undefined) {
-      $current_track = content;
-    // audio_inspector_content = content;
+      $current_track = content_id;
     }
   }
 

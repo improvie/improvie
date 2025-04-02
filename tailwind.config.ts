@@ -68,7 +68,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [...fontFamily.sans],
-        main: ['"Mamelon"', ...defaultTheme.fontFamily.sans],
+        main: ['"LINESeedJP"', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'accordion-down': {

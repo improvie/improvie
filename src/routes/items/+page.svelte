@@ -30,7 +30,10 @@
 
   let yt_open = $state(false);
 
-  setSlots({ header });
+  setSlots({
+    prefix_pathname: '/items',
+    header,
+  });
 </script>
 
 <YtImportDialog bind:open={yt_open} parent_folder_id={current_folder_id} />

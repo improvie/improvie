@@ -112,8 +112,8 @@
           <img alt={track.title} class='object-cover' src={thumbnail_path} />
         </div>
       {/if}
-      <div class='h-full'>
-        <p class='text-primary text-wrap max-w-80'>{track.title}</p>
+      <div class='h-full flex items-center'>
+        <p class='text-primary text-wrap max-w-[30rem]'>{track.title}</p>
       </div>
     </div>
     <div class='gap-4 flex items-center mr-6'>

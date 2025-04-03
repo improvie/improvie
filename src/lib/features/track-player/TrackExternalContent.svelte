@@ -37,6 +37,17 @@
     }
   });
 
+  const content_path = $derived.by(() => {
+    return convertFileSrc(content.content_path);
+  });
+
+  const thumbnail_path = $derived.by(() => {
+    if (!content.thumbnail_path) {
+      return undefined;
+    }
+    return convertFileSrc(content.thumbnail_path);
+  });
+
 </script>
 
 <Tabs.Root value={default_value} class='container mx-auto text-center h-full'>
@@ -58,9 +69,9 @@
     {/if}
   </Tabs.List>
   <Tabs.Content value='thumbnail' class='pt-4 h-full'>
-    {#if content.thumbnail_path}
+    {#if thumbnail_path}
       <img
-        src={convertFileSrc(content.thumbnail_path)}
+        src={thumbnail_path}
         alt='Thumbnail'
         class='w-full h-auto'
       />
@@ -70,8 +81,7 @@
   </Tabs.Content>
   <Tabs.Content value='video' class='pt-4 h-full'>
     <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='w-full h-auto' onclick={() => paused = !paused}>
-      <source src={convertFileSrc(content.content_path)} />
+      <source src={content_path} />
       <track kind='captions' />
-      Your browser does not support the video tag.
   </Tabs.Content>
 </Tabs.Root>

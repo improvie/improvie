@@ -78,7 +78,7 @@
 </script>
 
 {#if $current_rule === undefined}
-  <Card.Root class={cn('sticky bottom-20 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
+  <Card.Root class={cn('sticky z-10 bottom-20 px-4 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
     <TrackExternalContent
       bind:content={track}
       bind:paused
@@ -91,11 +91,11 @@
   </Card.Root>
 {/if}
 
-<Card.Root class='sticky bottom-0 h-20'>
+<Card.Root class='sticky bottom-0 h-20 z-20'>
   {#if !disable_audio}
     <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
-  <Slider class='absolute -translate-y-1/2 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
+  <Slider class='absolute -translate-y-1/2 left-0 ml-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between'>
     <div class='ml-6 gap-4 flex items-center'>
       <Button variant='outline' size='icon' onclick={() => paused = !paused}>

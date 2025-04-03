@@ -74,14 +74,14 @@
       <img
         src={thumbnail_path}
         alt='Thumbnail'
-        class='h-full w-auto'
+        class='h-full w-auto object-contain'
       />
     {:else}
       <ImageOffIcon class='w-auto h-full' />
     {/if}
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 pb-6 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
-    <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto' onclick={() => paused = !paused}>
+    <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => paused = !paused}>
       <source src={content_path} />
       <track kind='captions' />
   </Tabs.Content>

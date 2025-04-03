@@ -24,3 +24,9 @@ export function set_current_rules(rules: RuleType[]) {
     current_track_id.set(res[0].content_id);
   });
 }
+
+export function clear_track() {
+  current_rules.set(undefined);
+  current_rule_formats.set(undefined);
+  current_track_id.set(undefined);
+}

@@ -12,7 +12,7 @@
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { setSlots } from '$lib/stores/index.svelte';
-  import { current_rules, set_current_rules } from '$lib/stores/track';
+  import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
   import { ListPlusIcon, SquareMenuIcon } from 'lucide-svelte';
   import { PlaylistPlayer } from './Player.svelte';
 
@@ -20,7 +20,10 @@
   let rules = $state(prop_rules);
   $effect(() => {
     action_update_rules(playlist.id, rules);
-    if (rules.length !== 0) {
+    if (rules.length === 0) {
+      clear_track();
+    }
+    else {
       $current_rules = rules;
       set_current_rules(rules);
     }
@@ -68,5 +71,5 @@
     </ScrollArea>
   </Card.Root>
 
-  <PlaylistPlayer bind:open={player_open} bind:rules />
+  <PlaylistPlayer bind:open={player_open} />
 </div>

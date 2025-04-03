@@ -69,7 +69,7 @@
     {/if}
   </Tabs.Content>
   <Tabs.Content value='video' class='pt-4 h-full'>
-    <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='w-full h-auto'>
+    <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='w-full h-auto' onclick={() => paused = !paused}>
       <source src={convertFileSrc(content.content_path)} />
       <track kind='captions' />
       Your browser does not support the video tag.

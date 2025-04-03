@@ -4,8 +4,8 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-  import { getLocalStorageDefault, setLocalStorage } from '$lib/local-storage';
-  import { current_rule_formats, current_rules, set_current_rules } from '$lib/stores/track';
+  import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
+  import { current_rule_formats, current_rules, current_track_id, set_current_rules } from '$lib/stores/track';
   import { cn, TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { ListRestartIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
@@ -21,9 +21,13 @@
 
   let currentTime = $state(0);
 
-  let is_looping = $state(false);
+  let is_looping = $state(getLocalStorageOrDefault('is_looping', 'false') === 'true');
 
-  let volume = $state(Number(getLocalStorageDefault('volume', '0.5')));
+  $effect(() => {
+    setLocalStorage('is_looping', is_looping.toString());
+  });
+
+  let volume = $state(Number(getLocalStorageOrDefault('volume', '0.5')));
   $effect(() => {
     setLocalStorage('volume', volume.toString());
   });
@@ -34,11 +38,28 @@
     return TimeFormat.format_secs(TimeFormat.PlainHms, time);
   }
 
+  function start() {
+    paused = false;
+    currentTime = 0;
+    sliderCurrentTime = 0;
+  }
+
   function onended() {
-    if (is_looping) {
-      paused = false;
-      currentTime = 0;
-      sliderCurrentTime = 0;
+    if ($current_rule_formats !== undefined && $current_rules !== undefined) {
+      if ($current_rule_formats.idx + 1 < $current_rule_formats.rules.length) {
+        $current_rule_formats.idx = $current_rule_formats.idx + 1;
+        $current_track_id = $current_rule_formats.rules[$current_rule_formats.idx].content_id;
+      }
+      else {
+        if (is_looping) {
+          set_current_rules($current_rules);
+        }
+      }
+    }
+    else {
+      if (is_looping) {
+        start();
+      }
     }
   }
 
@@ -92,7 +113,7 @@
 
 <Card.Root class='sticky bottom-0 h-20 z-20'>
   {#if !disable_audio}
-    <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
+    <audio autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0 ml-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between'>
@@ -146,13 +167,13 @@
         </Button>
       {/if}
 
-      {#if $current_rules && $current_rule_formats}
-        <Button variant='outline' size='icon' onclick={() => {
-          set_current_rules($current_rules);
-        }}>
-          <ListRestartIcon />
-        </Button>
-      {/if}
+      <!-- {#if $current_rules} -->
+      <!--   <Button variant='outline' size='icon' onclick={() => { -->
+      <!--     set_current_rules($current_rules); -->
+      <!--   }}> -->
+      <!--     <ListRestartIcon /> -->
+      <!--   </Button> -->
+      <!-- {/if} -->
 
       <Button variant='outline' size='icon' onclick={() => {
         external_open = !external_open;

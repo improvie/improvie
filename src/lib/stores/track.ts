@@ -13,16 +13,15 @@ export const current_rules = writable<RuleType[] | undefined>(undefined);
 export const current_rule_formats = writable<CurrentRule | undefined>(undefined);
 
 // $current_rules = rules; を一緒に実行してください
-export function set_current_rules(rules: RuleType[]) {
-  action_get_rules_format(rules).then((res) => {
-    current_rule_formats.set(
-      {
-        rules: res,
-        idx: 0,
-      },
-    );
-    current_track_id.set(res[0].content_id);
-  });
+export async function set_current_rules(rules: RuleType[]) {
+  const res = await action_get_rules_format(rules);
+  current_rule_formats.set(
+    {
+      rules: res,
+      idx: 0,
+    },
+  );
+  current_track_id.set(res[0].content_id);
 }
 
 export function clear_track() {

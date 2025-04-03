@@ -4,7 +4,7 @@
   import Inner from './Inner.svelte';
 
   let track = $derived.by(() => {
-    if (!$current_track_id) {
+    if ($current_track_id === undefined) {
       return undefined;
     }
     return $contents.get($current_track_id);

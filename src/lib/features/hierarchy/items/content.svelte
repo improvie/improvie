@@ -2,7 +2,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
-  import { current_track } from '$lib/stores/track';
+  import { current_track_id } from '$lib/stores/track';
   import { DateTimeFormat } from '$lib/utils';
   import { FileMusicIcon, FileVideoIcon } from 'lucide-svelte';
 
@@ -15,7 +15,7 @@
 
   function dblclick() {
     if (content !== undefined) {
-      $current_track = content_id;
+      $current_track_id = content_id;
     }
   }
 

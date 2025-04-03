@@ -5,10 +5,10 @@
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { getLocalStorageDefault, setLocalStorage } from '$lib/local-storage';
-  import { current_rule } from '$lib/stores/track';
+  import { current_rule_formats, current_rules, set_current_rules } from '$lib/stores/track';
   import { cn, TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
+  import { ListRestartIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   let { track = $bindable() }: { track: Content } = $props();
@@ -75,21 +75,20 @@
     }
     return convertFileSrc(track.thumbnail_path);
   });
+
 </script>
 
-{#if $current_rule === undefined}
-  <Card.Root class={cn('sticky z-10 bottom-20 px-4 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
-    <TrackExternalContent
-      bind:content={track}
-      bind:paused
-      bind:currentTime
-      bind:volume
-      bind:duration
-      bind:disable_audio
-      onended={onended}
-    />
-  </Card.Root>
-{/if}
+<Card.Root class={cn('sticky z-10 bottom-20 px-4 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
+  <TrackExternalContent
+    bind:content={track}
+    bind:paused
+    bind:currentTime
+    bind:volume
+    bind:duration
+    bind:disable_audio
+    onended={onended}
+  />
+</Card.Root>
 
 <Card.Root class='sticky bottom-0 h-20 z-20'>
   {#if !disable_audio}
@@ -144,6 +143,14 @@
           is_looping = !is_looping;
         }}>
           <RepeatIcon />
+        </Button>
+      {/if}
+
+      {#if $current_rules && $current_rule_formats}
+        <Button variant='outline' size='icon' onclick={() => {
+          set_current_rules($current_rules);
+        }}>
+          <ListRestartIcon />
         </Button>
       {/if}
 

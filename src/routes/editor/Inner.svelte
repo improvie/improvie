@@ -12,6 +12,7 @@
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { setSlots } from '$lib/stores/index.svelte';
+  import { current_rules, set_current_rules } from '$lib/stores/track';
   import { ListPlusIcon, SquareMenuIcon } from 'lucide-svelte';
   import { PlaylistPlayer } from './Player.svelte';
 
@@ -19,6 +20,10 @@
   let rules = $state(prop_rules);
   $effect(() => {
     action_update_rules(playlist.id, rules);
+    if (rules.length !== 0) {
+      $current_rules = rules;
+      set_current_rules(rules);
+    }
   });
   function add_rule(new_rule: RuleType) {
     rules.push(new_rule);
@@ -50,25 +55,17 @@
 
 <div class='flex transition-all mx-4'>
   <Card.Root class='container w-2/3 select-none h-[90dvh] transition-all'>
-    <Card.Header>
-      <Card.Title>Title: {playlist.title}</Card.Title>
-      {#if playlist.description}
-        <Card.Description>Desc: {playlist.description}</Card.Description>
-      {/if}
-    </Card.Header>
-    <Card.Content class='h-full'>
-      <div class='flex items-center my-2'>
-        <h2 class='text-2xl'>Rules</h2>
-        <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
-      </div>
-      <ScrollArea class='h-[70dvh]' orientation='both'>
-        {#each rules as _, i}
-          <RuleNode bind:rule={rules[i]} remove_rule={() => {
-            rules = rules.filter((_, j) => i !== j);
-          }} />
-        {/each}
-      </ScrollArea>
-    </Card.Content>
+    <div class='flex items-center my-2'>
+      <h2 class='text-2xl'>Rules</h2>
+      <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
+    </div>
+    <ScrollArea class='h-[70dvh]' orientation='both'>
+      {#each rules as _, i}
+        <RuleNode bind:rule={rules[i]} remove_rule={() => {
+          rules = rules.filter((_, j) => i !== j);
+        }} />
+      {/each}
+    </ScrollArea>
   </Card.Root>
 
   <PlaylistPlayer bind:open={player_open} bind:rules />

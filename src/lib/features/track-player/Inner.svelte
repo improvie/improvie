@@ -78,7 +78,7 @@
 
 </script>
 
-<Card.Root class={cn('sticky z-10 bottom-20 px-4 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
+<Card.Root class={cn('sticky z-10 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
   <TrackExternalContent
     bind:content={track}
     bind:paused

@@ -12,7 +12,6 @@ export interface LayoutSlots {
 export function initSlots(): LayoutSlots {
   const slots = $state<LayoutSlots>({ prefix_pathname: '/', header: undefined });
   $effect(() => {
-    console.log('initSlots', page.url.pathname);
     if (!page.url.pathname.startsWith(slots.prefix_pathname)) {
       setSlots({ prefix_pathname: page.url.pathname, header: undefined });
     }

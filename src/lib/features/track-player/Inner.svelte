@@ -5,11 +5,15 @@
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { getLocalStorageDefault, setLocalStorage } from '$lib/local-storage';
-  import { TimeFormat } from '$lib/utils';
+  import { current_rule } from '$lib/stores/track';
+  import { cn, TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
+  import { PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
+  import TrackExternalContent from './TrackExternalContent.svelte';
 
   let { track = $bindable() }: { track: Content } = $props();
+
+  let external_open = $state(false);
 
   let paused = $state(true);
 
@@ -54,10 +58,28 @@
     }
     currentTime = value;
   }
+
+  let disable_audio = $state(false);
 </script>
 
+{#if $current_rule === undefined}
+  <Card.Root class={cn('sticky bottom-20 p-10 h-[calc(100dvh-80px)]', external_open || 'hidden')}>
+    <TrackExternalContent
+      bind:content={track}
+      bind:paused
+      bind:currentTime
+      bind:volume
+      bind:duration
+      bind:disable_audio
+      onended={onended}
+    />
+  </Card.Root>
+{/if}
+
 <Card.Root class='sticky bottom-0 h-20'>
-  <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={convertFileSrc(track.content_path)}></audio>
+  {#if !disable_audio}
+    <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={convertFileSrc(track.content_path)}></audio>
+  {/if}
   <Slider class='absolute -translate-y-1/2 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between'>
     <div class='ml-6 gap-4 flex items-center'>
@@ -109,6 +131,16 @@
           <RepeatIcon />
         </Button>
       {/if}
+
+      <Button variant='outline' size='icon' onclick={() => {
+        external_open = !external_open;
+      }}>
+        {#if external_open}
+          <PanelTopOpenIcon />
+        {:else}
+          <PanelBottomOpenIcon />
+        {/if}
+      </Button>
 
     </div>
   </div>

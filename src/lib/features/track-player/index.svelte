@@ -11,5 +11,7 @@
   });
 </script>
 {#if track}
-  <Inner bind:track />
+  {#key track.id}
+    <Inner bind:track />
+  {/key}
 {/if}

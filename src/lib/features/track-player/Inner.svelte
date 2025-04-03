@@ -60,10 +60,25 @@
   }
 
   let disable_audio = $state(false);
+
+  const time = $derived.by(() => {
+    return `${to_readable_time(currentTime)} / ${to_readable_time(duration)}`;
+  });
+
+  const content_path = $derived.by(() => {
+    return convertFileSrc(track.content_path);
+  });
+
+  const thumbnail_path = $derived.by(() => {
+    if (!track.thumbnail_path) {
+      return undefined;
+    }
+    return convertFileSrc(track.thumbnail_path);
+  });
 </script>
 
 {#if $current_rule === undefined}
-  <Card.Root class={cn('sticky bottom-20 p-10 h-[calc(100dvh-80px)]', external_open || 'hidden')}>
+  <Card.Root class={cn('sticky bottom-20 p-10 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
     <TrackExternalContent
       bind:content={track}
       bind:paused
@@ -78,7 +93,7 @@
 
 <Card.Root class='sticky bottom-0 h-20'>
   {#if !disable_audio}
-    <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={convertFileSrc(track.content_path)}></audio>
+    <audio bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
   <Slider class='absolute -translate-y-1/2 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between'>
@@ -90,12 +105,12 @@
           <PauseIcon />
         {/if}
       </Button>
-      <p class='text-primary text-sm font-mono'>{to_readable_time(currentTime)} / {to_readable_time(duration)}</p>
+      <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
     <div class='gap-4 items-center h-full flex py-4'>
-      {#if track.thumbnail_path}
+      {#if thumbnail_path}
         <div class='h-full aspect-square relative flex items-center'>
-          <img alt={track.title} class='object-cover' src={convertFileSrc(track.thumbnail_path)} />
+          <img alt={track.title} class='object-cover' src={thumbnail_path} />
         </div>
       {/if}
       <div class='h-full'>

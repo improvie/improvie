@@ -8,7 +8,7 @@
   import { current_rule_formats, current_rules, current_track_id, set_current_rules } from '$lib/stores/track';
   import { cn, TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { ListRestartIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
+  import { PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   let { track = $bindable() }: { track: Content } = $props();

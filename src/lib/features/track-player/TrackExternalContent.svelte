@@ -77,7 +77,7 @@
         class='h-full w-auto object-contain'
       />
     {:else}
-      <ImageOffIcon class='w-auto h-full' />
+      <ImageOffIcon class='h-full w-auto' />
     {/if}
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>

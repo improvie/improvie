@@ -54,10 +54,10 @@
   <Form.Field {form} name='content_id'>
     <Form.Control>
       {#snippet children({ props })}
-        <div class='grid grid-cols-5 items-center gap-4'>
+        <div class='grid grid-cols-7 items-center gap-4'>
           <Form.Label class='text-right col-span-2'>Content</Form.Label>
           <Button
-            class='col-span-3'
+            class='col-span-5 text-wrap'
             variant='outline'
             {...props}
             onclick={() => open = true}

@@ -69,7 +69,7 @@
 </script>
 
 <Dialog.Root bind:open onOpenChange={onOpenChange}>
-  <Dialog.Content class='sm:max-w-[425px]'>
+  <Dialog.Content class='sm:max-w-xl md:max-w-3xl'>
     <form method='POST' use:enhance onsubmit={handleSubmit}>
       <Dialog.Header>
         <Dialog.Title>Rename</Dialog.Title>

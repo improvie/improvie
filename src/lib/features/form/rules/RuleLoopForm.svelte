@@ -43,9 +43,9 @@
   <Form.Field {form} name='times'>
     <Form.Control>
       {#snippet children({ props })}
-        <div class='grid grid-cols-5 items-center gap-4'>
+        <div class='grid grid-cols-7 items-center gap-4'>
           <Form.Label class='text-right col-span-2'>Times</Form.Label>
-          <Input class='col-span-3' bind:value={$formData.times} type='number' {...props} />
+          <Input class='col-span-5' bind:value={$formData.times} type='number' {...props} />
         </div>
       {/snippet}
     </Form.Control>

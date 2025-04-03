@@ -12,7 +12,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content>
+  <Dialog.Content class='sm:max-w-xl md:max-w-3xl'>
     <Dialog.Header>
       <Dialog.Title class='text-center'>Create Rule</Dialog.Title>
     </Dialog.Header>

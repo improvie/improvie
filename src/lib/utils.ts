@@ -60,6 +60,27 @@ enum TimeFormat {
 }
 
 namespace TimeFormat {
+  export function format_secs(format: TimeFormat, time: number): string {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = Math.floor(time % 60);
+
+    let text;
+    if (hours > 0) {
+      text = `${hours}:`;
+    }
+    else {
+      text = '';
+    }
+
+    switch (format) {
+      case TimeFormat.PlainHm:
+        return `${text}${String(minutes).padStart(2, '0')}`;
+      case TimeFormat.PlainHms:
+        return `${text}${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+  }
+
   export function format(format: TimeFormat, _time: Date): string {
     const time = new Date(_time);
     const hours = String(time.getHours()).padStart(2, '0');

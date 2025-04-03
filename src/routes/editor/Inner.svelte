@@ -26,7 +26,10 @@
   let open = $state(false);
   let player_open = $state(true);
 
-  setSlots({ header });
+  setSlots({
+    prefix_pathname: '/editor',
+    header,
+  });
 </script>
 
 {#snippet header()}

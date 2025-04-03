@@ -70,7 +70,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content>
+  <Dialog.Content class='sm:max-w-xl'>
     <form method='POST' use:enhance onsubmit={handleSubmit}>
       <Dialog.Header>
         <Dialog.Title>Add Item</Dialog.Title>

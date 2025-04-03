@@ -58,7 +58,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content>
+  <Dialog.Content class='sm:max-w-xl'>
     <Dialog.Header>
       <Dialog.Title>Add Folder</Dialog.Title>
     </Dialog.Header>

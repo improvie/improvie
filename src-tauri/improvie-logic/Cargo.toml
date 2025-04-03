@@ -12,7 +12,6 @@ sqlx.workspace = true
 chrono.workspace = true
 ambassador.workspace = true
 serde.workspace = true
-generator.workspace = true
 rand.workspace = true
 more-convert.workspace = true
 

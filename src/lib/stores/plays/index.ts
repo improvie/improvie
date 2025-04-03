@@ -14,7 +14,7 @@ export const current_playlist_id: Writable<string> = writable(UUID_NIL);
 
 export function select_playlist(playlist_id: string) {
   current_playlist_id.set(playlist_id);
-  goto('/playlist');
+  goto('/editor');
 }
 
 export const current_play_folder_ids: Writable<string[]> = writable([UUID_NIL]);

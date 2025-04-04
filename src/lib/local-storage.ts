@@ -17,7 +17,7 @@ export function removeLocalStorage(key: string): void {
   }
 }
 
-export function getLocalStorageDefault(key: string, defaultValue: string): string {
+export function getLocalStorageOrDefault(key: string, defaultValue: string): string {
   const value = getLocalStorage(key);
   if (value !== null) {
     return value;

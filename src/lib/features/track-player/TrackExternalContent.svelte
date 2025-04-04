@@ -2,6 +2,7 @@
   import type { Content } from '$lib/types/item';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+  import { cn } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { ImageOffIcon } from 'lucide-svelte';
 
@@ -25,15 +26,15 @@
 
   const is_video = $derived(content.kind === 'Video');
 
-  let default_value: string = $state('thumbnail');
+  let value: string = $state('thumbnail');
 
   $effect(() => {
     if (is_video) {
       disable_audio = true;
-      default_value = 'video';
+      value = 'video';
     }
     else {
-      default_value = 'thumbnail';
+      value = 'thumbnail';
     }
   });
 
@@ -50,8 +51,8 @@
 
 </script>
 
-<Tabs.Root value={default_value} class='container mx-auto text-center h-full'>
-  <Tabs.List>
+<Tabs.Root bind:value class='container mx-auto text-center h-full'>
+  <Tabs.List class='absolute top-2 -translate-x-1/2'>
     <Tabs.Trigger value='thumbnail'>Thumbnail</Tabs.Trigger>
     {#if is_video}
       <Tabs.Trigger value='video'>Video</Tabs.Trigger>
@@ -68,19 +69,19 @@
       </Tooltip.Provider>
     {/if}
   </Tabs.List>
-  <Tabs.Content value='thumbnail' class='pt-4 h-full'>
+  <Tabs.Content value='thumbnail' class={cn('pt-2 h-full flex items-center justify-center', value !== 'thumbnail' && 'hidden')}>
     {#if thumbnail_path}
       <img
         src={thumbnail_path}
         alt='Thumbnail'
-        class='w-full h-auto'
+        class='h-full w-auto object-contain'
       />
     {:else}
-      <ImageOffIcon class='w-full h-full' />
+      <ImageOffIcon class='h-full w-auto' />
     {/if}
   </Tabs.Content>
-  <Tabs.Content value='video' class='pt-4 h-full'>
-    <video bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='w-full h-auto' onclick={() => paused = !paused}>
+  <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
+    <video autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => paused = !paused}>
       <source src={content_path} />
       <track kind='captions' />
   </Tabs.Content>

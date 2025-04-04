@@ -19,7 +19,9 @@ pub enum YtStore {
 #[derive(Debug, Clone)]
 pub struct YtIntegration {
     fetcher: Youtube,
+    #[allow(dead_code)]
     data_dir: PathBuf,
+    outputs_dir: PathBuf,
 }
 
 impl YtIntegration {
@@ -40,6 +42,7 @@ impl YtIntegration {
                 return;
             }
         };
+        let outputs_dir_clone = output_dir.clone();
         rt.block_on(async move {
             log::info!("Starting youtube integration background task");
 
@@ -48,7 +51,11 @@ impl YtIntegration {
                 Ok(fetcher) => {
                     log::info!("Youtube integration ready");
                     let mut arc = arc.write().await;
-                    *arc = YtStore::Loaded(Self { fetcher, data_dir });
+                    *arc = YtStore::Loaded(Self {
+                        fetcher,
+                        data_dir,
+                        outputs_dir: outputs_dir_clone,
+                    });
                     log::info!("Youtube integration loaded");
                 }
                 Err(err) => {
@@ -61,6 +68,71 @@ impl YtIntegration {
         });
     }
 
+    pub async fn download_content_with_progress(
+        &self,
+        url: String,
+        progress_callback: impl Fn(YtDownloadState) + Send + Sync + 'static,
+    ) -> Result<YtContent, Box<dyn std::error::Error>> {
+        log::info!("Fetching video info for {}", url);
+
+        let video = self.fetcher.fetch_video_infos(url).await?;
+
+        log::info!("Downloading video {}: {}", video.id, video.title);
+
+        let fetcher = self.fetcher.clone();
+
+        let thumbnail_video = video.clone();
+        let thumbnail_path = format!("{}.jpg", thumbnail_video.id);
+        let thumbnail_path_clone = thumbnail_path.clone();
+        let join_thumbnail = tokio::task::spawn(async move {
+            fetcher
+                .download_thumbnail(&thumbnail_video, thumbnail_path_clone)
+                .await
+        });
+
+        let video_id = video.id.clone();
+
+        let video_path = format!("{}.mp4", video.id);
+
+        let download_id = self
+            .fetcher
+            .download_video_with_progress(&video, &video_path, move |downloaded, total| {
+                let percentage = if total > 0 {
+                    (downloaded as f64 / total as f64 * 100.0) as u8
+                } else {
+                    0
+                };
+                let downloaded_mb = downloaded as f64 / 1024.0 / 1024.0;
+                let downloaded_mb = downloaded_mb.floor() as u64;
+                let total_mb = total as f64 / 1024.0 / 1024.0;
+                let total_mb = total_mb.floor() as u64;
+                log::info!(
+                    "Downloading {} Progress: {}/{} MB - ({}%)",
+                    video_id,
+                    downloaded_mb,
+                    total_mb,
+                    percentage
+                );
+                progress_callback(YtDownloadState {
+                    downloaded_mb,
+                    total_mb,
+                    percentage,
+                });
+            })
+            .await?;
+
+        self.fetcher.wait_for_download(download_id).await;
+
+        join_thumbnail.await??;
+
+        Ok(YtContent {
+            title: video.title,
+            content_path: self.outputs_dir.join(video_path),
+            thumbnail_path: self.outputs_dir.join(thumbnail_path),
+        })
+    }
+
+    #[allow(dead_code)]
     pub async fn download_content(
         &self,
         url: String,
@@ -71,20 +143,27 @@ impl YtIntegration {
 
         log::info!("Downloading video {}: {}", video.id, video.title);
 
-        let content_path = self
-            .fetcher
-            .download_video(&video, format!("{}.mp4", video.id))
-            .await?;
+        let content_path = format!("{}.mp4", video.id);
 
-        let thumbnail_path = self
-            .fetcher
-            .download_thumbnail(&video, format!("{}.jpg", video.id))
+        self.fetcher.download_video(&video, &content_path).await?;
+
+        let thumbnail_path = format!("{}.jpg", video.id);
+
+        self.fetcher
+            .download_thumbnail(&video, &thumbnail_path)
             .await?;
 
         Ok(YtContent {
             title: video.title,
-            content_path: self.data_dir.join(content_path),
-            thumbnail_path: self.data_dir.join(thumbnail_path),
+            content_path: self.outputs_dir.join(content_path),
+            thumbnail_path: self.outputs_dir.join(thumbnail_path),
         })
     }
+}
+
+#[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
+pub struct YtDownloadState {
+    pub downloaded_mb: u64,
+    pub total_mb: u64,
+    pub percentage: u8,
 }

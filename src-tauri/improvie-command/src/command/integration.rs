@@ -1,12 +1,14 @@
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
 use improvie_logic::{AppError, AppResult};
 use improvie_yt::YtStore;
+use tauri::{AppHandle, Emitter};
 use uid::Uid;
 
 use crate::state::TauriAppState;
 
 #[tauri::command]
-pub async fn import_youtube_video(
+pub async fn import_youtube_video<R: tauri::Runtime>(
+    app: AppHandle<R>,
     state: TauriAppState<'_>,
     parent_folder_id: Uid,
     url: String,
@@ -24,7 +26,12 @@ pub async fn import_youtube_video(
         }
     };
 
-    let content = match yt.download_content(url).await {
+    let content = match yt
+        .download_content_with_progress(url, move |progress| {
+            let _ = app.emit("yt-download-progress", progress);
+        })
+        .await
+    {
         Ok(content) => content,
         Err(err) => return Err(AppError::Errored("youtube integration", err.to_string())),
     };

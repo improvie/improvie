@@ -7,5 +7,6 @@ edition.workspace = true
 [dependencies]
 tokio.workspace = true
 log.workspace = true
+serde.workspace = true
 
-yt-dlp = "=1.3.2"
+yt-dlp = { version = "=1.3.2", git = "https://github.com/moriyoshi-kasuga/yt-dlp.git" }

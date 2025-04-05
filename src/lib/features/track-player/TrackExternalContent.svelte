@@ -72,10 +72,10 @@
       <img
         src={thumbnail_path}
         alt='Thumbnail not found.'
-        class='h-full w-auto object-contain'
+        class='w-full h-auto aspect-video object-cover'
       />
     {:else}
-      <ImageOffIcon class='h-full w-auto' />
+      <ImageOffIcon class='w-9/16 h-auto aspect-square' />
     {/if}
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>

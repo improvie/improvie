@@ -59,10 +59,10 @@
             <img
               src={thumbnail_path}
               alt='Thumbnail not found.'
-              class='h-full w-auto object-contain'
+              class='w-full h-auto aspect-video object-cover'
             />
           {:else}
-            <ImageOffIcon class='h-full w-auto' />
+            <ImageOffIcon class='w-9/16 h-auto aspect-square' />
           {/if}
         </div>
         <p class='line-clamp-3 select-text'>{content.title}</p>

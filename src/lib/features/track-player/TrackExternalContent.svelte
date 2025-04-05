@@ -57,16 +57,14 @@
     {#if is_video}
       <Tabs.Trigger value='video'>Video</Tabs.Trigger>
     {:else}
-      <Tooltip.Provider>
-        <Tooltip.Root delayDuration={0}>
-          <Tooltip.Trigger class='cursor-not-allowed'>
-            <Tabs.Trigger value='video' disabled>Video</Tabs.Trigger>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>This content is not Video</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </Tooltip.Provider>
+      <Tooltip.Root>
+        <Tooltip.Trigger class='cursor-not-allowed'>
+          <Tabs.Trigger value='video' disabled>Video</Tabs.Trigger>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
+          <p>This content is not Video</p>
+        </Tooltip.Content>
+      </Tooltip.Root>
     {/if}
   </Tabs.List>
   <Tabs.Content value='thumbnail' class={cn('pt-2 h-full flex items-center justify-center', value !== 'thumbnail' && 'hidden')}>

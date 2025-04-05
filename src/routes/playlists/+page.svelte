@@ -30,7 +30,7 @@
 <CreatePlayFolderDialog bind:open={is_open_create_play_folder} />
 <RenameDialog bind:data={rename_data} />
 
-<Separator class='my-2' />
+<Separator class='mb-2' />
 <PlayPageBreadcrumb />
 <Separator class='my-2' />
 <ScrollArea class='w-full h-dvh'>

@@ -1,7 +1,6 @@
 <script lang='ts'>
   import type { Content } from '$lib/types/item';
   import IconButton from '$lib/components/IconButton.svelte';
-  import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
@@ -100,7 +99,7 @@
 
 </script>
 
-<Card.Root class={cn('sticky z-10 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)]', external_open || 'invisible')}>
+<Card.Root class={cn('sticky z-10 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)]', external_open || 'hidden')}>
   <TrackExternalContent
     bind:content={track}
     bind:paused

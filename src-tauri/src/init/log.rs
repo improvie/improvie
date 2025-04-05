@@ -1,5 +1,5 @@
 use tauri::{Runtime, plugin::TauriPlugin};
-use tauri_plugin_log::{Target, TargetKind};
+use tauri_plugin_log::{RotationStrategy, Target, TargetKind};
 
 pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
     tauri_plugin_log::Builder::new()
@@ -22,5 +22,7 @@ pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
             #[cfg(not(debug_assertions))]
             [Target::new(TargetKind::LogDir { file_name: None })],
         )
+        .rotation_strategy(RotationStrategy::KeepAll)
+        .max_file_size(40000)
         .build()
 }

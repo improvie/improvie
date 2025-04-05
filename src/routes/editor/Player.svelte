@@ -38,7 +38,7 @@
               {#if content.thumbnail_path}
                 <img
                   src={convertFileSrc(content.thumbnail_path)}
-                  alt='Thumbnail'
+                  alt='Thumbnail not found.'
                   class='w-full h-auto object-contain'
                 />
               {:else}

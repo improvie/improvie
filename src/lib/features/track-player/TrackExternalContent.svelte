@@ -71,7 +71,7 @@
     {#if thumbnail_path}
       <img
         src={thumbnail_path}
-        alt='Thumbnail'
+        alt='Thumbnail not found.'
         class='h-full w-auto object-contain'
       />
     {:else}

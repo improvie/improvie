@@ -3,7 +3,8 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
   import { current_track_id } from '$lib/stores/track';
-  import { FileMusicIcon, FileVideoIcon, ImageOffIcon } from 'lucide-svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
+  import { ImageOffIcon } from 'lucide-svelte';
 
   let { content_id, rename_data = $bindable() }: {
     content_id: string;
@@ -37,21 +38,31 @@
     delete_content(content_id);
   }
 
+  const thumbnail_path = $derived.by(() => {
+    if (content === undefined) {
+      return undefined;
+    }
+    if (!content.thumbnail_path) {
+      return undefined;
+    }
+    return convertFileSrc(content.thumbnail_path);
+  });
+
 </script>
 
 {#if content !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger>
       <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
-        <div class='w-full flex items-center justify-center'>
-          {#if content.thumbnail_path}
+        <div class='h-60 md:h-40 flex items-center justify-center'>
+          {#if thumbnail_path}
             <img
-              src={content.thumbnail_path}
-              alt='Thumbnail'
-              class='w-full h-auto object-contain'
+              src={thumbnail_path}
+              alt='Thumbnail not found.'
+              class='h-full w-auto object-contain'
             />
           {:else}
-            <ImageOffIcon class='w-full h-auto' />
+            <ImageOffIcon class='h-full w-auto' />
           {/if}
         </div>
         <p class='line-clamp-3'>{content.title}</p>

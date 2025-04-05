@@ -137,7 +137,7 @@
     <div class='gap-4 items-center h-full flex py-4'>
       {#if thumbnail_path}
         <div class='h-full aspect-square relative flex items-center'>
-          <img alt={track.title} class='object-cover' src={thumbnail_path} />
+          <img class='object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
         </div>
       {/if}
       <div class='h-full flex items-center'>

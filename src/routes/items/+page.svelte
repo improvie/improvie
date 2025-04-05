@@ -60,7 +60,7 @@
 <Separator class='my-2' />
 <ScrollArea class='w-full h-dvh'>
   <div class='flex flex-col h-full'>
-    <div class='w-full grid grid-cols-5 p-4 gap-4 [grid-auto-rows:min-content]'>
+    <div class='w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 '>
       {#each node as child}
         {#if child.kind === 'Folder'}
           <HierarchyFolder folder_id={child.id} bind:rename_data />

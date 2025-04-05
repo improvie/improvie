@@ -10,7 +10,8 @@
   import { HierarchyContent, HierarchyFolder } from '$lib/features/hierarchy/items';
   import { setSlots } from '$lib/stores/index.svelte';
   import { current_folder_ids, folder_nodes } from '$lib/stores/items';
-  import { CloudDownloadIcon, FolderIcon, ImportIcon } from 'lucide-svelte';
+  import { CirclePlusIcon } from '@lucide/svelte';
+  import { CloudDownloadIcon, FolderIcon } from 'lucide-svelte';
   import { ItemPageBreadcrumb } from './Breadcrumb.svelte';
 
   let is_open_create_content = $state(false);
@@ -76,7 +77,7 @@
         <ContextMenu.Item onclick={() => {
           is_open_create_content = true;
         }} class='flex items-center'>
-          <ImportIcon class='mr-2 size-4' />Add Item
+          <CirclePlusIcon class='mr-2 size-4' />Add Item
         </ContextMenu.Item>
         <ContextMenu.Item onclick={() => {
           is_open_create_folder = true;

@@ -40,11 +40,11 @@
 {#if folder !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger>
-      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
+      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
         <div class='h-60 md:h-40 flex items-center justify-center'>
           <FolderIcon class='h-full w-auto' />
         </div>
-        <p class='line-clamp-3'>{folder.title}</p>
+        <p class='line-clamp-3 select-text'>{folder.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>

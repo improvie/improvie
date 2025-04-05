@@ -1,9 +1,8 @@
 <script lang='ts'>
+  import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import * as Table from '$lib/components/ui/table/index.js';
   import { current_play_folder_ids } from '$lib/stores/plays';
   import { delete_play_folder, play_folders, update_play_folder_name } from '$lib/stores/plays/folder';
-  import { DateTimeFormat } from '$lib/utils';
   import { FolderIcon } from 'lucide-svelte';
 
   let { folder_id, rename_data = $bindable() }: { folder_id: string; rename_data: { now_name: string; update_fn: (name: string) => void } | undefined } = $props();
@@ -40,12 +39,13 @@
 
 {#if folder !== undefined}
   <ContextMenu.Root>
-    <ContextMenu.Trigger class='contents'>
-      <Table.Row ondblclick={() => dblclick()}>
-        <Table.Cell><FolderIcon /></Table.Cell>
-        <Table.Cell>{folder.title}</Table.Cell>
-        <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, folder.created_at)}</Table.Cell>
-      </Table.Row>
+    <ContextMenu.Trigger>
+      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
+        <div class='h-60 md:h-40 flex items-center justify-center'>
+          <FolderIcon class='h-full w-auto' />
+        </div>
+        <p class='line-clamp-3 select-text'>{folder.title}</p>
+      </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>

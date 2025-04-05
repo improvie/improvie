@@ -53,7 +53,7 @@
 {#if content !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger>
-      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
+      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
         <div class='h-60 md:h-40 flex items-center justify-center'>
           {#if thumbnail_path}
             <img
@@ -65,7 +65,7 @@
             <ImageOffIcon class='h-full w-auto' />
           {/if}
         </div>
-        <p class='line-clamp-3'>{content.title}</p>
+        <p class='line-clamp-3 select-text'>{content.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>

@@ -1,9 +1,9 @@
 <script lang='ts'>
+  import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import * as Table from '$lib/components/ui/table/index.js';
   import { select_playlist } from '$lib/stores/plays';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
-  import { DateTimeFormat } from '$lib/utils';
+  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ListMusicIcon } from 'lucide-svelte';
 
   let { playlist_id, rename_data = $bindable() }: {
@@ -32,19 +32,41 @@
     delete_playlist(playlist_id);
   }
 
+  function dblclick() {
+    if (playlist !== undefined) {
+      select_playlist(playlist.id);
+    }
+  }
+
+  const thumbnail_path = $derived.by(() => {
+    if (playlist === undefined) {
+      return undefined;
+    }
+    if (!playlist.thumbnail_path) {
+      return undefined;
+    }
+    return convertFileSrc(playlist.thumbnail_path);
+  });
+
 </script>
 
 {#if playlist !== undefined}
   <ContextMenu.Root>
-    <ContextMenu.Trigger class='contents'>
-      <Table.Row ondblclick={() => {
-        select_playlist(playlist.id);
-      }}>
-        <Table.Cell><ListMusicIcon /></Table.Cell>
-
-        <Table.Cell>{playlist.title}</Table.Cell>
-        <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, playlist.created_at)}</Table.Cell>
-      </Table.Row>
+    <ContextMenu.Trigger>
+      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
+        <div class='h-60 md:h-40 flex items-center justify-center'>
+          {#if thumbnail_path}
+            <img
+              src={thumbnail_path}
+              alt='Thumbnail not found.'
+              class='h-full w-auto object-contain'
+            />
+          {:else}
+            <ListMusicIcon class='h-full w-auto' />
+          {/if}
+        </div>
+        <p class='line-clamp-3 select-text'>{playlist.title}</p>
+      </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>

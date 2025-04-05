@@ -1,10 +1,9 @@
 <script lang='ts'>
+  import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import * as Table from '$lib/components/ui/table/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
   import { current_track_id } from '$lib/stores/track';
-  import { DateTimeFormat } from '$lib/utils';
-  import { FileMusicIcon, FileVideoIcon } from 'lucide-svelte';
+  import { FileMusicIcon, FileVideoIcon, ImageOffIcon } from 'lucide-svelte';
 
   let { content_id, rename_data = $bindable() }: {
     content_id: string;
@@ -42,17 +41,21 @@
 
 {#if content !== undefined}
   <ContextMenu.Root>
-    <ContextMenu.Trigger class='contents'>
-      <Table.Row ondblclick={dblclick}>
-        {#if content.kind === 'Audio'}
-          <Table.Cell><FileMusicIcon /></Table.Cell>
-        {:else if content.kind === 'Video'}
-          <Table.Cell><FileVideoIcon /></Table.Cell>
-        {/if}
-
-        <Table.Cell>{content.title}</Table.Cell>
-        <Table.Cell class='text-right'>{DateTimeFormat.format(DateTimeFormat.PlainYmdHms, content.created_at)}</Table.Cell>
-      </Table.Row>
+    <ContextMenu.Trigger>
+      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
+        <div class='w-full flex items-center justify-center'>
+          {#if content.thumbnail_path}
+            <img
+              src={content.thumbnail_path}
+              alt='Thumbnail'
+              class='w-full h-auto object-contain'
+            />
+          {:else}
+            <ImageOffIcon class='w-full h-auto' />
+          {/if}
+        </div>
+        <p class='line-clamp-3'>{content.title}</p>
+      </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>

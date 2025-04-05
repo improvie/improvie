@@ -3,7 +3,6 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
-  import * as Table from '$lib/components/ui/table/index.js';
   import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
   import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
@@ -60,16 +59,8 @@
 <ItemPageBreadcrumb />
 <Separator class='my-2' />
 <ScrollArea class='w-full h-dvh'>
-  <Table.Root class='table-fixed select-none'>
-    <Table.Header>
-      <Table.Row>
-        <Table.Head class='w-8'>Name</Table.Head>
-        <Table.Head></Table.Head>
-        <!-- <Table.Head>Description</Table.Head> -->
-        <Table.Head class='text-right'>CreatedAt</Table.Head>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
+  <div class='flex flex-col h-full'>
+    <div class='w-full grid grid-cols-5 p-4 gap-4 [grid-auto-rows:min-content]'>
       {#each node as child}
         {#if child.kind === 'Folder'}
           <HierarchyFolder folder_id={child.id} bind:rename_data />
@@ -77,22 +68,22 @@
           <HierarchyContent content_id={child.id} bind:rename_data />
         {/if}
       {/each}
-    </Table.Body>
-  </Table.Root>
-  <ContextMenu.Root>
-    <ContextMenu.Trigger class='w-full min-h-72 h-fit'>
-    </ContextMenu.Trigger>
-    <ContextMenu.Content>
-      <ContextMenu.Item onclick={() => {
-        is_open_create_content = true;
-      }} class='flex items-center'>
-        <ImportIcon class='mr-2 size-4' />Add Item
-      </ContextMenu.Item>
-      <ContextMenu.Item onclick={() => {
-        is_open_create_folder = true;
-      }} class='flex items-center'>
-        <FolderIcon class='mr-2 size-4' />Add Folder
-      </ContextMenu.Item>
-    </ContextMenu.Content>
-  </ContextMenu.Root>
+    </div>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger class='flex-grow w-full min-h-[70dvh]'>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item onclick={() => {
+          is_open_create_content = true;
+        }} class='flex items-center'>
+          <ImportIcon class='mr-2 size-4' />Add Item
+        </ContextMenu.Item>
+        <ContextMenu.Item onclick={() => {
+          is_open_create_folder = true;
+        }} class='flex items-center'>
+          <FolderIcon class='mr-2 size-4' />Add Folder
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  </div>
 </ScrollArea>

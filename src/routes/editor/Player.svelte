@@ -34,17 +34,15 @@
       {#if content !== undefined}
         <Card.Root class='min-w-80'>
           <Card.Content>
-            <div class='w-full'>
-              {#if content.thumbnail_path}
-                <img
-                  src={convertFileSrc(content.thumbnail_path)}
-                  alt='Thumbnail not found.'
-                  class='w-full h-auto object-contain'
-                />
-              {:else}
-                <ImageOffIcon class='w-80 h-80' />
-              {/if}
-            </div>
+            {#if content.thumbnail_path}
+              <img
+                src={convertFileSrc(content.thumbnail_path)}
+                alt='Thumbnail not found.'
+                class='w-full h-auto aspect-video object-cover'
+              />
+            {:else}
+              <ImageOffIcon class='w-9/16 h-auto aspect-square' />
+            {/if}
             <h2>{content.title}</h2>
           </Card.Content>
         </Card.Root>

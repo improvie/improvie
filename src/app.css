@@ -117,3 +117,12 @@ html,
 body {
   @apply h-full overflow-hidden font-main;
 }
+
+@layer utilities {
+  .w-9\/16 {
+    width: 56.25%;
+  }
+  .h-9\/16 {
+    height: 56.25%;
+  }
+}

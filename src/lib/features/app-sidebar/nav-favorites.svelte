@@ -2,6 +2,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { useSidebar } from '$lib/components/ui/sidebar/index.js';
+  import { select_playlist } from '$lib/stores/plays';
   import { favoritePlaylists, initFavoritePlaylist, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { playlists } from '$lib/stores/plays/playlist';
   import Ellipsis from 'lucide-svelte/icons/ellipsis';
@@ -28,7 +29,7 @@
   <Sidebar.Menu>
     {#each favorites as playlist}
       <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
+        <Sidebar.MenuButton onclick={() => select_playlist(playlist.id)}>
           <span>{playlist.title}</span>
         </Sidebar.MenuButton>
         <DropdownMenu.Root>

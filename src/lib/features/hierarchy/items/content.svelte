@@ -1,9 +1,9 @@
 <script lang='ts'>
+  import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
   import { clear_track, current_track_id } from '$lib/stores/track';
-  import { ImageOffIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { content_id, rename_data = $bindable() }: {
@@ -39,7 +39,7 @@
     delete_content(content_id);
   }
 
-  const thumbnail_path = $derived.by(() => {
+  let thumbnail_path = $derived.by(() => {
     if (content === undefined) {
       return undefined;
     }
@@ -56,15 +56,9 @@
     <ContextMenu.Trigger>
       <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
-          {#if thumbnail_path}
-            <img
-              src={thumbnail_path}
-              alt='Thumbnail not found.'
-              class='w-full h-auto aspect-video object-cover'
-            />
-          {:else}
-            <ImageOffIcon class='w-9/16 h-auto aspect-square' />
-          {/if}
+          <ImageLoader
+            bind:src={thumbnail_path}
+          />
         </div>
         <p class='line-clamp-3 select-text'>{content.title}</p>
       </Card.Root>

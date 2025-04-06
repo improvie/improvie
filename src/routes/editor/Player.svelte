@@ -5,12 +5,12 @@
 
 <script lang='ts'>
   import type { CurrentRule } from '$lib/stores/track';
+  import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import { contents } from '$lib/stores/items/content';
   import { current_rule_formats } from '$lib/stores/track';
   import { cn } from '$lib/utils';
-  import { ImageOffIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { open = $bindable() }: { open: boolean } = $props();
@@ -34,15 +34,9 @@
       {#if content !== undefined}
         <Card.Root class='min-w-80'>
           <Card.Content>
-            {#if content.thumbnail_path}
-              <img
-                src={convertFileSrc(content.thumbnail_path)}
-                alt='Thumbnail not found.'
-                class='w-full h-auto aspect-video object-cover'
-              />
-            {:else}
-              <ImageOffIcon class='w-9/16 h-auto aspect-square' />
-            {/if}
+            <ImageLoader
+              src={content.thumbnail_path && convertFileSrc(content.thumbnail_path)}
+            />
             <h2>{content.title}</h2>
           </Card.Content>
         </Card.Root>

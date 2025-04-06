@@ -1,10 +1,10 @@
 <script lang='ts'>
+  import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { select_playlist } from '$lib/stores/plays';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
-  import { ListMusicIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { playlist_id, rename_data = $bindable() }: {
@@ -39,7 +39,7 @@
     }
   }
 
-  const thumbnail_path = $derived.by(() => {
+  let thumbnail_path = $derived.by(() => {
     if (playlist === undefined) {
       return undefined;
     }
@@ -63,15 +63,9 @@
     <ContextMenu.Trigger>
       <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
-          {#if thumbnail_path}
-            <img
-              src={thumbnail_path}
-              alt='Thumbnail not found.'
-              class='w-full h-auto aspect-video object-cover'
-            />
-          {:else}
-            <ListMusicIcon class='w-9/16 h-auto aspect-square' />
-          {/if}
+          <ImageLoader
+            bind:src={thumbnail_path}
+          />
         </div>
         <p class='line-clamp-3 select-text'>{playlist.title}</p>
       </Card.Root>

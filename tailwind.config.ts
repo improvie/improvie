@@ -47,6 +47,7 @@ const config: Config = {
         },
         card: {
           DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+          primary: 'hsl(var(--card-primary) / <alpha-value>)',
           foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
         },
         sidebar: {

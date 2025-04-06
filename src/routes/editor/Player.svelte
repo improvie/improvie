@@ -10,8 +10,8 @@
   import { contents } from '$lib/stores/items/content';
   import { current_rule_formats } from '$lib/stores/track';
   import { cn } from '$lib/utils';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ImageOffIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { open = $bindable() }: { open: boolean } = $props();
 

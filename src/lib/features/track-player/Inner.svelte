@@ -7,8 +7,8 @@
   import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
   import { current_rule_formats, current_rules, current_track_id, set_current_rules } from '$lib/stores/track';
   import { cn, TimeFormat } from '$lib/utils';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   let { track = $bindable() }: { track: Content } = $props();
@@ -118,7 +118,7 @@
     <audio autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='w-full h-full flex justify-between'>
+  <div class='w-full h-full flex justify-between gap-2'>
     <div class='ml-6 gap-4 flex items-center'>
       {#if is_playlist}
         <IconButton onclick={() => {
@@ -167,7 +167,7 @@
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
       <div class='h-full flex items-center'>
-        <p class='text-primary text-wrap max-w-[30rem]'>{track.title}</p>
+        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track.title}</p>
       </div>
     </div>
     <div class='gap-4 flex items-center mr-6'>

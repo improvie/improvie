@@ -26,7 +26,7 @@
 
 </script>
 
-<Tooltip.Root delayDuration={delayDuration}>
+<Tooltip.Root delayDuration={delayDuration} disableHoverableContent disableCloseOnTriggerClick>
   <Tooltip.Trigger>
     <Button
       type={type}

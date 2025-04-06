@@ -79,8 +79,11 @@
     {/if}
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
-    <video autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => paused = !paused}>
-      <source src={content_path} />
-      <track kind='captions' />
+    {#if disable_audio}
+      <video autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => paused = !paused}>
+        <source src={content_path} />
+        <track kind='captions' />
+      </video>
+    {/if}
   </Tabs.Content>
 </Tabs.Root>

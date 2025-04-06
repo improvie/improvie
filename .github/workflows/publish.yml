@@ -22,9 +22,9 @@ jobs:
           - platform: macos-latest # for Intel based macs.
             args: --target x86_64-apple-darwin
           - platform: ubuntu-22.04 # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: ''
+            args: ""
           - platform: windows-latest
-            args: ''
+            args: ""
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -34,7 +34,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: bun-modules-${{ hashFiles('bun.lockb') }}
+          key: bun-modules-${{ hashFiles('bun.lock') }}
+
       - name: setup bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -43,15 +44,11 @@ jobs:
         run: |
           bun install
 
-      - name: Cache cargo registry
-        uses: actions/cache@v3
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-registry-
+          workspaces: "./src-tauri -> target"
+          key: ${{ matrix.args }}
 
       - name: Cache target directory
         uses: actions/cache@v3

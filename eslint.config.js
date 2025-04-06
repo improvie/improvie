@@ -9,6 +9,7 @@ export default antfu({
     'bun.lock',
     'src/lib/components/ui',
     'src/lib/hooks',
+    '.github',
   ],
   stylistic: {
     indent: 2,

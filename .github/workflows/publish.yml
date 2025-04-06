@@ -30,10 +30,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Bun modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: bun-modules-${{ hashFiles('bun.lockb') }}
       - name: setup bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - name: install frontend dependencies
+        run: |
+          bun install
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
+
+      - name: Cache target directory
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-target-${{ matrix.args }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-target-${{ matrix.args }}-
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable

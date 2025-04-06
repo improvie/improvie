@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte';
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
   import type { ButtonVariant } from './ui/button';
+  import { Tooltip as NaitiveTooltip } from 'bits-ui';
   import { Button } from './ui/button';
   import * as Tooltip from './ui/tooltip/index';
 
@@ -12,6 +13,7 @@
       content: Snippet;
       children: Snippet;
       delayDuration?: number;
+      contentProps?: NaitiveTooltip.ContentProps;
     };
 
   const {
@@ -21,6 +23,7 @@
     content,
     children,
     delayDuration = 500,
+    contentProps = {},
     ...restProps
   }: Props = $props();
 
@@ -38,7 +41,7 @@
       {@render children()}
     </Button>
   </Tooltip.Trigger>
-  <Tooltip.Content>
+  <Tooltip.Content {...contentProps}>
     {@render content()}
   </Tooltip.Content>
 </Tooltip.Root>

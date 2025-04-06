@@ -11,10 +11,11 @@
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
+  import { getLocalStorageOrDefault } from '$lib/local-storage';
   import { setSlots } from '$lib/stores/index.svelte';
   import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
   import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
-  import { PlaylistPlayer } from './Player.svelte';
+  import { EditorTracker } from './Tracker.svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
   let rules = $state(prop_rules);
@@ -32,7 +33,7 @@
     rules.push(new_rule);
   }
   let open = $state(false);
-  let player_open = $state(true);
+  let tracker_open = $state(getLocalStorageOrDefault('editor_tracker_open', 'true') === 'true');
 
   setSlots({
     prefix_pathname: '/editor',
@@ -44,7 +45,7 @@
   <Button
     type='button'
     onclick={() => {
-      player_open = !player_open;
+      tracker_open = !tracker_open;
     }}
     variant='ghost'
     size='icon'
@@ -56,8 +57,8 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex transition-all mx-4'>
-  <Card.Root class='container w-2/3 select-none h-[90dvh] transition-all'>
+<div class='flex mx-4'>
+  <Card.Root class='container w-2/3 select-none h-[90dvh]'>
     <div class='flex items-center my-2'>
       <h2 class='text-2xl'>Rules</h2>
       <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
@@ -71,5 +72,5 @@
     </ScrollArea>
   </Card.Root>
 
-  <PlaylistPlayer bind:open={player_open} />
+  <EditorTracker bind:open={tracker_open} />
 </div>

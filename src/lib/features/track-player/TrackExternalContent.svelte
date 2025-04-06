@@ -1,9 +1,9 @@
 <script lang='ts'>
   import type { Content } from '$lib/types/item';
+  import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { cn } from '$lib/utils';
-  import { ImageOffIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
@@ -42,7 +42,7 @@
     return convertFileSrc(content.content_path);
   });
 
-  const thumbnail_path = $derived.by(() => {
+  let thumbnail_path = $derived.by(() => {
     if (!content.thumbnail_path) {
       return undefined;
     }
@@ -68,15 +68,9 @@
     {/if}
   </Tabs.List>
   <Tabs.Content value='thumbnail' class={cn('pt-2 h-full flex items-center justify-center', value !== 'thumbnail' && 'hidden')}>
-    {#if thumbnail_path}
-      <img
-        src={thumbnail_path}
-        alt='Thumbnail not found.'
-        class='w-full h-auto aspect-video object-cover'
-      />
-    {:else}
-      <ImageOffIcon class='w-9/16 h-auto aspect-square' />
-    {/if}
+    <ImageLoader
+      bind:src={thumbnail_path}
+    />
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
     {#if disable_audio}

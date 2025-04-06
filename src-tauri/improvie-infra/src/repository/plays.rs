@@ -72,6 +72,54 @@ ORDER BY sort_order
         Ok(rows.vec_into())
     }
 
+    async fn add_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+
+        let max_number: u32 = sqlx::query_scalar(
+            "
+SELECT
+    MAX(sort_order)
+FROM favorite_playlists
+",
+        )
+        .fetch_one(&mut *tx)
+        .await?;
+
+        let result = sqlx::query(
+            "
+INSERT INTO favorite_playlists (playlist_id, sort_order) VALUES (?, ?)",
+        )
+        .bind(playlist_id)
+        .bind(max_number + 1)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
+    }
+
+    async fn remove_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()> {
+        let mut tx = self.db.begin().await?;
+
+        let result = sqlx::query(
+            "
+DELETE FROM favorite_playlists
+WHERE playlist_id = ?",
+        )
+        .bind(playlist_id)
+        .execute(&mut *tx)
+        .await;
+
+        tx_check!(result, tx);
+
+        tx.commit().await?;
+
+        Ok(())
+    }
+
     async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> AppResult<PlayFolderNode> {
         let rows = sqlx::query_as::<_, PlayCurrentNodeRaw>(
             "

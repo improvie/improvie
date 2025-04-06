@@ -31,6 +31,24 @@ pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<U
 }
 
 #[tauri::command]
+pub async fn add_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppResult<()> {
+    state
+        .modules
+        .plays_use_case()
+        .add_favorite_playlist(id)
+        .await
+}
+
+#[tauri::command]
+pub async fn remove_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppResult<()> {
+    state
+        .modules
+        .plays_use_case()
+        .remove_favorite_playlist(id)
+        .await
+}
+
+#[tauri::command]
 pub async fn get_plays_hierarchy(
     state: TauriAppState<'_>,
     folder_id: Option<Uid>,

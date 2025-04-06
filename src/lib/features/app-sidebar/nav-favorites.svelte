@@ -7,15 +7,16 @@
   import Ellipsis from 'lucide-svelte/icons/ellipsis';
   import StarOff from 'lucide-svelte/icons/star-off';
   import { onMount } from 'svelte';
-  import { derived } from 'svelte/store';
 
   onMount(() => {
     initFavoritePlaylist();
   });
 
-  const favorites = derived(favoritePlaylists, ($favoritePlaylists) => {
+  const favorites = $derived.by(() => {
     return $favoritePlaylists
-      .map(id => $playlists.get(id))
+      .map((id) => {
+        return $playlists.get(id);
+      })
       .filter(v => v !== undefined);
   });
 
@@ -23,19 +24,20 @@
 </script>
 
 <Sidebar.Group class='group-data-[collapsible=icon]:hidden'>
-  <Sidebar.GroupLabel>Favorites</Sidebar.GroupLabel>
+  <Sidebar.GroupLabel>Favorite Playlists</Sidebar.GroupLabel>
   <Sidebar.Menu>
-    {#each $favorites as playlist}
+    {#each favorites as playlist}
       <Sidebar.MenuItem>
         <Sidebar.MenuButton>
           <span>{playlist.title}</span>
         </Sidebar.MenuButton>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
-            <Sidebar.MenuAction showOnHover>
-              <Ellipsis />
-              <span class='sr-only'>More</span>
-            </Sidebar.MenuAction>
+            {#snippet child({ props })}
+              <Sidebar.MenuAction {...props}>
+                <Ellipsis />
+              </Sidebar.MenuAction>
+            {/snippet}
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
             class='w-56 rounded-lg'
@@ -48,7 +50,7 @@
               }}
             >
               <StarOff class='text-muted-foreground' />
-              <span>Remove from Favorites</span>
+              <span>Remove</span>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>

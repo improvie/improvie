@@ -23,6 +23,10 @@ pub trait PlaystsRepository {
 
     async fn get_favorite_playlists(&self) -> AppResult<Vec<Uid>>;
 
+    async fn add_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()>;
+
+    async fn remove_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()>;
+
     async fn create_play_folder(&self, model: CreatePlayFolderModel) -> AppResult<PlayFolder>;
 
     async fn create_playlist(&self, model: CreatePlaylistModel) -> AppResult<Playlist>;

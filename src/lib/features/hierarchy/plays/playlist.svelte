@@ -2,6 +2,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { select_playlist } from '$lib/stores/plays';
+  import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { ListMusicIcon } from 'lucide-svelte';
@@ -48,6 +49,13 @@
     return convertFileSrc(playlist.thumbnail_path);
   });
 
+  const is_favorite = $derived.by(() => {
+    if (playlist === undefined) {
+      return false;
+    }
+    return $favoritePlaylists.includes(playlist.id);
+  });
+
 </script>
 
 {#if playlist !== undefined}
@@ -70,6 +78,11 @@
     </ContextMenu.Trigger>
     <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>
+      {#if is_favorite}
+        <ContextMenu.Item onclick={() => removeFavoritePlaylist(playlist.id)}><p class='text-destructive'>Unfavorite</p></ContextMenu.Item>
+      {:else}
+        <ContextMenu.Item onclick={() => addFavoritePlaylist(playlist.id)}>Favorite</ContextMenu.Item>
+      {/if}
       <ContextMenu.Separator />
       <ContextMenu.Item onclick={delete_item}><p class='text-destructive'>Remove</p></ContextMenu.Item>
     </ContextMenu.Content>

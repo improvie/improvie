@@ -19,7 +19,7 @@ export async function removeFavoritePlaylist(id: string) {
   favoritePlaylists.update(ids => ids.filter(i => i !== id));
 }
 
-// TODO: use this
+// TODO: use this and impl on rust
 export async function moveFavoritePlaylist(id: string, index: number) {
   await invoke('move_favorite_playlist', { id, sort_order: index });
   favoritePlaylists.update((ids) => {

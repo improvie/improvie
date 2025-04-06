@@ -4,8 +4,8 @@
   import { select_playlist } from '$lib/stores/plays';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ListMusicIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { playlist_id, rename_data = $bindable() }: {
     playlist_id: string;
@@ -62,7 +62,7 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger>
       <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
-        <div class='h-60 md:h-40 flex items-center justify-center'>
+        <div class='flex items-center justify-center'>
           {#if thumbnail_path}
             <img
               src={thumbnail_path}

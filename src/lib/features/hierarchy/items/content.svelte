@@ -3,8 +3,8 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
   import { clear_track, current_track_id } from '$lib/stores/track';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ImageOffIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { content_id, rename_data = $bindable() }: {
     content_id: string;
@@ -55,7 +55,7 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger>
       <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
-        <div class='h-60 md:h-40 flex items-center justify-center'>
+        <div class='flex items-center justify-center'>
           {#if thumbnail_path}
             <img
               src={thumbnail_path}

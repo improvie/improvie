@@ -2,7 +2,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
-  import { current_track_id } from '$lib/stores/track';
+  import { clear_track, current_track_id } from '$lib/stores/track';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { ImageOffIcon } from 'lucide-svelte';
 
@@ -15,6 +15,7 @@
 
   function dblclick() {
     if (content !== undefined) {
+      clear_track();
       $current_track_id = content_id;
     }
   }

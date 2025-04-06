@@ -8,7 +8,7 @@
   import { current_rule_formats, current_rules, current_track_id, set_current_rules } from '$lib/stores/track';
   import { cn, TimeFormat } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
+  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from 'lucide-svelte';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   let { track = $bindable() }: { track: Content } = $props();
@@ -44,15 +44,17 @@
     sliderCurrentTime = 0;
   }
 
+  const is_playlist = $derived($current_rule_formats !== undefined && $current_rules !== undefined);
+
   function onended() {
-    if ($current_rule_formats !== undefined && $current_rules !== undefined) {
-      if ($current_rule_formats.idx + 1 < $current_rule_formats.rules.length) {
-        $current_rule_formats.idx = $current_rule_formats.idx + 1;
-        $current_track_id = $current_rule_formats.rules[$current_rule_formats.idx].content_id;
+    if (is_playlist) {
+      if ($current_rule_formats!.idx + 1 < $current_rule_formats!.rules.length) {
+        $current_rule_formats!.idx = $current_rule_formats!.idx + 1;
+        $current_track_id = $current_rule_formats!.rules[$current_rule_formats!.idx].content_id;
       }
       else {
         if (is_looping) {
-          set_current_rules($current_rules);
+          set_current_rules($current_rules!);
         }
       }
     }
@@ -115,9 +117,22 @@
   {#if !disable_audio}
     <audio autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
-  <Slider class='absolute -translate-y-1/2 left-0 ml-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
+  <Slider class='absolute -translate-y-1/2 left-0 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between'>
     <div class='ml-6 gap-4 flex items-center'>
+      {#if is_playlist}
+        <IconButton onclick={() => {
+          if ($current_rule_formats!.idx > 0) {
+            $current_rule_formats!.idx = $current_rule_formats!.idx - 1;
+            $current_track_id = $current_rule_formats!.rules[$current_rule_formats!.idx].content_id;
+          }
+        }}>
+          <ChevronsLeftIcon />
+          {#snippet content()}
+            <p>previous</p>
+          {/snippet}
+        </IconButton>
+      {/if}
       <IconButton onclick={() => paused = !paused}>
         {#if paused}
           <PlayIcon />
@@ -132,6 +147,19 @@
           {/if}
         {/snippet}
       </IconButton>
+      {#if is_playlist}
+        <IconButton onclick={() => {
+          if ($current_rule_formats!.idx + 1 < $current_rule_formats!.rules.length) {
+            $current_rule_formats!.idx = $current_rule_formats!.idx + 1;
+            $current_track_id = $current_rule_formats!.rules[$current_rule_formats!.idx].content_id;
+          }
+        }}>
+          <ChevronsRightIcon />
+          {#snippet content()}
+            <p>next</p>
+          {/snippet}
+        </IconButton>
+      {/if}
       <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
     <div class='gap-4 items-center h-full flex py-4'>

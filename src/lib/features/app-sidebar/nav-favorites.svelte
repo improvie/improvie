@@ -5,8 +5,8 @@
   import { select_playlist } from '$lib/stores/plays';
   import { favoritePlaylists, initFavoritePlaylist, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { playlists } from '$lib/stores/plays/playlist';
-  import Ellipsis from 'lucide-svelte/icons/ellipsis';
-  import StarOff from 'lucide-svelte/icons/star-off';
+  import Ellipsis from '@lucide/svelte/icons/ellipsis';
+  import StarOff from '@lucide/svelte/icons/star-off';
   import { onMount } from 'svelte';
 
   onMount(() => {

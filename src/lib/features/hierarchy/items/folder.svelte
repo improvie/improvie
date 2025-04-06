@@ -3,7 +3,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { current_folder_ids } from '$lib/stores/items';
   import { delete_folder, folders, update_folder_name } from '$lib/stores/items/folder';
-  import { FolderIcon } from 'lucide-svelte';
+  import { FolderIcon } from '@lucide/svelte';
 
   let { folder_id, rename_data = $bindable() }: { folder_id: string; rename_data: { now_name: string; update_fn: (name: string) => void } | undefined } = $props();
 

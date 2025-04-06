@@ -3,7 +3,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { ListPlusIcon, RepeatIcon } from 'lucide-svelte';
+  import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let { rule = $bindable(), remove_rule }: { rule: LoopRule; remove_rule: () => void } = $props();

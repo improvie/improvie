@@ -11,7 +11,7 @@
   import { current_rule_formats } from '$lib/stores/track';
   import { cn } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { ImageOffIcon } from 'lucide-svelte';
+  import { ImageOffIcon } from '@lucide/svelte';
 
   let { open = $bindable() }: { open: boolean } = $props();
 

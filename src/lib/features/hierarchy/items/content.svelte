@@ -4,7 +4,7 @@
   import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
   import { clear_track, current_track_id } from '$lib/stores/track';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { ImageOffIcon } from 'lucide-svelte';
+  import { ImageOffIcon } from '@lucide/svelte';
 
   let { content_id, rename_data = $bindable() }: {
     content_id: string;

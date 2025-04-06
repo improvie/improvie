@@ -4,7 +4,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { contents } from '$lib/stores/items/content';
-  import { ChevronsUpIcon } from 'lucide-svelte';
+  import { ChevronsUpIcon } from '@lucide/svelte';
 
   let { rule = $bindable(), remove_rule }: { rule: RangeRule; remove_rule: () => void } = $props();
   const content = $derived.by(() => {

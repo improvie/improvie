@@ -13,7 +13,7 @@
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { setSlots } from '$lib/stores/index.svelte';
   import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
-  import { ListPlusIcon, SquareMenuIcon } from 'lucide-svelte';
+  import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
   import { PlaylistPlayer } from './Player.svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();

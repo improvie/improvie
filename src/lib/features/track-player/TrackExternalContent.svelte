@@ -4,7 +4,7 @@
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { cn } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { ImageOffIcon } from 'lucide-svelte';
+  import { ImageOffIcon } from '@lucide/svelte';
 
   let {
     content = $bindable(),

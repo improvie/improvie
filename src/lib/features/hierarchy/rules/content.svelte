@@ -3,7 +3,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents } from '$lib/stores/items/content';
-  import { HeadphonesIcon } from 'lucide-svelte';
+  import { HeadphonesIcon } from '@lucide/svelte';
 
   let { rule = $bindable(), remove_rule }: { rule: ContentRule; remove_rule: () => void } = $props();
   const content = $derived.by(() => {

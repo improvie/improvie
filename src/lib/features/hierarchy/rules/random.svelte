@@ -4,7 +4,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { Separator } from '$lib/components/ui/separator';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon } from 'lucide-svelte';
+  import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let { rule = $bindable(), remove_rule }: { rule: RandomRule; remove_rule: () => void } = $props();

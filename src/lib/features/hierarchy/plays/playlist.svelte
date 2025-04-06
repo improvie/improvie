@@ -5,7 +5,7 @@
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
   import { convertFileSrc } from '@tauri-apps/api/core';
-  import { ListMusicIcon } from 'lucide-svelte';
+  import { ListMusicIcon } from '@lucide/svelte';
 
   let { playlist_id, rename_data = $bindable() }: {
     playlist_id: string;

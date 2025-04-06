@@ -1,7 +1,7 @@
 <script lang='ts'>
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import ThemeChanger from '$lib/features/ThemeChanger.svelte';
-  import { MessageCircleQuestion, Palette, Settings2 } from 'lucide-svelte';
+  import { MessageCircleQuestion, Palette, Settings2 } from '@lucide/svelte';
 
   let open: boolean = $state(false);
 </script>

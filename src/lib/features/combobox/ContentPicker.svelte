@@ -5,7 +5,7 @@
   import { contents } from '$lib/stores/items/content';
   import { folders } from '$lib/stores/items/folder';
   import { cn, UUID_NIL } from '$lib/utils.js';
-  import { Check } from 'lucide-svelte';
+  import { Check } from '@lucide/svelte';
 
   let { content = $bindable(), open = $bindable() }: { content: PickItem | undefined; open: boolean } = $props();
 

@@ -7,7 +7,7 @@
   import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
   import { HierarchyPlayerFolder, HierarchyPlaylist } from '$lib/features/hierarchy/plays';
   import { current_play_folder_ids, play_folder_nodes } from '$lib/stores/plays';
-  import { CirclePlusIcon, FolderIcon } from 'lucide-svelte';
+  import { CirclePlusIcon, FolderIcon } from '@lucide/svelte';
   import { PlayPageBreadcrumb } from './Breadcrumb.svelte';
 
   let is_open_create_playlist = $state(false);

@@ -49,6 +49,20 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
             .await
     }
 
+    pub async fn add_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()> {
+        self.repository
+            .playsts_repository()
+            .add_favorite_playlist(playlist_id)
+            .await
+    }
+
+    pub async fn remove_favorite_playlist(&self, playlist_id: Uid) -> AppResult<()> {
+        self.repository
+            .playsts_repository()
+            .remove_favorite_playlist(playlist_id)
+            .await
+    }
+
     pub async fn create_play_folder(
         &self,
         model: CreatePlayFolderDto,

@@ -12,10 +12,8 @@ use crate::model::items::{CreateContentModel, CreateFolderModel};
 pub trait ItemsRepository {
     async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode>;
 
-    async fn get_items_hierarchy_loop(
-        &self,
-        folder_id: Uid,
-    ) -> AppResult<HashMap<Uid, FolderNode>>;
+    async fn get_items_hierarchy_loop(&self, folder_id: Uid)
+    -> AppResult<HashMap<Uid, FolderNode>>;
 
     async fn get_contents(&self) -> AppResult<Vec<Content>>;
 

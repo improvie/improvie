@@ -3,8 +3,8 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { cn } from '$lib/utils';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import { ImageOffIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
     content = $bindable(),

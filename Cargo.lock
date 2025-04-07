@@ -2281,6 +2281,7 @@ version = "0.1.5"
 dependencies = [
  "fix-path-env",
  "improvie-command",
+ "improvie-plugin",
  "log",
  "serde",
  "serde_json",
@@ -2369,6 +2370,14 @@ dependencies = [
  "sqlx",
  "thiserror 2.0.12",
  "uid",
+]
+
+[[package]]
+name = "improvie-plugin"
+version = "0.1.5"
+dependencies = [
+ "async-trait",
+ "log",
 ]
 
 [[package]]

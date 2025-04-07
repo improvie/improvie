@@ -6,6 +6,7 @@ members = [
     "src-tauri/improvie-command",
     "src-tauri/improvie-logic",
     "src-tauri/improvie-app",
+    "src-tauri/improvie-plugin",
     "src-tauri/external_crate/uid",
     "src-tauri/integration/youtube",
 ]
@@ -22,6 +23,7 @@ improvie-infra = { path = "src-tauri/improvie-infra" }
 improvie-domain = { path = "src-tauri/improvie-domain" }
 improvie-logic = { path = "src-tauri/improvie-logic" }
 improvie-command = { path = "src-tauri/improvie-command" }
+improvie-plugin = { path = "src-tauri/improvie-plugin" }
 
 # external
 uid = { path = "src-tauri/external_crate/uid" }

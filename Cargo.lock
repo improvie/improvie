@@ -2314,6 +2314,7 @@ dependencies = [
 name = "improvie-builtin"
 version = "0.1.5"
 dependencies = [
+ "async-trait",
  "improvie-plugin",
 ]
 
@@ -3685,6 +3686,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85eae3c4ed2f50dcfe72643da4befc30deadb458a9b590d720cde2f2b1e97da9"
 dependencies = [
  "zerocopy",
+]
+
+[[package]]
+name = "prebuild"
+version = "0.1.0"
+dependencies = [
+ "improvie-builtin",
+ "serde_json",
 ]
 
 [[package]]

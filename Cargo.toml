@@ -10,6 +10,7 @@ members = [
     "src-tauri/improvie-builtin",
     "src-tauri/external_crate/uid",
     "src-tauri/integration/youtube",
+    "scripts/prebuild",
 ]
 resolver = "3"
 

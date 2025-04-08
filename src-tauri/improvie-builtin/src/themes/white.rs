@@ -1,0 +1,36 @@
+use improvie_plugin::theme::ThemeFeature;
+
+pub fn white_theme() -> ThemeFeature<'static> {
+    ThemeFeature {
+        name: "white",
+        background: "0 0% 100%",
+        foreground: "222.2 84% 4.9%",
+        muted: "210 40% 96.1%",
+        muted_foreground: "215.4 16.3% 46.9%",
+        popover: "0 0% 100%",
+        popover_foreground: "222.2 84% 4.9%",
+        card: "0 0% 100%",
+        card_primary: "210 40% 92%",
+        card_foreground: "222.2 84% 4.9%",
+        border: "214.3 31.8% 91.4%",
+        input: "214.3 31.8% 91.4%",
+        primary: "222.2 47.4% 11.2%",
+        primary_foreground: "210 40% 98%",
+        secondary: "210 40% 96.1%",
+        secondary_foreground: "222.2 47.4% 11.2%",
+        accent: "210 40% 96.1%",
+        accent_foreground: "222.2 47.4% 11.2%",
+        destructive: "0 72.2% 50.6%",
+        destructive_foreground: "210 40% 98%",
+        ring: "222.2 84% 4.9%",
+        radius: "0.5rem",
+        sidebar_background: "0 0% 98%",
+        sidebar_foreground: "240 5.3% 26.1%",
+        sidebar_primary: "240 5.9% 10%",
+        sidebar_primary_foreground: "0 0% 98%",
+        sidebar_accent: "240 4.8% 95.9%",
+        sidebar_accent_foreground: "240 5.9% 10%",
+        sidebar_border: "220 13% 91%",
+        sidebar_ring: "217.2 91.2% 59.8%",
+    }
+}

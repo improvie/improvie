@@ -6,3 +6,5 @@ edition.workspace = true
 
 [dependencies]
 improvie-plugin.workspace = true
+
+async-trait.workspace = true

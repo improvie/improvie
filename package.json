@@ -5,8 +5,9 @@
   "description": "",
   "license": "MIT",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
+    "prebuild": "cd scripts/prebuild && cargo run",
+    "dev": "bun run prebuild && vite dev",
+    "build": "bun run prebuild && vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -21,7 +22,6 @@
     "@tauri-apps/plugin-log": "~2.3.1",
     "@tauri-apps/plugin-opener": "^2.2.6",
     "clsx": "^2.1.1",
-    "mode-watcher": "^0.5.1",
     "sveltekit-i18n": "^2.4.2",
     "tailwind-merge": "^2.6.0",
     "ts-pattern": "^5.7.0"

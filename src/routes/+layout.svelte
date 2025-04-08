@@ -4,12 +4,12 @@
   import * as Sidebar from '$lib/components/ui/sidebar';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
   import TrackPlayer from '$lib/features/track-player/index.svelte';
+  import { get_themes } from '$lib/plugin/feature/theme.svelte';
   import { initSlots } from '$lib/stores/index.svelte';
   // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
   import { loadTranslations } from '$lib/translations/translations';
-  import { ModeWatcher } from 'mode-watcher';
   import { onMount } from 'svelte';
   import '../app.css';
 
@@ -21,12 +21,11 @@
   onMount(() => {
     init_items();
     init_play_items();
+    get_themes();
   });
 
   const slots = initSlots();
 </script>
-
-<ModeWatcher />
 
 <Sidebar.Provider>
   <AppSidebar />
@@ -42,5 +41,3 @@
     <TrackPlayer />
   </Sidebar.Inset>
 </Sidebar.Provider>
-
-<style></style>

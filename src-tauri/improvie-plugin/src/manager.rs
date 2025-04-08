@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::{BoxResult, Plugin, PluginContext, PluginFeature, PluginMetadata};
+use crate::{BoxResult, Plugin, PluginContext, PluginFeature, PluginMetadata, theme::ThemeFeature};
 
 pub struct PluginData {
     pub metadata: PluginMetadata<'static>,
@@ -133,5 +133,30 @@ impl PluginManager {
         for plugin in &mut self.plugins {
             plugin.unload().await;
         }
+    }
+
+    fn loaded_plugin(&self) -> impl Iterator<Item = &PluginData> {
+        self.plugins.iter().filter(|data| data.is_loaded)
+    }
+
+    pub fn get_loaded_plugins(&self) -> Vec<PluginMetadata<'static>> {
+        self.loaded_plugin()
+            .map(|data| data.metadata.clone())
+            .collect()
+    }
+
+    pub fn get_themes(&self) -> Vec<ThemeFeature<'static>> {
+        self.loaded_plugin()
+            .flat_map(|data| {
+                data.features
+                    .iter()
+                    .filter_map(|feature| match feature {
+                        PluginFeature::Theme(theme) => Some(theme.clone()),
+                        #[allow(unreachable_patterns)]
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect()
     }
 }

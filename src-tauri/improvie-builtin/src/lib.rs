@@ -1,5 +1,5 @@
 use improvie_plugin::{BoxResult, Plugin, PluginContext, PluginFeature};
-use themes::{black_theme, white_theme};
+use themes::{black_theme, catppuccin_frappe_theme, tokyonight_night_theme, white_theme};
 
 improvie_plugin::metadata!();
 
@@ -20,6 +20,8 @@ impl Plugin for BuiltinPlugin {
         Ok(vec![
             PluginFeature::Theme(white_theme()),
             PluginFeature::Theme(black_theme()),
+            PluginFeature::Theme(catppuccin_frappe_theme()),
+            PluginFeature::Theme(tokyonight_night_theme()),
         ])
     }
 }

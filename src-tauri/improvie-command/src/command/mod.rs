@@ -3,4 +3,5 @@ pub mod health_check;
 pub mod integration;
 pub mod items;
 pub mod plays;
+pub mod plugin;
 pub mod rules;

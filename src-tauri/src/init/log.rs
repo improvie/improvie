@@ -1,14 +1,14 @@
 use tauri::{Runtime, plugin::TauriPlugin};
 use tauri_plugin_log::{RotationStrategy, Target, TargetKind};
 
+#[cfg(debug_assertions)]
+pub const LOG_LEVEL_FILTER: log::LevelFilter = log::LevelFilter::Debug;
+#[cfg(not(debug_assertions))]
+pub const LOG_LEVEL_FILTER: log::LevelFilter = log::LevelFilter::Info;
+
 pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
     tauri_plugin_log::Builder::new()
-        .level(
-            #[cfg(debug_assertions)]
-            log::LevelFilter::Debug,
-            #[cfg(not(debug_assertions))]
-            log::LevelFilter::Info,
-        )
+        .level(LOG_LEVEL_FILTER)
         .targets(
             #[cfg(debug_assertions)]
             [

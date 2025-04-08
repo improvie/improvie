@@ -11,6 +11,12 @@ pub fn run() {
         .plugin(init::log::init_log_plugin())
         .plugin(tauri_plugin_opener::init())
         .setup(move |app| {
+            let result = improvie_plugin::LOGGER.set((log::logger(), init::log::LOG_LEVEL_FILTER));
+
+            if result.is_err() {
+                log::error!("Failed to set logger. not logging on plugin");
+            }
+
             #[cfg(debug_assertions)]
             let data_dir = init::dev_folder();
             #[cfg(not(debug_assertions))]

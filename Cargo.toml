@@ -6,8 +6,11 @@ members = [
     "src-tauri/improvie-command",
     "src-tauri/improvie-logic",
     "src-tauri/improvie-app",
+    "src-tauri/improvie-plugin",
+    "src-tauri/improvie-builtin",
     "src-tauri/external_crate/uid",
     "src-tauri/integration/youtube",
+    "scripts/prebuild",
 ]
 resolver = "3"
 
@@ -15,6 +18,8 @@ resolver = "3"
 version = "0.1.5"
 edition = "2024"
 authors = ["moriyoshi-kasuga"]
+repository = "https://github.com/improvie/improvie"
+description = "This is a tauri app that improves movie(video) management."
 
 [workspace.dependencies]
 improvie-app = { path = "src-tauri/improvie-app" }
@@ -22,6 +27,8 @@ improvie-infra = { path = "src-tauri/improvie-infra" }
 improvie-domain = { path = "src-tauri/improvie-domain" }
 improvie-logic = { path = "src-tauri/improvie-logic" }
 improvie-command = { path = "src-tauri/improvie-command" }
+improvie-plugin = { path = "src-tauri/improvie-plugin" }
+improvie-builtin = { path = "src-tauri/improvie-builtin" }
 
 # external
 uid = { path = "src-tauri/external_crate/uid" }

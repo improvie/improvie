@@ -1,8 +1,12 @@
 use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::persistence::db::InitDbError;
+use improvie_plugin::PluginManager;
 use improvie_yt::YtStore;
-use tauri::{State, async_runtime::RwLock};
+use tauri::{
+    State,
+    async_runtime::{Mutex, RwLock},
+};
 
 use crate::modules::Modules;
 
@@ -16,21 +20,39 @@ cfg_if::cfg_if!(
 
 pub struct AppState {
     pub modules: Arc<Modules>,
+    pub pm: Arc<Mutex<PluginManager>>,
     pub yt: Arc<RwLock<YtStore>>,
 }
 
 impl AppState {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         let modules = Modules::new_with_db(data_dir.clone()).await?;
+
         let yt = Arc::new(RwLock::new(YtStore::Loading));
         let captured_yt = yt.clone();
 
-        std::thread::spawn(move || {
-            improvie_yt::YtIntegration::new_background(data_dir, captured_yt);
+        std::thread::spawn({
+            let data_dir = data_dir.clone();
+            move || {
+                improvie_yt::YtIntegration::new_background(data_dir, captured_yt);
+            }
         });
+
+        log::info!("Start loading plugins");
+        let mut pm = PluginManager::new(data_dir);
+        let _ = pm
+            .register_plugin(
+                improvie_builtin::METADATA.clone(),
+                Box::new(improvie_builtin::BuiltinPlugin::new()),
+            )
+            .await;
+        let _ = pm.load_plugins().await;
+        let pm = Arc::new(Mutex::new(pm));
+        log::info!("Plugins loaded");
 
         Ok(Self {
             modules: Arc::new(modules),
+            pm,
             yt,
         })
     }

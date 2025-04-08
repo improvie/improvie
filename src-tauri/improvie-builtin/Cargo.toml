@@ -1,0 +1,10 @@
+[package]
+name = "improvie-builtin"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[dependencies]
+improvie-plugin.workspace = true
+
+async-trait.workspace = true

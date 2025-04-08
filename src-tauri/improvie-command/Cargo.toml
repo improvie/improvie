@@ -8,7 +8,11 @@ improvie-domain.workspace = true
 improvie-logic.workspace = true
 improvie-infra.workspace = true
 improvie-app.workspace = true
+improvie-plugin.workspace = true
+improvie-builtin.workspace = true
+
 uid.workspace = true
+
 improvie-yt = { path = "../integration/youtube" }
 
 thiserror.workspace = true

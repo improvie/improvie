@@ -2311,11 +2311,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "improvie-builtin"
+version = "0.1.5"
+dependencies = [
+ "improvie-plugin",
+]
+
+[[package]]
 name = "improvie-command"
 version = "0.1.0"
 dependencies = [
  "cfg-if",
  "improvie-app",
+ "improvie-builtin",
  "improvie-domain",
  "improvie-infra",
  "improvie-logic",
@@ -2380,6 +2388,7 @@ dependencies = [
  "async-trait",
  "libloading 0.8.6",
  "log",
+ "serde",
  "tokio",
 ]
 

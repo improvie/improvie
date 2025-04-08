@@ -10,15 +10,22 @@ macro_rules! init_log {
 }
 
 #[macro_export]
+macro_rules! maybe_empty_env {
+    ($env:literal) => {
+        $crate::MaybeEmptyStr::new(env!($env))
+    };
+}
+
+#[macro_export]
 macro_rules! metadata {
     () => {
         #[unsafe(no_mangle)]
         pub static METADATA: $crate::PluginMetadata = $crate::PluginMetadata {
             name: env!("CARGO_PKG_NAME"),
             version: env!("CARGO_PKG_VERSION"),
-            authors: env!("CARGO_PKG_AUTHORS"),
-            description: env!("CARGO_PKG_DESCRIPTION"),
-            repository: option_env!("CARGO_PKG_REPOSITORY"),
+            authors: $crate::maybe_empty_env!("CARGO_PKG_AUTHORS"),
+            description: $crate::maybe_empty_env!("CARGO_PKG_DESCRIPTION"),
+            repository: $crate::maybe_empty_env!("CARGO_PKG_REPOSITORY"),
         };
     };
 }

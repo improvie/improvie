@@ -38,9 +38,17 @@ impl AppState {
             }
         });
 
+        log::info!("Start loading plugins");
         let mut pm = PluginManager::new(data_dir);
+        let _ = pm
+            .register_plugin(
+                improvie_builtin::METADATA.clone(),
+                Box::new(improvie_builtin::BuiltinPlugin::new()),
+            )
+            .await;
         let _ = pm.load_plugins().await;
         let pm = Arc::new(Mutex::new(pm));
+        log::info!("Plugins loaded");
 
         Ok(Self {
             modules: Arc::new(modules),

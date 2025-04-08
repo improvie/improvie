@@ -5,35 +5,7 @@ import { invoke } from '@tauri-apps/api/core';
 export interface ThemeFeature {
   name: string;
 
-  background: string;
-  foreground: string;
-  muted: string;
-  muted_foreground: string;
-  popover: string;
-  popover_foreground: string;
-  card: string;
-  card_primary: string;
-  card_foreground: string;
-  border: string;
-  input: string;
-  primary: string;
-  primary_foreground: string;
-  secondary: string;
-  secondary_foreground: string;
-  accent: string;
-  accent_foreground: string;
-  destructive: string;
-  destructive_foreground: string;
-  ring: string;
-  radius: string;
-  sidebar_background: string;
-  sidebar_foreground: string;
-  sidebar_primary: string;
-  sidebar_primary_foreground: string;
-  sidebar_accent: string;
-  sidebar_accent_foreground: string;
-  sidebar_border: string;
-  sidebar_ring: string;
+  [key: string]: string;
 }
 
 let themes: ThemeFeature[] | undefined = $state();

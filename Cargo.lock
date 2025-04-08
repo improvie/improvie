@@ -2319,6 +2319,7 @@ dependencies = [
  "improvie-domain",
  "improvie-infra",
  "improvie-logic",
+ "improvie-plugin",
  "improvie-yt",
  "log",
  "serde",
@@ -2377,7 +2378,9 @@ name = "improvie-plugin"
 version = "0.1.5"
 dependencies = [
  "async-trait",
+ "libloading 0.8.6",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -2625,7 +2628,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e9ec52138abedcc58dc17a7c6c0c00a2bdb4f3427c7f63fa97fd0d859155caf"
 dependencies = [
  "gtk-sys",
- "libloading",
+ "libloading 0.7.4",
  "once_cell",
 ]
 
@@ -2643,6 +2646,16 @@ checksum = "b67380fd3b2fbe7527a606e18729d21c6f3951633d0500574c4dc22d2d638b9f"
 dependencies = [
  "cfg-if",
  "winapi",
+]
+
+[[package]]
+name = "libloading"
+version = "0.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
+dependencies = [
+ "cfg-if",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]

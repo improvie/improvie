@@ -7,3 +7,6 @@ edition.workspace = true
 [dependencies]
 log.workspace = true
 async-trait.workspace = true
+tokio.workspace = true
+
+libloading = "0.8"

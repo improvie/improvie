@@ -18,6 +18,7 @@ macro_rules! metadata {
             version: env!("CARGO_PKG_VERSION"),
             authors: env!("CARGO_PKG_AUTHORS"),
             description: env!("CARGO_PKG_DESCRIPTION"),
+            repository: option_env!("CARGO_PKG_REPOSITORY"),
         };
     };
 }

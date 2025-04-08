@@ -16,6 +16,8 @@ resolver = "3"
 version = "0.1.5"
 edition = "2024"
 authors = ["moriyoshi-kasuga"]
+repository = "https://github.com/improvie/improvie"
+description = "This is a tauri app that improves movie(video) management."
 
 [workspace.dependencies]
 improvie-app = { path = "src-tauri/improvie-app" }

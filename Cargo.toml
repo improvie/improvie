@@ -6,10 +6,10 @@ members = [
     "src-tauri/improvie-command",
     "src-tauri/improvie-logic",
     "src-tauri/improvie-app",
-    "src-tauri/improvie-plugin",
-    "src-tauri/improvie-builtin",
-    "src-tauri/external_crate/uid",
-    "src-tauri/integration/youtube",
+    "src-tauri/addtional/improvie-plugin",
+    "src-tauri/addtional/improvie-builtin",
+    "src-tauri/addtional/uid",
+    "src-tauri/addtional/integration/youtube",
     "scripts/prebuild",
 ]
 resolver = "3"
@@ -27,11 +27,12 @@ improvie-infra = { path = "src-tauri/improvie-infra" }
 improvie-domain = { path = "src-tauri/improvie-domain" }
 improvie-logic = { path = "src-tauri/improvie-logic" }
 improvie-command = { path = "src-tauri/improvie-command" }
-improvie-plugin = { path = "src-tauri/improvie-plugin" }
-improvie-builtin = { path = "src-tauri/improvie-builtin" }
 
-# external
-uid = { path = "src-tauri/external_crate/uid" }
+# addtional
+improvie-plugin = { path = "src-tauri/addtional/improvie-plugin" }
+improvie-builtin = { path = "src-tauri/addtional/improvie-builtin" }
+uid = { path = "src-tauri/addtional/uid" }
+improvie-yt = { path = "src-tauri/addtional/integration/youtube" }
 
 # tauri
 tauri = { version = "=2.4.1", features = ["protocol-asset"] }

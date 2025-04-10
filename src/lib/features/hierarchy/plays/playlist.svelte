@@ -61,7 +61,7 @@
 {#if playlist !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger>
-      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
+      <Card.Root class='z-20 p-3 h-full select-none' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
           <ImageLoader
             bind:src={thumbnail_path}

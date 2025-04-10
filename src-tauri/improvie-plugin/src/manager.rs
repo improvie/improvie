@@ -28,6 +28,7 @@ impl PluginData {
 
 pub struct PluginManager {
     plugins: Vec<PluginData>,
+    libs: Vec<libloading::Library>,
     data_dir: PathBuf,
 }
 
@@ -37,6 +38,7 @@ impl PluginManager {
     pub fn new(data_dir: PathBuf) -> Self {
         Self {
             plugins: Vec::new(),
+            libs: Vec::new(),
             data_dir,
         }
     }
@@ -76,18 +78,52 @@ impl PluginManager {
 
         let plugin_fn = unsafe { lib.get::<fn() -> Box<dyn Plugin>>(b"plugin")? };
         let metadata: &PluginMetadata =
-            unsafe { &**lib.get::<*const PluginMetadata>(b"METADATA")?.clone() };
+            unsafe { &**lib.get::<*const PluginMetadata>(b"METADATA")? };
+
+        macro_rules! require_str {
+            ($var:expr) => {{
+                let var = $var.trim_ascii();
+                if var.is_empty() {
+                    return Err(format!("Plugin {path:?} has empty metadata").into());
+                }
+                var
+            }};
+        }
+
+        macro_rules! maybe_empty_str {
+            ($var:expr) => {{
+                let var = $var;
+                match var {
+                    Some(v) => {
+                        let v = v.trim_ascii();
+                        if v.is_empty() { None } else { Some(v) }
+                    }
+                    None => None,
+                }
+            }};
+        }
+
+        let metadata = PluginMetadata {
+            name: require_str!(metadata.name),
+            version: require_str!(metadata.version),
+            authors: maybe_empty_str!(metadata.authors),
+            description: maybe_empty_str!(metadata.description),
+            repository: maybe_empty_str!(metadata.repository),
+        };
 
         let instance = plugin_fn();
 
-        self.register_plugin(metadata.clone(), instance).await
+        self.register_plugin(metadata, instance).await;
+        self.libs.push(lib);
+
+        Ok(())
     }
 
     pub async fn register_plugin(
         &mut self,
         metadata: PluginMetadata<'static>,
         mut instance: Box<dyn Plugin>,
-    ) -> BoxResult<()> {
+    ) {
         let context = PluginContext::new(metadata.clone());
 
         let on_load = instance.on_load(&context).await;
@@ -108,8 +144,6 @@ impl PluginManager {
             is_loaded,
             features,
         });
-
-        Ok(())
     }
 
     pub async fn unload_plugin(&mut self, name: &str) -> BoxResult<()> {
@@ -158,5 +192,12 @@ impl PluginManager {
                     .collect::<Vec<_>>()
             })
             .collect()
+    }
+}
+
+impl Drop for PluginManager {
+    fn drop(&mut self) {
+        self.plugins.clear();
+        self.libs.clear();
     }
 }

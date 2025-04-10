@@ -19,9 +19,9 @@ macros::def_modules!(
 );
 
 impl Modules {
-    pub async fn new_with_db(data_dir: PathBuf) -> Result<Self, InitDbError> {
+    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         let db = DbPool::new(data_dir).await?;
-        let modules = Self::new(db);
+        let modules = Self::new_with_db(db);
         Ok(modules)
     }
 }
@@ -37,7 +37,7 @@ mod macros {
         }
 
         impl $name {
-            $pub fn new(db: DbPool) -> Self {
+            $pub fn new_with_db(db: DbPool) -> Self {
                 let repository = $repository::new(db);
                 Self {
                     $($variable: $usecase::new(repository.clone()),)*

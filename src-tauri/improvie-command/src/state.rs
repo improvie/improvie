@@ -26,7 +26,7 @@ pub struct AppState {
 
 impl AppState {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
-        let modules = Modules::new_with_db(data_dir.clone()).await?;
+        let modules = Modules::new(data_dir.clone()).await?;
 
         let yt = Arc::new(RwLock::new(YtStore::Loading));
         let captured_yt = yt.clone();
@@ -40,12 +40,11 @@ impl AppState {
 
         log::info!("Start loading plugins");
         let mut pm = PluginManager::new(data_dir);
-        let _ = pm
-            .register_plugin(
-                improvie_builtin::METADATA.clone(),
-                Box::new(improvie_builtin::BuiltinPlugin::new()),
-            )
-            .await;
+        pm.register_plugin(
+            improvie_builtin::METADATA.clone(),
+            Box::new(improvie_builtin::BuiltinPlugin::new()),
+        )
+        .await;
         let _ = pm.load_plugins().await;
         let pm = Arc::new(Mutex::new(pm));
         log::info!("Plugins loaded");

@@ -14,7 +14,7 @@ export const current_folder_ids: Writable<string[]> = writable([UUID_NIL]);
 export const folder_nodes: Writable<SvelteMap<string, FolderNode>> = writable(new SvelteMap());
 
 export function init_items() {
-  action_get_items_hierarchy().then((v) => {
+  action_get_items_hierarchy(UUID_NIL).then((v) => {
     folder_nodes.set(v);
   });
 

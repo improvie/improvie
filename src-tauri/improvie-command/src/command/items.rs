@@ -14,12 +14,12 @@ use crate::state::TauriAppState;
 #[tauri::command]
 pub async fn get_items_hierarchy(
     state: TauriAppState<'_>,
-    folder_id: Option<Uid>,
+    folder_id: Uid,
 ) -> AppResult<HashMap<Uid, FolderNode>> {
     state
         .modules
         .items_use_case()
-        .get_items_hierarchy_loop(folder_id.unwrap_or(Uid::nil()))
+        .get_items_hierarchy_loop(folder_id)
         .await
 }
 

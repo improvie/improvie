@@ -3,14 +3,31 @@ use crate::repository::{
     rules::RulesRepository,
 };
 
-pub trait RepositoriesModule: Clone + Send + Sync + Sized + 'static {
-    type HealthCheckRepository: HealthCheckRepository;
-    type ItemsRepository: ItemsRepository;
-    type PlaystsRepository: PlaystsRepository;
-    type RulesRepository: RulesRepository;
+macros::def_module!(RepositoriesModule {
+    health_check_repository: HealthCheckRepository,
+    items_repository: ItemsRepository,
+    playsts_repository: PlaystsRepository,
+    rules_repository: RulesRepository,
+});
 
-    fn health_check_repository(&self) -> &Self::HealthCheckRepository;
-    fn items_repository(&self) -> &Self::ItemsRepository;
-    fn playsts_repository(&self) -> &Self::PlaystsRepository;
-    fn rules_repository(&self) -> &Self::RulesRepository;
+mod macros {
+    macro_rules! def_module {
+        (
+            $module:ident {
+                $($variable:ident: $repository:ident,)*
+            }
+        ) => {
+            pub trait $module: Clone + Send + Sync + Sized + 'static {
+                $(
+                    type $repository: $repository;
+                )*
+
+                $(
+                    fn $variable(&self) -> &Self::$repository;
+                )*
+            }
+        };
+    }
+
+    pub(super) use def_module;
 }

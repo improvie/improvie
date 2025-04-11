@@ -2316,6 +2316,7 @@ dependencies = [
  "improvie-plugin",
  "improvie-yt",
  "log",
+ "more-convert",
  "serde",
  "tauri",
  "tauri-plugin-dialog",

@@ -1,10 +1,21 @@
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
-use improvie_logic::{AppError, AppResult};
+use improvie_logic::impl_serialize_for_dyn_app_error;
 use improvie_yt::YtStore;
 use tauri::{AppHandle, Emitter};
 use uid::Uid;
 
 use crate::state::TauriAppState;
+
+#[derive(Debug, thiserror::Error, more_convert::VariantName)]
+#[variant_name(prefix = "Yt")]
+pub enum YtError {
+    #[error("youtube integration is loading")]
+    Loading,
+    #[error("youtube integration errored: {0}")]
+    Errored(String),
+}
+
+impl_serialize_for_dyn_app_error!(YtError);
 
 #[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
@@ -12,17 +23,14 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     state: TauriAppState<'_>,
     parent_folder_id: Uid,
     url: String,
-) -> AppResult<CreateContentResponse> {
+) -> Result<CreateContentResponse, YtError> {
     let yt = match &*state.yt.read().await {
         YtStore::Loaded(yt) => yt.clone(),
         YtStore::Loading => {
-            return Err(AppError::NotReady(
-                "youtube integration",
-                "now loading".to_string(),
-            ));
+            return Err(YtError::Loading);
         }
         YtStore::Error(err) => {
-            return Err(AppError::Errored("youtube integration", err.to_string()));
+            return Err(YtError::Errored(err.to_string()));
         }
     };
 
@@ -33,7 +41,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         .await
     {
         Ok(content) => content,
-        Err(err) => return Err(AppError::Errored("youtube integration", err.to_string())),
+        Err(err) => return Err(YtError::Errored(err.to_string())),
     };
 
     let dto = CreateContentDto {
@@ -47,5 +55,9 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         thumbnail_path: Some(content.thumbnail_path.to_string_lossy().to_string()),
     };
 
-    state.modules.items_use_case().create_content(dto).await
+    let result = state.modules.items_use_case().create_content(dto).await;
+    match result {
+        Ok(content) => Ok(content),
+        Err(err) => Err(YtError::Errored(err.to_string())),
+    }
 }

@@ -19,6 +19,7 @@ tauri.workspace = true
 serde.workspace = true
 log.workspace = true
 tauri-plugin-dialog.workspace = true
+more-convert.workspace = true
 
 [lints]
 workspace = true

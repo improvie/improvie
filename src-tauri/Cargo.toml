@@ -31,7 +31,6 @@ log.workspace = true
 
 tauri.workspace = true
 tauri-plugin-dialog.workspace = true
-tauri-plugin-fs.workspace = true
 
 # tauri plugin and config
 tauri-plugin-opener = "=2.2.6"

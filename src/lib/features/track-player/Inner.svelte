@@ -101,7 +101,7 @@
 
 </script>
 
-<Card.Root class={cn('sticky z-10 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', external_open || 'hidden')}>
+<Card.Root class={cn('sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', external_open || 'hidden')}>
   <TrackExternalContent
     bind:content={track}
     bind:paused
@@ -113,7 +113,7 @@
   />
 </Card.Root>
 
-<Card.Root class='sticky bottom-0 h-20 z-20 rounded-none'>
+<Card.Root class='sticky bottom-0 h-20 z-40 rounded-none'>
   {#if !disable_audio}
     <audio autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}

@@ -76,7 +76,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-  <div class='z-0 absolute w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+  <div class='absolute w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
     {#each node as child}
       {#if child.kind === 'Folder'}
         <HierarchyFolder folder_id={child.id} bind:rename_data />

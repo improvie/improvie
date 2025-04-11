@@ -51,12 +51,12 @@ pub async fn remove_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppR
 #[tauri::command]
 pub async fn get_plays_hierarchy(
     state: TauriAppState<'_>,
-    folder_id: Option<Uid>,
+    folder_id: Uid,
 ) -> AppResult<HashMap<Uid, PlayFolderNode>> {
     state
         .modules
         .plays_use_case()
-        .get_plays_hierarchy_loop(folder_id.unwrap_or(Uid::nil()))
+        .get_plays_hierarchy_loop(folder_id)
         .await
 }
 

@@ -15,11 +15,11 @@ uid.workspace = true
 improvie-yt.workspace = true
 
 thiserror.workspace = true
-cfg-if.workspace = true
 tauri.workspace = true
 serde.workspace = true
 log.workspace = true
 tauri-plugin-dialog.workspace = true
+more-convert.workspace = true
 
 [lints]
 workspace = true

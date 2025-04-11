@@ -7,17 +7,7 @@
   ],
   "permissions": [
     "core:default",
-    "opener:default",
     "log:default",
-    "dialog:default",
-    "fs:default",
-    {
-      "identifier": "fs:allow-read-file",
-      "allow": [
-        {
-          "path": "**"
-        }
-      ]
-    }
+    "dialog:default"
   ]
 }

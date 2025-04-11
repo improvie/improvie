@@ -70,18 +70,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 
 [[package]]
-name = "ambassador"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b27ba24e4d8a188489d5a03c7fabc167a60809a383cdb4d15feb37479cd2a48"
-dependencies = [
- "itertools 0.10.5",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "android-tzdata"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2288,7 +2276,6 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
- "tauri-plugin-fs",
  "tauri-plugin-log",
  "tauri-plugin-opener",
 ]
@@ -2299,7 +2286,6 @@ version = "0.2.0"
 dependencies = [
  "improvie-domain",
  "improvie-logic",
- "itertools 0.14.0",
  "log",
  "more-convert",
  "serde",
@@ -2322,7 +2308,6 @@ dependencies = [
 name = "improvie-command"
 version = "0.1.0"
 dependencies = [
- "cfg-if",
  "improvie-app",
  "improvie-builtin",
  "improvie-domain",
@@ -2345,7 +2330,6 @@ dependencies = [
  "async-trait",
  "chrono",
  "improvie-logic",
- "itertools 0.14.0",
  "thiserror 2.0.12",
  "uid",
 ]
@@ -2358,7 +2342,6 @@ dependencies = [
  "chrono",
  "improvie-domain",
  "improvie-logic",
- "itertools 0.14.0",
  "log",
  "more-convert",
  "serde",
@@ -2372,7 +2355,6 @@ dependencies = [
 name = "improvie-logic"
 version = "0.2.0"
 dependencies = [
- "ambassador",
  "chrono",
  "more-convert",
  "rand 0.9.0",
@@ -2466,24 +2448,6 @@ checksum = "173609498df190136aa7dea1a91db051746d339e18476eed5ca40521f02d7aa5"
 dependencies = [
  "is-docker",
  "once_cell",
-]
-
-[[package]]
-name = "itertools"
-version = "0.10.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
-dependencies = [
- "either",
 ]
 
 [[package]]
@@ -5536,9 +5500,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.44.1"
+version = "1.44.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f382da615b842244d4b8738c82ed1275e6c5dd90c459a30941cd07080b06c91a"
+checksum = "e6b88822cbe49de4185e3a4cbf8321dd487cf5fe0c5c65695fef6346371e9c48"
 dependencies = [
  "backtrace",
  "bytes",

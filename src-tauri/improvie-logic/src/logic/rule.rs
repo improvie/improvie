@@ -1,4 +1,3 @@
-use ambassador::{Delegate, delegatable_trait};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
@@ -21,8 +20,7 @@ impl RuleFormat {
     }
 }
 
-#[derive(Debug, Clone, Delegate, Serialize, Deserialize)]
-#[delegate(RuleFormatIter)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 pub enum Rule {
     Content(ContentRule),
@@ -31,9 +29,19 @@ pub enum Rule {
     Random(RandomRule),
 }
 
-#[delegatable_trait]
 pub trait RuleFormatIter {
     fn formats(&self) -> Vec<RuleFormat>;
+}
+
+impl RuleFormatIter for Rule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        match self {
+            Rule::Content(rule) => rule.formats(),
+            Rule::Range(rule) => rule.formats(),
+            Rule::Loop(rule) => rule.formats(),
+            Rule::Random(rule) => rule.formats(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

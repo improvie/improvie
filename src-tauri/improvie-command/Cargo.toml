@@ -15,7 +15,6 @@ uid.workspace = true
 improvie-yt.workspace = true
 
 thiserror.workspace = true
-cfg-if.workspace = true
 tauri.workspace = true
 serde.workspace = true
 log.workspace = true

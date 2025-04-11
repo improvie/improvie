@@ -10,13 +10,10 @@ use tauri::{
 
 use crate::modules::Modules;
 
-cfg_if::cfg_if!(
-    if #[cfg(test)] {
-        pub type AppRuntime = tauri::test::MockRuntime;
-    } else {
-        pub type AppRuntime = tauri::Wry;
-    }
-);
+#[cfg(test)]
+pub type AppRuntime = tauri::test::MockRuntime;
+#[cfg(not(test))]
+pub type AppRuntime = tauri::Wry;
 
 pub struct AppState {
     pub modules: Arc<Modules>,

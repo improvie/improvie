@@ -10,7 +10,6 @@ uid.workspace = true
 thiserror.workspace = true
 sqlx.workspace = true
 chrono.workspace = true
-ambassador.workspace = true
 serde.workspace = true
 rand.workspace = true
 more-convert.workspace = true

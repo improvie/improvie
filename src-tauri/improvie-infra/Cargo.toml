@@ -15,7 +15,6 @@ sqlx.workspace = true
 log.workspace = true
 chrono.workspace = true
 more-convert.workspace = true
-itertools.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 

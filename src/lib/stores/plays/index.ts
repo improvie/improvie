@@ -22,7 +22,7 @@ export const current_play_folder_ids: Writable<string[]> = writable([UUID_NIL]);
 export const play_folder_nodes: Writable<SvelteMap<string, PlayFolderNode>> = writable(new SvelteMap());
 
 export function init_play_items() {
-  action_get_plays_hierarchy().then((v) => {
+  action_get_plays_hierarchy(UUID_NIL).then((v) => {
     play_folder_nodes.set(v);
   }).catch((e) => {
     console.error(e);

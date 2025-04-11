@@ -4,8 +4,11 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Progress } from '$lib/components/ui/progress/index.js';
+  import { toAppError } from '$lib/error';
+  import { Logger } from '$lib/logger';
   import { import_youtube_video } from '$lib/stores/items/content';
   import { listen } from '@tauri-apps/api/event';
+  import { toast } from 'svelte-sonner';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
@@ -66,12 +69,24 @@
     downloading = true;
     try {
       await import_youtube_video(parent_folder_id, $formData.url);
+      open = false;
     }
     catch (e) {
-      console.error(e);
+      const app_error = toAppError(e);
+      switch (app_error.kind) {
+        case 'YtLoading':
+          toast('Please wait while loaded system');
+          break;
+        case 'YtErrored':
+          toast('Video download failed');
+          break;
+        default:
+          toast('Video download failed');
+          Logger.app_error('Error importing youtube video', app_error);
+          break;
+      }
     }
     downloading = false;
-    open = false;
     download_state = {
       downloaded_mb: 0,
       total_mb: 0,

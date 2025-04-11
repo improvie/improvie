@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
 
   import * as Sidebar from '$lib/components/ui/sidebar';
+  import { Toaster } from '$lib/components/ui/sonner';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
   import TrackPlayer from '$lib/features/track-player/index.svelte';
   import { get_themes } from '$lib/plugin/feature/theme.svelte';
@@ -26,6 +27,8 @@
 
   const slots = initSlots();
 </script>
+
+<Toaster />
 
 <Sidebar.Provider>
   <AppSidebar />

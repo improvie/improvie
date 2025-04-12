@@ -1,0 +1,498 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03A3A53928D123276B60355C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4F560E810F279A0124A0430 /* QuartzCore.framework */; };
+		31A9A62A967EA734049E7639 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673A1D2D3C72B78DE27C0498 /* libapp.a */; };
+		3B0B0F0CA6657A9D77ACAD5F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7954C19DE804E806D6FDD46 /* WebKit.framework */; };
+		6E300646ADC2528287A46E1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC0EF80C64D04FBFC1B02B9C /* Assets.xcassets */; };
+		7B6E35A5678917E062DE5E95 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F1A0CB72498619075F2EFA3 /* Security.framework */; };
+		80AE480917520D940AC1617A /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACF6E2F4B0BBEE7EAFF193BC /* Metal.framework */; };
+		92E00BF57DE68D6A4BD139B3 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B99ED5F4BF9226F638F815A4 /* MetalKit.framework */; };
+		A8130E4FE302B64C477576B1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B4724D8DAA24047E01A0F3 /* UIKit.framework */; };
+		AFEEB788F543BD0F08C2168A /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E87F927D6A8641A302D13D1A /* main.mm */; };
+		DE9DA04C218C8F43319E6E13 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 0F26B487BA685166FBD89518 /* assets */; };
+		E45DD0F2A9571413C962D4A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202DF1417EA0D4BA50F469B3 /* CoreGraphics.framework */; };
+		ED784A8F31D302120AD38182 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B285FDEA075E027814C9AEA /* LaunchScreen.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0CD5B1672A3E3D92EF18DF14 /* improvie_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = improvie_iOS.entitlements; sourceTree = "<group>"; };
+		0F26B487BA685166FBD89518 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		1259CDD75CEFD96E5317073F /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		136EB971BEF67BA7A1E78B17 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		202DF1417EA0D4BA50F469B3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2088DA2F907199330D5B8E2C /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		2F1A0CB72498619075F2EFA3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		41B4724D8DAA24047E01A0F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		5B285FDEA075E027814C9AEA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		673A1D2D3C72B78DE27C0498 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		6DF98B8F743A51851D585108 /* log.rs */ = {isa = PBXFileReference; path = log.rs; sourceTree = "<group>"; };
+		87D2C68A514CF08278816161 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		A7954C19DE804E806D6FDD46 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		ACF6E2F4B0BBEE7EAFF193BC /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		B5107CECADCC534E290A0F37 /* handler.rs */ = {isa = PBXFileReference; path = handler.rs; sourceTree = "<group>"; };
+		B99ED5F4BF9226F638F815A4 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		BC0EF80C64D04FBFC1B02B9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C4F560E810F279A0124A0430 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E7E48F4639286BDCD381C222 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E87F927D6A8641A302D13D1A /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		F0979C4BC97F59608289BD7C /* improvie_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = improvie_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6E13527DDE57027F350F41C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31A9A62A967EA734049E7639 /* libapp.a in Frameworks */,
+				E45DD0F2A9571413C962D4A1 /* CoreGraphics.framework in Frameworks */,
+				80AE480917520D940AC1617A /* Metal.framework in Frameworks */,
+				92E00BF57DE68D6A4BD139B3 /* MetalKit.framework in Frameworks */,
+				03A3A53928D123276B60355C /* QuartzCore.framework in Frameworks */,
+				7B6E35A5678917E062DE5E95 /* Security.framework in Frameworks */,
+				A8130E4FE302B64C477576B1 /* UIKit.framework in Frameworks */,
+				3B0B0F0CA6657A9D77ACAD5F /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		021D4F16D551FE335B84693C = {
+			isa = PBXGroup;
+			children = (
+				0F26B487BA685166FBD89518 /* assets */,
+				BC0EF80C64D04FBFC1B02B9C /* Assets.xcassets */,
+				5B285FDEA075E027814C9AEA /* LaunchScreen.storyboard */,
+				BA98C3EA21419CA9E986F00E /* Externals */,
+				28370F484AADE28E9057B980 /* improvie_iOS */,
+				462340840DD3C40E0B7A52BC /* Sources */,
+				A6B7B17F070B7CF1B558DF99 /* src */,
+				51BCE399711A1CA9948360FC /* Frameworks */,
+				691A6CBF65E0950F59C32A5F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		06ADDA734115155D089C86DD /* init */ = {
+			isa = PBXGroup;
+			children = (
+				6DF98B8F743A51851D585108 /* log.rs */,
+				2088DA2F907199330D5B8E2C /* mod.rs */,
+			);
+			path = init;
+			sourceTree = "<group>";
+		};
+		28370F484AADE28E9057B980 /* improvie_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				0CD5B1672A3E3D92EF18DF14 /* improvie_iOS.entitlements */,
+				E7E48F4639286BDCD381C222 /* Info.plist */,
+			);
+			path = improvie_iOS;
+			sourceTree = "<group>";
+		};
+		2BF4834C5A8156643A791B85 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				136EB971BEF67BA7A1E78B17 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		462340840DD3C40E0B7A52BC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				BC0F660EB89818C88D848307 /* improvie */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		51BCE399711A1CA9948360FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				202DF1417EA0D4BA50F469B3 /* CoreGraphics.framework */,
+				673A1D2D3C72B78DE27C0498 /* libapp.a */,
+				ACF6E2F4B0BBEE7EAFF193BC /* Metal.framework */,
+				B99ED5F4BF9226F638F815A4 /* MetalKit.framework */,
+				C4F560E810F279A0124A0430 /* QuartzCore.framework */,
+				2F1A0CB72498619075F2EFA3 /* Security.framework */,
+				41B4724D8DAA24047E01A0F3 /* UIKit.framework */,
+				A7954C19DE804E806D6FDD46 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		691A6CBF65E0950F59C32A5F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F0979C4BC97F59608289BD7C /* improvie_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A6B7B17F070B7CF1B558DF99 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B5107CECADCC534E290A0F37 /* handler.rs */,
+				87D2C68A514CF08278816161 /* lib.rs */,
+				1259CDD75CEFD96E5317073F /* main.rs */,
+				06ADDA734115155D089C86DD /* init */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		BA98C3EA21419CA9E986F00E /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		BC0F660EB89818C88D848307 /* improvie */ = {
+			isa = PBXGroup;
+			children = (
+				E87F927D6A8641A302D13D1A /* main.mm */,
+				2BF4834C5A8156643A791B85 /* bindings */,
+			);
+			path = improvie;
+			sourceTree = "<group>";
+		};
+		"TEMP_60C64CE4-67E5-4C74-920F-7E3AA824A0D6" /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		"TEMP_967AA7F1-5A22-41BA-9FDF-AA4A62CDC275" /* arm64-sim */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "arm64-sim";
+			sourceTree = "<group>";
+		};
+		"TEMP_CEBDDD20-59D7-4392-AC04-FA50D0E67EC0" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		58BE91B34A37870681FE004A /* improvie_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A864B24E2BA21AE730E5AFE /* Build configuration list for PBXNativeTarget "improvie_iOS" */;
+			buildPhases = (
+				14690EDCE2FF875D84809EBC /* Build Rust Code */,
+				DD85CC1AA655015BBB4A60C7 /* Sources */,
+				EC39E4DF57584CE455983EBB /* Resources */,
+				6E13527DDE57027F350F41C5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = improvie_iOS;
+			productName = improvie_iOS;
+			productReference = F0979C4BC97F59608289BD7C /* improvie_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BC5CAA0FA0FEC5BB5D4ECA14 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 570B4957E9F4BB80E4467A58 /* Build configuration list for PBXProject "improvie" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 021D4F16D551FE335B84693C;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				58BE91B34A37870681FE004A /* improvie_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EC39E4DF57584CE455983EBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E300646ADC2528287A46E1B /* Assets.xcassets in Resources */,
+				ED784A8F31D302120AD38182 /* LaunchScreen.storyboard in Resources */,
+				DE9DA04C218C8F43319E6E13 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		14690EDCE2FF875D84809EBC /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64-sim/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cargo tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DD85CC1AA655015BBB4A60C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFEEB788F543BD0F08C2168A /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		438D975F622D9B5D87BA7F8E /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					"arm64-sim",
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = improvie_iOS/improvie_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = improvie_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = github.improvie.improvie;
+				PRODUCT_NAME = improvie;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  arm64-sim";
+			};
+			name = release;
+		};
+		76BE6A07E2646D5F34504D8D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		EEC3DD409A13A5847B3AC96A /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					"arm64-sim",
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = improvie_iOS/improvie_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = improvie_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = github.improvie.improvie;
+				PRODUCT_NAME = improvie;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  arm64-sim";
+			};
+			name = debug;
+		};
+		EED91919E8F2657BF6D18B6B /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A864B24E2BA21AE730E5AFE /* Build configuration list for PBXNativeTarget "improvie_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEC3DD409A13A5847B3AC96A /* debug */,
+				438D975F622D9B5D87BA7F8E /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		570B4957E9F4BB80E4467A58 /* Build configuration list for PBXProject "improvie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76BE6A07E2646D5F34504D8D /* debug */,
+				EED91919E8F2657BF6D18B6B /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BC5CAA0FA0FEC5BB5D4ECA14 /* Project object */;
+}

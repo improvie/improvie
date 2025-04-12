@@ -64,7 +64,7 @@ seq-macro = "=0.3.6"
 log = "=0.4.27"
 sqlx = { version = "=0.8.3", git = "https://github.com/moriyoshi-kasuga/sqlx.git", features = [
     "sqlite",
-    "runtime-tokio-native-tls",
+    "tls-rustls",
     "chrono",
 ] }
 

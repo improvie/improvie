@@ -2265,7 +2265,7 @@ dependencies = [
 
 [[package]]
 name = "improvie"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "fix-path-env",
  "improvie-command",
@@ -2282,7 +2282,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-app"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "improvie-domain",
  "improvie-logic",
@@ -2298,7 +2298,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-builtin"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "async-trait",
  "improvie-plugin",
@@ -2326,7 +2326,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-domain"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2337,7 +2337,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-infra"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2354,7 +2354,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-logic"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "chrono",
  "more-convert",
@@ -2367,7 +2367,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-plugin"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "async-trait",
  "libloading 0.8.6",
@@ -2378,7 +2378,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-yt"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "log",
  "serde",

@@ -65,6 +65,7 @@ log = "=0.4.27"
 sqlx = { version = "=0.8.3", git = "https://github.com/moriyoshi-kasuga/sqlx.git", features = [
     "sqlite",
     "tls-rustls",
+    "runtime-tokio",
     "chrono",
 ] }
 

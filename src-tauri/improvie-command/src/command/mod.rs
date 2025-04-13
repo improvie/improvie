@@ -4,3 +4,4 @@ pub mod items;
 pub mod plays;
 pub mod plugin;
 pub mod rules;
+pub mod youtube;

@@ -2,6 +2,7 @@ use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::persistence::db::InitDbError;
 use improvie_plugin::PluginManager;
+use reqwest::Client;
 use tauri::{State, async_runtime::Mutex};
 
 use crate::modules::Modules;
@@ -14,6 +15,8 @@ pub type AppRuntime = tauri::Wry;
 pub struct AppState {
     pub modules: Arc<Modules>,
     pub pm: Arc<Mutex<PluginManager>>,
+    pub data_dir: PathBuf,
+    pub client: Client,
 }
 
 impl AppState {
@@ -21,7 +24,7 @@ impl AppState {
         let modules = Modules::new(data_dir.clone()).await?;
 
         log::info!("Start loading plugins");
-        let mut pm = PluginManager::new(data_dir);
+        let mut pm = PluginManager::new(data_dir.clone());
         pm.register_plugin(
             improvie_builtin::METADATA.clone(),
             Box::new(improvie_builtin::BuiltinPlugin::new()),
@@ -34,6 +37,8 @@ impl AppState {
         Ok(Self {
             modules: Arc::new(modules),
             pm,
+            data_dir,
+            client: Client::new(),
         })
     }
 }

@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import type { CreateContentResponse } from '$lib/types/item/create';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -6,11 +7,13 @@
   import { Progress } from '$lib/components/ui/progress/index.js';
   import { toAppError } from '$lib/error';
   import { Logger } from '$lib/logger';
-  import { import_youtube_video } from '$lib/stores/items/content';
+  import { update_content } from '$lib/stores/items/content';
+  import { invoke } from '@tauri-apps/api/core';
   import { listen } from '@tauri-apps/api/event';
   import { toast } from 'svelte-sonner';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
+  import Innertube, { Types } from 'youtubei.js';
   import { z } from 'zod';
   import FormError from '../form/FormError.svelte';
 
@@ -22,8 +25,14 @@
     open: boolean;
   } = $props();
 
+  const youtubeUrlRegex
+    = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})(?:[&?][\w=]*)*$/;
+
   const formSchema = z.object({
-    url: z.string().url(),
+    url: z.string()
+      .regex(youtubeUrlRegex, {
+        message: 'Invalid YouTube URL',
+      }),
   });
 
   const form = superForm(defaults(zod(formSchema)), {
@@ -66,25 +75,39 @@
       return;
     }
 
+    const yt = await Innertube.create({
+      generate_session_locally: false,
+      enable_session_cache: false,
+    });
+    const video_id = result.data.url.match(youtubeUrlRegex)![1]!;
+    const info = await yt.getInfo(video_id);
+    const title = info.basic_info.title;
+
+    const opts: Types.DownloadOptions = {
+      quality: '360p',
+      type: 'video+audio',
+      format: 'mp4',
+      range: undefined,
+    };
+
+    const format = info.chooseFormat(opts);
+    const formatUrl = format.decipher(yt.session.player);
+    const videoUrl = `${formatUrl}&cpn=${info.cpn}`;
+
     downloading = true;
     try {
-      await import_youtube_video(parent_folder_id, $formData.url);
+      const res = await invoke<CreateContentResponse>('import_youtube_video', {
+        parentFolderId: parent_folder_id,
+        title,
+        videoUrl,
+      });
+      update_content(res);
       open = false;
     }
     catch (e) {
       const app_error = toAppError(e);
-      switch (app_error.kind) {
-        case 'YtLoading':
-          toast('Please wait while loaded system');
-          break;
-        case 'YtErrored':
-          toast('Video download failed');
-          break;
-        default:
-          toast('Video download failed');
-          Logger.app_error('Error importing youtube video', app_error);
-          break;
-      }
+      toast('Video download failed');
+      Logger.app_error('Error importing youtube video', app_error);
     }
     downloading = false;
     download_state = {

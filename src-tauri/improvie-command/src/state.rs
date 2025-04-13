@@ -2,11 +2,7 @@ use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::persistence::db::InitDbError;
 use improvie_plugin::PluginManager;
-use improvie_yt::YtStore;
-use tauri::{
-    State,
-    async_runtime::{Mutex, RwLock},
-};
+use tauri::{State, async_runtime::Mutex};
 
 use crate::modules::Modules;
 
@@ -18,22 +14,11 @@ pub type AppRuntime = tauri::Wry;
 pub struct AppState {
     pub modules: Arc<Modules>,
     pub pm: Arc<Mutex<PluginManager>>,
-    pub yt: Arc<RwLock<YtStore>>,
 }
 
 impl AppState {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         let modules = Modules::new(data_dir.clone()).await?;
-
-        let yt = Arc::new(RwLock::new(YtStore::Loading));
-        let captured_yt = yt.clone();
-
-        std::thread::spawn({
-            let data_dir = data_dir.clone();
-            move || {
-                improvie_yt::YtIntegration::new_background(data_dir, captured_yt);
-            }
-        });
 
         log::info!("Start loading plugins");
         let mut pm = PluginManager::new(data_dir);
@@ -49,7 +34,6 @@ impl AppState {
         Ok(Self {
             modules: Arc::new(modules),
             pm,
-            yt,
         })
     }
 }

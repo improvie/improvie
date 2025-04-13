@@ -12,7 +12,6 @@ improvie-app.workspace = true
 improvie-plugin.workspace = true
 improvie-builtin.workspace = true
 uid.workspace = true
-improvie-yt.workspace = true
 
 thiserror.workspace = true
 tauri.workspace = true

@@ -1,0 +1,87 @@
+[workspace]
+members = [
+    "src-tauri",
+    "src-tauri/improvie-infra",
+    "src-tauri/improvie-domain",
+    "src-tauri/improvie-command",
+    "src-tauri/improvie-logic",
+    "src-tauri/improvie-app",
+    "src-tauri/addtional/improvie-plugin",
+    "src-tauri/addtional/improvie-builtin",
+    "src-tauri/addtional/uid",
+    "src-tauri/addtional/integration/youtube",
+    "scripts/prebuild",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.2.1"
+edition = "2024"
+authors = ["moriyoshi-kasuga"]
+repository = "https://github.com/improvie/improvie"
+description = "This is a tauri app that improves movie(video) management."
+
+[workspace.dependencies]
+improvie-app = { path = "src-tauri/improvie-app" }
+improvie-infra = { path = "src-tauri/improvie-infra" }
+improvie-domain = { path = "src-tauri/improvie-domain" }
+improvie-logic = { path = "src-tauri/improvie-logic" }
+improvie-command = { path = "src-tauri/improvie-command" }
+
+# addtional
+improvie-plugin = { path = "src-tauri/addtional/improvie-plugin" }
+improvie-builtin = { path = "src-tauri/addtional/improvie-builtin" }
+uid = { path = "src-tauri/addtional/uid" }
+improvie-yt = { path = "src-tauri/addtional/integration/youtube" }
+
+# tauri
+tauri = { version = "=2.4.1", features = ["protocol-asset"] }
+tauri-plugin-dialog = "=2.2.1"
+
+# async/concurrency/parallelism
+tokio = { version = "=1.44.2", features = ["full"] }
+async-trait = "=0.1"
+
+# ser/de
+serde = { version = "=1.0", features = ["derive"] }
+serde_json = "=1.0"
+
+# utils
+thiserror = "=2.0"
+chrono = { version = "=0.4.40", features = ["serde"] }
+rand = "=0.9.0"
+
+# this is my crate (I'm going to update it quite a bit.)
+more-convert = { version = "=0", features = ["utils"] }
+
+# macros
+proc-macro2 = "=1.0"
+quote = "=1.0"
+syn = "=2.0"
+seq-macro = "=0.3.6"
+
+# others
+log = "=0.4.27"
+sqlx = { version = "=0.8.3", git = "https://github.com/moriyoshi-kasuga/sqlx.git", features = [
+    "sqlite",
+    "runtime-tokio-native-tls",
+    "chrono",
+] }
+
+[workspace.lints.rust]
+nonstandard_style = { level = "warn", priority = -1 }
+unreachable_pub = "warn"
+unused_import_braces = "warn"
+unused_lifetimes = "warn"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+
+needless_continue = "warn"
+needless_for_each = "warn"
+needless_raw_string_hashes = "warn"
+needless_raw_strings = "warn"

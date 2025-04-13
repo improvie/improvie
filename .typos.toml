@@ -1,14 +1,15 @@
 [files]
 extend-exclude = [
-  "Cargo.lock",
-  "bun.lock",
-  "package-lock.json",
-  "*.svg",
-  "*.png",
-  "*.jpg",
-  "*.gif",
-  "*.ico",
-  "*.exe",
+    "Cargo.lock",
+    "bun.lock",
+    "package-lock.json",
+    "src-tauri/gen",
+    "*.svg",
+    "*.png",
+    "*.jpg",
+    "*.gif",
+    "*.ico",
+    "*.exe",
 ]
 ignore-hidden = true
 ignore-vcs = true

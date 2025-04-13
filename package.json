@@ -5,7 +5,7 @@
   "description": "",
   "license": "MIT",
   "scripts": {
-    "prebuild": "cd scripts/prebuild && cargo run",
+    "prebuild": "cd src-tauri/prebuild && cargo run",
     "dev": "bun run prebuild && vite dev",
     "build": "bun run prebuild && vite build",
     "preview": "vite preview",

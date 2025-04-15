@@ -1,5 +1,6 @@
 use std::io::Write;
 
+use ez_ffmpeg::{FfmpegContext, Output};
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
 use improvie_logic::impl_serialize_for_dyn_app_error;
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
@@ -19,6 +20,8 @@ pub enum YtError {
     Http(#[from] rusty_ytdl::VideoError),
     #[error("failed to create content: {0}")]
     SaveError(#[from] improvie_logic::AppError),
+    #[error("failed to create ffmpeg context: {0}")]
+    Ffmpeg(#[from] ez_ffmpeg::error::Error),
 }
 
 impl_serialize_for_dyn_app_error!(YtError);
@@ -54,12 +57,13 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     std::fs::create_dir_all(&contents)?;
 
     let file_path = contents.join(format!("{}.mp4", &title));
+    let tmp_path = contents.join(format!("{}.mp4.tmp", &title));
 
-    let mut file = std::fs::OpenOptions::new()
+    let mut file_temp = std::fs::OpenOptions::new()
         .write(true)
         .create(true)
         .truncate(true)
-        .open(&file_path)?;
+        .open(&tmp_path)?;
 
     let stream = video.stream().await?;
 
@@ -68,7 +72,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     let mut downloaded: u64 = 0;
 
     while let Some(chunk) = stream.chunk().await? {
-        file.write_all(&chunk)?;
+        file_temp.write_all(&chunk)?;
         downloaded += chunk.len() as u64;
         let progress = (downloaded as f64 / total_size as f64) * 100.0;
         let _ = app.emit(
@@ -81,7 +85,16 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         );
     }
 
-    file.flush()?;
+    file_temp.flush()?;
+
+    FfmpegContext::builder()
+        .input(tmp_path.display().to_string())
+        .output(
+            Output::new(file_path.display().to_string()).set_format_opt("movflags", "faststart"),
+        )
+        .build()?
+        .start()?
+        .await?;
 
     let dto = CreateContentDto {
         item: CreateBaseItemDto {

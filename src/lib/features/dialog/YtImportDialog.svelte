@@ -13,7 +13,6 @@
   import { toast } from 'svelte-sonner';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
-  import Innertube, { Types } from 'youtubei.js';
   import { z } from 'zod';
   import FormError from '../form/FormError.svelte';
 
@@ -75,30 +74,13 @@
       return;
     }
 
-    const yt = await Innertube.create({
-      generate_session_locally: false,
-      enable_session_cache: false,
-    });
-    const video_id = result.data.url.match(youtubeUrlRegex)![1]!;
-    const info = await yt.getInfo(video_id);
-    const title = info.basic_info.title;
-
-    const opts: Types.DownloadOptions = {
-      quality: '360p',
-      type: 'video+audio',
-      format: 'mp4',
-      range: undefined,
-    };
-
-    const format = info.chooseFormat(opts);
-    const formatUrl = format.decipher(yt.session.player);
-    const videoUrl = `${formatUrl}&cpn=${info.cpn}`;
+    const videoUrl = result.data.url.match(youtubeUrlRegex)![1]!;
 
     downloading = true;
     try {
+      Logger.info(`Downloading video id: ${videoUrl}`);
       const res = await invoke<CreateContentResponse>('import_youtube_video', {
         parentFolderId: parent_folder_id,
-        title,
         videoUrl,
       });
       update_content(res);

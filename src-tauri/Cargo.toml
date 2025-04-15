@@ -31,7 +31,6 @@ tauri-plugin-dialog.workspace = true
 # tauri plugin and config
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "=2.3.1"
-tauri-plugin-cors-fetch = "3.1.0"
 
 [workspace]
 members = [

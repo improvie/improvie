@@ -8,7 +8,6 @@ mod init;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_cors_fetch::init())
         .plugin(init::log::init_log_plugin())
         .setup(move |app| {
             let result = improvie_plugin::LOGGER.set((log::logger(), init::log::LOG_LEVEL_FILTER));

@@ -22,5 +22,9 @@ log.workspace = true
 tauri-plugin-dialog.workspace = true
 more-convert.workspace = true
 
+rusty_ytdl = { version = "=0.7.4", git = "https://github.com/Mithronn/rusty_ytdl", default-features = false, features = [
+    "rustls-tls",
+] }
+
 [lints]
 workspace = true

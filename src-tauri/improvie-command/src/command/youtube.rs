@@ -1,8 +1,8 @@
 use std::io::Write;
 
-use futures_util::StreamExt;
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
 use improvie_logic::impl_serialize_for_dyn_app_error;
+use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use tauri::{AppHandle, Emitter};
 use uid::Uid;
 
@@ -11,14 +11,14 @@ use crate::state::TauriAppState;
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
 #[variant_name(prefix = "Yt")]
 pub enum YtError {
+    #[error("invalid url")]
+    InvalidUrl,
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
     #[error("http error: {0}")]
-    Http(#[from] reqwest::Error),
-    #[error("content length not found")]
-    ContentLength,
-    #[error("errored on {0}")]
-    Errored(String),
+    Http(#[from] rusty_ytdl::VideoError),
+    #[error("failed to create content: {0}")]
+    SaveError(#[from] improvie_logic::AppError),
 }
 
 impl_serialize_for_dyn_app_error!(YtError);
@@ -35,25 +35,39 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
     parent_folder_id: Uid,
-    title: String,
     video_url: String,
-    // thumbnail_url: String,
 ) -> Result<CreateContentResponse, YtError> {
-    let res = state.client.get(video_url).send().await?;
-    let total_size = res.content_length().ok_or(YtError::ContentLength)?;
+    let video = Video::new_with_options(
+        video_url,
+        VideoOptions {
+            quality: VideoQuality::HighestVideo,
+            filter: VideoSearchOptions::Video,
+            ..Default::default()
+        },
+    )
+    .map_err(|_| YtError::InvalidUrl)?;
+
+    let title = video.get_info().await?.video_details.title;
 
     let contents = state.data_dir.join("content");
 
     std::fs::create_dir_all(&contents)?;
 
     let file_path = contents.join(format!("{}.mp4", &title));
-    let mut file = std::fs::File::create(&file_path)?;
+
+    let mut file = std::fs::OpenOptions::new()
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .open(&file_path)?;
+
+    let stream = video.stream().await?;
+
+    let total_size = stream.content_length() as u64;
 
     let mut downloaded: u64 = 0;
-    let mut stream = res.bytes_stream();
 
-    while let Some(item) = stream.next().await {
-        let chunk = item?;
+    while let Some(chunk) = stream.chunk().await? {
         file.write_all(&chunk)?;
         downloaded += chunk.len() as u64;
         let progress = (downloaded as f64 / total_size as f64) * 100.0;
@@ -67,7 +81,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         );
     }
 
-    drop(file);
+    file.flush()?;
 
     let dto = CreateContentDto {
         item: CreateBaseItemDto {
@@ -84,6 +98,6 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     let result = state.modules.items_use_case().create_content(dto).await;
     match result {
         Ok(content) => Ok(content),
-        Err(err) => Err(YtError::Errored(err.to_string())),
+        Err(err) => Err(YtError::SaveError(err)),
     }
 }

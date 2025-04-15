@@ -2,7 +2,6 @@ use std::{path::PathBuf, sync::Arc};
 
 use improvie_infra::persistence::db::InitDbError;
 use improvie_plugin::PluginManager;
-use reqwest::Client;
 use tauri::{State, async_runtime::Mutex};
 
 use crate::modules::Modules;
@@ -16,7 +15,6 @@ pub struct AppState {
     pub modules: Arc<Modules>,
     pub pm: Arc<Mutex<PluginManager>>,
     pub data_dir: PathBuf,
-    pub client: Client,
 }
 
 impl AppState {
@@ -38,7 +36,6 @@ impl AppState {
             modules: Arc::new(modules),
             pm,
             data_dir,
-            client: Client::new(),
         })
     }
 }

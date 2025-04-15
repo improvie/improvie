@@ -8,7 +8,6 @@
   "permissions": [
     "core:default",
     "log:default",
-    "dialog:default",
-    "cors-fetch:default"
+    "dialog:default"
   ]
 }

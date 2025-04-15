@@ -90,7 +90,10 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     FfmpegContext::builder()
         .input(tmp_path.display().to_string())
         .output(
-            Output::new(file_path.display().to_string()).set_format_opt("movflags", "faststart"),
+            Output::new(file_path.display().to_string())
+                .add_stream_map_with_copy("0:v?")
+                .add_stream_map_with_copy("0:a?")
+                .set_format_opt("movflags", "faststart"),
         )
         .build()?
         .start()?

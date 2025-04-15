@@ -1410,9 +1410,9 @@ dependencies = [
 
 [[package]]
 name = "ez-ffmpeg"
-version = "0.3.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "712d360bb946b41381aa4d27bd53be5ba5e9579010b65c273d3d29e4994eaf8c"
+checksum = "9d1036786a06c8d2a97b8e9b6e1e6823599c78941216cfaa5885a82417a6c8f5"
 dependencies = [
  "core-foundation",
  "crossbeam",

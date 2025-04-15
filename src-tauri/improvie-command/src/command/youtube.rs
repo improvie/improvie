@@ -50,14 +50,18 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     )
     .map_err(|_| YtError::InvalidUrl)?;
 
-    let title = video.get_info().await?.video_details.title;
+    let info = video.get_info().await?;
+    let title = info.video_details.title.clone();
+    let id = info.video_details.video_id.clone();
 
     let contents = state.data_dir.join("content");
 
     std::fs::create_dir_all(&contents)?;
 
-    let file_path = contents.join(format!("{}.mp4", &title));
-    let tmp_path = contents.join(format!("{}.mp4.tmp", &title));
+    let file_path = contents.join(format!("{}.mp4", &id));
+    let tmp_path = contents.join(format!("{}.mp4.tmp", &id));
+
+    log::debug!("create tmp file: {:?}", tmp_path);
 
     let mut file_temp = std::fs::OpenOptions::new()
         .write(true)
@@ -98,6 +102,8 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         .build()?
         .start()?
         .await?;
+
+    std::fs::remove_file(&tmp_path)?;
 
     let dto = CreateContentDto {
         item: CreateBaseItemDto {

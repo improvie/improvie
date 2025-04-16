@@ -13,6 +13,7 @@ improvie-plugin.workspace = true
 improvie-builtin.workspace = true
 uid.workspace = true
 
+tokio.workspace = true
 reqwest.workspace = true
 futures-util.workspace = true
 thiserror.workspace = true

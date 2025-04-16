@@ -1,9 +1,12 @@
-use std::io::Write;
+use std::{io::Write, path::PathBuf, sync::Arc};
 
 use ez_ffmpeg::{FfmpegContext, Output};
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
 use improvie_logic::impl_serialize_for_dyn_app_error;
-use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
+use rusty_ytdl::{
+    DownloadOptions, Video, VideoInfo, VideoOptions, VideoQuality, VideoSearchOptions,
+    choose_format,
+};
 use tauri::{AppHandle, Emitter};
 use uid::Uid;
 
@@ -14,6 +17,8 @@ use crate::state::TauriAppState;
 pub enum YtError {
     #[error("invalid url")]
     InvalidUrl,
+    #[error("failed to download video")]
+    Async,
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
     #[error("http error: {0}")]
@@ -30,7 +35,7 @@ impl_serialize_for_dyn_app_error!(YtError);
 struct DownloadState {
     downloaded_mb: u64,
     total_mb: u64,
-    percentage: f64,
+    percentage: u8,
 }
 
 #[tauri::command]
@@ -40,17 +45,11 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     parent_folder_id: Uid,
     video_url: String,
 ) -> Result<CreateContentResponse, YtError> {
-    let video = Video::new_with_options(
-        video_url,
-        VideoOptions {
-            quality: VideoQuality::HighestVideo,
-            filter: VideoSearchOptions::Video,
-            ..Default::default()
-        },
-    )
-    .map_err(|_| YtError::InvalidUrl)?;
+    let video = Video::new(video_url).map_err(|_| YtError::InvalidUrl)?;
+    let video = Arc::new(video);
 
     let info = video.get_info().await?;
+    let info = Arc::new(info);
     let title = info.video_details.title.clone();
     let id = info.video_details.video_id.clone();
 
@@ -59,9 +58,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     std::fs::create_dir_all(&contents)?;
 
     let file_path = contents.join(format!("{}.mp4", &id));
-    let tmp_path = contents.join(format!("{}.mp4.tmp", &id));
-
-    log::debug!("create tmp file: {:?}", tmp_path);
+    let tmp_path = contents.join(format!("{}.tmp.mp4", &id));
 
     let mut file_temp = std::fs::OpenOptions::new()
         .write(true)
@@ -69,11 +66,28 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         .truncate(true)
         .open(&tmp_path)?;
 
-    let stream = video.stream().await?;
+    let video_format = choose_format(
+        &info.formats,
+        &VideoOptions {
+            quality: VideoQuality::HighestVideo,
+            filter: VideoSearchOptions::Video,
+            ..Default::default()
+        },
+    )?;
+    let stream = video_format
+        .stream(video.get_client(), &DownloadOptions::default())
+        .await?;
 
     let total_size = stream.content_length() as u64;
 
     let mut downloaded: u64 = 0;
+
+    let audio_path = contents.join(format!("{}.mp3", &id));
+    let audio_task = tokio::spawn(download_audio(
+        audio_path.clone(),
+        Arc::clone(&video),
+        Arc::clone(&info),
+    ));
 
     while let Some(chunk) = stream.chunk().await? {
         file_temp.write_all(&chunk)?;
@@ -84,19 +98,24 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
             DownloadState {
                 downloaded_mb: downloaded / 1024 / 1024,
                 total_mb: total_size / 1024 / 1024,
-                percentage: progress,
+                percentage: progress as u8,
             },
         );
     }
 
     file_temp.flush()?;
 
+    audio_task.await.map_err(|_| YtError::Async)??;
+
     FfmpegContext::builder()
-        .input(tmp_path.display().to_string())
+        .input(tmp_path.to_string_lossy().to_string())
+        .input(audio_path.to_string_lossy().to_string())
         .output(
-            Output::new(file_path.display().to_string())
+            Output::new(file_path.to_string_lossy().to_string())
+                .set_vsync_method(ez_ffmpeg::core::context::output::VSyncMethod::VsyncVfr)
                 .add_stream_map_with_copy("0:v?")
-                .add_stream_map_with_copy("0:a?")
+                .add_stream_map("1:a?")
+                .set_audio_codec("aac")
                 .set_format_opt("movflags", "faststart"),
         )
         .build()?
@@ -104,6 +123,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         .await?;
 
     std::fs::remove_file(&tmp_path)?;
+    std::fs::remove_file(&audio_path)?;
 
     let dto = CreateContentDto {
         item: CreateBaseItemDto {
@@ -122,4 +142,29 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         Ok(content) => Ok(content),
         Err(err) => Err(YtError::SaveError(err)),
     }
+}
+
+async fn download_audio(
+    download_path: PathBuf,
+    video: Arc<Video<'_>>,
+    info: Arc<VideoInfo>,
+) -> Result<(), YtError> {
+    let audio_format = choose_format(
+        &info.formats,
+        &VideoOptions {
+            quality: VideoQuality::HighestAudio,
+            filter: VideoSearchOptions::Audio,
+            ..Default::default()
+        },
+    )?;
+
+    audio_format
+        .download(
+            video.get_client(),
+            &DownloadOptions::default(),
+            &download_path,
+        )
+        .await?;
+
+    Ok(())
 }

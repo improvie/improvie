@@ -2472,6 +2472,7 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
+ "tokio",
  "uid",
 ]
 

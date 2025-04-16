@@ -15,7 +15,7 @@ name = "improvie_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "=2.1", features = [] }
+tauri-build = { version = "=2.2", features = [] }
 
 [dependencies]
 improvie-command.workspace = true
@@ -67,7 +67,7 @@ improvie-builtin = { path = "addtional/improvie-builtin" }
 uid = { path = "addtional/uid" }
 
 # tauri
-tauri = { version = "=2.4.1", features = ["protocol-asset"] }
+tauri = { version = "=2.5.0", features = ["protocol-asset"] }
 tauri-plugin-dialog = "=2.2.1"
 
 # async/concurrency/parallelism
@@ -99,7 +99,7 @@ seq-macro = "=0.3.6"
 
 # others
 log = "=0.4.27"
-sqlx = { version = "=0.8.3", features = [
+sqlx = { version = "=0.8.5", features = [
     "sqlite",
     "tls-rustls",
     "runtime-tokio",

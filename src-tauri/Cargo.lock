@@ -1411,8 +1411,7 @@ dependencies = [
 [[package]]
 name = "ez-ffmpeg"
 version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d1036786a06c8d2a97b8e9b6e1e6823599c78941216cfaa5885a82417a6c8f5"
+source = "git+https://github.com/moriyoshi-kasuga/ez-ffmpeg?branch=feature%2Fbuild#6e23a5a06defe1386b96e1e163d18736ef3e2e1e"
 dependencies = [
  "core-foundation",
  "crossbeam",
@@ -4453,7 +4452,7 @@ checksum = "eded382c5f5f786b989652c49544c4877d9f015cc22e145a5ea8ea66c2921cd2"
 [[package]]
 name = "rusty_ytdl"
 version = "0.7.4"
-source = "git+https://github.com/Mithronn/rusty_ytdl#85d6d332987abf7f8860dcabe33783c9ee58b7c1"
+source = "git+https://github.com/moriyoshi-kasuga/rusty_ytdl#8ccae560e512b22762c70c2d07eb3ea719dfa88c"
 dependencies = [
  "aes",
  "async-trait",

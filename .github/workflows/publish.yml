@@ -69,7 +69,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           choco install -y yasm
-          set MSYS2_PATH_TYPE=inherit
+          echo "MSYS2_PATH_TYPE=inherit" >> $GITHUB_ENV
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
 
       - uses: tauri-apps/tauri-action@v0

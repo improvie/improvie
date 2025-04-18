@@ -25,7 +25,6 @@ more-convert.workspace = true
 
 ez-ffmpeg = { version = "=0.3.2", features = [
     "async",
-    "static",
 ], git = "https://github.com/moriyoshi-kasuga/ez-ffmpeg.git" }
 rusty_ytdl = { version = "=0.7.4", git = "https://github.com/moriyoshi-kasuga/rusty_ytdl", default-features = false, features = [
     "rustls-tls",

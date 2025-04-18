@@ -35,38 +35,29 @@ echo "🔧 Updating version from $OLD_VERSION to $NEW_VERSION"
 jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json >package.json.tmp && mv package.json.tmp package.json
 echo "✅ Updated package.json"
 
-# Update Cargo.toml
-if [ -f Cargo.toml ]; then
+(
+    cd src-tauri || exit
+    # Update Cargo.toml
     sed -i.bak "s/version = \"$OLD_VERSION\"/version = \"$NEW_VERSION\"/" Cargo.toml && rm Cargo.toml.bak
     echo "✅ Updated Cargo.toml"
     cargo update --workspace &>/dev/null
     echo "✅ Updated Cargo.lock"
-else
-    echo "⚠️ Cargo.toml not found, skipping."
-fi
 
-# Update tauri.conf.json
-if [ -f src-tauri/tauri.conf.json ]; then
-    jq --arg new_version "$NEW_VERSION" '.version = $new_version' src-tauri/tauri.conf.json >src-tauri/tauri.conf.json.tmp && mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+    # Update tauri.conf.json
+    jq --arg new_version "$NEW_VERSION" '.version = $new_version' tauri.conf.json >tauri.conf.json.tmp && mv tauri.conf.json.tmp tauri.conf.json
     echo "✅ Updated tauri.conf.json"
-else
-    echo "⚠️ src-tauri/tauri.conf.json not found, skipping."
-fi
+)
 
 # Update README.md
-if [ -f README.md ]; then
-    # Escape dots in OLD_VERSION for safety in sed
-    SAFE_OLD_VERSION=$(printf '%s\n' "$OLD_VERSION" | sed 's/[.[\*^$]/\\&/g')
+# Escape dots in OLD_VERSION for safety in sed
+SAFE_OLD_VERSION=$(printf '%s\n' "$OLD_VERSION" | sed 's/[.[\*^$]/\\&/g')
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/$SAFE_OLD_VERSION/$NEW_VERSION/g" README.md
-    else
-        sed -i "s/$SAFE_OLD_VERSION/$NEW_VERSION/g" README.md
-    fi
-
-    echo "✅ Updated README.md"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "s/$SAFE_OLD_VERSION/$NEW_VERSION/g" README.md
 else
-    echo "⚠️ README.md not found, skipping."
+    sed -i "s/$SAFE_OLD_VERSION/$NEW_VERSION/g" README.md
 fi
+
+echo "✅ Updated README.md"
 
 echo "🎉 Done!"

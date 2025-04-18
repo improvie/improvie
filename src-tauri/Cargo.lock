@@ -518,9 +518,9 @@ dependencies = [
 
 [[package]]
 name = "brotli-decompressor"
-version = "4.0.2"
+version = "4.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74fa05ad7d803d413eb8380983b092cbbaf9a85f151b871360e7b00cd7060b37"
+checksum = "a334ef7c9e23abf0ce748e8cd309037da93e606ad52eb372e4ce327a0dcfbdfd"
 dependencies = [
  "alloc-no-stdlib",
  "alloc-stdlib",
@@ -1411,7 +1411,7 @@ dependencies = [
 [[package]]
 name = "ez-ffmpeg"
 version = "0.3.2"
-source = "git+https://github.com/moriyoshi-kasuga/ez-ffmpeg.git#fa5fd45472adcf6a60992261bc6ef00afef90a14"
+source = "git+https://github.com/moriyoshi-kasuga/ez-ffmpeg.git#a2f1e1edef650c4ceb67013aeda9175d463f8114"
 dependencies = [
  "core-foundation",
  "crossbeam",

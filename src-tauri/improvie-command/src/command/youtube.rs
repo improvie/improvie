@@ -82,6 +82,34 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
 
     let mut downloaded: u64 = 0;
 
+    let thumbnail = {
+        let thumbnail_url = info
+            .video_details
+            .thumbnails
+            .iter()
+            .max_by(|a, b| a.width.cmp(&b.width).then(a.height.cmp(&b.height)))
+            .map(|t| t.url.clone());
+
+        let client = video.get_client().clone();
+        let thumbnail_path = contents.join(format!("{}.jpg", &id));
+        tokio::spawn(async move {
+            if let Some(thumbnail_url) = thumbnail_url {
+                let bytes = client
+                    .get(thumbnail_url)
+                    .send()
+                    .await
+                    .map_err(|_| YtError::Async)?
+                    .bytes()
+                    .await
+                    .map_err(|_| YtError::Async)?;
+                std::fs::write(&thumbnail_path, bytes)?;
+                Result::<Option<PathBuf>, YtError>::Ok(Some(thumbnail_path))
+            } else {
+                Ok(None)
+            }
+        })
+    };
+
     let audio_path = contents.join(format!("{}.mp3", &id));
     let audio_task = tokio::spawn(download_audio(
         audio_path.clone(),
@@ -106,6 +134,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     file_temp.flush()?;
 
     audio_task.await.map_err(|_| YtError::Async)??;
+    let thumbnail_path = thumbnail.await.map_err(|_| YtError::Async)??;
 
     FfmpegContext::builder()
         .input(tmp_path.to_string_lossy().to_string())
@@ -132,8 +161,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         },
         kind: improvie_logic::constant::items::ContentKind::Video,
         content_path: file_path.to_string_lossy().to_string(),
-        thumbnail_path: None,
-        // thumbnail_path: Some(content.thumbnail_path.to_string_lossy().to_string()),
+        thumbnail_path: thumbnail_path.map(|p| p.to_string_lossy().to_string()),
     };
 
     let result = state.modules.items_use_case().create_content(dto).await;

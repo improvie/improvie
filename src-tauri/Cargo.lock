@@ -1410,8 +1410,8 @@ dependencies = [
 
 [[package]]
 name = "ez-ffmpeg"
-version = "0.3.1"
-source = "git+https://github.com/moriyoshi-kasuga/ez-ffmpeg#d9f21092dab49bbf44aec1fbae0840f66ded0fb2"
+version = "0.3.2"
+source = "git+https://github.com/moriyoshi-kasuga/ez-ffmpeg.git#fa5fd45472adcf6a60992261bc6ef00afef90a14"
 dependencies = [
  "core-foundation",
  "crossbeam",
@@ -1457,8 +1457,7 @@ dependencies = [
 [[package]]
 name = "ffmpeg-next"
 version = "7.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da02698288e0275e442a47fc12ca26d50daf0d48b15398ba5906f20ac2e2a9f9"
+source = "git+https://github.com/moriyoshi-kasuga/rust-ffmpeg.git#7f79ec3c18d04fbb4b61286454f87eb5ee885024"
 dependencies = [
  "bitflags 2.9.0",
  "ffmpeg-sys-next",
@@ -1467,9 +1466,8 @@ dependencies = [
 
 [[package]]
 name = "ffmpeg-sys-next"
-version = "7.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "773df59c62c7da5dae3733a188e19c2929070a865e7a6de0e4d33e980cfa069e"
+version = "7.1.0"
+source = "git+https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git#9ce4a04afc1d796748ceb58349781064259a4434"
 dependencies = [
  "bindgen",
  "cc",
@@ -5949,9 +5947,9 @@ dependencies = [
 
 [[package]]
 name = "tray-icon"
-version = "0.20.0"
+version = "0.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d433764348e7084bad2c5ea22c96c71b61b17afe3a11645710f533bd72b6a2b5"
+checksum = "9f7eee98ec5c90daf179d55c20a49d8c0d043054ce7c26336c09a24d31f14fa0"
 dependencies = [
  "crossbeam-channel",
  "dirs",

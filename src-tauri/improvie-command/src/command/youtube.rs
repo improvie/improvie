@@ -141,9 +141,9 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         .input(audio_path.to_string_lossy().to_string())
         .output(
             Output::new(file_path.to_string_lossy().to_string())
-                .set_vsync_method(ez_ffmpeg::core::context::output::VSyncMethod::VsyncVfr)
                 .add_stream_map_with_copy("0:v?")
-                .add_stream_map_with_copy("1:a?")
+                .add_stream_map("1:a?")
+                .set_audio_codec("aac")
                 .set_format_opt("movflags", "faststart"),
         )
         .build()?

@@ -23,9 +23,9 @@ jobs:
             args: --features build-ffmpeg
             target: x86_64-unknown-linux-gnu
 
-          # - platform: windows-latest
-          #   args: --features static-ffmpeg
-          #   target: x86_64-pc-windows-msvc
+          - platform: windows-latest
+            args: --features static-ffmpeg
+            target: x86_64-pc-windows-msvc
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -65,19 +65,52 @@ jobs:
         run: |
           export RUSTFLAGS="-C link-arg=-lc++"
 
-      # FIXME: errored on windows
+      - name: Install LLVM and Clang (windows only)
+        if: matrix.platform == 'windows-latest'
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0"
+          directory: ${{ github.workspace }}/clang
+
+      - name: Cache vcpkg (windows only)
+        id: cache
+        if: matrix.platform == 'windows-latest'
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ github.workspace }}/vcpkg
+          key: vcpkg-windows
+
+      - name: Build vcpkg (windows only)
+        if: matrix.platform == 'windows-latest' && steps.cache.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/microsoft/vcpkg --depth 1
+          ./vcpkg/bootstrap-vcpkg.bat
+
       - name: install dependencies (windows only)
         if: matrix.platform == 'windows-latest'
         run: |
           choco install -y yasm
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-          .\vcpkg install ffmpeg:x64-windows-static
-          .\vcpkg integrate install
-          echo "FFMPEG_DIR=C:\vcpkg\installed\x64-windows-static" >> $GITHUB_ENV
+          ./vcpkg/vcpkg install ffmpeg:x64-windows-static
 
       - uses: tauri-apps/tauri-action@v0
+        if: matrix.platform == 'windows-latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FFMPEG_DIR: ${{ github.workspace }}/vcpkg/installed/x64-windows-static
+          RUSTFLAGS: -Ctarget-feature=+crt-static
+          LIBCLANG_PATH: ${{ github.workspace }}/clang/lib
+          LLVM_CONFIG_PATH: ${{ github.workspace }}/clang/bin/llvm-config
+        with:
+          tagName: app-v__VERSION__
+          releaseName: App v__VERSION__
+          releaseBody: See the assets to download this version and install.
+          releaseDraft: true
+          prerelease: false
+          args: --target ${{ matrix.target }} ${{ matrix.args }}
+
+      - uses: tauri-apps/tauri-action@v0
+        if: matrix.platform != 'windows-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

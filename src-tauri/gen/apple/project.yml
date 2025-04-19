@@ -76,7 +76,6 @@ targets:
         embed: false
       - sdk: AudioToolbox.framework
       - sdk: AVFoundation.framework
-      - sdk: CodeFoundation.framework
       - sdk: CoreGraphics.framework
       - sdk: CoreAudio.framework
       - sdk: CoreMedia.framework

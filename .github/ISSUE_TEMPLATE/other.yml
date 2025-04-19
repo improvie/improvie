@@ -1,0 +1,15 @@
+name: "📋 Other Requests"
+description: "Please fill in requests other than bug reports or feature proposals."
+title: "[OTHER] "
+labels: ["other"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please describe your other request.**
+        Examples: Documentation improvements, new project direction proposals, etc.
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional Information"
+      description: "Please provide relevant information or references. Specific examples or background information are helpful."

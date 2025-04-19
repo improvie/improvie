@@ -72,7 +72,10 @@ improvie-builtin = { path = "addtional/improvie-builtin" }
 uid = { path = "addtional/uid" }
 
 # tauri
-tauri = { version = "=2.5.0", features = ["protocol-asset"] }
+tauri = { version = "=2.5.0", features = [
+    "protocol-asset",
+    "macos-private-api",
+] }
 tauri-plugin-dialog = "=2.2.1"
 
 # async/concurrency/parallelism
@@ -128,3 +131,6 @@ needless_continue = "warn"
 needless_for_each = "warn"
 needless_raw_string_hashes = "warn"
 needless_raw_strings = "warn"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-window-state = "2"

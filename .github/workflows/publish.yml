@@ -74,7 +74,7 @@ jobs:
           .\bootstrap-vcpkg.bat
           .\vcpkg install ffmpeg:x64-windows-static
           .\vcpkg integrate install
-          [System.Environment]::SetEnvironmentVariable('VCPKG_ROOT', 'C:\vcpkg', 'User')
+          echo "VCPKG_ROOT=$PWD" >> $env:GITHUB_ENV
 
       - uses: tauri-apps/tauri-action@v0
         env:

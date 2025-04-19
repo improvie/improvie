@@ -35,11 +35,13 @@
 ## 📥 インストール
 
 ### 推奨環境
+
 - **OS**: Windows 10/11, macOS 11+, Ubuntu 20.04+
 - **RAM**: 2GB以上推奨
 - **ディスク容量**: 100MB以上の空き容量
 
 ### ダウンロード
+
 最新リリースは[Githubリリースページ](https://github.com/improvie/improvie/releases/latest)からダウンロードできます。
 
 ## 📸 スクリーンショット

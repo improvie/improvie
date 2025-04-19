@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
 [![Stars](https://img.shields.io/github/stars/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/stargazers)
 
-[English](README.md) | [日本語](README-JA.md)
+[English](./README.md) | [日本語](README-JA.md)
 
 </div>
 
@@ -37,11 +37,13 @@
 ## 📥 Installation
 
 ### System Requirements
+
 - **OS**: Windows 10/11, macOS 11+, Ubuntu 20.04+
 - **RAM**: 2GB+ recommended
 - **Disk Space**: 100MB+ free space
 
 ### Download
+
 Get the latest release from the [GitHub releases page](https://github.com/improvie/improvie/releases/latest).
 
 ## 📸 Screenshots
@@ -53,11 +55,9 @@ Get the latest release from the [GitHub releases page](https://github.com/improv
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
-
 ## 📜 License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
-
 
 ## 📢 Feedback
 

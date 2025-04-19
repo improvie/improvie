@@ -1,7 +1,7 @@
 import type { Content } from '$lib/types/item';
 import type { CreateContent, CreateContentResponse } from '$lib/types/item/create';
 import type { Writable } from 'svelte/store';
-import { action_delete_item, action_import_youtube_video, action_update_item_name } from '$lib/action/items';
+import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
 import { SvelteMap } from 'svelte/reactivity';
 import { writable } from 'svelte/store';
@@ -31,7 +31,7 @@ export async function update_content_name(id: string, name: string): Promise<voi
   });
 }
 
-function update_content(res: CreateContentResponse): void {
+export function update_content(res: CreateContentResponse): void {
   folder_nodes.update((v) => {
     v.set(res.folder_node.folder, res.folder_node);
     return v;
@@ -45,10 +45,5 @@ function update_content(res: CreateContentResponse): void {
 
 export async function create_content(data: CreateContent): Promise<void> {
   const res = await action_create_content(data);
-  update_content(res);
-}
-
-export async function import_youtube_video(parent_folder_id: string, url: string): Promise<void> {
-  const res = await action_import_youtube_video(parent_folder_id, url);
   update_content(res);
 }

@@ -7,6 +7,8 @@ pub type AppResult<T> = std::result::Result<T, AppError>;
 pub enum AppError {
     #[error("db error: {0}")]
     Db(#[from] sqlx::Error),
+    #[error("io error: {0}")]
+    Io(#[from] std::io::Error),
     #[error("not ready on {0}: {1}")]
     NotReady(&'static str, String),
     #[error("errored on {0}: {1}")]

@@ -16,9 +16,9 @@ pub fn run() {
                 log::error!("Failed to set logger. not logging on plugin");
             }
 
-            #[cfg(debug_assertions)]
+            #[cfg(all(debug_assertions, not(mobile)))]
             let data_dir = init::dev_folder();
-            #[cfg(not(debug_assertions))]
+            #[cfg(not(all(debug_assertions, not(mobile))))]
             let data_dir = app.path().app_data_dir()?;
 
             let app_state = block_on(AppState::new(data_dir))?;

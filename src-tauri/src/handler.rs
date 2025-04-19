@@ -1,4 +1,4 @@
-use improvie_command::command::{dialog, health_check, integration, items, plays, plugin, rules};
+use improvie_command::command::{dialog, health_check, items, plays, plugin, rules, youtube};
 
 pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
@@ -29,9 +29,9 @@ pub fn generate_handler<R: tauri::Runtime>()
         rules::get_rules,
         rules::update_rules,
         rules::get_rules_format,
-        // integration
-        integration::import_youtube_video,
         // plugins
         plugin::get_themes,
+        // youtube
+        youtube::import_youtube_video,
     ]
 }

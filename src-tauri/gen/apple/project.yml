@@ -21,6 +21,8 @@ targetTemplates:
       environmentVariables:
         RUST_BACKTRACE: full
         RUST_LOG: info
+        RUSTFLAGS: -C link-arg=-lc++
+        FFMPEG_DIR: $(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator
     settings:
       groups: [app]
 targets:
@@ -59,6 +61,8 @@ targets:
       environmentVariables:
         RUST_BACKTRACE: full
         RUST_LOG: info
+        RUSTFLAGS: -C link-arg=-lc++
+        FFMPEG_DIR: $(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator
     settings:
       base:
         ENABLE_BITCODE: false
@@ -90,8 +94,7 @@ targets:
       - sdk: WebKit.framework
       - sdk: VideoToolbox.framework
     preBuildScripts:
-      # FIXME: This env variable is not found in xcode-script builds
-      - script: RUSTFLAGS="-C link-arg=-lc++" FFMPEG_DIR="$(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator" cargo tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths "${FRAMEWORK_SEARCH_PATHS:?}" --header-search-paths "${HEADER_SEARCH_PATHS:?}" --gcc-preprocessor-definitions "${GCC_PREPROCESSOR_DEFINITIONS:-}" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}
+      - script: cargo tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths "${FRAMEWORK_SEARCH_PATHS:?}" --header-search-paths "${HEADER_SEARCH_PATHS:?}" --gcc-preprocessor-definitions "${GCC_PREPROCESSOR_DEFINITIONS:-}" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}
         name: Build Rust Code
         basedOnDependencyAnalysis: false
         outputFiles:

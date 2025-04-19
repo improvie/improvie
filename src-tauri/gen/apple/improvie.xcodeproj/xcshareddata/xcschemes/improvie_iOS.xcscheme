@@ -38,6 +38,16 @@
       </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "FFMPEG_DIR"
+            value = "$(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "RUSTFLAGS"
+            value = "-C link-arg=-lc++"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "RUST_BACKTRACE"
             value = "full"
             isEnabled = "YES">
@@ -73,6 +83,16 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "FFMPEG_DIR"
+            value = "$(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "RUSTFLAGS"
+            value = "-C link-arg=-lc++"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "RUST_BACKTRACE"
             value = "full"
             isEnabled = "YES">
@@ -101,6 +121,16 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FFMPEG_DIR"
+            value = "$(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "RUSTFLAGS"
+            value = "-C link-arg=-lc++"
+            isEnabled = "YES">
+         </EnvironmentVariable>
          <EnvironmentVariable
             key = "RUST_BACKTRACE"
             value = "full"

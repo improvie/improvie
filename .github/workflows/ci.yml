@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Fmt
+        run: |
+          cd src-tauri
+          cargo fmt --all -- --check
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+          key: ci-rust-cache-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Clippy
+        run: |
+          cd src-tauri
+          cargo clippy -- -D warnings
+
+      - name: Run tests
+        run: |
+          cd src-tauri
+          cargo test --workspace

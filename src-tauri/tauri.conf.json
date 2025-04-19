@@ -11,11 +11,11 @@
   },
   "app": {
     "withGlobalTauri": true,
+    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "improvie",
-        "width": 800,
-        "height": 600
+        "label": "main"
       }
     ],
     "security": {
@@ -30,6 +30,11 @@
   },
   "bundle": {
     "active": true,
+    "shortDescription": "A Tauri app to 'improve like movie' — helping you organize local media and create playlists easily.",
+    "copyright": "Copyright © 2025 improvie",
+    "license": "Apache-2.0",
+    "licenseFile": "LICENSE",
+    "publisher": "improvie",
     "targets": "all",
     "icon": [
       "icons/32x32.png",

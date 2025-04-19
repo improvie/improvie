@@ -1,6 +1,6 @@
 [package]
 name = "improvie"
-description = "This is a tauri app that improves movie(video) management."
+description = "A Tauri app to 'improve like movie' — helping you organize local media and create playlists easily."
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

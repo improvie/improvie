@@ -21,8 +21,6 @@ targetTemplates:
       environmentVariables:
         RUST_BACKTRACE: full
         RUST_LOG: info
-        RUSTFLAGS: -C link-arg=-lc++
-        FFMPEG_DIR: $(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator
     settings:
       groups: [app]
 targets:
@@ -61,8 +59,6 @@ targets:
       environmentVariables:
         RUST_BACKTRACE: full
         RUST_LOG: info
-        RUSTFLAGS: -C link-arg=-lc++
-        FFMPEG_DIR: $(cat ~/.vcpkg/vcpkg.path.txt)/installed/arm64-ios-simulator
     settings:
       base:
         ENABLE_BITCODE: false

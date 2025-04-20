@@ -1,10 +1,13 @@
 [files]
 extend-exclude = [
-  "Cargo.lock",
+  "node_modules/**/*",
+  ".svelte-kit/**/*",
+  "build/**/*",
+  ".github/**/*",
+  "src-tauri/gen/**/*",
   "bun.lock",
   "package-lock.json",
-  "src-tauri/gen",
-  ".github",
+  "src-tauri/Cargo.lock",
   "*.svg",
   "*.png",
   "*.jpg",

@@ -1,7 +1,7 @@
-name: "✨ Feature Request"
-description: "Propose new features or improvements."
-title: "[FEATURE] "
-labels: ["enhancement"]
+name: ✨ Feature Request
+description: Propose new features or improvements.
+title: '[FEATURE] '
+labels: [enhancement]
 body:
   - type: markdown
     attributes:
@@ -10,10 +10,10 @@ body:
   - type: textarea
     id: benefits
     attributes:
-      label: "Benefits"
-      description: "Explain how this feature will be beneficial."
+      label: Benefits
+      description: Explain how this feature will be beneficial.
   - type: textarea
     id: additional
     attributes:
-      label: "Additional Information"
-      description: "Provide any relevant information or references."
+      label: Additional Information
+      description: Provide any relevant information or references.

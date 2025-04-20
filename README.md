@@ -16,22 +16,22 @@
 
 ## ✨ Features
 
-- 📂 **Local Media Management**  
+- 📂 **Local Media Management**
   Import and organize video/audio files stored on your machine.
 
-- 🎵 **Playlist Creation**  
+- 🎵 **Playlist Creation**
   Quickly create and edit playlists from your local media.
 
-- 🎧 **Lightweight Media Player**  
+- 🎧 **Lightweight Media Player**
   Seamless playback experience optimized for local content.
 
-- ⚡ **Built with Tauri**  
+- ⚡ **Built with Tauri**
   Fast and secure with a native feel.
 
-- 🌐 **Multi-language Support**  
+- 🌐 **Multi-language Support**
   Available in both English and Japanese, choose your preferred language.
 
-- 🎨 **Theme Customization**  
+- 🎨 **Theme Customization**
   Customize the appearance of the application.
 
 ## 📥 Installation

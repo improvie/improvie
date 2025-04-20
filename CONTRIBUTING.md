@@ -6,27 +6,27 @@ Thank you for your interest in contributing to the `improvie` project! This guid
 
 You can contribute to the project in the following ways:
 
-1. **Bug Reports**  
+1. **Bug Reports**
    If you find any issues with the application, please report them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
-2. **Feature Suggestions**  
+2. **Feature Suggestions**
    If you have ideas for new features or improvements, please propose them on [GitHub Discussions](https://github.com/improvie/improvie/discussions).
 
-3. **Code Improvements**  
+3. **Code Improvements**
    Fix bugs or implement new features and submit a pull request.
 
-4. **Documentation Improvements**  
+4. **Documentation Improvements**
    Fix typos or add content to the documentation.
 
-5. **Adding Tests**  
+5. **Adding Tests**
    Add test cases to improve the quality of the application.
 
 ## 🧪 Code Style and Testing
 
-- **Code Style**  
+- **Code Style**
   Follow the project's code style. It is recommended to use formatters and linters.
 
-- **Testing**  
+- **Testing**
   Ensure all tests pass before pushing your changes.
 
   ```bash

@@ -7,12 +7,29 @@ on:
   pull_request:
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Cache Bun modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: bun-modules-${{ hashFiles('bun.lock') }}
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: install frontend dependencies
+        run: |
+          bun install
+      - name: Test and Lint frontend
+        run: |
+          bun test
+          bun lint
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -25,7 +42,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: ./src-tauri -> target
           key: ci-rust-cache-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Clippy

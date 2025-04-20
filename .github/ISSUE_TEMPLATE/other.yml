@@ -1,7 +1,7 @@
-name: "📋 Other Requests"
-description: "Please fill in requests other than bug reports or feature proposals."
-title: "[OTHER] "
-labels: ["other"]
+name: 📋 Other Requests
+description: Please fill in requests other than bug reports or feature proposals.
+title: '[OTHER] '
+labels: [other]
 body:
   - type: markdown
     attributes:
@@ -11,5 +11,5 @@ body:
   - type: textarea
     id: additional
     attributes:
-      label: "Additional Information"
-      description: "Please provide relevant information or references. Specific examples or background information are helpful."
+      label: Additional Information
+      description: Please provide relevant information or references. Specific examples or background information are helpful.

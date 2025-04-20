@@ -3,8 +3,8 @@
 </script>
 
 <script lang='ts'>
-  import type { Playlist } from '$lib/types/plays';
-  import type { RuleType } from '$lib/types/rules';
+  import type { Playlist } from '$bindings/play';
+  import type { RuleType } from '$bindings/Rule';
   import { action_update_rules } from '$lib/action/rules';
   import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';

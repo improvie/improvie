@@ -1,4 +1,4 @@
-import type { FolderNode } from '$lib/types/item';
+import type { FolderNode } from '$bindings/item';
 import { invoke } from '@tauri-apps/api/core';
 import { SvelteMap } from 'svelte/reactivity';
 

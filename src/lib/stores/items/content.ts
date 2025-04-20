@@ -1,5 +1,5 @@
-import type { Content } from '$lib/types/item';
-import type { CreateContent, CreateContentResponse } from '$lib/types/item/create';
+import type { Content } from '$bindings/item';
+import type { CreateContentDto, CreateContentResponse } from '$bindings/item/dto';
 import type { Writable } from 'svelte/store';
 import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
@@ -43,7 +43,7 @@ export function update_content(res: CreateContentResponse): void {
   });
 }
 
-export async function create_content(data: CreateContent): Promise<void> {
+export async function create_content(data: CreateContentDto): Promise<void> {
   const res = await action_create_content(data);
   update_content(res);
 }

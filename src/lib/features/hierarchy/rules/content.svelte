@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { ContentRule } from '$lib/types/rules';
+  import type { ContentRule } from '$bindings/Rule';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents } from '$lib/stores/items/content';

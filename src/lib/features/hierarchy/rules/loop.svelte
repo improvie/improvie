@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { LoopRule, RuleType } from '$lib/types/rules';
+  import type { LoopRule, RuleType } from '$bindings/Rule';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';

@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import type { ContentKind } from '$lib/types/item';
-  import type { CreateContent } from '$lib/types/item/create';
+  import type { ContentKind } from '$bindings/Constants';
+  import type { CreateContentDto } from '$bindings/item/dto';
   import {
     action_select_content_dialog,
     action_select_thumbnail_dialog,
@@ -50,11 +50,11 @@
       return;
     }
 
-    const req: CreateContent = {
+    const req: CreateContentDto = {
       title: $formData.title,
-      description: $formData.description,
+      description: $formData.description ?? null,
       content_path: $formData.content,
-      thumbnail_path: $formData.thumbnail,
+      thumbnail_path: $formData.thumbnail ?? null,
       parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
       kind: content_kind,
     };
@@ -126,7 +126,7 @@
                   }
                   else {
                     $formData.content = res.path;
-                    content_kind = res.kind;
+                    content_kind = res.kind as ContentKind;
 
                     if (!$formData.title) {
                       $formData.title = res.name;

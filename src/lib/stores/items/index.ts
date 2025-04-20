@@ -1,4 +1,4 @@
-import type { FolderNode } from '$lib/types/item/index.ts';
+import type { FolderNode } from '$bindings/item';
 import type { Writable } from 'svelte/store';
 import { action_get_contents } from '$lib/action/items/content';
 import { action_get_folders } from '$lib/action/items/folder';

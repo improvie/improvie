@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { CreatePlayFolder } from '$lib/types/plays/create';
+  import type { CreatePlayFolderDto } from '$bindings/play/dto';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -41,9 +41,9 @@
       return;
     }
 
-    const req: CreatePlayFolder = {
+    const req: CreatePlayFolderDto = {
       title: $formData.title,
-      description: $formData.description,
+      description: $formData.description ?? null,
       parent_folder_id: $current_play_folder_ids[$current_play_folder_ids.length - 1],
     };
 

@@ -2,7 +2,6 @@ use std::{io::Write, path::PathBuf, sync::Arc};
 
 use ez_ffmpeg::{FfmpegContext, Output};
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
-use improvie_logic::impl_serialize_for_dyn_app_error;
 use rusty_ytdl::{
     DownloadOptions, Video, VideoInfo, VideoOptions, VideoQuality, VideoSearchOptions,
     choose_format,
@@ -10,33 +9,7 @@ use rusty_ytdl::{
 use tauri::{AppHandle, Emitter};
 use uid::Uid;
 
-use crate::state::TauriAppState;
-
-#[derive(Debug, thiserror::Error, more_convert::VariantName)]
-#[variant_name(prefix = "Yt")]
-pub enum YtError {
-    #[error("invalid url")]
-    InvalidUrl,
-    #[error("failed to download video")]
-    Async,
-    #[error("io error: {0}")]
-    Io(#[from] std::io::Error),
-    #[error("http error: {0}")]
-    Http(#[from] rusty_ytdl::VideoError),
-    #[error("failed to create content: {0}")]
-    SaveError(#[from] improvie_logic::AppError),
-    #[error("failed to create ffmpeg context: {0}")]
-    Ffmpeg(#[from] ez_ffmpeg::error::Error),
-}
-
-impl_serialize_for_dyn_app_error!(YtError);
-
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-struct DownloadState {
-    downloaded_mb: u64,
-    total_mb: u64,
-    percentage: u8,
-}
+use crate::{error::yt::YtError, model::yt::YtDownloadState, state::TauriAppState};
 
 #[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
@@ -45,6 +18,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     parent_folder_id: Uid,
     video_url: String,
 ) -> Result<CreateContentResponse, YtError> {
+    // TODO: move this, this model and this error to a use case
     let video = Video::new(video_url).map_err(|_| YtError::InvalidUrl)?;
     let video = Arc::new(video);
 
@@ -123,7 +97,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         let progress = (downloaded as f64 / total_size as f64) * 100.0;
         let _ = app.emit(
             "yt-download-progress",
-            DownloadState {
+            YtDownloadState {
                 downloaded_mb: downloaded / 1024 / 1024,
                 total_mb: total_size / 1024 / 1024,
                 percentage: progress as u8,

@@ -4,6 +4,10 @@ version.workspace = true
 authors.workspace = true
 edition.workspace = true
 
+[features]
+default = []
+ts = ["uid/ts", "dep:ts-bind", "dep:ts-rs"]
+
 [dependencies]
 improvie-domain.workspace = true
 improvie-logic.workspace = true
@@ -16,6 +20,8 @@ log.workspace = true
 more-convert.workspace = true
 tauri-plugin-dialog.workspace = true
 thiserror.workspace = true
+ts-bind = { workspace = true, optional = true }
+ts-rs = { workspace = true, optional = true }
 
 [dev-dependencies]
 tauri = { workspace = true, features = ["test"] }

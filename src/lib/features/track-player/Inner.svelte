@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { Content } from '$lib/types/item';
+  import type { Content } from '$bindings/item';
   import IconButton from '$lib/components/IconButton.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';

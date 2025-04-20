@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { CreatePlaylist } from '$lib/types/plays/create';
+  import type { CreatePlaylistDto } from '$bindings/play/dto';
   import {
     action_select_thumbnail_dialog,
   } from '$lib/action/dialog/file';
@@ -45,10 +45,10 @@
       return;
     }
 
-    const req: CreatePlaylist = {
+    const req: CreatePlaylistDto = {
       title: $formData.title,
-      description: $formData.description,
-      thumbnail_path: $formData.thumbnail,
+      description: $formData.description ?? null,
+      thumbnail_path: $formData.thumbnail ?? null,
       parent_folder_id: $current_play_folder_ids[$current_play_folder_ids.length - 1],
     };
 

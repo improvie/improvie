@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { CreateFolder } from '$lib/types/item/create';
+  import type { CreateFolderDto } from '$bindings/item/dto';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -41,9 +41,9 @@
       return;
     }
 
-    const req: CreateFolder = {
+    const req: CreateFolderDto = {
       title: $formData.title,
-      description: $formData.description,
+      description: $formData.description ?? null,
       parent_folder_id: $current_folder_ids[$current_folder_ids.length - 1],
     };
 

@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { CreateContentResponse } from '$lib/types/item/create';
+  import type { CreateContentResponse } from '$bindings/item/dto';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';

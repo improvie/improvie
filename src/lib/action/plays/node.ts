@@ -1,4 +1,4 @@
-import type { PlayFolderNode } from '$lib/types/plays';
+import type { PlayFolderNode } from '$bindings/play';
 import { invoke } from '@tauri-apps/api/core';
 import { SvelteMap } from 'svelte/reactivity';
 

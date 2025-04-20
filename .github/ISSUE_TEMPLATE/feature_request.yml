@@ -1,0 +1,19 @@
+name: ✨ Feature Request
+description: Propose new features or improvements.
+title: '[FEATURE] '
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please describe the feature or improvement you are proposing.**
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: Explain how this feature will be beneficial.
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Provide any relevant information or references.

@@ -1,0 +1,19 @@
+name: ❓ Question
+description: Please fill in your questions regarding the project.
+title: '[QUESTION] '
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please describe your question.**
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Please provide the background or related information for your question.
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Please provide any relevant information or references.

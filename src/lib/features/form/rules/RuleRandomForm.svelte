@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RuleType } from '$lib/types/rules';
+  import type { RuleType } from '$bindings/Rule';
   import { Button } from '$lib/components/ui/button';
   import { Checkbox } from '$lib/components/ui/checkbox';
   import * as Form from '$lib/components/ui/form/index.js';

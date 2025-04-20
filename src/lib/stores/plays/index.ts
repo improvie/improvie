@@ -1,4 +1,4 @@
-import type { PlayFolderNode } from '$lib/types/plays';
+import type { PlayFolderNode } from '$bindings/play';
 import type { Writable } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { action_get_play_folders } from '$lib/action/plays/folder';

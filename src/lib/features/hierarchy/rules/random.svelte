@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RandomRule, RuleType } from '$lib/types/rules';
+  import type { RandomRule, RuleType } from '$bindings/Rule';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { Separator } from '$lib/components/ui/separator';

@@ -1,4 +1,4 @@
-import type { RuleFormat, RuleType } from '$lib/types/rules';
+import type { RuleFormat, RuleType } from '$bindings/Rule';
 import { action_get_rules_format } from '$lib/action/rules';
 import { writable } from 'svelte/store';
 

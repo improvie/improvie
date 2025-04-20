@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use uid::Uid;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
 pub struct RuleFormat {
     pub content_id: Uid,
     pub range_start: Option<u32>,
@@ -21,6 +22,8 @@ impl RuleFormat {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
+#[cfg_attr(feature = "ts", ts(rename = "RuleType"))]
 #[serde(tag = "type", content = "data")]
 pub enum Rule {
     Content(ContentRule),
@@ -45,6 +48,7 @@ impl RuleFormatIter for Rule {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
 pub struct ContentRule {
     pub content_id: Uid,
 }
@@ -56,6 +60,7 @@ impl RuleFormatIter for ContentRule {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
 pub struct RangeRule {
     pub content_id: Uid,
     pub range_start: Option<u32>,
@@ -73,6 +78,7 @@ impl RuleFormatIter for RangeRule {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
 pub struct LoopRule {
     pub rules: Vec<Rule>,
     pub times: u8,
@@ -91,6 +97,7 @@ impl RuleFormatIter for LoopRule {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
 pub struct RandomRule {
     // u8 is the weight
     pub rules: Vec<(Rule, u8)>,

@@ -22,6 +22,7 @@ macro_rules! uid {
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "ts", ts_bind::ts)]
 #[repr(transparent)]
 pub struct Uid(uuid::Uuid);
 

@@ -1,5 +1,5 @@
-import type { Playlist } from '$lib/types/plays';
-import type { CreatePlaylist } from '$lib/types/plays/create';
+import type { Playlist } from '$bindings/play';
+import type { CreatePlaylistDto } from '$bindings/play/dto';
 import type { Writable } from 'svelte/store';
 import { action_delete_play_item, action_update_play_item_name } from '$lib/action/plays';
 import { action_create_playlist } from '$lib/action/plays/playlists';
@@ -31,7 +31,7 @@ export async function update_playlist_name(id: string, name: string): Promise<vo
   });
 }
 
-export async function create_playlist(data: CreatePlaylist): Promise<void> {
+export async function create_playlist(data: CreatePlaylistDto): Promise<void> {
   const res = await action_create_playlist(data);
 
   play_folder_nodes.update((v) => {

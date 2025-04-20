@@ -17,6 +17,8 @@ const config = {
       '$lib/*': './src/lib/*',
       '$static': './src/static',
       '$static/*': './src/static/*',
+      '$bindings': './src/bindings',
+      '$bindings/*': './src/bindings/*',
     },
   },
 };

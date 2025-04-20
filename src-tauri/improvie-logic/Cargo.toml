@@ -4,6 +4,10 @@ version.workspace = true
 authors.workspace = true
 edition.workspace = true
 
+[features]
+default = []
+ts = ["uid/ts", "dep:ts-bind", "dep:ts-rs"]
+
 [dependencies]
 uid.workspace = true
 
@@ -13,6 +17,8 @@ chrono.workspace = true
 serde.workspace = true
 rand.workspace = true
 more-convert.workspace = true
+ts-bind = { workspace = true, optional = true }
+ts-rs = { workspace = true, optional = true }
 
 [lints]
 workspace = true

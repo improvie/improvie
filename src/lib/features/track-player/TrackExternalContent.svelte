@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { Content } from '$lib/types/item';
+  import type { Content } from '$bindings/item';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';

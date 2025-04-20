@@ -1,5 +1,5 @@
-import type { Folder } from '$lib/types/item';
-import type { CreateFolder } from '$lib/types/item/create';
+import type { Folder } from '$bindings/item';
+import type { CreateFolderDto } from '$bindings/item/dto';
 import type { Writable } from 'svelte/store';
 import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_folder } from '$lib/action/items/folder';
@@ -31,7 +31,7 @@ export async function update_folder_name(id: string, name: string): Promise<void
   });
 }
 
-export async function create_folder(data: CreateFolder): Promise<void> {
+export async function create_folder(data: CreateFolderDto): Promise<void> {
   const res = await action_create_folder(data);
 
   folder_nodes.update((v) => {

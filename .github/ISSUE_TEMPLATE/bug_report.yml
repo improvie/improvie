@@ -1,0 +1,24 @@
+name: 🐛 Bug Report
+description: Please report any issues with the application.
+title: '[BUG] '
+labels: [bug]
+body:
+  - type: input
+    id: environment
+    attributes:
+      label: Environment Information
+      description: Please provide details such as OS and app version.
+  - type: markdown
+    attributes:
+      value: |
+        **Please provide details of the bug.**
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: Please provide the steps to reproduce the bug.
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Please provide any relevant information such as screenshots or logs.

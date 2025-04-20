@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RuleType } from '$lib/types/rules';
+  import type { RuleType } from '$bindings/Rule';
   import { ContentRuleNode, LoopRuleNode, RandomRuleNode, RangeRuleNode } from '.';
 
   let { rule = $bindable(), remove_rule }: { rule: RuleType; remove_rule: () => void } = $props();

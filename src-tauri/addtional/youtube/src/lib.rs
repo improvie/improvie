@@ -2,6 +2,7 @@ mod error;
 pub use error::YtError;
 
 mod model;
+pub use model::SingleVideoDownload;
 pub use model::YtPlaylistDownloadState;
 pub use model::YtVideoDownloadState;
 

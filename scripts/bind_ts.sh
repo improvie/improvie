@@ -12,6 +12,8 @@ fi
 
 cd "$(dirname "$0")/.." || exit
 
+export TS_RS_EXPORT_DIR="$PWD/src/bindings"
+
 cd src-tauri || exit
 
 echo "🔧 Binding TypeScript files in src-tauri to src/bindings"

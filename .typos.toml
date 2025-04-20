@@ -4,6 +4,7 @@ extend-exclude = [
   "bun.lock",
   "package-lock.json",
   "src-tauri/gen",
+  ".github",
   "*.svg",
   "*.png",
   "*.jpg",

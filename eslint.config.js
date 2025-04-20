@@ -9,6 +9,7 @@ export default antfu({
     'src/lib/hooks',
     'src/static/',
     'src/bindings/',
+    '.github',
   ],
   stylistic: {
     indent: 2,

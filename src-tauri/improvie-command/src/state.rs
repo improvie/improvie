@@ -60,7 +60,9 @@ pub mod tests {
                 .build(tauri::test::mock_context(tauri::test::noop_assets()))
                 .unwrap();
 
-            let state = AppState::new(test_dir()).await.unwrap();
+            let test_dir = test_dir();
+            let teset_document_dir = test_dir.join("documents");
+            let state = AppState::new(test_dir, teset_document_dir).await.unwrap();
             app.manage(state);
             Self { app }
         }

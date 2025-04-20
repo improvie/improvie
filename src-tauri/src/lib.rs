@@ -6,8 +6,14 @@ mod init;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_window_state::Builder::new().build())
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        builder = builder.plugin(tauri_plugin_window_state::Builder::new().build());
+    }
+
+    builder
         .plugin(tauri_plugin_dialog::init())
         .plugin(init::log::init_log_plugin())
         .setup(move |app| {
@@ -19,10 +25,15 @@ pub fn run() {
 
             #[cfg(all(debug_assertions, not(mobile)))]
             let data_dir = init::dev_folder();
+            #[cfg(all(debug_assertions, not(mobile)))]
+            let document_dir = data_dir.join("documents");
+
             #[cfg(not(all(debug_assertions, not(mobile))))]
             let data_dir = app.path().app_data_dir()?;
+            #[cfg(not(all(debug_assertions, not(mobile))))]
+            let document_dir = app.path().document_dir()?.join(&app.config().identifier);
 
-            let app_state = block_on(AppState::new(data_dir))?;
+            let app_state = block_on(AppState::new(data_dir, document_dir))?;
             app.manage(app_state);
             Ok(())
         })

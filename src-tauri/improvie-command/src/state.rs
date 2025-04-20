@@ -15,10 +15,11 @@ pub struct AppState {
     pub modules: Arc<Modules>,
     pub pm: Arc<Mutex<PluginManager>>,
     pub data_dir: PathBuf,
+    pub document_dir: PathBuf,
 }
 
 impl AppState {
-    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
+    pub async fn new(data_dir: PathBuf, document_dir: PathBuf) -> Result<Self, InitDbError> {
         let modules = Modules::new(data_dir.clone()).await?;
 
         log::info!("Start loading plugins");
@@ -36,6 +37,7 @@ impl AppState {
             modules: Arc::new(modules),
             pm,
             data_dir,
+            document_dir,
         })
     }
 }

@@ -51,6 +51,7 @@ members = [
     "addtional/improvie-builtin",
     "addtional/uid",
     "addtional/ts-bind",
+    "addtional/youtube",
     "prebuild",
 ]
 resolver = "3"
@@ -73,6 +74,7 @@ improvie-command = { path = "improvie-command" }
 improvie-plugin = { path = "addtional/improvie-plugin" }
 improvie-builtin = { path = "addtional/improvie-builtin" }
 uid = { path = "addtional/uid" }
+youtube = { path = "addtional/youtube" }
 
 # tauri
 tauri = { version = "=2.5.0", features = [

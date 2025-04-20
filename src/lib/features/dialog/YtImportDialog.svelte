@@ -1,5 +1,6 @@
 <script lang='ts'>
   import type { CreateContentResponse } from '$bindings/item/dto';
+  import type { YtVideoDownloadState } from '$bindings/yt';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -47,21 +48,15 @@
     }
   });
 
-  interface DownloadState {
-    downloaded_mb: number;
-    total_mb: number;
-    percentage: number;
-  }
-
   let downloading = $state(false);
 
-  let download_state = $state<DownloadState>({
-    downloaded_mb: 0,
-    total_mb: 0,
+  let download_state = $state<YtVideoDownloadState>({
+    downloaded_mb: 0n,
+    total_mb: 0n,
     percentage: 0,
   });
 
-  listen<DownloadState>('yt-download-progress', (event) => {
+  listen<YtVideoDownloadState>('yt-download-progress-video', (event) => {
     download_state = event.payload;
   });
 
@@ -92,8 +87,8 @@
     }
     downloading = false;
     download_state = {
-      downloaded_mb: 0,
-      total_mb: 0,
+      downloaded_mb: 0n,
+      total_mb: 0n,
       percentage: 0,
     };
   }
@@ -109,7 +104,7 @@
       <div class='grid gap-4 py-4'>
         <div class='flex items-center justify-between'>
           <p>Downloaded: {download_state.downloaded_mb}MB / {download_state.total_mb}MB</p>
-          {#if download_state.total_mb === 0}
+          {#if download_state.total_mb === 0n}
             <p class='text-muted-foreground'>Fetching video info. Please wait.</p>
           {/if}
           <p>{download_state.percentage}%</p>

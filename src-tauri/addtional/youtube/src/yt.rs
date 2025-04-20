@@ -1,11 +1,22 @@
-use std::{io::Write, path::Path};
+use std::{
+    io::Write,
+    path::{Path, PathBuf},
+    sync::Arc,
+};
 
 use rusty_ytdl::{
     DownloadOptions, Video, VideoInfo, VideoOptions, VideoQuality, VideoSearchOptions,
-    choose_format,
+    choose_format, search::Playlist,
 };
+use tokio::task::JoinHandle;
 
-use crate::{YtVideoDownloadState, model::SingleVideoDownload};
+use crate::{YtPlaylistDownloadState, YtVideoDownloadState, model::SingleVideoDownload};
+
+fn contents_dir(target_dir: &Path) -> std::io::Result<std::path::PathBuf> {
+    let contents = target_dir.join("content");
+    std::fs::create_dir_all(&contents)?;
+    Ok(contents)
+}
 
 pub async fn download_single_video(
     video_url: &str,
@@ -13,12 +24,55 @@ pub async fn download_single_video(
     callback: impl Fn(YtVideoDownloadState) -> Result<(), crate::YtError>,
 ) -> Result<SingleVideoDownload, crate::YtError> {
     let video = Video::new(video_url)?;
+    let contents = contents_dir(target_dir)?;
+
+    download_single_video_internal(video, contents, callback).await
+}
+
+pub async fn download_playlist(
+    playlist_url: &str,
+    target_dir: &Path,
+    callback: impl Fn(YtPlaylistDownloadState) -> Result<(), crate::YtError> + Send + Sync + 'static,
+) -> Result<Vec<SingleVideoDownload>, crate::YtError> {
+    let playlist = Playlist::get(playlist_url, None).await?;
+    let contents = contents_dir(target_dir)?;
+    let callback = Arc::new(callback);
+
+    let mut join_downloads = Vec::new();
+    for (i, video) in playlist.videos.into_iter().enumerate() {
+        let join: JoinHandle<Result<SingleVideoDownload, crate::YtError>> = tokio::spawn({
+            let contents = contents.clone();
+            let callback = Arc::clone(&callback);
+            async move {
+                let video = Video::new(&video.url)?;
+                let download = download_single_video_internal(video, contents, |state| {
+                    callback(YtPlaylistDownloadState { index: i, state })
+                })
+                .await?;
+                Ok(download)
+            }
+        });
+
+        join_downloads.push(join);
+    }
+
+    let mut downloads = Vec::new();
+    for join in join_downloads {
+        let download = join.await.map_err(|_| crate::YtError::JoinError)??;
+        downloads.push(download);
+    }
+
+    Ok(downloads)
+}
+
+async fn download_single_video_internal(
+    video: Video<'_>,
+    contents: PathBuf,
+    callback: impl Fn(YtVideoDownloadState) -> Result<(), crate::YtError>,
+) -> Result<SingleVideoDownload, crate::YtError> {
     let info = video.get_info().await?;
     let title = info.video_details.title.clone();
     let id = info.video_details.video_id.clone();
-    let contents = target_dir.join("content");
-
-    std::fs::create_dir_all(&contents)?;
 
     let video_path = contents.join(format!("{}.mp4", &id));
     let video_temp_path = contents.join(format!("{}.temp.mp4", &id));

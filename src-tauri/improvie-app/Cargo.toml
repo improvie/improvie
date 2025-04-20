@@ -6,7 +6,7 @@ edition.workspace = true
 
 [features]
 default = []
-ts = ["dep:ts-bind", "dep:ts-rs"]
+ts = ["uid/ts", "dep:ts-bind", "dep:ts-rs"]
 
 [dependencies]
 improvie-domain.workspace = true

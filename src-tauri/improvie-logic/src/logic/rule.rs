@@ -23,6 +23,7 @@ impl RuleFormat {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", ts_bind::ts("Rule.ts"))]
+#[cfg_attr(feature = "ts", ts(rename = "RuleType"))]
 #[serde(tag = "type", content = "data")]
 pub enum Rule {
     Content(ContentRule),

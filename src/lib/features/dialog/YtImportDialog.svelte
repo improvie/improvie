@@ -24,8 +24,7 @@
     open: boolean;
   } = $props();
 
-  const youtubeUrlRegex
-    = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})(?:[&?][\w=]*)*$/;
+  const youtubeUrlRegex = /(?:^|\W)(?:youtube(?:-nocookie)?\.com\/(?:.*[?&]v=|v\/|shorts\/|e(?:mbed)?\/|[^/]+\/.+\/)|youtu\.be\/)([\w-]{11})/;
 
   const formSchema = z.object({
     url: z.string()

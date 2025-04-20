@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 use uid::Uid;
 
 #[derive(Debug, Deserialize, Convert)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/dto.ts"))]
 #[convert(into(CreateBasePlayItemModel))]
 pub struct CreateBasePlayItemDto {
     pub parent_folder_id: Uid,
@@ -16,6 +17,7 @@ pub struct CreateBasePlayItemDto {
 }
 
 #[derive(Debug, Deserialize, Convert)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/dto.ts"))]
 #[convert(into(CreatePlayFolderModel))]
 pub struct CreatePlayFolderDto {
     #[serde(flatten)]
@@ -23,6 +25,7 @@ pub struct CreatePlayFolderDto {
 }
 
 #[derive(Debug, Deserialize, Convert)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/dto.ts"))]
 #[convert(into(CreatePlaylistModel))]
 pub struct CreatePlaylistDto {
     #[serde(flatten)]
@@ -32,12 +35,14 @@ pub struct CreatePlaylistDto {
 }
 
 #[derive(Debug, Serialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/dto.ts"))]
 pub struct CreatePlaylistResponse {
     pub playlist: Playlist,
     pub folder_node: PlayFolderNode,
 }
 
 #[derive(Debug, Serialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/dto.ts"))]
 pub struct CreatePlayFolderResponse {
     pub folder: PlayFolder,
     pub folder_node: PlayFolderNode,

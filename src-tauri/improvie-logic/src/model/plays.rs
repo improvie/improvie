@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use uid::Uid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/index.ts"))]
 pub struct PlayItem {
     pub id: Uid,
     pub title: String,
@@ -12,12 +13,14 @@ pub struct PlayItem {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/index.ts"))]
 pub struct PlayFolder {
     #[serde(flatten)]
     pub item: PlayItem,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/index.ts"))]
 pub struct Playlist {
     #[serde(flatten)]
     pub item: PlayItem,
@@ -25,13 +28,15 @@ pub struct Playlist {
     pub thumbnail_path: Option<String>,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/index.ts"))]
 pub struct PlayFolderNode {
     pub folder: Uid,
     pub children: Vec<PlayItemNode>,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", ts_bind::ts("play/index.ts"))]
 #[serde(tag = "kind")]
 pub enum PlayItemNode {
     Folder { id: Uid, sort_order: u32 },

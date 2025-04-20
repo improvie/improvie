@@ -1,0 +1,19 @@
+[package]
+name = "ts-bind"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+description.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+ts-rs = { workspace = true, optional = true }
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+ts-rs.workspace = true

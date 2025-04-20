@@ -3,6 +3,10 @@ name = "uid"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+ts = ["dep:ts-bind", "dep:ts-rs"]
+
 [dependencies]
 uuid = { version = "=1.16.0", features = [
     "v7",
@@ -12,3 +16,5 @@ uuid = { version = "=1.16.0", features = [
 ] }
 sqlx = { workspace = true, features = ["uuid"] }
 serde.workspace = true
+ts-rs = { workspace = true, optional = true }
+ts-bind = { workspace = true, optional = true }

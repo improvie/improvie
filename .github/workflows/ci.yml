@@ -36,4 +36,9 @@ jobs:
       - name: Run tests
         run: |
           cd src-tauri
-          cargo test --workspace
+          cargo test --workspace --features run-test
+
+      - name: Check ts-binding diff
+        run: |
+          cd src
+          git diff --exit-code -- bindings/

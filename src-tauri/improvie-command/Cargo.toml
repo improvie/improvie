@@ -22,6 +22,8 @@ serde.workspace = true
 log.workspace = true
 tauri-plugin-dialog.workspace = true
 more-convert.workspace = true
+ts-rs = { workspace = true, optional = true }
+ts-bind = { workspace = true, optional = true }
 
 ez-ffmpeg = { version = "=0.3.2", features = [
     "async",
@@ -33,6 +35,13 @@ rusty_ytdl = { version = "=0.7.4", git = "https://github.com/moriyoshi-kasuga/ru
 
 [features]
 default = []
+ts = [
+    "dep:ts-bind",
+    "dep:ts-rs",
+    "improvie-logic/ts",
+    "improvie-app/ts",
+    "uid/ts",
+]
 static-ffmpeg = ["ez-ffmpeg/static"]
 build-ffmpeg = ["ez-ffmpeg/build"]
 

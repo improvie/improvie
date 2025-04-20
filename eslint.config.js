@@ -10,6 +10,7 @@ export default antfu({
     'src/lib/components/ui',
     'src/lib/hooks',
     '.github',
+    'src/bindings/',
   ],
   stylistic: {
     indent: 2,

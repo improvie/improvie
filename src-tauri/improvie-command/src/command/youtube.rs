@@ -33,18 +33,41 @@ async fn save(
 // TODO: add beautiful log
 
 #[tauri::command]
+pub async fn import_youtube_url<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    state: TauriAppState<'_>,
+    parent_folder_id: Uid,
+    url: String,
+) -> Result<Vec<CreateContentResponse>, YtError> {
+    let url_state = youtube::get_youtube_url_state(&url)?;
+    match url_state {
+        youtube::YtUrlState::Video { id } => {
+            let content = import_youtube_video(app, state, parent_folder_id, id).await?;
+            Ok(vec![content])
+        }
+        youtube::YtUrlState::Playlist { url } => {
+            import_youtube_playlist(app, state, parent_folder_id, url).await
+        }
+    }
+}
+
+#[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
     parent_folder_id: Uid,
-    video_url: String,
+    video_url_or_id: String,
 ) -> Result<CreateContentResponse, YtError> {
-    let downloaded =
-        youtube::download_single_video(&video_url, &state.document_dir, |downloading_state| {
+    let downloaded = youtube::download_single_video(
+        &video_url_or_id,
+        &state.document_dir,
+        |downloading_state| {
+            log::debug!("Video Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-video", downloading_state);
             Ok(())
-        })
-        .await?;
+        },
+    )
+    .await?;
 
     save(&state, parent_folder_id, downloaded).await
 }
@@ -60,6 +83,7 @@ pub async fn import_youtube_playlist<R: tauri::Runtime>(
         &playlist_url,
         &state.document_dir,
         move |downloading_state| {
+            log::debug!("Playlist Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-playlist", downloading_state);
             Ok(())
         },

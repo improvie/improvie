@@ -6,7 +6,7 @@ use std::{
 
 use rusty_ytdl::{
     DownloadOptions, Video, VideoInfo, VideoOptions, VideoQuality, VideoSearchOptions,
-    choose_format, search::Playlist,
+    choose_format, get_video_id, search::Playlist,
 };
 use tokio::task::JoinHandle;
 
@@ -16,6 +16,17 @@ fn contents_dir(target_dir: &Path) -> std::io::Result<std::path::PathBuf> {
     let contents = target_dir.join("content");
     std::fs::create_dir_all(&contents)?;
     Ok(contents)
+}
+
+pub fn get_youtube_url_state(url: &str) -> Result<crate::YtUrlState, crate::YtError> {
+    if let Some(playlist_id) = Playlist::get_playlist_url(url) {
+        return Ok(crate::YtUrlState::Playlist { url: playlist_id });
+    }
+    if let Some(id) = get_video_id(url) {
+        return Ok(crate::YtUrlState::Video { id });
+    }
+
+    Err(crate::YtError::InvalidUrl)
 }
 
 pub async fn download_single_video(

@@ -1,6 +1,6 @@
 <script lang='ts'>
   import type { CreateContentResponse } from '$bindings/item/dto';
-  import type { YtVideoDownloadState } from '$bindings/yt';
+  import type { YtPlaylistDownloadState, YtVideoDownloadState } from '$bindings/yt';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Form from '$lib/components/ui/form/index.js';
@@ -25,13 +25,8 @@
     open: boolean;
   } = $props();
 
-  const youtubeUrlRegex = /(?:^|\W)(?:youtube(?:-nocookie)?\.com\/(?:.*[?&]v=|v\/|shorts\/|e(?:mbed)?\/|[^/]+\/.+\/)|youtu\.be\/)([\w-]{11})/;
-
   const formSchema = z.object({
-    url: z.string()
-      .regex(youtubeUrlRegex, {
-        message: 'Invalid YouTube URL',
-      }),
+    url: z.string().nonempty().url(),
   });
 
   const form = superForm(defaults(zod(formSchema)), {
@@ -50,14 +45,35 @@
 
   let downloading = $state(false);
 
-  let download_state = $state<YtVideoDownloadState>({
-    downloaded_mb: 0n,
-    total_mb: 0n,
-    percentage: 0,
-  });
+  let download_state = $state<YtPlaylistDownloadState[]>([{
+    index: 0,
+    state: {
+      downloaded_mb: 0n,
+      total_mb: 0n,
+      percentage: 0,
+    },
+  }]);
 
   listen<YtVideoDownloadState>('yt-download-progress-video', (event) => {
-    download_state = event.payload;
+    download_state = [{
+      index: 0,
+      state: event.payload,
+    }];
+  });
+
+  listen<YtPlaylistDownloadState>('yt-download-progress-playlist', (event) => {
+    const { index, state } = event.payload;
+    const existingState = download_state.find(s => s.index === index);
+
+    if (existingState) {
+      existingState.state = state;
+    }
+    else {
+      download_state.push({
+        index,
+        state,
+      });
+    }
   });
 
   async function handleSubmit(event: Event) {
@@ -68,29 +84,39 @@
       return;
     }
 
-    const videoUrl = result.data.url.match(youtubeUrlRegex)![1]!;
+    const url = result.data.url;
 
     downloading = true;
     try {
-      Logger.info(`Downloading video id: ${videoUrl}`);
-      const res = await invoke<CreateContentResponse>('import_youtube_video', {
+      Logger.info(`Downloading video id: ${url}`);
+      const res = await invoke<CreateContentResponse[]>('import_youtube_url', {
         parentFolderId: parent_folder_id,
-        videoUrl,
+        url,
       });
-      update_content(res);
+      for (const item of res) {
+        update_content(item);
+      }
       open = false;
     }
     catch (e) {
       const app_error = toAppError(e);
-      toast('Video download failed');
-      Logger.app_error('Error importing youtube video', app_error);
+      if (app_error.kind === 'YtInvalidUrl') {
+        toast('Invalid Youtube URL');
+      }
+      else {
+        toast('Video download failed');
+        Logger.app_error('Error importing youtube video', app_error);
+      }
     }
     downloading = false;
-    download_state = {
-      downloaded_mb: 0n,
-      total_mb: 0n,
-      percentage: 0,
-    };
+    download_state = [{
+      index: 0,
+      state: {
+        downloaded_mb: 0n,
+        total_mb: 0n,
+        percentage: 0,
+      },
+    }];
   }
 
 </script>
@@ -102,23 +128,25 @@
         <Dialog.Title>Downloading...</Dialog.Title>
       </Dialog.Header>
       <div class='grid gap-4 py-4'>
-        <div class='flex items-center justify-between'>
-          <p>Downloaded: {download_state.downloaded_mb}MB / {download_state.total_mb}MB</p>
-          {#if download_state.total_mb === 0n}
-            <p class='text-muted-foreground'>Fetching video info. Please wait.</p>
-          {/if}
-          <p>{download_state.percentage}%</p>
+        <div class='flex flex-col items-center justify-between gap-4'>
+          {#each download_state as { index: _, state }}
+            <p>Downloaded: {state.downloaded_mb}MB / {state.total_mb}MB</p>
+            {#if state.total_mb === 0n}
+              <p class='text-muted-foreground'>Fetching video info. Please wait.</p>
+            {/if}
+            <p>{state.percentage}%</p>
+            <Progress
+              value={state.percentage}
+              max={100}
+              class='w-full'
+            />
+          {/each}
         </div>
-        <Progress
-          value={download_state.percentage}
-          max={100}
-          class='w-full'
-        />
       </div>
     {:else}
       <form method='POST' use:enhance onsubmit={handleSubmit}>
         <Dialog.Header>
-          <Dialog.Title>Import Youtube Video</Dialog.Title>
+          <Dialog.Title>Import Youtube Video Or Playlist</Dialog.Title>
         </Dialog.Header>
         <div class='grid gap-4 py-4'>
           <Form.Field {form} name='url'>

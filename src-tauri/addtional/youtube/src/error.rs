@@ -6,7 +6,7 @@ pub enum YtError {
     #[error("invalid url")]
     InvalidUrl,
     #[error("failed to download video")]
-    Async,
+    JoinError,
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
     #[error("http error: {0}")]

@@ -2467,7 +2467,6 @@ dependencies = [
 name = "improvie-command"
 version = "0.1.0"
 dependencies = [
- "ez-ffmpeg",
  "futures-util",
  "improvie-app",
  "improvie-builtin",
@@ -2478,7 +2477,6 @@ dependencies = [
  "log",
  "more-convert",
  "reqwest",
- "rusty_ytdl",
  "serde",
  "tauri",
  "tauri-plugin-dialog",
@@ -2487,6 +2485,7 @@ dependencies = [
  "ts-bind",
  "ts-rs",
  "uid",
+ "youtube",
 ]
 
 [[package]]
@@ -7176,6 +7175,24 @@ dependencies = [
  "quote",
  "syn 2.0.100",
  "synstructure",
+]
+
+[[package]]
+name = "youtube"
+version = "0.2.6"
+dependencies = [
+ "ez-ffmpeg",
+ "futures-util",
+ "improvie-logic",
+ "log",
+ "more-convert",
+ "reqwest",
+ "rusty_ytdl",
+ "serde",
+ "thiserror 2.0.12",
+ "tokio",
+ "ts-bind",
+ "ts-rs",
 ]
 
 [[package]]

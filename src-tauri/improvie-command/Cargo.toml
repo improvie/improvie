@@ -12,6 +12,7 @@ improvie-app.workspace = true
 improvie-plugin.workspace = true
 improvie-builtin.workspace = true
 uid.workspace = true
+youtube.workspace = true
 
 tokio.workspace = true
 reqwest.workspace = true
@@ -25,14 +26,6 @@ more-convert.workspace = true
 ts-rs = { workspace = true, optional = true }
 ts-bind = { workspace = true, optional = true }
 
-ez-ffmpeg = { version = "=0.3.2", features = [
-    "async",
-], git = "https://github.com/moriyoshi-kasuga/ez-ffmpeg.git" }
-rusty_ytdl = { version = "=0.7.4", git = "https://github.com/moriyoshi-kasuga/rusty_ytdl", default-features = false, features = [
-    "rustls-tls",
-    "search",
-] }
-
 [features]
 default = []
 ts = [
@@ -40,10 +33,11 @@ ts = [
     "dep:ts-rs",
     "improvie-logic/ts",
     "improvie-app/ts",
+    "youtube/ts",
     "uid/ts",
 ]
-static-ffmpeg = ["ez-ffmpeg/static"]
-build-ffmpeg = ["ez-ffmpeg/build"]
+static-ffmpeg = ["youtube/static-ffmpeg"]
+build-ffmpeg = ["youtube/build-ffmpeg"]
 
 [lints]
 workspace = true

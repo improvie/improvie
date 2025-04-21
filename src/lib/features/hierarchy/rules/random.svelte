@@ -10,11 +10,9 @@
   let {
     rule = $bindable(),
     remove_rule,
-    dep,
   }: {
     rule: RandomRule;
     remove_rule: () => void;
-    dep: number;
   } = $props();
   let open = $state(false);
 
@@ -27,28 +25,24 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger class='relative overflow-visible' style={{
-    'z-index': dep,
-  }} oncontextmenu={e => e.stopPropagation()}>
+  <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
     <ShuffleIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
-    <Card.Root class='min-w-80'>
-      <div class='flex'>
-        {#if rule.duplicate}
-          <CopyCheckIcon />
-        {:else}
-          <CopyMinusIcon />
-        {/if}
-        <Separator orientation='vertical' class='mx-1' />
-        <RepeatIcon />
-        <p class='mx-1'>{rule.times}</p>
-      </div>
-      <div class='p-4 flex flex-col gap-6'>
-        {#each rule.rules as _, i}
-          <RuleNode dep={dep + 1} bind:rule={rule.rules[i][0]} remove_rule={() => {
-            rule.rules = rule.rules.filter((_, j) => i !== j);
-          }} />
-        {/each}
-      </div>
+    <div class='absolute flex -translate-y-1/2 left-6'>
+      {#if rule.duplicate}
+        <CopyCheckIcon />
+      {:else}
+        <CopyMinusIcon />
+      {/if}
+      <Separator orientation='vertical' class='mx-1' />
+      <RepeatIcon />
+      <p class='mx-1'>{rule.times}</p>
+    </div>
+    <Card.Root class='min-w-80 px-4 py-8 flex flex-col gap-6'>
+      {#each rule.rules as _, i}
+        <RuleNode bind:rule={rule.rules[i][0]} remove_rule={() => {
+          rule.rules = rule.rules.filter((_, j) => i !== j);
+        }} />
+      {/each}
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>

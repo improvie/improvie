@@ -60,9 +60,21 @@
 
 <div class='flex'>
   <Card.Root class='w-2/3 select-none z-0'>
-    <ScrollArea orientation='both' class='relative w-full h-full'>
+    <ScrollArea orientation='both' class='w-full h-dvh relative'>
       <ContextMenu.Root>
-        <ContextMenu.Trigger class='absolute w-full h-full z-[1]'>
+        <ContextMenu.Trigger>
+          <div class='w-full flex flex-col gap-6 p-6'>
+            {#each rules as _, i}
+              <RuleNode bind:rule={rules[i]} remove_rule={() => {
+                rules = rules.filter((_, j) => i !== j);
+              }} />
+            {:else}
+              <div class='flex items-center justify-center w-full h-full'>
+                <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
+              </div>
+            {/each}
+          </div>
+          <div class='min-h-80'></div>
         </ContextMenu.Trigger>
         <ContextMenu.Content>
           <ContextMenu.Item onclick={() => {
@@ -72,18 +84,6 @@
           </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu.Root>
-
-      <div class='absolute w-full flex flex-col gap-6 p-6'>
-        {#each rules as _, i}
-          <RuleNode dep={2} bind:rule={rules[i]} remove_rule={() => {
-            rules = rules.filter((_, j) => i !== j);
-          }} />
-        {:else}
-          <div class='flex items-center justify-center w-full h-full'>
-            <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
-          </div>
-        {/each}
-      </div>
     </ScrollArea>
   </Card.Root>
 

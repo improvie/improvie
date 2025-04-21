@@ -4,16 +4,14 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { contents } from '$lib/stores/items/content';
-  import { ChevronsUpIcon } from '@lucide/svelte';
+  import { ChevronsUpIcon, TrashIcon } from '@lucide/svelte';
 
   let {
     rule = $bindable(),
     remove_rule,
-    dep,
   }: {
     rule: RangeRule;
     remove_rule: () => void;
-    dep: number;
   } = $props();
   const content = $derived.by(() => {
     return $contents.get(rule.content_id);
@@ -21,9 +19,7 @@
 </script>
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger class='relative overflow-visible' style={{
-    'z-index': dep,
-  }} oncontextmenu={e => e.stopPropagation()}>
+  <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
     <ChevronsUpIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <Card.Root class='min-w-80'>
       <Card.Content>
@@ -36,6 +32,8 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item onclick={remove_rule}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
+      <TrashIcon />Remove
+    </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

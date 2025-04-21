@@ -12,14 +12,12 @@
 </script>
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger>
+  <ContextMenu.Trigger class='relative overflow-visible'>
+    <HeadphonesIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <Card.Root class='min-w-80'>
-      <Card.Content>
-        <div class='flex'>
-          <HeadphonesIcon />
-          <p>{content?.title || 'Loading...'}</p>
-        </div>
-      </Card.Content>
+      <div class='flex p-2'>
+        <p class='line-clamp-2 select-text'>{content?.title || 'Loading...'}</p>
+      </div>
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>

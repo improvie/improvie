@@ -21,9 +21,9 @@
 <Card.Root class='min-w-80'>
   <Card.Content>
     <ContextMenu.Root>
-      <ContextMenu.Trigger>
+      <ContextMenu.Trigger class='relative overflow-visible'>
+        <ShuffleIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
         <div class='flex'>
-          <ShuffleIcon />
           <Separator orientation='vertical' class='mx-1' />
           {#if rule.duplicate}
             <CopyCheckIcon />

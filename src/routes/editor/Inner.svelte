@@ -14,7 +14,7 @@
   import { getLocalStorageOrDefault } from '$lib/local-storage';
   import { setSlots } from '$lib/stores/index.svelte';
   import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
-  import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
+  import { SquareMenuIcon } from '@lucide/svelte';
   import { EditorTracker } from './Tracker.svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
@@ -57,18 +57,16 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex mx-4'>
-  <Card.Root class='container w-2/3 select-none h-[90dvh]'>
-    <div class='flex items-center my-2'>
-      <h2 class='text-2xl'>Rules</h2>
-      <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
-    </div>
-    <ScrollArea class='h-[70dvh]' orientation='both'>
-      {#each rules as _, i}
-        <RuleNode bind:rule={rules[i]} remove_rule={() => {
-          rules = rules.filter((_, j) => i !== j);
-        }} />
-      {/each}
+<div class='flex'>
+  <Card.Root class='w-2/3 select-none'>
+    <ScrollArea orientation='both'>
+      <div class='w-full h-full p-6 flex flex-col gap-4'>
+        {#each rules as _, i}
+          <RuleNode bind:rule={rules[i]} remove_rule={() => {
+            rules = rules.filter((_, j) => i !== j);
+          }} />
+        {/each}
+      </div>
     </ScrollArea>
   </Card.Root>
 

@@ -13,11 +13,11 @@
 </script>
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger>
+  <ContextMenu.Trigger class='relative overflow-visible'>
+    <ChevronsUpIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <Card.Root class='min-w-80'>
       <Card.Content>
         <div class='flex'>
-          <ChevronsUpIcon />
           <p>{content?.title || 'Loading...'}</p>
           <Separator orientation='vertical' class='mx-1' />
           <p>{rule.range_start}s - {rule.range_end}s</p>

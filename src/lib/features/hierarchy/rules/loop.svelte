@@ -18,9 +18,9 @@
 <Card.Root class='min-w-80'>
   <Card.Content>
     <ContextMenu.Root>
-      <ContextMenu.Trigger>
+      <ContextMenu.Trigger class='relative overflow-visible'>
+        <RepeatIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
         <div class='flex'>
-          <RepeatIcon />
           <p class='mx-1'>{rule.times}</p>
           <button onclick={() => open = true} class='flex ml-8'><ListPlusIcon />Add Rule</button>
         </div>

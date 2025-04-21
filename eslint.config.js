@@ -5,6 +5,7 @@ export default antfu({
     'src-tauri',
     'package-json.json',
     'bun.lock',
+    'components.json',
     'src/lib/components/ui',
     'src/lib/hooks',
     'src/static/',

@@ -29,12 +29,12 @@ ts-bind = { workspace = true, optional = true }
 [features]
 default = []
 ts = [
-    "dep:ts-bind",
-    "dep:ts-rs",
-    "improvie-logic/ts",
-    "improvie-app/ts",
-    "youtube/ts",
-    "uid/ts",
+  "dep:ts-bind",
+  "dep:ts-rs",
+  "improvie-logic/ts",
+  "improvie-app/ts",
+  "youtube/ts",
+  "uid/ts",
 ]
 static-ffmpeg = ["youtube/static-ffmpeg"]
 build-ffmpeg = ["youtube/build-ffmpeg"]

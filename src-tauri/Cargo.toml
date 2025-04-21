@@ -41,18 +41,18 @@ tauri-plugin-log = "=2.4.0"
 
 [workspace]
 members = [
-    ".",
-    "improvie-infra",
-    "improvie-domain",
-    "improvie-command",
-    "improvie-logic",
-    "improvie-app",
-    "addtional/improvie-plugin",
-    "addtional/improvie-builtin",
-    "addtional/uid",
-    "addtional/ts-bind",
-    "addtional/youtube",
-    "prebuild",
+  ".",
+  "improvie-infra",
+  "improvie-domain",
+  "improvie-command",
+  "improvie-logic",
+  "improvie-app",
+  "addtional/improvie-plugin",
+  "addtional/improvie-builtin",
+  "addtional/uid",
+  "addtional/ts-bind",
+  "addtional/youtube",
+  "prebuild",
 ]
 resolver = "3"
 
@@ -78,8 +78,8 @@ youtube = { path = "addtional/youtube" }
 
 # tauri
 tauri = { version = "=2.5.0", features = [
-    "protocol-asset",
-    "macos-private-api",
+  "protocol-asset",
+  "macos-private-api",
 ] }
 tauri-plugin-dialog = "=2.2.1"
 
@@ -87,9 +87,9 @@ tauri-plugin-dialog = "=2.2.1"
 tokio = { version = "=1.44.2", features = ["full"] }
 async-trait = "=0.1"
 reqwest = { version = "=0.12.15", default-features = false, features = [
-    "json",
-    "stream",
-    "rustls-tls",
+  "json",
+  "stream",
+  "rustls-tls",
 ] }
 futures-util = "=0.3.31"
 
@@ -114,10 +114,10 @@ seq-macro = "=0.3.6"
 # others
 log = "=0.4.27"
 sqlx = { version = "=0.8.5", features = [
-    "sqlite",
-    "tls-rustls",
-    "runtime-tokio",
-    "chrono",
+  "sqlite",
+  "tls-rustls",
+  "runtime-tokio",
+  "chrono",
 ] }
 
 [workspace.lints.rust]

@@ -9,10 +9,10 @@ ts = ["dep:ts-bind", "dep:ts-rs"]
 
 [dependencies]
 uuid = { version = "=1.16.0", features = [
-    "v7",
-    "fast-rng",
-    "macro-diagnostics",
-    "serde",
+  "v7",
+  "fast-rng",
+  "macro-diagnostics",
+  "serde",
 ] }
 sqlx = { workspace = true, features = ["uuid"] }
 serde.workspace = true

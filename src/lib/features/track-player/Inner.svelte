@@ -117,7 +117,7 @@
   {#if !disable_audio}
     <audio autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} src={content_path}></audio>
   {/if}
-  <Slider class='absolute -translate-y-1/2 left-0 mx-2' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
+  <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between gap-2'>
     <div class='ml-6 gap-4 flex items-center'>
       {#if is_playlist}

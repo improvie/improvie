@@ -6,14 +6,24 @@
   import { contents } from '$lib/stores/items/content';
   import { ChevronsUpIcon } from '@lucide/svelte';
 
-  let { rule = $bindable(), remove_rule }: { rule: RangeRule; remove_rule: () => void } = $props();
+  let {
+    rule = $bindable(),
+    remove_rule,
+    dep,
+  }: {
+    rule: RangeRule;
+    remove_rule: () => void;
+    dep: number;
+  } = $props();
   const content = $derived.by(() => {
     return $contents.get(rule.content_id);
   });
 </script>
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger class='relative overflow-visible'>
+  <ContextMenu.Trigger class='relative overflow-visible' style={{
+    'z-index': dep,
+  }} oncontextmenu={e => e.stopPropagation()}>
     <ChevronsUpIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <Card.Root class='min-w-80'>
       <Card.Content>

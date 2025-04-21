@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { Rule } from '$bindings/Rule';
+  import type { RuleType } from '$bindings/Rule';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
@@ -7,7 +7,7 @@
   import RuleRandomForm from '$lib/features/form/rules/RuleRandomForm.svelte';
   // import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
 
-  let { add_rule, open = $bindable() }: { add_rule: (new_rule: Rule) => void; open: boolean } = $props();
+  let { add_rule, open = $bindable() }: { add_rule: (new_rule: RuleType) => void; open: boolean } = $props();
 
 </script>
 

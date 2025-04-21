@@ -8,13 +8,14 @@
   import { action_update_rules } from '$lib/action/rules';
   import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';
+  import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { getLocalStorageOrDefault } from '$lib/local-storage';
   import { setSlots } from '$lib/stores/index.svelte';
   import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
-  import { SquareMenuIcon } from '@lucide/svelte';
+  import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
   import { EditorTracker } from './Tracker.svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
@@ -58,13 +59,29 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <div class='flex'>
-  <Card.Root class='w-2/3 select-none'>
-    <ScrollArea orientation='both'>
-      <div class='w-full h-full p-6 flex flex-col gap-4'>
+  <Card.Root class='w-2/3 select-none z-0'>
+    <ScrollArea orientation='both' class='relative w-full h-full'>
+      <ContextMenu.Root>
+        <ContextMenu.Trigger class='absolute w-full h-full z-[1]'>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item onclick={() => {
+            open = true;
+          }} class='flex items-center'>
+            <ListPlusIcon class='mr-2 size-4' />Add Rule
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
+
+      <div class='absolute w-full flex flex-col gap-4 p-6'>
         {#each rules as _, i}
-          <RuleNode bind:rule={rules[i]} remove_rule={() => {
+          <RuleNode dep={2} bind:rule={rules[i]} remove_rule={() => {
             rules = rules.filter((_, j) => i !== j);
           }} />
+        {:else}
+          <div class='flex items-center justify-center w-full h-full'>
+            <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
+          </div>
         {/each}
       </div>
     </ScrollArea>

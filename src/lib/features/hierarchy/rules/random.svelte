@@ -42,7 +42,7 @@
         <RepeatIcon />
         <p class='mx-1'>{rule.times}</p>
       </div>
-      <div class='p-4 flex flex-col gap-4'>
+      <div class='p-4 flex flex-col gap-6'>
         {#each rule.rules as _, i}
           <RuleNode dep={dep + 1} bind:rule={rule.rules[i][0]} remove_rule={() => {
             rule.rules = rule.rules.filter((_, j) => i !== j);

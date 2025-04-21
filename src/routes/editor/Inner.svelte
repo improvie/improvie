@@ -73,7 +73,7 @@
         </ContextMenu.Content>
       </ContextMenu.Root>
 
-      <div class='absolute w-full flex flex-col gap-4 p-6'>
+      <div class='absolute w-full flex flex-col gap-6 p-6'>
         {#each rules as _, i}
           <RuleNode dep={2} bind:rule={rules[i]} remove_rule={() => {
             rules = rules.filter((_, j) => i !== j);

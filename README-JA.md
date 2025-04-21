@@ -8,6 +8,8 @@
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
 [![Stars](https://img.shields.io/github/stars/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/stargazers)
 
+[English](./README.md) | 日本語
+
 </div>
 
 `improvie` は [Tauri](https://tauri.app/) で構築された軽量デスクトップアプリケーションで、ローカルビデオやオーディオファイルを簡単に管理できます。メディアの閲覧、カスタムプレイリストの作成、スムーズな再生を、クリーンで直感的なインターフェイスで実現します。

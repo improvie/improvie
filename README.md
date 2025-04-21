@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
 [![Stars](https://img.shields.io/github/stars/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/stargazers)
 
-[English](./README.md) | [日本語](README-JA.md)
+English | [日本語](./README-JA.md)
 
 </div>
 

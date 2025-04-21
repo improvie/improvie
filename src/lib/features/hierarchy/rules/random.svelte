@@ -4,7 +4,7 @@
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { Separator } from '$lib/components/ui/separator';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon } from '@lucide/svelte';
+  import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon, TrashIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let {
@@ -33,7 +33,6 @@
     <ShuffleIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <Card.Root class='min-w-80'>
       <div class='flex'>
-        <Separator orientation='vertical' class='mx-1' />
         {#if rule.duplicate}
           <CopyCheckIcon />
         {:else}
@@ -42,7 +41,6 @@
         <Separator orientation='vertical' class='mx-1' />
         <RepeatIcon />
         <p class='mx-1'>{rule.times}</p>
-        <button onclick={() => open = true} class='flex ml-8'><ListPlusIcon />Add Rule</button>
       </div>
       <div class='p-4 flex flex-col gap-4'>
         {#each rule.rules as _, i}
@@ -54,6 +52,11 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item onclick={remove_rule}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+    <ContextMenu.Item onclick={() => open = true}>
+      <ListPlusIcon />Add Rule
+    </ContextMenu.Item>
+    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
+      <TrashIcon />Remove
+    </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

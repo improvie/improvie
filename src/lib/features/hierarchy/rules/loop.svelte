@@ -3,7 +3,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
+  import { ListPlusIcon, RepeatIcon, TrashIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let {
@@ -31,7 +31,6 @@
     <Card.Root class='min-w-80'>
       <div class='flex'>
         <p class='mx-1'>{rule.times}</p>
-        <button onclick={() => open = true} class='flex ml-8'><ListPlusIcon />Add Rule</button>
       </div>
       <div class='p-4 flex flex-col gap-4'>
         {#each rule.rules as _, i}
@@ -43,6 +42,11 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item onclick={remove_rule}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+    <ContextMenu.Item onclick={() => open = true}>
+      <ListPlusIcon />Add Rule
+    </ContextMenu.Item>
+    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
+      <TrashIcon />Remove
+    </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

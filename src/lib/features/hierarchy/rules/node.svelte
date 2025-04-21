@@ -2,7 +2,13 @@
   import type { RuleType } from '$bindings/Rule';
   import { ContentRuleNode, LoopRuleNode, RandomRuleNode, RangeRuleNode } from '.';
 
-  let { rule = $bindable(), remove_rule }: { rule: RuleType; remove_rule: () => void } = $props();
+  let {
+    rule = $bindable(),
+    remove_rule,
+  }: {
+    rule: RuleType;
+    remove_rule: () => void;
+  } = $props();
 </script>
 
 {#if rule.type === 'Content'}

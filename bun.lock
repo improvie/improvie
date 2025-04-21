@@ -4,7 +4,7 @@
     "": {
       "name": "improvie",
       "dependencies": {
-        "@lucide/svelte": "^0.493.0",
+        "@lucide/svelte": "^0.501.0",
         "@tauri-apps/api": "^2.5.0",
         "@tauri-apps/plugin-log": "~2.4.0",
         "@tauri-apps/plugin-window-state": "~2.2.2",
@@ -190,7 +190,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
 
-    "@lucide/svelte": ["@lucide/svelte@0.493.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-qDpQck1XhtU2GA3UD8uwAD/nDqeUXNuO/9vS9hqxWtl98LKbhTFoL/FsxaVpGuIgbdjMiW815O86wXZRaYM+sA=="],
+    "@lucide/svelte": ["@lucide/svelte@0.501.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-W3YWDyANY+Gi1wzf4JKK5bRYGqRQFAIDbNmMR1ujZ/TR+/jT+8rj9txn5XEuxygYn0ioEw5EcaVewDWSUOU/bg=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.8", "", { "dependencies": { "@emnapi/core": "^1.4.0", "@emnapi/runtime": "^1.4.0", "@tybys/wasm-util": "^0.9.0" } }, "sha512-OBlgKdX7gin7OIq4fadsjpg+cp2ZphvAIKucHsNfTdJiqdOmOEwQd/bHi0VwNrcw5xpBJyUw6cK/QilCqy1BSg=="],
 

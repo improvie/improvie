@@ -8,6 +8,7 @@
   import { action_update_rules } from '$lib/action/rules';
   import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card/index.js';
+  import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
@@ -57,18 +58,32 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex mx-4'>
-  <Card.Root class='container w-2/3 select-none h-[90dvh]'>
-    <div class='flex items-center my-2'>
-      <h2 class='text-2xl'>Rules</h2>
-      <button onclick={() => open = true} class='flex ml-4'><ListPlusIcon /> Add Rule</button>
-    </div>
-    <ScrollArea class='h-[70dvh]' orientation='both'>
-      {#each rules as _, i}
-        <RuleNode bind:rule={rules[i]} remove_rule={() => {
-          rules = rules.filter((_, j) => i !== j);
-        }} />
-      {/each}
+<div class='flex'>
+  <Card.Root class='w-2/3 select-none z-0'>
+    <ScrollArea orientation='both' class='w-full h-dvh relative'>
+      <ContextMenu.Root>
+        <ContextMenu.Trigger>
+          <div class='w-full flex flex-col gap-6 p-6'>
+            {#each rules as _, i}
+              <RuleNode bind:rule={rules[i]} remove_rule={() => {
+                rules = rules.filter((_, j) => i !== j);
+              }} />
+            {:else}
+              <div class='flex items-center justify-center w-full h-full'>
+                <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
+              </div>
+            {/each}
+          </div>
+          <div class='min-h-80'></div>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item onclick={() => {
+            open = true;
+          }} class='flex items-center'>
+            <ListPlusIcon class='mr-2 size-4' />Add Rule
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
     </ScrollArea>
   </Card.Root>
 

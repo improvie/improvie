@@ -16,7 +16,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@lucide/svelte": "^0.493.0",
+    "@lucide/svelte": "^0.501.0",
     "@tauri-apps/api": "^2.5.0",
     "@tauri-apps/plugin-log": "~2.4.0",
     "@tauri-apps/plugin-window-state": "~2.2.2",

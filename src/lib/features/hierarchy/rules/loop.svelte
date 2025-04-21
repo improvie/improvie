@@ -3,10 +3,16 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
+  import { ListPlusIcon, RepeatIcon, TrashIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
-  let { rule = $bindable(), remove_rule }: { rule: LoopRule; remove_rule: () => void } = $props();
+  let {
+    rule = $bindable(),
+    remove_rule,
+  }: {
+    rule: LoopRule;
+    remove_rule: () => void;
+  } = $props();
   let open = $state(false);
   function add_rule(new_rule: RuleType) {
     rule.rules.push(new_rule);
@@ -15,26 +21,26 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<Card.Root class='min-w-80'>
-  <Card.Content>
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>
-        <div class='flex'>
-          <RepeatIcon />
-          <p class='mx-1'>{rule.times}</p>
-          <button onclick={() => open = true} class='flex ml-8'><ListPlusIcon />Add Rule</button>
-        </div>
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item onclick={remove_rule}><p class='text-destructive'>Remove</p></ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-    <div>
+<ContextMenu.Root>
+  <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
+    <RepeatIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
+    <div class='absolute flex -translate-y-1/2 left-6'>
+      <p>{rule.times}</p>
+    </div>
+    <Card.Root class='min-w-80 px-4 py-8 flex flex-col gap-6'>
       {#each rule.rules as _, i}
         <RuleNode bind:rule={rule.rules[i]} remove_rule={() => {
           rule.rules = rule.rules.filter((_, j) => i !== j);
         }} />
       {/each}
-    </div>
-  </Card.Content>
-</Card.Root>
+    </Card.Root>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item onclick={() => open = true}>
+      <ListPlusIcon />Add Rule
+    </ContextMenu.Item>
+    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
+      <TrashIcon />Remove
+    </ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>

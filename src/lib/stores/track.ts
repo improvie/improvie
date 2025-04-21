@@ -15,6 +15,10 @@ export const current_rule_formats = writable<CurrentRule | undefined>(undefined)
 // $current_rules = rules; を一緒に実行してください
 export async function set_current_rules(rules: RuleType[]) {
   const res = await action_get_rules_format(rules);
+  if (res.length === 0) {
+    clear_track();
+    return;
+  }
   current_rule_formats.set(
     {
       rules: res,

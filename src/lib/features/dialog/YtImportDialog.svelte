@@ -119,6 +119,8 @@
     }];
   }
 
+// TODO: fix style on playlsit, and write test
+
 </script>
 
 <Dialog.Root bind:open>
@@ -128,8 +130,8 @@
         <Dialog.Title>Downloading...</Dialog.Title>
       </Dialog.Header>
       <div class='grid gap-4 py-4'>
-        <div class='flex flex-col items-center justify-between gap-4'>
-          {#each download_state as { index: _, state }}
+        {#each download_state as { index: _, state }}
+          <div class='flex flex-col items-center justify-between '>
             <p>Downloaded: {state.downloaded_mb}MB / {state.total_mb}MB</p>
             {#if state.total_mb === 0n}
               <p class='text-muted-foreground'>Fetching video info. Please wait.</p>
@@ -140,8 +142,8 @@
               max={100}
               class='w-full'
             />
-          {/each}
-        </div>
+          </div>
+        {/each}
       </div>
     {:else}
       <form method='POST' use:enhance onsubmit={handleSubmit}>

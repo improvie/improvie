@@ -10,7 +10,7 @@
    アプリケーションの問題を見つけた場合は、[GitHub Issues](https://github.com/improvie/improvie/issues) に報告してください。
 
 2. **機能提案**
-   新しい機能や改善案がある場合は、[GitHub Discussions](https://github.com/improvie/improvie/discussions) で提案してください。
+   新しい機能や改善案がある場合は、[GitHub Issues](https://github.com/improvie/improvie/issues) で提案してください。
 
 3. **コードの改善**
    バグ修正や新機能の実装を行い、プルリクエストを送信してください。
@@ -30,7 +30,7 @@
   変更をプッシュする前に、すべてのテストが成功することを確認してください。
 
   ```bash
-  cargo test --workspace (--all-features はつけないでください)
+  cargo ci
   ```
 
 ## 📜 ライセンス

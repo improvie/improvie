@@ -1,15 +1,30 @@
 name: ✨ Feature Request
-description: Propose new features or improvements.
+description: Suggest a new feature or improvement for the application.
 title: "[FEATURE] "
 labels: [enhancement]
+assignees: moriyoshi-kasuga
 body:
-  - type: textarea
-    id: feature
+  - type: checkboxes
+    id: duplicate
     attributes:
-      label: Feature
-      description: Please provide a description of the feature.
+      label: Search for Existing Feature Requests
+      description: Please confirm that you’ve checked for similar feature requests before creating a new one.
+      options:
+        - label: I have searched for similar requests and didn’t find any matches.
+          required: true
+
   - type: textarea
-    id: benefits
+    id: problem
     attributes:
-      label: Benefits
-      description: Explain how this feature will be beneficial.
+      label: Is your feature request related to a problem?
+      description: If this feature request is related to a specific problem or inconvenience, please describe it clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you’d like to see
+      description: Clearly describe the feature or improvement you’d like to suggest.
+    validations:
+      required: true

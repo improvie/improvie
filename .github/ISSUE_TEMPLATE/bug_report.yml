@@ -1,10 +1,58 @@
 name: 🐛 Bug Report
-description: Please report any issues with the application.
+description: Report an issue or unexpected behavior with the application.
 title: "[BUG] "
 labels: [bug]
+assignees: moriyoshi-kasuga
 body:
-  - type: textarea
-    id: bug
+  - type: checkboxes
+    id: duplicate
     attributes:
-      label: Bug
-      description: Please provide a description of the bug. (e.g. steps to reproduce, expected behavior, actual behavior)
+      label: Prior Issue Search
+      description: Please confirm that you’ve checked for existing issues before reporting a new one.
+      options:
+        - label: I have searched for existing issues and couldn’t find a match.
+          required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you using? (e.g. Windows 11, macOS Ventura, Ubuntu 22.04)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Application Version
+      description: Which version of the app are you using? (e.g. 1.0.0)
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What Happened?
+      description: Please describe the issue clearly and concisely.
+    validations:
+      required: true
+
+  - type: textarea
+    id: to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide detailed steps to reproduce the issue.
+      placeholder: |
+        1. Open the app
+        2. Click on 'X'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true

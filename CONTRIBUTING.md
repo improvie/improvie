@@ -10,7 +10,7 @@ You can contribute to the project in the following ways:
    If you find any issues with the application, please report them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 2. **Feature Suggestions**
-   If you have ideas for new features or improvements, please propose them on [GitHub Discussions](https://github.com/improvie/improvie/discussions).
+   If you have ideas for new features or improvements, please propose them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 3. **Code Improvements**
    Fix bugs or implement new features and submit a pull request.
@@ -30,7 +30,7 @@ You can contribute to the project in the following ways:
   Ensure all tests pass before pushing your changes.
 
   ```bash
-  cargo test --workspace (do not use --all-features)
+  cargo ci
   ```
 
 ## 📜 License

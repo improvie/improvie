@@ -53,7 +53,7 @@ jobs:
       - name: Run tests
         run: |
           cd src-tauri
-          cargo test --workspace --features run-test
+          cargo ci
 
       - name: Check ts-binding diff
         run: |

@@ -10,7 +10,7 @@ You can contribute to the project in the following ways:
    If you find any issues with the application, please report them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 2. **Feature Suggestions**
-   If you have ideas for new features or improvements, please propose them on [GitHub Discussions](https://github.com/improvie/improvie/discussions).
+   If you have ideas for new features or improvements, please propose them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 3. **Code Improvements**
    Fix bugs or implement new features and submit a pull request.
@@ -21,16 +21,20 @@ You can contribute to the project in the following ways:
 5. **Adding Tests**
    Add test cases to improve the quality of the application.
 
-## 🧪 Code Style and Testing
+## 🧪 Coding Guidelines
 
-- **Code Style**
-  Follow the project's code style. It is recommended to use formatters and linters.
+- **Code Style**  
+  Please follow the project's coding style. It is recommended to use formatters and linters such as `cargo fmt` and `cargo clippy`.
 
-- **Testing**
-  Ensure all tests pass before pushing your changes.
+- **Documentation**  
+  When adding new features or changing existing functionality, be sure to update or add relevant documentation.
+
+- **Testing**  
+  When modifying existing code or adding new features, add or update tests as needed.  
+  Before pushing changes, make sure all tests pass:
 
   ```bash
-  cargo test --workspace (do not use --all-features)
+  cargo ci
   ```
 
 ## 📜 License

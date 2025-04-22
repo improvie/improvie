@@ -1,9 +1,11 @@
 <script lang='ts'>
   import type { LoopRule, RuleType } from '$bindings/Rule';
+  import RemoveElement from '$lib/components/element/RemoveElement.svelte';
+  import RenameElement from '$lib/components/element/RenameElement.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { ListPlusIcon, RepeatIcon, TrashIcon } from '@lucide/svelte';
+  import { RepeatIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let {
@@ -37,10 +39,10 @@
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => open = true}>
-      <ListPlusIcon />Add Rule
+      <RenameElement />
     </ContextMenu.Item>
-    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
-      <TrashIcon />Remove
+    <ContextMenu.Item onclick={remove_rule}>
+      <RemoveElement />
     </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

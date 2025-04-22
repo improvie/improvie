@@ -1,10 +1,11 @@
 <script lang='ts'>
   import type { RangeRule } from '$bindings/Rule';
+  import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { contents } from '$lib/stores/items/content';
-  import { ChevronsUpIcon, TrashIcon } from '@lucide/svelte';
+  import { ChevronsUpIcon } from '@lucide/svelte';
 
   let {
     rule = $bindable(),
@@ -32,8 +33,8 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
-      <TrashIcon />Remove
+    <ContextMenu.Item onclick={remove_rule}>
+      <RemoveElement />
     </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

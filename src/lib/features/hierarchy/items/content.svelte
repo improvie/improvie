@@ -1,4 +1,6 @@
 <script lang='ts'>
+  import RemoveElement from '$lib/components/element/RemoveElement.svelte';
+  import RenameElement from '$lib/components/element/RenameElement.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
@@ -64,9 +66,13 @@
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>
-      <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>
+      <ContextMenu.Item onclick={rename}>
+        <RenameElement />
+      </ContextMenu.Item>
       <ContextMenu.Separator />
-      <ContextMenu.Item onclick={delete_item}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+      <ContextMenu.Item onclick={delete_item}>
+        <RemoveElement />
+      </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>
 {/if}

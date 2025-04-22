@@ -50,7 +50,7 @@
     }}
     variant='ghost'
     size='icon'
-    class='mr-2'
+    class='mr-1'
   >
     <SquareMenuIcon />
   </Button>
@@ -79,8 +79,8 @@
         <ContextMenu.Content>
           <ContextMenu.Item onclick={() => {
             open = true;
-          }} class='flex items-center'>
-            <ListPlusIcon class='mr-2 size-4' />Add Rule
+          }}>
+            <ListPlusIcon class='mr-1' />Add Rule
           </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu.Root>

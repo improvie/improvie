@@ -1,10 +1,13 @@
 <script lang='ts'>
+  import RemoveElement from '$lib/components/element/RemoveElement.svelte';
+  import RenameElement from '$lib/components/element/RenameElement.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { select_playlist } from '$lib/stores/plays';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
+  import { StarIcon, StarOffIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let { playlist_id, rename_data = $bindable() }: {
@@ -71,14 +74,22 @@
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>
-      <ContextMenu.Item onclick={rename}>Rename</ContextMenu.Item>
+      <ContextMenu.Item onclick={rename}>
+        <RenameElement />
+      </ContextMenu.Item>
       {#if is_favorite}
-        <ContextMenu.Item onclick={() => removeFavoritePlaylist(playlist.id)}><p class='text-destructive'>Unfavorite</p></ContextMenu.Item>
+        <ContextMenu.Item onclick={() => removeFavoritePlaylist(playlist.id)} class='text-destructive'>
+          <StarOffIcon class='mr-1 size-4' />Unfavorite
+        </ContextMenu.Item>
       {:else}
-        <ContextMenu.Item onclick={() => addFavoritePlaylist(playlist.id)}>Favorite</ContextMenu.Item>
+        <ContextMenu.Item onclick={() => addFavoritePlaylist(playlist.id)}>
+          <StarIcon class='mr-1 size-4' />Favorite
+        </ContextMenu.Item>
       {/if}
       <ContextMenu.Separator />
-      <ContextMenu.Item onclick={delete_item}><p class='text-destructive'>Remove</p></ContextMenu.Item>
+      <ContextMenu.Item onclick={delete_item}>
+        <RemoveElement />
+      </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>
 {/if}

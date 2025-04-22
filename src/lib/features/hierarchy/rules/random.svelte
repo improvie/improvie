@@ -1,10 +1,12 @@
 <script lang='ts'>
   import type { RandomRule, RuleType } from '$bindings/Rule';
+  import RemoveElement from '$lib/components/element/RemoveElement.svelte';
+  import RenameElement from '$lib/components/element/RenameElement.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { Separator } from '$lib/components/ui/separator';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon, TrashIcon } from '@lucide/svelte';
+  import { CopyCheckIcon, CopyMinusIcon, RepeatIcon, ShuffleIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let {
@@ -47,10 +49,10 @@
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => open = true}>
-      <ListPlusIcon />Add Rule
+      <RenameElement />
     </ContextMenu.Item>
-    <ContextMenu.Item onclick={remove_rule} class='text-destructive'>
-      <TrashIcon />Remove
+    <ContextMenu.Item onclick={remove_rule}>
+      <RemoveElement />
     </ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>

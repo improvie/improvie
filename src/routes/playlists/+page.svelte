@@ -40,12 +40,12 @@
       <ContextMenu.Item onclick={() => {
         is_open_create_playlist = true;
       }} class='flex items-center'>
-        <CirclePlusIcon class='mr-2 size-4' />Add Playlsit
+        <CirclePlusIcon class='mr-1 size-4' />Add Playlsit
       </ContextMenu.Item>
       <ContextMenu.Item onclick={() => {
         is_open_create_play_folder = true;
       }} class='flex items-center'>
-        <FolderIcon class='mr-2 size-4' />Add Folder
+        <FolderIcon class='mr-1 size-4' />Add Folder
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>

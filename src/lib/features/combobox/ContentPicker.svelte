@@ -64,7 +64,7 @@
         >
           <Check
             class={cn(
-              'mr-2 size-4',
+              'mr-1 size-4',
               content?.id !== item.id && 'text-transparent',
             )}
           />

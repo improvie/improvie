@@ -1477,7 +1477,7 @@ dependencies = [
 [[package]]
 name = "ffmpeg-sys-next"
 version = "7.1.0"
-source = "git+https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git#8dcd573f840945dcce620de5259485d355bcfb93"
+source = "git+https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git#73be45bf6248a6b25528d26f2b4ccefaa85d9a26"
 dependencies = [
  "bindgen",
  "cc",
@@ -4818,9 +4818,9 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "signal-hook-registry"
-version = "1.4.4"
+version = "1.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1ee1aca2bc74ef9589efa7ccaa0f3752751399940356209b3fd80c078149b5e"
+checksum = "9203b8055f63a2a00e2f593bb0510367fe707d7ff1e5c872de2f537b339e5410"
 dependencies = [
  "libc",
 ]

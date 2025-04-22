@@ -23,14 +23,14 @@ You can contribute to the project in the following ways:
 
 ## 🧪 Coding Guidelines
 
-- **Code Style**  
+- **Code Style**
   Please follow the project's coding style. It is recommended to use formatters and linters such as `cargo fmt` and `cargo clippy`.
 
-- **Documentation**  
+- **Documentation**
   When adding new features or changing existing functionality, be sure to update or add relevant documentation.
 
-- **Testing**  
-  When modifying existing code or adding new features, add or update tests as needed.  
+- **Testing**
+  When modifying existing code or adding new features, add or update tests as needed.
   Before pushing changes, make sure all tests pass:
 
   ```bash

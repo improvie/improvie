@@ -1,19 +1,15 @@
 # Pull Request
 
+Please follow our [Coding Guidelines](https://github.com/improvie/improvie/blob/develop/CONTRIBUTING.md#-code-style-and-testing).
+
 ## 📄 Overview
 
-Please briefly describe the purpose and changes of this PR.
-
-## ✅ Checklist
-
-- [ ] I have confirmed that the code works correctly.
-- [ ] I have added or updated necessary tests.
-- [ ] I have updated the documentation (if necessary).
+Briefly describe the purpose and changes of this PR.
 
 ## 🔗 Related Issue
 
-Please list related issue numbers (e.g., `#123`).
+List related issue numbers (e.g., `#123`).
 
 ## 💬 Additional Comments
 
-Please provide any additional information or notes.
+Any additional information or notes.

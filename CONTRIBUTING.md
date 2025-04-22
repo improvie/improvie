@@ -21,13 +21,17 @@ You can contribute to the project in the following ways:
 5. **Adding Tests**
    Add test cases to improve the quality of the application.
 
-## 🧪 Code Style and Testing
+## 🧪 Coding Guidelines
 
-- **Code Style**
-  Follow the project's code style. It is recommended to use formatters and linters.
+- **Code Style**  
+  Please follow the project's coding style. It is recommended to use formatters and linters such as `cargo fmt` and `cargo clippy`.
 
-- **Testing**
-  Ensure all tests pass before pushing your changes.
+- **Documentation**  
+  When adding new features or changing existing functionality, be sure to update or add relevant documentation.
+
+- **Testing**  
+  When modifying existing code or adding new features, add or update tests as needed.  
+  Before pushing changes, make sure all tests pass:
 
   ```bash
   cargo ci

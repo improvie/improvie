@@ -64,18 +64,20 @@
 
 </script>
 
-<Card.Root class={cn('sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
+<div class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
   <TrackExternalContent
     bind:content={track}
     bind:duration
     bind:disable_audio
     onended={onended}
   />
-</Card.Root>
+</div>
 
 <Card.Root class='sticky bottom-0 h-20 z-40 rounded-none'>
   {#if !disable_audio}
-    <audio autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} src={content_path}></audio>
+    {#key tracker.track_version}
+      <audio autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} src={content_path}></audio>
+    {/key}
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between gap-2'>

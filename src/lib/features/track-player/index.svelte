@@ -4,8 +4,7 @@
 
   let track = $derived(tracker.get_current_content());
 </script>
+
 {#if track}
-  {#key track}
-    <Inner bind:track />
-  {/key}
+  <Inner bind:track />
 {/if}

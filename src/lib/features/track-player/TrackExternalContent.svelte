@@ -69,10 +69,12 @@
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
     {#if disable_audio}
-      <video playsinline autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={tracker.toggle_pause}>
-        <source src={content_path} />
-        <track kind='captions' />
-      </video>
+      {#key tracker.track_version}
+        <video playsinline autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={tracker.toggle_pause}>
+          <source src={content_path} />
+          <track kind='captions' />
+        </video>
+      {/key}
     {/if}
   </Tabs.Content>
 </Tabs.Root>

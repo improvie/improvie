@@ -15,6 +15,7 @@
   import { getLocalStorageOrDefault } from '$lib/local-storage';
   import { setSlots } from '$lib/stores/index.svelte';
   import { tracker } from '$lib/stores/tracker.svelte';
+  import { cn } from '$lib/utils';
   import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
   import { EditorTracker } from './Tracker.svelte';
 
@@ -53,7 +54,7 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <div class='flex'>
-  <Card.Root class='w-2/3 select-none z-0'>
+  <Card.Root class={cn('w-full select-none z-0', open && 'sm:w-2/3')}>
     <ScrollArea orientation='both' class='w-full h-dvh relative'>
       <ContextMenu.Root>
         <ContextMenu.Trigger>

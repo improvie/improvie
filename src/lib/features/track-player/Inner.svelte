@@ -80,8 +80,8 @@
     {/key}
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='w-full h-full flex justify-between gap-2'>
-    <div class='ml-6 gap-4 flex items-center'>
+  <div class='w-full h-full flex justify-between gap-1'>
+    <div class='ml-6 gap-2 flex items-center'>
       {#if is_playlist}
         <IconButton onclick={() => {
           tracker.previous();
@@ -118,7 +118,7 @@
       {/if}
       <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
-    <div class='gap-4 items-center h-full hidden sm:flex py-4'>
+    <div class='gap-2 items-center h-full hidden sm:flex py-4'>
       {#if thumbnail_path}
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
@@ -126,7 +126,7 @@
         <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track.title}</p>
       </div>
     </div>
-    <div class='gap-4 flex items-center mr-6'>
+    <div class='gap-2 flex items-center mr-6'>
       <Tooltip.Root>
         <Tooltip.Trigger>
           {#if tracker.volume === 0}

@@ -29,7 +29,7 @@
     <div class='absolute flex -translate-y-1/2 left-6'>
       <p>{rule.times}</p>
     </div>
-    <Card.Root class='min-w-80 px-4 py-8 flex flex-col gap-6'>
+    <Card.Root class='min-w-48 sm:min-w-80  px-4 py-8 flex flex-col gap-6'>
       {#each rule.rules as _, i}
         <RuleNode bind:rule={rule.rules[i]} remove_rule={() => {
           rule.rules = rule.rules.filter((_, j) => i !== j);

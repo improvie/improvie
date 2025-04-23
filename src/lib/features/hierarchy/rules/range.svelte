@@ -22,7 +22,7 @@
 <ContextMenu.Root>
   <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
     <ChevronsUpIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
-    <Card.Root class='min-w-80'>
+    <Card.Root class='min-w-48 sm:min-w-80'>
       <Card.Content>
         <div class='flex'>
           <p>{content?.title || 'Loading...'}</p>

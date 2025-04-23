@@ -30,7 +30,7 @@
   },
   "bundle": {
     "active": true,
-    "shortDescription": "A Tauri app to 'improve like movie' — helping you organize local media and create playlists easily.",
+    "shortDescription": "A Tauri app to 'improve like the movie' — helping you organize local media and create playlists easily.",
     "copyright": "Copyright © 2025 improvie",
     "license": "Apache-2.0",
     "licenseFile": "LICENSE",

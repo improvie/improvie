@@ -11,20 +11,24 @@ import { folders } from './folder';
 
 export const current_folder_ids: Writable<string[]> = writable([UUID_NIL]);
 
-export const folder_nodes: Writable<SvelteMap<string, FolderNode>> = writable(new SvelteMap());
+export const folder_nodes: SvelteMap<string, FolderNode> = new SvelteMap();
 
 export function init_items() {
   action_get_items_hierarchy(UUID_NIL).then((v) => {
-    folder_nodes.set(v);
+    v.forEach((obj) => {
+      folder_nodes.set(obj[0], obj[1]);
+    });
   });
 
   action_get_contents().then((v) => {
-    const b = v.map(obj => [obj.id, obj] as const);
-    contents.set(new SvelteMap(b));
+    v.forEach((obj) => {
+      contents.set(obj.id, obj);
+    });
   });
 
   action_get_folders().then((v) => {
-    const b = v.map(obj => [obj.id, obj] as const);
-    folders.set(new SvelteMap(b));
+    v.forEach((obj) => {
+      folders.set(obj.id, obj);
+    });
   });
 }

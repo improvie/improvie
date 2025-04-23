@@ -14,7 +14,7 @@
     remove_rule: () => void;
   } = $props();
   const content = $derived.by(() => {
-    return $contents.get(rule.content_id);
+    return contents.get(rule.content_id);
   });
 </script>
 

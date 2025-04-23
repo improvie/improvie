@@ -19,25 +19,29 @@ export function select_playlist(playlist_id: string) {
 
 export const current_play_folder_ids: Writable<string[]> = writable([UUID_NIL]);
 
-export const play_folder_nodes: Writable<SvelteMap<string, PlayFolderNode>> = writable(new SvelteMap());
+export const play_folder_nodes: SvelteMap<string, PlayFolderNode> = new SvelteMap();
 
 export function init_play_items() {
   action_get_plays_hierarchy(UUID_NIL).then((v) => {
-    play_folder_nodes.set(v);
+    v.forEach((obj) => {
+      play_folder_nodes.set(obj[0], obj[1]);
+    });
   }).catch((e) => {
     console.error(e);
   });
 
   action_get_playlists().then((v) => {
-    const b = v.map(obj => [obj.id, obj] as const);
-    playlists.set(new SvelteMap(b));
+    v.forEach((obj) => {
+      playlists.set(obj.id, obj);
+    });
   }).catch((e) => {
     console.error(e);
   });
 
   action_get_play_folders().then((v) => {
-    const b = v.map(obj => [obj.id, obj] as const);
-    play_folders.set(new SvelteMap(b));
+    v.forEach((obj) => {
+      play_folders.set(obj.id, obj);
+    });
   }).catch((e) => {
     console.error(e);
   });

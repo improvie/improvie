@@ -13,7 +13,7 @@
     rename_data: { now_name: string; update_fn: (name: string) => void } | undefined;
   } = $props();
 
-  const content = $derived.by(() => $contents.get(content_id));
+  const content = $derived(contents.get(content_id));
 
   function dblclick() {
     if (content !== undefined) {
@@ -28,10 +28,7 @@
       update_fn: (name: string) => {
         if (content !== undefined) {
           update_content_name(content.id, name);
-          contents.update((v) => {
-            v.set(content.id, { ...content, title: name });
-            return v;
-          });
+          contents.set(content.id, { ...content, title: name });
         }
       },
     };

@@ -15,7 +15,7 @@
     rename_data: { now_name: string; update_fn: (name: string) => void } | undefined;
   } = $props();
 
-  const playlist = $derived.by(() => $playlists.get(playlist_id));
+  const playlist = $derived(playlists.get(playlist_id));
 
   function rename() {
     rename_data = {
@@ -23,10 +23,7 @@
       update_fn: (name: string) => {
         if (playlist !== undefined) {
           update_playlist_name(playlist.id, name);
-          playlists.update((v) => {
-            v.set(playlist.id, { ...playlist, title: name });
-            return v;
-          });
+          playlists.set(playlist.id, { ...playlist, title: name });
         }
       },
     };

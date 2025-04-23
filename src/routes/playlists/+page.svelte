@@ -15,7 +15,7 @@
 
   const current_play_folder_id = $derived($current_play_folder_ids[$current_play_folder_ids.length - 1]);
   const node = $derived.by(() => {
-    const nodes = $play_folder_nodes.get(current_play_folder_id);
+    const nodes = play_folder_nodes.get(current_play_folder_id);
     if (!nodes) {
       return [];
     }

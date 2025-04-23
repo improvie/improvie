@@ -10,11 +10,11 @@
   let { content = $bindable(), open = $bindable() }: { content: PickItem | undefined; open: boolean } = $props();
 
   function get_content(id: string): PickItem[] {
-    const node = $folder_nodes.get(id);
+    const node = folder_nodes.get(id);
     if (!node) {
       return [];
     }
-    const folder = $folders.get(id);
+    const folder = folders.get(id);
     if (!folder) {
       return [];
     }
@@ -29,7 +29,7 @@
         items = items.concat(new_children);
       }
       else if (item.kind === 'Content') {
-        const content = $contents.get(item.id);
+        const content = contents.get(item.id);
         if (!content) {
           continue;
         }

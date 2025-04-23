@@ -12,7 +12,7 @@
   <Breadcrumb.List>
     {#each $current_play_folder_ids as folder_id}
       <Breadcrumb.Item>
-        {@const folder = $play_folders.get(folder_id)}
+        {@const folder = play_folders.get(folder_id)}
         {#if folder === undefined}
           <Breadcrumb.Ellipsis />
         {:else}

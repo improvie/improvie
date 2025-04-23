@@ -16,7 +16,7 @@
   const favorites = $derived.by(() => {
     return $favoritePlaylists
       .map((id) => {
-        return $playlists.get(id);
+        return playlists.get(id);
       })
       .filter(v => v !== undefined);
   });

@@ -18,7 +18,7 @@
 
   const current_folder_id = $derived($current_folder_ids[$current_folder_ids.length - 1]);
   const node = $derived.by(() => {
-    const nodes = $folder_nodes.get(current_folder_id);
+    const nodes = folder_nodes.get(current_folder_id);
     if (!nodes) {
       return [];
     }

@@ -7,7 +7,7 @@
     if ($current_track_id === undefined) {
       return undefined;
     }
-    return $contents.get($current_track_id);
+    return contents.get($current_track_id);
   });
 </script>
 {#if track}

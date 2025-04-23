@@ -9,7 +9,7 @@
 
   let { folder_id, rename_data = $bindable() }: { folder_id: string; rename_data: { now_name: string; update_fn: (name: string) => void } | undefined } = $props();
 
-  const folder = $derived.by(() => $folders.get(folder_id));
+  const folder = $derived(folders.get(folder_id));
 
   function dblclick() {
     current_folder_ids.update((v) => {
@@ -24,10 +24,7 @@
       update_fn: (name: string) => {
         if (folder !== undefined) {
           update_folder_name(folder.id, name);
-          folders.update((v) => {
-            v.set(folder.id, { ...folder, title: name });
-            return v;
-          });
+          folders.set(folder.id, { ...folder, title: name });
         }
       },
     };

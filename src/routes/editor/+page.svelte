@@ -7,7 +7,7 @@
   import { PlaylistInner } from './Inner.svelte';
 
   const playlist: [ Playlist, Promise<RuleType[]> ] | undefined = $derived.by(() => {
-    const playlist = $playlists.get($current_playlist_id);
+    const playlist = playlists.get($current_playlist_id);
     if (playlist === undefined) {
       return undefined;
     }

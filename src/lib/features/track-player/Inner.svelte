@@ -4,7 +4,6 @@
   import IconButton from '$lib/components/IconButton.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
-  import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';

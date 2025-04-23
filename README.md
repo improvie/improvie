@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**A Tauri app to _"improve like movie"_ — helping you organize local media and create playlists easily.**
+**A Tauri app to _"improve like the movie"_ — helping you organize local media and create playlists easily.**
 
 [![License](https://img.shields.io/github/license/improvie/improvie?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
@@ -40,7 +40,7 @@ English | [日本語](./README-JA.md)
 
 - **OS**: Windows 10/11, macOS 11+, Ubuntu 20.04+
 - **RAM**: 2GB+ recommended
-- **Disk Space**: 100MB+ free space
+- **Disk Space**: 100MB+ free space and enough space for your media files
 
 ### Download
 

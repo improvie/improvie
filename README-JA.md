@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**ローカルメディアを整理しプレイリストを簡単に作成できる _"improve like movie"_ をコンセプトにしたTauriアプリ**
+**ローカルメディアを整理しプレイリストを簡単に作成できる _"improve like the movie"_ をコンセプトにしたTauriアプリ**
 
 [![License](https://img.shields.io/github/license/improvie/improvie?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
@@ -40,7 +40,7 @@
 
 - **OS**: Windows 10/11, macOS 11+, Ubuntu 20.04+
 - **RAM**: 2GB以上推奨
-- **ディスク容量**: 100MB以上の空き容量
+- **ディスク容量**: 100MB以上の空き容量とメディアファイル用の十分な空き容量
 
 ### ダウンロード
 

@@ -3,7 +3,7 @@
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
-  import { current_rule_formats, current_track_id } from '$lib/stores/track';
+  import { tracker } from '$lib/stores/tracker.svelte';
   import { cn } from '$lib/utils';
   import { PlayIcon, Volume2Icon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
@@ -18,7 +18,7 @@
     idx,
   }: Props = $props();
 
-  const is_current = $derived($current_rule_formats?.idx === idx);
+  const is_current = $derived(tracker.current_rule_idx === idx);
 
   const thumbnail_path = $derived.by(() => {
     if (!content.thumbnail_path) {
@@ -26,8 +26,6 @@
     }
     return convertFileSrc(content.thumbnail_path);
   });
-
-  const content_id = $derived(content.id);
 
   let is_hovered = $state(false);
 </script>
@@ -44,8 +42,7 @@
       {#if is_hovered}
         <IconButton
           onclick={() => {
-            $current_rule_formats!.idx = idx;
-            $current_track_id = content_id;
+            tracker.set_current_track(idx);
           }}
           contentProps={{
             side: 'right',

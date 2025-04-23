@@ -1,17 +1,11 @@
 <script lang='ts'>
-  import { contents } from '$lib/stores/items/content';
-  import { current_track_id } from '$lib/stores/track';
+  import { tracker } from '$lib/stores/tracker.svelte';
   import Inner from './Inner.svelte';
 
-  let track = $derived.by(() => {
-    if ($current_track_id === undefined) {
-      return undefined;
-    }
-    return contents.get($current_track_id);
-  });
+  let track = $derived(tracker.get_current_content());
 </script>
 {#if track}
-  {#key track.id}
+  {#key track}
     <Inner bind:track />
   {/key}
 {/if}

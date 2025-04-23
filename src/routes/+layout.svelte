@@ -10,6 +10,7 @@
   // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
+  import { tracker } from '$lib/stores/tracker.svelte';
   import { loadTranslations } from '$lib/translations/translations';
   import { onMount } from 'svelte';
   import '../app.css';
@@ -20,6 +21,7 @@
   loadTranslations(defaultLanguage, '/');
 
   onMount(() => {
+    tracker.init();
     init_items();
     init_play_items();
     get_themes();

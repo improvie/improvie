@@ -1,20 +1,74 @@
 import type { Content } from '$bindings/item';
-import type { RuleFormat } from '$bindings/Rule';
+import type { RuleFormat, RuleType } from '$bindings/Rule';
+import { action_get_rules_format } from '$lib/action/rules';
+import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
+import { contents } from './items/content';
 
 export class Tracker {
-  current_track_id: string | undefined = $state();
-  play_rules: RuleFormat[] = $state([]);
-  current_rule_idx: number = $state(0);
+  public current_track_id: string | undefined = $state();
+  public play_rules: RuleFormat[] = $state([]);
+  public current_rule_idx: number = $state(0);
+  public external_open: boolean = $state(false);
+  public paused: boolean = $state(true);
 
-  set_single_content(id: string) {
+  public currentTime: number = $state(0);
+  public is_looping: boolean = $state()!;
+  public volume: number = $state()!;
+
+  public init() {
+    this.is_looping = getLocalStorageOrDefault('is_looping', 'false') === 'true';
+    this.volume = Number(getLocalStorageOrDefault('volume', '0.5'));
+
+    $effect(() => {
+      setLocalStorage('is_looping', this.is_looping.toString());
+    });
+
+    $effect(() => {
+      setLocalStorage('volume', this.volume.toString());
+    });
+  }
+
+  public set_single_content(id: string) {
+    this.clear_track();
+
     this.current_track_id = id;
+  }
+
+  public clear_track() {
+    this.current_track_id = undefined;
     this.play_rules = [];
     this.current_rule_idx = 0;
   }
 
-  set_rules(rules: RuleFormat[]) {
+  public get_current_content(): Content | undefined {
+    if (this.current_track_id === undefined) {
+      return undefined;
+    }
+    return contents.get(this.current_track_id);
+  }
+
+  public toggle_external_open() {
+    this.external_open = !this.external_open;
+  }
+
+  public toggle_loop() {
+    this.is_looping = !this.is_looping;
+  }
+
+  public toggle_pause() {
+    this.paused = !this.paused;
+  }
+
+  // Section: Playlist
+
+  public is_playlist(): boolean {
+    return this.play_rules.length > 0;
+  }
+
+  public set_rules(rules: RuleFormat[]) {
+    this.clear_track();
+
     this.play_rules = rules;
-    this.current_rule_idx = 0;
     if (rules.length > 0) {
       this.current_track_id = rules[0].content_id;
     }
@@ -23,17 +77,60 @@ export class Tracker {
     }
   }
 
-  clear_track() {
-    this.current_track_id = undefined;
-    this.play_rules = [];
-    this.current_rule_idx = 0;
+  public async set_rules_by_type(rules: RuleType[]): Promise<void> {
+    const formats = await action_get_rules_format(rules);
+    this.set_rules(formats);
   }
 
-  get_current_content(): Content | undefined {
-    if (this.current_track_id === undefined) {
-      return undefined;
+  public update_current_track() {
+    if (this.is_playlist()) {
+      this.currentTime = 0;
+      this.paused = false;
+      this.current_track_id = this.play_rules[this.current_rule_idx].content_id;
     }
-    // return $contents[this.current_track_id];
+  }
+
+  public set_current_track(idx: number) {
+    if (idx < 0 || idx >= this.play_rules.length) {
+      return;
+    }
+    this.current_rule_idx = idx;
+    this.update_current_track();
+  }
+
+  public next(): boolean {
+    if (!this.is_playlist()) {
+      return this.is_looping;
+    }
+    if (this.current_rule_idx < this.play_rules.length - 1) {
+      this.current_rule_idx++;
+      this.update_current_track();
+      return true;
+    }
+    else if (this.is_looping) {
+      this.current_rule_idx = 0;
+      this.update_current_track();
+      return true;
+    }
+
+    return false;
+  }
+
+  public previous(): boolean {
+    if (!this.is_playlist()) {
+      return this.is_looping;
+    }
+    if (this.current_rule_idx > 0) {
+      this.current_rule_idx--;
+      this.update_current_track();
+      return true;
+    }
+    else if (this.is_looping) {
+      this.current_rule_idx = this.play_rules.length - 1;
+      this.update_current_track();
+      return true;
+    }
+    return false;
   }
 }
 

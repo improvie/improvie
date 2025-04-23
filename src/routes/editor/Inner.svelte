@@ -14,7 +14,7 @@
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { getLocalStorageOrDefault } from '$lib/local-storage';
   import { setSlots } from '$lib/stores/index.svelte';
-  import { clear_track, current_rules, set_current_rules } from '$lib/stores/track';
+  import { tracker } from '$lib/stores/tracker.svelte';
   import { ListPlusIcon, SquareMenuIcon } from '@lucide/svelte';
   import { EditorTracker } from './Tracker.svelte';
 
@@ -22,13 +22,7 @@
   let rules = $state(prop_rules);
   $effect(() => {
     action_update_rules(playlist.id, rules);
-    if (rules.length === 0) {
-      clear_track();
-    }
-    else {
-      $current_rules = rules;
-      set_current_rules(rules);
-    }
+    tracker.set_rules_by_type(rules);
   });
   function add_rule(new_rule: RuleType) {
     rules.push(new_rule);

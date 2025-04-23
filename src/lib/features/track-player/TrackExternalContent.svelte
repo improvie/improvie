@@ -3,22 +3,17 @@
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+  import { tracker } from '$lib/stores/tracker.svelte';
   import { cn } from '$lib/utils';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
     content = $bindable(),
-    paused = $bindable(),
-    currentTime = $bindable(),
-    volume = $bindable(),
     duration = $bindable(),
     disable_audio = $bindable(),
     onended,
   }: {
     content: Content;
-    paused: boolean;
-    currentTime: number;
-    volume: number;
     duration: number;
     disable_audio: boolean;
     onended: () => void;
@@ -74,10 +69,12 @@
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
     {#if disable_audio}
-      <video playsinline autoplay bind:volume bind:currentTime bind:paused bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => paused = !paused}>
-        <source src={content_path} />
-        <track kind='captions' />
-      </video>
+      {#key tracker.track_version}
+        <video playsinline autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={tracker.toggle_pause}>
+          <source src={content_path} />
+          <track kind='captions' />
+        </video>
+      {/key}
     {/if}
   </Tabs.Content>
 </Tabs.Root>

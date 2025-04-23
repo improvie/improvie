@@ -21,7 +21,7 @@
 <ContextMenu.Root>
   <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
     <HeadphonesIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
-    <Card.Root class='min-w-80 flex p-4'>
+    <Card.Root class='min-w-48 sm:min-w-80 flex p-4'>
       <p class='line-clamp-2 select-text break-words'>{content?.title || 'Loading...'}</p>
     </Card.Root>
   </ContextMenu.Trigger>

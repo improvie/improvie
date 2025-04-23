@@ -1,5 +1,6 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
+  import FloatingTip from '$lib/components/FloatingTip.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
@@ -80,8 +81,8 @@
     {/key}
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='w-full h-full flex justify-between gap-2'>
-    <div class='ml-6 gap-4 flex items-center'>
+  <div class='w-full h-full flex justify-between gap-1'>
+    <div class='ml-6 gap-2 flex items-center'>
       {#if is_playlist}
         <IconButton onclick={() => {
           tracker.previous();
@@ -118,7 +119,7 @@
       {/if}
       <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
-    <div class='gap-4 items-center h-full hidden sm:flex py-4'>
+    <div class='gap-2 items-center h-full hidden sm:flex py-4'>
       {#if thumbnail_path}
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
@@ -126,19 +127,18 @@
         <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track.title}</p>
       </div>
     </div>
-    <div class='gap-4 flex items-center mr-6'>
-      <Tooltip.Root>
-        <Tooltip.Trigger>
+    <div class='gap-2 flex items-center mr-6'>
+      <FloatingTip side='left' class='p-4 w-40'>
+        {#snippet trigger()}
           {#if tracker.volume === 0}
             <VolumeOffIcon />
           {:else}
             <Volume2Icon />
           {/if}
-        </Tooltip.Trigger>
-        <Tooltip.Content side='left' class='p-4 w-40'>
-          <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
-        </Tooltip.Content>
-      </Tooltip.Root>
+        {/snippet}
+
+        <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
+      </FloatingTip>
 
       <IconButton variant={tracker.is_looping ? 'secondary' : 'outline'} onclick={() => {
         tracker.toggle_loop();

@@ -32,7 +32,7 @@ impl FileDialogResponse {
                     return Err(NotAllowUrlOnFileDialog);
                 };
                 let kind = match ext.to_string_lossy().as_ref() {
-                    "mp3" | "wav" => FileDialogKind::Audio,
+                    "mp3" | "wav" | "aac" => FileDialogKind::Audio,
                     "mp4" => FileDialogKind::Video,
                     "png" | "jpeg" | "gif" => FileDialogKind::Image,
                     _ => unreachable!(),

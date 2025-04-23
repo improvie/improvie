@@ -118,7 +118,7 @@
       {/if}
       <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
-    <div class='gap-4 items-center h-full flex py-4'>
+    <div class='gap-4 items-center h-full hidden sm:flex py-4'>
       {#if thumbnail_path}
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}

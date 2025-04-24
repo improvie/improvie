@@ -22,7 +22,8 @@ export class Tracker {
   }
 
   public init() {
-    this.is_looping = getLocalStorageOrDefault('is_looping', 'false') === 'true';
+    this.is_looping
+      = getLocalStorageOrDefault('is_looping', 'false') === 'true';
     this.volume = Number(getLocalStorageOrDefault('volume', '0.5'));
 
     $effect(() => {
@@ -60,6 +61,14 @@ export class Tracker {
       return undefined;
     }
     return contents.get(this.current_track_id);
+  }
+
+  public reset_track() {
+    const id = this.current_track_id;
+    this.clear_track();
+    this.update_version();
+    this.current_track_id = id;
+    this.paused = false;
   }
 
   public toggle_external_open() {
@@ -117,6 +126,7 @@ export class Tracker {
 
   public next(): boolean {
     if (!this.is_playlist()) {
+      this.reset_track();
       return this.is_looping;
     }
     if (this.current_rule_idx < this.play_rules.length - 1) {
@@ -135,6 +145,7 @@ export class Tracker {
 
   public previous(): boolean {
     if (!this.is_playlist()) {
+      this.reset_track();
       return this.is_looping;
     }
     if (this.current_rule_idx > 0) {

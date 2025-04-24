@@ -158,6 +158,8 @@ async fn download_video(
 
     crate::ffmpeg::movflags_faststart(&temp_path, video_path).await?;
 
+    std::fs::remove_file(&temp_path)?;
+
     Ok(())
 }
 
@@ -182,6 +184,8 @@ async fn download_audio(
         .await?;
 
     crate::ffmpeg::audio_to_acc(&temp_path, audio_path).await?;
+
+    std::fs::remove_file(&temp_path)?;
 
     Ok(())
 }

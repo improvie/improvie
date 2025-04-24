@@ -14,8 +14,8 @@ pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
             [
                 Target::new(TargetKind::Stdout),
                 Target::new(TargetKind::Folder {
-                    path: super::dev_folder(),
-                    file_name: Some(String::from("dev")),
+                    path: super::dev_folder().join("logs"),
+                    file_name: None,
                 }),
                 Target::new(TargetKind::Webview),
             ],

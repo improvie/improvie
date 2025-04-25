@@ -8,18 +8,18 @@
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
-    content = $bindable(),
+    track,
     duration = $bindable(),
     disable_audio = $bindable(),
     onended,
   }: {
-    content: Content;
+    track: Content;
     duration: number;
     disable_audio: boolean;
     onended: () => void;
   } = $props();
 
-  const is_video = $derived(content.kind === 'Video');
+  const is_video = $derived(track.kind === 'Video');
 
   let value: string = $state('thumbnail');
 
@@ -34,16 +34,24 @@
   });
 
   const content_path = $derived.by(() => {
-    return convertFileSrc(content.content_path);
+    return convertFileSrc(track.content_path);
   });
 
   let thumbnail_path = $derived.by(() => {
-    if (!content.thumbnail_path) {
+    if (!track.thumbnail_path) {
       return undefined;
     }
-    return convertFileSrc(content.thumbnail_path);
+    return convertFileSrc(track.thumbnail_path);
   });
 
+  let video_element: HTMLVideoElement | undefined = $state();
+
+  $effect(() => {
+    if (video_element && content_path) {
+      video_element.load();
+      video_element.play();
+    }
+  });
 </script>
 
 <Tabs.Root bind:value class='container mx-auto text-center h-full'>
@@ -69,12 +77,10 @@
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
     {#if disable_audio}
-      {#key tracker.track_version}
-        <video playsinline autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => tracker.toggle_pause()}>
-          <source src={content_path} />
-          <track kind='captions' />
-        </video>
-      {/key}
+      <video bind:this={video_element} crossorigin='anonymous' playsinline autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => tracker.toggle_pause()}>
+        <source src={content_path} />
+        <track kind='captions' />
+      </video>
     {/if}
   </Tabs.Content>
 </Tabs.Root>

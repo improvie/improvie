@@ -10,7 +10,7 @@
   import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
-  let { track = $bindable() }: { track: Content } = $props();
+  const { track }: { track: Content } = $props();
 
   const is_playlist = $derived(tracker.is_playlist());
 
@@ -62,11 +62,21 @@
     return convertFileSrc(track.thumbnail_path);
   });
 
+  let audio_element: HTMLAudioElement | undefined = $state();
+
+  $effect(() => {
+    if (audio_element && content_path) {
+      tracker.paused = true;
+      audio_element.load();
+      audio_element.play();
+    }
+  });
+
 </script>
 
 <div class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
   <TrackExternalContent
-    bind:content={track}
+    track={track}
     bind:duration
     bind:disable_audio
     onended={onended}
@@ -75,9 +85,9 @@
 
 <Card.Root class='sticky bottom-0 h-20 z-40 rounded-none'>
   {#if !disable_audio}
-    {#key tracker.track_version}
-      <audio autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} src={content_path}></audio>
-    {/key}
+    <audio bind:this={audio_element} crossorigin='anonymous' bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended}>
+      <source src={content_path} />
+    </audio>
   {/if}
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between gap-1'>

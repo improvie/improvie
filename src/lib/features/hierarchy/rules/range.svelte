@@ -32,7 +32,7 @@
       </Card.Content>
     </Card.Root>
   </ContextMenu.Trigger>
-  <ContextMenu.Content alignOffset={-20}>
+        <ContextMenu.Content>
     <ContextMenu.Item onclick={remove_rule}>
       <RemoveElement />
     </ContextMenu.Item>

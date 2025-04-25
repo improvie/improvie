@@ -37,7 +37,7 @@
       {/each}
     </Card.Root>
   </ContextMenu.Trigger>
-  <ContextMenu.Content alignOffset={-20}>
+        <ContextMenu.Content>
     <ContextMenu.Item onclick={() => open = true}>
       <RenameElement />
     </ContextMenu.Item>

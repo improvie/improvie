@@ -71,7 +71,7 @@
           </div>
           <div class='min-h-80'></div>
         </ContextMenu.Trigger>
-        <ContextMenu.Content alignOffset={-20}>
+        <ContextMenu.Content>
           <ContextMenu.Item onclick={() => {
             open = true;
           }}>

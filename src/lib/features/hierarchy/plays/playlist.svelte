@@ -70,7 +70,7 @@
         <p class='line-clamp-3 select-text'>{playlist.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
-    <ContextMenu.Content alignOffset={-20}>
+        <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>
         <RenameElement />
       </ContextMenu.Item>

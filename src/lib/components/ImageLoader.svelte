@@ -9,7 +9,7 @@
   }
 
   let {
-    src = $bindable(),
+    src,
     alt = 'Image not specified',
     failed = $bindable(false),
   }: Props = $props();

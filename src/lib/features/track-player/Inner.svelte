@@ -10,7 +10,7 @@
   import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
-  const { track }: { track: Content } = $props();
+  const { track }: { track: Content | undefined } = $props();
 
   const is_playlist = $derived(tracker.is_playlist());
 
@@ -50,7 +50,7 @@
   });
 
   const thumbnail_path = $derived.by(() => {
-    if (!track.thumbnail_path) {
+    if (!track?.thumbnail_path) {
       return undefined;
     }
     return convertFileSrc(track.thumbnail_path);
@@ -66,7 +66,7 @@
   />
 </div>
 
-<Card.Root class='sticky bottom-0 h-20 z-40 rounded-none'>
+<Card.Root class={cn('sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between gap-1'>
     <div class='ml-6 gap-2 flex items-center'>
@@ -111,7 +111,7 @@
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
       <div class='h-full flex items-center'>
-        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track.title}</p>
+        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track?.title}</p>
       </div>
     </div>
     <div class='gap-2 flex items-center mr-6'>

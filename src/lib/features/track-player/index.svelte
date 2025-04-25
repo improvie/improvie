@@ -5,6 +5,4 @@
   const track = $derived(tracker.get_current_content());
 </script>
 
-{#if track}
-  <Inner track={track} />
-{/if}
+<Inner track={track} />

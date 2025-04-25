@@ -13,21 +13,24 @@
     duration = $bindable(),
     onended,
   }: {
-    track: Content;
+    track: Content | undefined;
     duration: number;
     onended: () => void;
   } = $props();
 
-  const is_video = $derived(track.kind === 'Video');
+  const is_video = $derived(track?.kind === 'Video');
 
   let value: string = $derived(is_video ? 'video' : 'thumbnail');
 
   const content_path = $derived.by(() => {
+    if (!track?.content_path) {
+      return undefined;
+    }
     return convertFileSrc(track.content_path);
   });
 
   const thumbnail_path = $derived.by(() => {
-    if (!track.thumbnail_path) {
+    if (!track?.thumbnail_path) {
       return undefined;
     }
     return convertFileSrc(track.thumbnail_path);
@@ -36,11 +39,16 @@
   let video_element: HTMLVideoElement | undefined = $state();
 
   $effect(() => {
-    if (video_element && content_path) {
-      video_element.load();
-      video_element.play().catch((error) => {
-        Logger.error(`Error playing video: ${error}`);
-      });
+    if (video_element) {
+      if (content_path) {
+        video_element.load();
+        video_element.play().catch((error) => {
+          Logger.error(`Error playing video: ${error}`);
+        });
+      }
+      else {
+        video_element.pause();
+      }
     }
   });
 </script>
@@ -68,7 +76,9 @@
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
     <video bind:this={video_element} crossorigin='anonymous' playsinline bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => tracker.toggle_pause()}>
-      <source src={content_path} />
+      {#if content_path}
+        <source src={content_path} />
+      {/if}
       <track kind='captions' />
     </video>
   </Tabs.Content>

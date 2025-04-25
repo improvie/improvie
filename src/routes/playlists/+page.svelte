@@ -36,7 +36,7 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger class='absolute w-full h-full z-10'>
     </ContextMenu.Trigger>
-    <ContextMenu.Content>
+        <ContextMenu.Content>
       <ContextMenu.Item onclick={() => {
         is_open_create_playlist = true;
       }} class='flex items-center'>

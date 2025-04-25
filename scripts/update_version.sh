@@ -2,7 +2,7 @@
 
 #!/usr/bin/env bash
 
-# This script updates the version number in package.json, Cargo.toml, Cargo.lock, tauri.conf.json, and README.md.
+# This script updates the version number in package.json, Cargo.toml, Cargo.lock, tauri.conf.json, project.yml, Info.plist and README.md.
 # Usage: ./scripts/update_version.sh <new_version>
 
 set -euo pipefail
@@ -50,9 +50,18 @@ echo "✅ Updated package.json"
 	echo "✅ Updated tauri.conf.json"
 )
 
-# Update README.md
 # Escape dots in OLD_VERSION for safety in sed
 SAFE_OLD_VERSION=$(printf '%s\n' "$OLD_VERSION" | sed 's/[.[\*^$]/\\&/g')
+
+# Update relation of mobile
+
+sed -i.bak "s/CFBundleShortVersionString: $SAFE_OLD_VERSION/CFBundleShortVersionString: $NEW_VERSION/" src-tauri/gen/apple/project.yml && rm src-tauri/gen/apple/project.yml.bak
+sed -i.bak "s/CFBundleVersion: $SAFE_OLD_VERSION/CFBundleVersion: $NEW_VERSION/" src-tauri/gen/apple/project.yml && rm src-tauri/gen/apple/project.yml.bak
+sed -i.bak "s/<string>$SAFE_OLD_VERSION<\/string>/<string>$NEW_VERSION<\/string>/" src-tauri/gen/apple/improvie_iOS/Info.plist && rm src-tauri/gen/apple/improvie_iOS/Info.plist.bak
+
+echo "✅ Updated project.yml"
+
+# Update README.md
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	sed -i '' "s/$SAFE_OLD_VERSION/$NEW_VERSION/g" README.md

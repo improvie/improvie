@@ -37,7 +37,7 @@
       {/each}
     </Card.Root>
   </ContextMenu.Trigger>
-  <ContextMenu.Content>
+        <ContextMenu.Content>
     <ContextMenu.Item onclick={() => open = true}>
       <RenameElement />
     </ContextMenu.Item>

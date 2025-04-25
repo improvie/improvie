@@ -52,7 +52,7 @@
 {#if content !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
-      <Card.Root class='p-3 h-full select-none' ondblclick={() => dblclick()}>
+      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
           <ImageLoader
             bind:src={thumbnail_path}
@@ -61,7 +61,7 @@
         <p class='line-clamp-3 select-text'>{content.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
-    <ContextMenu.Content>
+        <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>
         <RenameElement />
       </ContextMenu.Item>

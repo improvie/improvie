@@ -54,7 +54,7 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <div class='flex'>
-  <Card.Root class={cn('w-full select-none z-0', open && 'sm:w-2/3')}>
+  <Card.Root class={cn('w-full z-0', open && 'sm:w-2/3')}>
     <ScrollArea orientation='both' class='w-full h-dvh relative'>
       <ContextMenu.Root>
         <ContextMenu.Trigger>

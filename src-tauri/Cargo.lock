@@ -2422,7 +2422,7 @@ dependencies = [
 
 [[package]]
 name = "improvie"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "fix-path-env",
  "improvie-command",
@@ -2439,7 +2439,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-app"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "improvie-domain",
  "improvie-logic",
@@ -2457,7 +2457,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-builtin"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "async-trait",
  "improvie-plugin",
@@ -2490,7 +2490,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-domain"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2501,7 +2501,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-infra"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2518,7 +2518,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-logic"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "chrono",
  "more-convert",
@@ -2533,7 +2533,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-plugin"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "async-trait",
  "libloading 0.8.6",
@@ -3787,7 +3787,7 @@ dependencies = [
 
 [[package]]
 name = "prebuild"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "improvie-builtin",
  "serde_json",
@@ -6016,7 +6016,7 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "ts-bind"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "ts-rs",
 ]
@@ -7179,7 +7179,7 @@ dependencies = [
 
 [[package]]
 name = "youtube"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "ez-ffmpeg",
  "futures-util",

@@ -34,7 +34,7 @@
 
 <Sidebar.Provider>
   <AppSidebar />
-  <Sidebar.Inset>
+  <Sidebar.Inset class='select-none'>
     <header class='flex h-14 shrink-0 items-center gap-2'>
       <div class='flex flex-1 items-center gap-2 px-3'>
         <Sidebar.Trigger class='h-10 w-10 z-50' />

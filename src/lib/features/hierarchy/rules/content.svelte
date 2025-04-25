@@ -25,7 +25,7 @@
       <p class='line-clamp-2 select-text break-words'>{content?.title || 'Loading...'}</p>
     </Card.Root>
   </ContextMenu.Trigger>
-  <ContextMenu.Content>
+  <ContextMenu.Content alignOffset={-20}>
     <ContextMenu.Item onclick={remove_rule}>
       <RemoveElement />
     </ContextMenu.Item>

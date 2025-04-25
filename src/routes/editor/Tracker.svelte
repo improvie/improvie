@@ -18,7 +18,7 @@
 
 </script>
 
-<Card.Root class={cn('p-0 container w-1/3 select-none h-[90dvh] hidden', open || 'sm:flex')}>
+<Card.Root class={cn('p-0 container w-1/3 h-[90dvh] hidden', open || 'sm:flex')}>
   <ScrollArea class='w-full h-full'>
     {#each tracker.play_rules as rule, idx}
       {@const content = contents.get(rule.content_id)}

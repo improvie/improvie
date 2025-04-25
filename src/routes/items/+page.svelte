@@ -62,7 +62,7 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger class='absolute w-full h-full z-10'>
     </ContextMenu.Trigger>
-    <ContextMenu.Content>
+    <ContextMenu.Content alignOffset={-20}>
       <ContextMenu.Item onclick={() => {
         is_open_create_content = true;
       }}>

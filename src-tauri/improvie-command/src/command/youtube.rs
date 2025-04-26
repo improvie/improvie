@@ -33,25 +33,6 @@ async fn save(
 // TODO: add beautiful log
 
 #[tauri::command]
-pub async fn import_youtube_url<R: tauri::Runtime>(
-    app: AppHandle<R>,
-    state: TauriAppState<'_>,
-    parent_folder_id: Uid,
-    url: String,
-) -> Result<Vec<CreateContentResponse>, YtError> {
-    let url_state = youtube::get_youtube_url_state(&url)?;
-    match url_state {
-        youtube::YtUrlState::Video { id } => {
-            let content = import_youtube_video(app, state, parent_folder_id, id).await?;
-            Ok(vec![content])
-        }
-        youtube::YtUrlState::Playlist { url } => {
-            import_youtube_playlist(app, state, parent_folder_id, url).await
-        }
-    }
-}
-
-#[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
@@ -60,7 +41,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
 ) -> Result<CreateContentResponse, YtError> {
     let downloaded = youtube::download_single_video(
         &video_url_or_id,
-        &state.document_dir,
+        state.document_dir.to_path_buf(),
         |downloading_state| {
             log::debug!("Video Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-video", downloading_state);
@@ -81,7 +62,7 @@ pub async fn import_youtube_playlist<R: tauri::Runtime>(
 ) -> Result<Vec<CreateContentResponse>, YtError> {
     let downloaded = youtube::download_playlist(
         &playlist_url,
-        &state.document_dir,
+        state.document_dir.to_path_buf(),
         move |downloading_state| {
             log::debug!("Playlist Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-playlist", downloading_state);

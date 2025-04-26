@@ -22,9 +22,3 @@ pub struct SingleVideoDownload {
     pub video_path: PathBuf,
     pub thumbnail_path: Option<PathBuf>,
 }
-
-#[derive(Debug, Clone)]
-pub enum YtUrlState {
-    Video { id: String },
-    Playlist { url: String },
-}

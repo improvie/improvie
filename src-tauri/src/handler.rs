@@ -32,7 +32,6 @@ pub fn generate_handler<R: tauri::Runtime>()
         // plugins
         plugin::get_themes,
         // youtube
-        youtube::import_youtube_url,
         youtube::import_youtube_video,
         youtube::import_youtube_playlist,
     ]

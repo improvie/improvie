@@ -101,6 +101,8 @@ async fn download_single_video_internal(
 
     // TODO: add progress callback
     crate::ffmpeg::merge_video_audio(&video_temp_path, &audio_path, &video_path).await?;
+    std::fs::remove_file(&video_temp_path)?;
+    std::fs::remove_file(&audio_path)?;
 
     Ok(SingleVideoDownload {
         title,

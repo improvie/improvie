@@ -19,7 +19,6 @@ default = []
 run-test = ["ts"]
 ts = ["improvie-command/ts"]
 static-ffmpeg = ["improvie-command/static-ffmpeg"]
-build-ffmpeg = ["improvie-command/build-ffmpeg"]
 
 [build-dependencies]
 tauri-build = { version = "=2.2", features = [] }
@@ -77,7 +76,7 @@ uid = { path = "addtional/uid" }
 youtube = { path = "addtional/youtube" }
 
 # tauri
-tauri = { version = "=2.5.0", features = [
+tauri = { version = "=2.5.1", features = [
   "protocol-asset",
   "macos-private-api",
 ] }

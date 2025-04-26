@@ -15,12 +15,6 @@ export class Tracker {
   public is_looping: boolean = $state()!;
   public volume: number = $state()!;
 
-  private version: number = $state(0);
-
-  get track_version(): number {
-    return this.version;
-  }
-
   public init() {
     this.is_looping
       = getLocalStorageOrDefault('is_looping', 'false') === 'true';
@@ -35,23 +29,20 @@ export class Tracker {
     });
   }
 
-  private update_version() {
-    if (this.version > 1000) {
-      this.version = 0;
-    }
-    this.version++;
-  }
-
   public set_single_content(id: string) {
+    const prev_track_id = this.current_track_id;
     this.clear_track();
-    this.update_version();
 
     this.current_track_id = id;
+    if (prev_track_id === id) {
+      this.paused = false;
+    }
   }
 
   public clear_track() {
     this.play_rules = [];
     this.current_rule_idx = 0;
+    this.current_track_id = undefined;
     this.currentTime = 0;
     this.paused = true;
   }
@@ -66,7 +57,6 @@ export class Tracker {
   public reset_track() {
     const id = this.current_track_id;
     this.clear_track();
-    this.update_version();
     this.current_track_id = id;
     this.paused = false;
   }
@@ -94,8 +84,7 @@ export class Tracker {
 
     this.play_rules = rules;
     if (rules.length > 0) {
-      this.update_version();
-      this.current_track_id = rules[0].content_id;
+      this.update_current_track();
     }
     else {
       this.current_track_id = undefined;
@@ -109,10 +98,13 @@ export class Tracker {
 
   public update_current_track() {
     if (this.is_playlist()) {
+      const prev_track_id = this.current_track_id;
       this.currentTime = 0;
       this.paused = false;
-      this.update_version();
       this.current_track_id = this.play_rules[this.current_rule_idx].content_id;
+      if (prev_track_id === this.current_track_id) {
+        this.paused = false;
+      }
     }
   }
 

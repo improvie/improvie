@@ -10,7 +10,7 @@
   import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
-  let { track = $bindable() }: { track: Content } = $props();
+  const { track }: { track: Content | undefined } = $props();
 
   const is_playlist = $derived(tracker.is_playlist());
 
@@ -45,18 +45,12 @@
     tracker.currentTime = value;
   }
 
-  let disable_audio = $state(false);
-
   const time = $derived.by(() => {
     return `${to_readable_time(tracker.currentTime)} / ${to_readable_time(duration)}`;
   });
 
-  const content_path = $derived.by(() => {
-    return convertFileSrc(track.content_path);
-  });
-
   const thumbnail_path = $derived.by(() => {
-    if (!track.thumbnail_path) {
+    if (!track?.thumbnail_path) {
       return undefined;
     }
     return convertFileSrc(track.thumbnail_path);
@@ -66,19 +60,13 @@
 
 <div class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
   <TrackExternalContent
-    bind:content={track}
+    track={track}
     bind:duration
-    bind:disable_audio
     onended={onended}
   />
 </div>
 
-<Card.Root class='sticky bottom-0 h-20 z-40 rounded-none'>
-  {#if !disable_audio}
-    {#key tracker.track_version}
-      <audio autoplay bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} src={content_path}></audio>
-    {/key}
-  {/if}
+<Card.Root class={cn('sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
   <div class='w-full h-full flex justify-between gap-1'>
     <div class='ml-6 gap-2 flex items-center'>
@@ -123,7 +111,7 @@
         <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
       <div class='h-full flex items-center'>
-        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track.title}</p>
+        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track?.title}</p>
       </div>
     </div>
     <div class='gap-2 flex items-center mr-6'>

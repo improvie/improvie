@@ -18,8 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 default = []
 run-test = ["ts"]
 ts = ["improvie-command/ts"]
-static-ffmpeg = ["improvie-command/static-ffmpeg"]
-build-ffmpeg = ["improvie-command/build-ffmpeg"]
+static = ["youtube/static-ffmpeg"]
 
 [build-dependencies]
 tauri-build = { version = "=2.2", features = [] }
@@ -27,6 +26,7 @@ tauri-build = { version = "=2.2", features = [] }
 [dependencies]
 improvie-command.workspace = true
 improvie-plugin.workspace = true
+youtube.workspace = true
 
 serde.workspace = true
 serde_json.workspace = true
@@ -77,7 +77,7 @@ uid = { path = "addtional/uid" }
 youtube = { path = "addtional/youtube" }
 
 # tauri
-tauri = { version = "=2.5.0", features = [
+tauri = { version = "=2.5.1", features = [
   "protocol-asset",
   "macos-private-api",
 ] }

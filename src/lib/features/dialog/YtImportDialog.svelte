@@ -6,6 +6,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Progress } from '$lib/components/ui/progress/index.js';
+  import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { toAppError } from '$lib/error';
   import { Logger } from '$lib/logger';
   import { update_content } from '$lib/stores/items/content';
@@ -44,15 +45,18 @@
   });
 
   let downloading = $state(false);
+  let download_type = $state<'video' | 'playlist'>('video');
 
-  let download_state = $state<YtPlaylistDownloadState[]>([{
+  const yt_default_state: YtPlaylistDownloadState = {
     index: 0,
     state: {
       downloaded_mb: 0n,
       total_mb: 0n,
       percentage: 0,
     },
-  }]);
+  };
+
+  let download_state = $state<YtPlaylistDownloadState[]>([structuredClone(yt_default_state)]);
 
   listen<YtVideoDownloadState>('yt-download-progress-video', (event) => {
     download_state = [{
@@ -89,12 +93,21 @@
     downloading = true;
     try {
       Logger.info(`Downloading video id: ${url}`);
-      const res = await invoke<CreateContentResponse[]>('import_youtube_url', {
-        parentFolderId: parent_folder_id,
-        url,
-      });
-      for (const item of res) {
+      if (download_type === 'video') {
+        const item = await invoke<CreateContentResponse>('import_youtube_video', {
+          parentFolderId: parent_folder_id,
+          videoUrlOrId: url,
+        });
         update_content(item);
+      }
+      else if (download_type === 'playlist') {
+        const res = await invoke<CreateContentResponse[]>('import_youtube_playlist', {
+          parentFolderId: parent_folder_id,
+          playlistUrl: url,
+        });
+        for (const item of res) {
+          update_content(item);
+        }
       }
       open = false;
     }
@@ -109,14 +122,7 @@
       }
     }
     downloading = false;
-    download_state = [{
-      index: 0,
-      state: {
-        downloaded_mb: 0n,
-        total_mb: 0n,
-        percentage: 0,
-      },
-    }];
+    download_state = [structuredClone(yt_default_state)];
   }
 
 // TODO: fix style on playlsit, and write test
@@ -128,15 +134,22 @@
     {#if downloading}
       <Dialog.Header>
         <Dialog.Title>Downloading...</Dialog.Title>
+        {#if download_state[0].state.downloaded_mb === 0n}
+          <Dialog.Description>
+            <p>Fetching Video Info. Please wait...</p>
+          </Dialog.Description>
+        {/if}
       </Dialog.Header>
       <div class='grid gap-4 py-4'>
         {#each download_state as { index: _, state }}
-          <div class='flex flex-col items-center justify-between '>
-            <p>Downloaded: {state.downloaded_mb}MB / {state.total_mb}MB</p>
-            {#if state.total_mb === 0n}
-              <p class='text-muted-foreground'>Fetching video info. Please wait.</p>
-            {/if}
-            <p>{state.percentage}%</p>
+          <div>
+            <div class='flex items-center justify-between gap-1'>
+              <div class='flex flex-wrap gap-1'>
+                <p>Downloaded:</p>
+                <p>{state.downloaded_mb}MB / {state.total_mb}MB</p>
+              </div>
+              <p>{state.percentage}%</p>
+            </div>
             <Progress
               value={state.percentage}
               max={100}
@@ -148,8 +161,16 @@
     {:else}
       <form method='POST' use:enhance onsubmit={handleSubmit}>
         <Dialog.Header>
-          <Dialog.Title>Import Youtube Video Or Playlist</Dialog.Title>
+          <Dialog.Title>Import Youtube</Dialog.Title>
         </Dialog.Header>
+
+        <Tabs.Root bind:value={download_type} class='mt-2 md:-mt-6 flex justify-center'>
+          <Tabs.List>
+            <Tabs.Trigger value='video'>Video</Tabs.Trigger>
+            <Tabs.Trigger value='playlist'>Playlist</Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+
         <div class='grid gap-4 py-4'>
           <Form.Field {form} name='url'>
             <Form.Control>

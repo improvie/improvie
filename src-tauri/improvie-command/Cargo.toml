@@ -36,7 +36,6 @@ ts = [
   "youtube/ts",
   "uid/ts",
 ]
-static-ffmpeg = ["youtube/static-ffmpeg"]
 
 [lints]
 workspace = true

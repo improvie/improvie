@@ -14,17 +14,12 @@ body:
           required: true
 
   - type: textarea
-    id: problem
+    id: feature-details
     attributes:
-      label: Is your feature request related to a problem?
-      description: If this feature request is related to a specific problem or inconvenience, please describe it clearly.
-    validations:
-      required: true
-
-  - type: textarea
-    id: solution
-    attributes:
-      label: Describe the solution you’d like to see
-      description: Clearly describe the feature or improvement you’d like to suggest.
+      label: Feature Details
+      description: Please describe the problem related to your feature request and the solution or improvement you propose.
+      placeholder: |
+        1. Describe the problem or inconvenience clearly.
+        2. Suggest the feature or improvement you’d like to see.
     validations:
       required: true

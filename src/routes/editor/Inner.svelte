@@ -7,7 +7,6 @@
   import type { RuleType } from '$bindings/Rule';
   import { action_update_rules } from '$lib/action/rules';
   import { Button } from '$lib/components/ui/button';
-  import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
@@ -54,33 +53,31 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <div class='flex'>
-  <Card.Root class={cn('w-full z-0', open && 'sm:w-2/3')}>
-    <ScrollArea orientation='both' class='w-full h-dvh relative'>
-      <ContextMenu.Root>
-        <ContextMenu.Trigger>
-          <div class='w-full flex flex-col gap-6 p-6'>
-            {#each rules as _, i}
-              <RuleNode bind:rule={rules[i]} remove_rule={() => {
-                rules = rules.filter((_, j) => i !== j);
-              }} />
-            {:else}
-              <div class='flex items-center justify-center w-full h-full'>
-                <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
-              </div>
-            {/each}
-          </div>
-          <div class='min-h-80'></div>
-        </ContextMenu.Trigger>
-        <ContextMenu.Content>
-          <ContextMenu.Item onclick={() => {
-            open = true;
-          }}>
-            <ListPlusIcon class='mr-1' />Add Rule
-          </ContextMenu.Item>
-        </ContextMenu.Content>
-      </ContextMenu.Root>
-    </ScrollArea>
-  </Card.Root>
+  <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>
+        <div class='w-full flex flex-col gap-6 p-6'>
+          {#each rules as _, i}
+            <RuleNode bind:rule={rules[i]} remove_rule={() => {
+              rules = rules.filter((_, j) => i !== j);
+            }} />
+          {:else}
+            <div class='flex items-center justify-center w-full h-full'>
+              <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
+            </div>
+          {/each}
+        </div>
+        <div class='min-h-80'></div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item onclick={() => {
+          open = true;
+        }}>
+          <ListPlusIcon class='mr-1' />Add Rule
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  </ScrollArea>
 
   <EditorTracker bind:open={tracker_open} />
 </div>

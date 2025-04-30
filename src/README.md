@@ -5,4 +5,4 @@
 > Do not edit any files in this directory manually.
 >
 > These files are generated via a Rust-to-TypeScript binding process.
-> To regenerate, run: `cargo test --workspace --features ts export_bindings`
+> To regenerate, run: `cargo ts`

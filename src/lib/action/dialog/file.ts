@@ -1,4 +1,4 @@
-import type { FileDialogResponse } from '$bindings/FileDialog';
+import type { FileDialogResponse } from '$bindings/file-dialog';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_select_content_dialog(): Promise<FileDialogResponse> {

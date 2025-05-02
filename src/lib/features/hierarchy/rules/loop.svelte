@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { LoopRule, RuleType } from '$bindings/Rule';
+  import type { LoopRule, RuleType } from '$bindings/rule';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import RenameElement from '$lib/components/element/RenameElement.svelte';
   import * as Card from '$lib/components/ui/card/index.js';

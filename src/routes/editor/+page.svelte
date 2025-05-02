@@ -1,6 +1,6 @@
 <script lang='ts'>
   import type { Playlist } from '$bindings/play';
-  import type { RuleType } from '$bindings/Rule';
+  import type { RuleType } from '$bindings/rule';
   import { action_get_rules } from '$lib/action/rules';
   import { current_playlist_id } from '$lib/stores/plays';
   import { playlists } from '$lib/stores/plays/playlist';

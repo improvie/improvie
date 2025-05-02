@@ -2,7 +2,7 @@
 import type { PlayFolder } from "./index";
 import type { PlayFolderNode } from "./index";
 import type { Playlist } from "./index";
-import type { Uid } from "../Uid";
+import type { Uid } from "../uid";
 
 export type CreateBasePlayItemDto = { parent_folder_id: Uid, title: string, description: string | null, };
 

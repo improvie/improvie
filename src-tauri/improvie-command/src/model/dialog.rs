@@ -8,7 +8,7 @@ def_unit_dyn_app_error! {
 }
 
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("FileDialog.ts"))]
+#[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
 pub enum FileDialogKind {
     Audio,
     Video,
@@ -16,7 +16,7 @@ pub enum FileDialogKind {
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("FileDialog.ts"))]
+#[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
 pub struct FileDialogResponse {
     pub path: PathBuf,
     pub name: String,

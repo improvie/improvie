@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RangeRule } from '$bindings/Rule';
+  import type { RangeRule } from '$bindings/rule';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';

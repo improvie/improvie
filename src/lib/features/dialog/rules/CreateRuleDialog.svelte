@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RuleType } from '$bindings/Rule';
+  import type { RuleType } from '$bindings/rule';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';

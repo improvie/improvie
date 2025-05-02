@@ -1,4 +1,4 @@
-import type { RuleFormat, RuleType } from '$bindings/Rule';
+import type { RuleFormat, RuleType } from '$bindings/rule';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_rules(playlist_id: string): Promise<RuleType[]> {

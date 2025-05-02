@@ -4,7 +4,7 @@
 
 <script lang='ts'>
   import type { Playlist } from '$bindings/play';
-  import type { RuleType } from '$bindings/Rule';
+  import type { RuleType } from '$bindings/rule';
   import { action_update_rules } from '$lib/action/rules';
   import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';

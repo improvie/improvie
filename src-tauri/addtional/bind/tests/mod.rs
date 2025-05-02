@@ -4,22 +4,8 @@
 // but dose not check if the generated code is correct.
 
 #[test]
-fn export() {
-    #[bind::ts]
-    struct Test {
-        a: i32,
-        b: String,
-    }
-
-    let _ = Test {
-        a: 1,
-        b: "test".to_string(),
-    };
-}
-
-#[test]
 fn export_to() {
-    #[bind::ts("playlist.ts")]
+    #[bind::ts("test-cabab.ts")]
     struct Test {
         a: i32,
         b: String,

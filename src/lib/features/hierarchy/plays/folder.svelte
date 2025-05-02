@@ -46,7 +46,7 @@
         <p class='line-clamp-3 select-text'>{folder.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
-        <ContextMenu.Content>
+    <ContextMenu.Content>
       <ContextMenu.Item onclick={rename}>
         <RenameElement />
       </ContextMenu.Item>

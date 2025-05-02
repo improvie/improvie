@@ -39,7 +39,7 @@
     }
   }
 
-  let thumbnail_path = $derived.by(() => {
+  const thumbnail_path = $derived.by(() => {
     if (playlist === undefined) {
       return undefined;
     }
@@ -64,7 +64,7 @@
       <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
           <ImageLoader
-            bind:src={thumbnail_path}
+            src={thumbnail_path}
           />
         </div>
         <p class='line-clamp-3 select-text'>{playlist.title}</p>

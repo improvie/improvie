@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { RuleType } from '$bindings/Rule';
+  import type { RuleType } from '$bindings/rule';
   import { ContentRuleNode, LoopRuleNode, RandomRuleNode, RangeRuleNode } from '.';
 
   let {

@@ -16,7 +16,7 @@ cd src-tauri || exit
 
 echo "🔧 Binding TypeScript files in src-tauri to src/bindings"
 
-cargo test --workspace --features ts
+cargo ts
 SUCCESS=$?
 
 if [ $SUCCESS -ne 0 ]; then

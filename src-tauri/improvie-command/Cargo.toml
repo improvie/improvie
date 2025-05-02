@@ -24,12 +24,12 @@ log.workspace = true
 tauri-plugin-dialog.workspace = true
 more-convert.workspace = true
 ts-rs = { workspace = true, optional = true }
-ts-bind = { workspace = true, optional = true }
+bind = { workspace = true, optional = true }
 
 [features]
 default = []
 ts = [
-  "dep:ts-bind",
+  "dep:bind",
   "dep:ts-rs",
   "improvie-logic/ts",
   "improvie-app/ts",

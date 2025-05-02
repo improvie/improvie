@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import type { ContentKind } from '$bindings/Constants';
+  import type { ContentKind } from '$bindings/constants';
   import type { CreateContentDto } from '$bindings/item/dto';
   import {
     action_select_content_dialog,

@@ -1,5 +1,5 @@
 import type { Content } from '$bindings/item';
-import type { RuleFormat, RuleType } from '$bindings/Rule';
+import type { RuleFormat, RuleType } from '$bindings/rule';
 import { action_get_rules_format } from '$lib/action/rules';
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
 import { contents } from './items/content';

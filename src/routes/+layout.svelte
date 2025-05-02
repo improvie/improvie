@@ -12,7 +12,6 @@
   import { init_play_items } from '$lib/stores/plays';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { loadTranslations } from '$lib/translations/translations';
-  import { onMount } from 'svelte';
   import '../app.css';
 
   const { children }: { children: Snippet } = $props();
@@ -20,7 +19,7 @@
   const defaultLanguage = 'ja';
   loadTranslations(defaultLanguage, '/');
 
-  onMount(() => {
+  $effect.pre(() => {
     tracker.init();
     init_items();
     init_play_items();

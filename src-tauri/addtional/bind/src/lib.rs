@@ -6,11 +6,11 @@ use std::str::FromStr;
 pub fn ts(attr: proc_macro::TokenStream, item: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let mut arg = String::from("export");
     if !attr.is_empty() {
-        let arg_str = attr.to_string();
-        if !arg_str.starts_with('"') {
+        let raw_arg_str = attr.to_string();
+        let arg_str = raw_arg_str.trim_matches('"');
+        if arg_str == raw_arg_str {
             panic!("The export_to argument must be a string");
         }
-        let arg_str = arg_str.trim_matches('"');
         if arg_str.is_empty() {
             panic!("The export_to argument must not be empty");
         }

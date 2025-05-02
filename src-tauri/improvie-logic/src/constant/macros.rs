@@ -8,7 +8,7 @@ macro_rules! def_constant_enum {
     ) => {
         $(
             $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)]
-            #[cfg_attr(feature = "ts", ts_bind::ts("Constants.ts"))]
+            #[cfg_attr(feature = "ts", bind::ts("Constants.ts"))]
             $pub $enum $name {
                 $(
                     $(#[$field_attr])*

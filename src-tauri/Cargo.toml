@@ -50,7 +50,7 @@ members = [
   "addtional/improvie-plugin",
   "addtional/improvie-builtin",
   "addtional/uid",
-  "addtional/ts-bind",
+  "addtional/bind",
   "addtional/youtube",
   "prebuild",
 ]
@@ -75,6 +75,7 @@ improvie-plugin = { path = "addtional/improvie-plugin" }
 improvie-builtin = { path = "addtional/improvie-builtin" }
 uid = { path = "addtional/uid" }
 youtube = { path = "addtional/youtube" }
+bind = { path = "addtional/bind" }
 
 # tauri
 tauri = { version = "=2.5.1", features = [
@@ -99,10 +100,9 @@ serde_json = "=1.0"
 
 # utils
 thiserror = "=2.0"
-chrono = { version = "=0.4.40", features = ["serde"] }
+chrono = { version = "=0.4.41", features = ["serde"] }
 rand = "=0.9.1"
 ts-rs = { version = "=10.1.0", features = ["uuid-impl", "chrono-impl"] }
-ts-bind = { path = "addtional/ts-bind" }
 more-convert = { version = "=0.11.1", features = ["utils"] }
 
 # macros

@@ -263,6 +263,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "89e25b6adfb930f02d1981565a6e5d9c547ac15a96606256d3b59040e5cd4ca3"
 
 [[package]]
+name = "bind"
+version = "0.2.7"
+dependencies = [
+ "ts-rs",
+]
+
+[[package]]
 name = "bindgen"
 version = "0.70.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -735,9 +742,9 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "chrono"
-version = "0.4.40"
+version = "0.4.41"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a7964611d71df112cb1730f2ee67324fcf4d0fc6606acbbe9bfe06df124637c"
+checksum = "c469d952047f47f91b68d1cba3f10d63c11d73e4636f24f08daf0278abf01c4d"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
@@ -2442,6 +2449,7 @@ dependencies = [
 name = "improvie-app"
 version = "0.2.7"
 dependencies = [
+ "bind",
  "improvie-domain",
  "improvie-logic",
  "log",
@@ -2451,7 +2459,6 @@ dependencies = [
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
- "ts-bind",
  "ts-rs",
  "uid",
 ]
@@ -2468,6 +2475,7 @@ dependencies = [
 name = "improvie-command"
 version = "0.1.0"
 dependencies = [
+ "bind",
  "futures-util",
  "improvie-app",
  "improvie-builtin",
@@ -2483,7 +2491,6 @@ dependencies = [
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
  "tokio",
- "ts-bind",
  "ts-rs",
  "uid",
  "youtube",
@@ -2521,13 +2528,13 @@ dependencies = [
 name = "improvie-logic"
 version = "0.2.7"
 dependencies = [
+ "bind",
  "chrono",
  "more-convert",
  "rand 0.9.1",
  "serde",
  "sqlx",
  "thiserror 2.0.12",
- "ts-bind",
  "ts-rs",
  "uid",
 ]
@@ -6024,13 +6031,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
-name = "ts-bind"
-version = "0.2.7"
-dependencies = [
- "ts-rs",
-]
-
-[[package]]
 name = "ts-rs"
 version = "10.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6082,9 +6082,9 @@ dependencies = [
 name = "uid"
 version = "0.1.0"
 dependencies = [
+ "bind",
  "serde",
  "sqlx",
- "ts-bind",
  "ts-rs",
  "uuid",
 ]
@@ -7190,6 +7190,7 @@ dependencies = [
 name = "youtube"
 version = "0.2.7"
 dependencies = [
+ "bind",
  "ez-ffmpeg",
  "futures-util",
  "improvie-logic",
@@ -7200,7 +7201,6 @@ dependencies = [
  "serde",
  "thiserror 2.0.12",
  "tokio",
- "ts-bind",
  "ts-rs",
 ]
 

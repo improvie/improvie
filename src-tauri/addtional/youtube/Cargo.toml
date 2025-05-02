@@ -8,7 +8,7 @@ description.workspace = true
 
 [features]
 default = []
-ts = ["dep:ts-bind", "dep:ts-rs"]
+ts = ["dep:bind", "dep:ts-rs"]
 static-ffmpeg = ["ez-ffmpeg/static"]
 
 [dependencies]
@@ -22,7 +22,7 @@ futures-util.workspace = true
 more-convert.workspace = true
 
 ts-rs = { workspace = true, optional = true }
-ts-bind = { workspace = true, optional = true }
+bind = { workspace = true, optional = true }
 
 ez-ffmpeg = { features = [
   "async",

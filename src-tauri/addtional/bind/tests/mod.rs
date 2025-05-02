@@ -1,8 +1,11 @@
 #![allow(unnameable_test_items, dead_code)]
 
+// This test is used to check if the `bind` macro compiles correctly
+// but dose not check if the generated code is correct.
+
 #[test]
 fn export() {
-    #[ts_bind::ts]
+    #[bind::ts]
     struct Test {
         a: i32,
         b: String,
@@ -16,7 +19,7 @@ fn export() {
 
 #[test]
 fn export_to() {
-    #[ts_bind::ts("playlist.rs")]
+    #[bind::ts("playlist.ts")]
     struct Test {
         a: i32,
         b: String,

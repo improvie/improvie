@@ -1,5 +1,5 @@
 [package]
-name = "ts-bind"
+name = "bind"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -10,7 +10,6 @@ description.workspace = true
 proc-macro = true
 
 [dependencies]
-ts-rs = { workspace = true, optional = true }
 
 [lints]
 workspace = true

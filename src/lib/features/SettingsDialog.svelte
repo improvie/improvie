@@ -1,6 +1,5 @@
 <script lang='ts'>
   import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-  import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import Bell from '@lucide/svelte/icons/bell';
@@ -33,15 +32,10 @@
     ],
   };
 
-  let open = $state(false);
+  let { open = $bindable() }: { open: boolean } = $props();
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Trigger>
-    {#snippet child({ props })}
-      <Button size='sm' {...props}>Open Dialog</Button>
-    {/snippet}
-  </Dialog.Trigger>
   <Dialog.Content class='overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>

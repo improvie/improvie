@@ -7,7 +7,6 @@
   import TrackPlayer from '$lib/features/track-player/index.svelte';
   import { get_themes } from '$lib/plugin/feature/theme.svelte';
   import { initSlots } from '$lib/stores/index.svelte';
-  // import SettingsDialog from '$lib/features/SettingsDialog.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
   import { tracker } from '$lib/stores/tracker.svelte';

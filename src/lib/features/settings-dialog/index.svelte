@@ -37,10 +37,10 @@
 </script>
 
 <Dialog.Root bind:open={settingsStore.state}>
-  <Dialog.Content class='h-dvh overflow-hidden select-none p-0 md:max-h-[600px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
+  <Dialog.Content class='h-dvh overflow-hidden select-none p-0 max-h-[98%] md:max-h-[90%] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
-    <Sidebar.Provider class='items-start'>
+    <Sidebar.Provider class='items-start' open={false}>
       <Sidebar.Root collapsible='icon'>
         <Sidebar.Content>
           <Sidebar.Group>
@@ -63,7 +63,7 @@
           </Sidebar.Group>
         </Sidebar.Content>
       </Sidebar.Root>
-      <main class='flex h-[calc(100dvh-20px)] md:h-[580px] flex-1 flex-col overflow-hidden'>
+      <main class='flex max-h-[calc(98%-20px)] md:max-h-[calc(88%-20px)] flex-1 flex-col overflow-hidden'>
         <header
           class='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'
         >
@@ -84,7 +84,7 @@
         </header>
         <div class='flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0'>
           {#each Array.from({ length: 10 }) as _, i (i)}
-            <div class='bg-muted/50 aspect-video max-w-3xl rounded-xl'></div>
+            <div class='bg-muted/50 aspect-video rounded-xl'></div>
           {/each}
         </div>
       </main>

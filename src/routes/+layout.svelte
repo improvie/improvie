@@ -4,6 +4,7 @@
   import * as Sidebar from '$lib/components/ui/sidebar';
   import { Toaster } from '$lib/components/ui/sonner';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
+  import SettingsDialog from '$lib/features/settings-dialog/index.svelte';
   import TrackPlayer from '$lib/features/track-player/index.svelte';
   import { get_themes } from '$lib/plugin/feature/theme.svelte';
   import { initSlots } from '$lib/stores/index.svelte';
@@ -44,3 +45,5 @@
     <TrackPlayer />
   </Sidebar.Inset>
 </Sidebar.Provider>
+
+<SettingsDialog />

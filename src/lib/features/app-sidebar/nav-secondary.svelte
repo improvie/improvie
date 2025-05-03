@@ -1,11 +1,10 @@
 <script lang='ts'>
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import ThemeChanger from '$lib/features/ThemeChanger.svelte';
+  import { settingsStore } from '$lib/stores/open.svelte';
   import { MessageCircleQuestion, Palette, Settings2 } from '@lucide/svelte';
-  import SettingsDialog from '../settings-dialog/index.svelte';
 
   let is_open_theme: boolean = $state(false);
-  let is_open_settings: boolean = $state(false);
 </script>
 
 <Sidebar.Group>
@@ -14,13 +13,12 @@
       <Sidebar.MenuItem>
         <Sidebar.MenuButton
           onclick={() => {
-            is_open_settings = !is_open_settings;
+            settingsStore.toggle();
           }}
         >
           <Settings2 />
           <span>Settings</span>
         </Sidebar.MenuButton>
-        <SettingsDialog bind:open={is_open_settings} />
       </Sidebar.MenuItem>
       <Sidebar.MenuItem>
         <Sidebar.MenuButton

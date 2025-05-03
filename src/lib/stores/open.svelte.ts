@@ -19,3 +19,5 @@ export class OpenStore {
     this._open = value;
   }
 }
+
+export const settingsStore = new OpenStore();

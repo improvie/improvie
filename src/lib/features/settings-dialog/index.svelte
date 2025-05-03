@@ -2,6 +2,7 @@
   import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+  import { settingsStore } from '$lib/stores/open.svelte';
   import Bell from '@lucide/svelte/icons/bell';
   import Check from '@lucide/svelte/icons/check';
   import Globe from '@lucide/svelte/icons/globe';
@@ -33,16 +34,14 @@
       { name: 'Advanced', icon: Settings },
     ],
   };
-
-  let { open = $bindable() }: { open: boolean } = $props();
 </script>
 
-<Dialog.Root bind:open>
-  <Dialog.Content class='overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
+<Dialog.Root bind:open={settingsStore.state}>
+  <Dialog.Content class='h-dvh overflow-hidden select-none p-0 md:max-h-[600px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
     <Sidebar.Provider class='items-start'>
-      <Sidebar.Root collapsible='none' class='hidden md:flex'>
+      <Sidebar.Root collapsible='icon'>
         <Sidebar.Content>
           <Sidebar.Group>
             <Sidebar.GroupContent>
@@ -64,11 +63,12 @@
           </Sidebar.Group>
         </Sidebar.Content>
       </Sidebar.Root>
-      <main class='flex h-[480px] flex-1 flex-col overflow-hidden'>
+      <main class='flex h-[calc(100dvh-20px)] md:h-[580px] flex-1 flex-col overflow-hidden'>
         <header
           class='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'
         >
           <div class='flex items-center gap-2 px-4'>
+            <Sidebar.Trigger class='h-10 w-10 z-50' />
             <Breadcrumb.Root>
               <Breadcrumb.List>
                 <Breadcrumb.Item class='hidden md:block'>

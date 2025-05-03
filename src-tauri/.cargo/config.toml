@@ -3,4 +3,5 @@ ci = "test --workspace --features run-test"
 ts = "test --workspace --features ts export_bindings"
 
 [env]
-TS_RS_EXPORT_DIR = { value = "../src/bindings/", relative = true, force = true }
+TS_RS_EXPORT_DIR = { value = "../src/bindings", relative = true, force = true }
+FRONTEND_STATIC_DIR = { value = "../src/static", relative = true, force = true }

@@ -2,7 +2,7 @@
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import ThemeChanger from '$lib/features/ThemeChanger.svelte';
   import { MessageCircleQuestion, Palette, Settings2 } from '@lucide/svelte';
-  import SettingsDialog from '../SettingsDialog.svelte';
+  import SettingsDialog from '../settings-dialog/index.svelte';
 
   let is_open_theme: boolean = $state(false);
   let is_open_settings: boolean = $state(false);

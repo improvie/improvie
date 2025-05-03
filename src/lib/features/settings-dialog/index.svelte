@@ -15,6 +15,8 @@
   import Settings from '@lucide/svelte/icons/settings';
   import Video from '@lucide/svelte/icons/video';
 
+  let selected = $state<string | null>(null);
+
   const data = {
     nav: [
       { name: 'Notifications', icon: Bell },
@@ -36,7 +38,7 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content class='overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]'>
+  <Dialog.Content class='overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
     <Sidebar.Provider class='items-start'>
@@ -47,9 +49,9 @@
               <Sidebar.Menu>
                 {#each data.nav as item (item.name)}
                   <Sidebar.MenuItem>
-                    <Sidebar.MenuButton isActive={item.name === 'Messages & media'}>
+                    <Sidebar.MenuButton isActive={item.name === selected}>
                       {#snippet child({ props })}
-                        <a href='##' {...props}>
+                        <a {...props} onclick={() => (selected = item.name)}>
                           <item.icon />
                           <span>{item.name}</span>
                         </a>

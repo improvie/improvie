@@ -1,10 +1,10 @@
-import type { FileDialogResponse } from '$bindings/file-dialog';
+import type { ContentFileDialogResponse } from '$bindings/file-dialog';
 import { invoke } from '@tauri-apps/api/core';
 
-export async function action_select_content_dialog(): Promise<FileDialogResponse> {
-  return await invoke<FileDialogResponse>('open_select_content_dialog');
+export async function action_select_content_dialog(): Promise<ContentFileDialogResponse> {
+  return await invoke<ContentFileDialogResponse>('open_select_content_dialog');
 }
 
-export async function action_select_thumbnail_dialog(): Promise<FileDialogResponse> {
-  return await invoke<FileDialogResponse>('open_select_thumbnail_dialog');
+export async function action_select_thumbnail_dialog(): Promise<string> {
+  return await invoke<string>('open_select_thumbnail_dialog');
 }

@@ -112,7 +112,7 @@
                 variant='outline'
                 class='col-span-4'
                 onclick={async () => {
-                  $formData.thumbnail = (await action_select_thumbnail_dialog())?.path;
+                  $formData.thumbnail = await action_select_thumbnail_dialog();
                 }}
               >
                 <span class='text-muted-foreground'>

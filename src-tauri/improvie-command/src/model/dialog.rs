@@ -1,29 +1,25 @@
 use std::path::PathBuf;
 
-use improvie_logic::def_unit_dyn_app_error;
+use improvie_logic::{constant::items::ContentKind, def_unit_dyn_app_error};
 use tauri_plugin_dialog::FilePath;
 
 def_unit_dyn_app_error! {
     pub struct NotAllowUrlOnFileDialog = "Not allow url on file dialog";
 }
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
-pub enum FileDialogKind {
-    Audio,
-    Video,
-    Image,
-}
+pub(crate) const IMAGE_FILTER: &[&str] = &["png", "jpeg", "gif"];
+pub(crate) const AUDIO_FILTER: &[&str] = &["mp3", "wav", "aac"];
+pub(crate) const VIDEO_FILTER: &[&str] = &["mp4"];
 
 #[derive(Debug, Clone, serde::Serialize)]
 #[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
-pub struct FileDialogResponse {
+pub struct ContentFileDialogResponse {
     pub path: PathBuf,
     pub name: String,
-    pub kind: FileDialogKind,
+    pub kind: ContentKind,
 }
 
-impl FileDialogResponse {
+impl ContentFileDialogResponse {
     pub fn new(path: FilePath) -> Result<Self, NotAllowUrlOnFileDialog> {
         match path {
             FilePath::Url(_) => Err(NotAllowUrlOnFileDialog),
@@ -31,11 +27,15 @@ impl FileDialogResponse {
                 let Some(ext) = path_buf.extension() else {
                     return Err(NotAllowUrlOnFileDialog);
                 };
-                let kind = match ext.to_string_lossy().as_ref() {
-                    "mp3" | "wav" | "aac" => FileDialogKind::Audio,
-                    "mp4" => FileDialogKind::Video,
-                    "png" | "jpeg" | "gif" => FileDialogKind::Image,
-                    _ => unreachable!(),
+                let ext = ext.to_string_lossy();
+                let ext = ext.as_ref();
+
+                let kind = if AUDIO_FILTER.contains(&ext) {
+                    ContentKind::Audio
+                } else if VIDEO_FILTER.contains(&ext) {
+                    ContentKind::Video
+                } else {
+                    return Err(NotAllowUrlOnFileDialog);
                 };
 
                 #[allow(clippy::unwrap_used)]

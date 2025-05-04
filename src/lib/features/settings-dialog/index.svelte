@@ -3,34 +3,21 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { settingsStore } from '$lib/stores/open.svelte';
-  import Bell from '@lucide/svelte/icons/bell';
-  import Check from '@lucide/svelte/icons/check';
   import Globe from '@lucide/svelte/icons/globe';
-  import House from '@lucide/svelte/icons/house';
   import Keyboard from '@lucide/svelte/icons/keyboard';
   import Link from '@lucide/svelte/icons/link';
-  import Lock from '@lucide/svelte/icons/lock';
-  import Menu from '@lucide/svelte/icons/menu';
-  import MessageCircle from '@lucide/svelte/icons/message-circle';
-  import Paintbrush from '@lucide/svelte/icons/paintbrush';
   import Settings from '@lucide/svelte/icons/settings';
   import Video from '@lucide/svelte/icons/video';
+  import Language from './language.svelte';
 
   let selected = $state<string | null>(null);
 
   const data = {
     nav: [
-      { name: 'Notifications', icon: Bell },
-      { name: 'Navigation', icon: Menu },
-      { name: 'Home', icon: House },
-      { name: 'Appearance', icon: Paintbrush },
-      { name: 'Messages & media', icon: MessageCircle },
-      { name: 'Language & region', icon: Globe },
+      { name: 'Language', icon: Globe, element: Language },
       { name: 'Accessibility', icon: Keyboard },
-      { name: 'Mark as read', icon: Check },
       { name: 'Audio & video', icon: Video },
-      { name: 'Connected accounts', icon: Link },
-      { name: 'Privacy & visibility', icon: Lock },
+      { name: 'Plugin', icon: Link },
       { name: 'Advanced', icon: Settings },
     ],
   };
@@ -40,8 +27,23 @@
   <Dialog.Content class='h-dvh overflow-hidden select-none p-0 max-h-[98%] md:max-h-[90%] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
-    <Sidebar.Provider class='items-start' open={true}>
+    <Sidebar.Provider class='items-start' open={true} style='--sidebar-width: 10rem; --sidebar-width-mobile: 10rem;'>
       <Sidebar.Root collapsible='icon'>
+        <Sidebar.Header>
+          <Sidebar.MenuButton size='lg' isActive={selected === null} onclick={() => (selected = null)}>
+            <div
+              class='flex aspect-square size-8 items-center justify-center rounded-lg'
+            >
+              <img src='/logo.png' alt='Logo' class='h-8 w-8 rounded-full' />
+            </div>
+            <div class='flex flex-col gap-1 leading-none'>
+              <span>Improvie</span>
+              <!-- TODO: from package.json  -->
+              <span>v0.3.0</span>
+            </div>
+          </Sidebar.MenuButton>
+        </Sidebar.Header>
+        <Sidebar.Separator />
         <Sidebar.Content>
           <Sidebar.Group>
             <Sidebar.GroupContent>
@@ -72,12 +74,14 @@
             <Breadcrumb.Root>
               <Breadcrumb.List>
                 <Breadcrumb.Item class='hidden md:block'>
-                  <Breadcrumb.Link href='#'>Settings</Breadcrumb.Link>
+                  <Breadcrumb.Link onclick={() => selected = null}>Settings</Breadcrumb.Link>
                 </Breadcrumb.Item>
-                <Breadcrumb.Separator class='hidden md:block' />
-                <Breadcrumb.Item>
-                  <Breadcrumb.Page>Messages & media</Breadcrumb.Page>
-                </Breadcrumb.Item>
+                {#if selected !== null}
+                  <Breadcrumb.Separator class='hidden md:block' />
+                  <Breadcrumb.Item>
+                    <Breadcrumb.Page>{selected}</Breadcrumb.Page>
+                  </Breadcrumb.Item>
+                {/if}
               </Breadcrumb.List>
             </Breadcrumb.Root>
           </div>

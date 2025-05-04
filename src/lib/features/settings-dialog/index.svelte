@@ -3,30 +3,24 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { settingsStore } from '$lib/stores/open.svelte';
-  import Globe from '@lucide/svelte/icons/globe';
-  import Keyboard from '@lucide/svelte/icons/keyboard';
   import Link from '@lucide/svelte/icons/link';
   import Settings from '@lucide/svelte/icons/settings';
-  import Video from '@lucide/svelte/icons/video';
-  import Language from './language.svelte';
+  import AdvancedElement from './advanced.svelte';
+  import MainElement from './main.svelte';
+  import PluginElement from './plugin.svelte';
 
   let selected = $state<string | null>(null);
 
   const data = {
     nav: [
-      { name: 'Language', icon: Globe, element: Language },
-      { name: 'Accessibility', icon: Keyboard },
-      { name: 'Audio & video', icon: Video },
-      { name: 'Plugin', icon: Link },
-      { name: 'Advanced', icon: Settings },
+      { name: 'Plugin', icon: Link, element: PluginElement },
+      { name: 'Advanced', icon: Settings, element: AdvancedElement },
     ],
   };
 </script>
 
 <Dialog.Root bind:open={settingsStore.state}>
   <Dialog.Content class='h-dvh overflow-hidden select-none p-0 max-h-[98%] md:max-h-[90%] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
-    <Dialog.Title class='sr-only'>Settings</Dialog.Title>
-    <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
     <Sidebar.Provider class='items-start' open={true} style='--sidebar-width: 10rem; --sidebar-width-mobile: 10rem;'>
       <Sidebar.Root collapsible='icon'>
         <Sidebar.Header>
@@ -69,10 +63,10 @@
           class='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12'
         >
           <div class='flex items-center gap-2 px-4'>
-            <Sidebar.Trigger class='h-10 w-10 z-50' />
+            <Sidebar.Trigger class='h-10 w-10' />
             <Breadcrumb.Root>
               <Breadcrumb.List>
-                <Breadcrumb.Item class='hidden md:block'>
+                <Breadcrumb.Item>
                   <Breadcrumb.Link onclick={() => selected = null}>Settings</Breadcrumb.Link>
                 </Breadcrumb.Item>
                 {#if selected !== null}
@@ -85,10 +79,13 @@
             </Breadcrumb.Root>
           </div>
         </header>
-        <div class='flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0'>
-          {#each Array.from({ length: 10 }) as _, i (i)}
-            <div class='bg-muted/50 aspect-video rounded-xl'></div>
-          {/each}
+        <div class='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
+          {#if selected === null}
+            <MainElement />
+          {:else}
+            {@const Element = data.nav.find(item => item.name === selected)!.element}
+            <Element />
+          {/if}
         </div>
       </main>
     </Sidebar.Provider>

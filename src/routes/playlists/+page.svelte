@@ -1,6 +1,5 @@
 <script lang='ts'>
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import CreatePlayFolderDialog from '$lib/features/dialog/plays/CreatePlayFolderDialog.svelte';
   import CreatePlaylistDialog from '$lib/features/dialog/plays/CreatePlaylistDialog.svelte';
@@ -32,7 +31,7 @@
 <Separator class='mb-2' />
 <PlayPageBreadcrumb />
 <Separator class='my-2' />
-<ScrollArea class='w-full h-dvh relative'>
+<div class='w-full h-dvh relative overflow-y-auto'>
   <ContextMenu.Root>
     <ContextMenu.Trigger class='absolute w-full h-full z-10'>
     </ContextMenu.Trigger>
@@ -59,4 +58,4 @@
       {/if}
     {/each}
   </div>
-</ScrollArea>
+</div>

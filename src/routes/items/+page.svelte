@@ -1,7 +1,6 @@
 <script lang='ts'>
   import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
@@ -58,7 +57,7 @@
 <Separator class='mb-2' />
 <ItemPageBreadcrumb />
 <Separator class='my-2' />
-<ScrollArea class='w-full h-dvh relative'>
+<div class='w-full h-dvh relative overflow-y-auto'>
   <ContextMenu.Root>
     <ContextMenu.Trigger class='absolute w-full h-full z-10'>
     </ContextMenu.Trigger>
@@ -76,7 +75,7 @@
     </ContextMenu.Content>
   </ContextMenu.Root>
 
-  <div class='absolute w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+  <div class='absolute grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
     {#each node as child}
       {#if child.kind === 'Folder'}
         <HierarchyFolder folder_id={child.id} bind:rename_data />
@@ -85,4 +84,4 @@
       {/if}
     {/each}
   </div>
-</ScrollArea>
+</div>

@@ -4,8 +4,10 @@ pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
     tauri::generate_handler![
         health_check::health_check,
+        // dialog
         dialog::file::open_select_content_dialog,
         dialog::file::open_select_thumbnail_dialog,
+        dialog::folder::open_select_folder_dialog,
         // items
         items::get_items_hierarchy,
         items::get_contents,

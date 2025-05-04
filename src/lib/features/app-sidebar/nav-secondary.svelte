@@ -1,7 +1,7 @@
 <script lang='ts'>
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import ThemeChanger from '$lib/features/ThemeChanger.svelte';
-  import { settingsStore } from '$lib/stores/open.svelte';
+  import { settingsStore, sidebarToggler } from '$lib/stores/open.svelte';
   import { MessageCircleQuestion, Palette, Settings2 } from '@lucide/svelte';
 
   let is_open_theme: boolean = $state(false);
@@ -13,6 +13,7 @@
       <Sidebar.MenuItem>
         <Sidebar.MenuButton
           onclick={() => {
+            sidebarToggler.toggle();
             settingsStore.toggle();
           }}
         >

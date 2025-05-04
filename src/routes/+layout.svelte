@@ -1,6 +1,5 @@
 <script lang='ts'>
   import type { Snippet } from 'svelte';
-
   import * as Sidebar from '$lib/components/ui/sidebar';
   import { Toaster } from '$lib/components/ui/sonner';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
@@ -12,6 +11,7 @@
   import { init_play_items } from '$lib/stores/plays';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { loadTranslations } from '$lib/translations/translations';
+  import Sealed from './sealed.svelte';
   import '../app.css';
 
   const { children }: { children: Snippet } = $props();
@@ -32,6 +32,7 @@
 <Toaster />
 
 <Sidebar.Provider>
+  <Sealed />
   <AppSidebar />
   <Sidebar.Inset class='select-none'>
     <header class='flex h-14 shrink-0 items-center gap-2'>

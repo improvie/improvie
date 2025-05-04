@@ -7,6 +7,14 @@ export class OpenStore {
     }
   }
 
+  open() {
+    this._open = true;
+  }
+
+  close() {
+    this._open = false;
+  }
+
   toggle() {
     this._open = !this._open;
   }
@@ -21,3 +29,4 @@ export class OpenStore {
 }
 
 export const settingsStore = new OpenStore();
+export const sidebarToggler: { toggle: () => void } = $state({ toggle: () => {} });

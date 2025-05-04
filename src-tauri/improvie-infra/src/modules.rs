@@ -5,8 +5,8 @@ use improvie_domain::modules::RepositoriesModule;
 use crate::{
     persistence::db::DbPool,
     repository::{
-        health_check::HealthCheckRepositoryImpl, items::ItemsRepositoryImpl,
-        plays::PlaylistsRepositoryImpl, rules::RulesRepositoryImpl,
+        items::ItemsRepositoryImpl, plays::PlaylistsRepositoryImpl, rules::RulesRepositoryImpl,
+        settings::HealthCheckRepositoryImpl,
     },
 };
 
@@ -28,7 +28,7 @@ macros::def_repositories_module!(
     RepositoriesModule,
     RepositoriesModuleImpl,
     struct RepositoriesModuleImplInner {
-        health_check_repository: HealthCheckRepositoryImpl = HealthCheckRepository,
+        settings_repository: HealthCheckRepositoryImpl = SettingsRepository,
         items_repository: ItemsRepositoryImpl = ItemsRepository,
         playsts_repository: PlaylistsRepositoryImpl = PlaystsRepository,
         rules_repository: RulesRepositoryImpl = RulesRepository,

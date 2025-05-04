@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use improvie_app::usecase::{
-    halth_check::HealthCheckUseCase, items::ItemsUseCase, plays::PlaysUseCase, rules::RulesUseCase,
+    items::ItemsUseCase, plays::PlaysUseCase, rules::RulesUseCase, settings::SettingsUseCase,
 };
 use improvie_infra::{
     modules::RepositoriesModuleImpl,
@@ -11,7 +11,7 @@ use improvie_infra::{
 macros::def_modules!(
     RepositoriesModuleImpl,
     pub struct Modules {
-        health_check_use_case: HealthCheckUseCase,
+        settings_use_case: SettingsUseCase,
         items_use_case: ItemsUseCase,
         plays_use_case: PlaysUseCase,
         rules_use_case: RulesUseCase,

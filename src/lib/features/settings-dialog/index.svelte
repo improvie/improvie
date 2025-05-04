@@ -37,9 +37,8 @@
               <img src='/logo.png' alt='Logo' class='h-8 w-8 rounded-full' />
             </div>
             <div class='flex flex-col gap-1 leading-none'>
-              <span>Improvie</span>
-              <!-- TODO: from package.json  -->
-              <span>v0.3.0</span>
+              <span>{PKG.name}</span>
+              <span>v{PKG.version}</span>
             </div>
           </Sidebar.MenuButton>
         </Sidebar.Header>

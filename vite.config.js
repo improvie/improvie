@@ -1,7 +1,13 @@
+import { readFileSync } from 'node:fs';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
+
+const file = fileURLToPath(new URL('package.json', import.meta.url));
+const json = readFileSync(file, 'utf8');
+const pkg = JSON.parse(json);
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -28,6 +34,12 @@ export default defineConfig(() => ({
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
+    },
+  },
+  define: {
+    PKG: {
+      name: pkg.name,
+      version: pkg.version,
     },
   },
 }));

@@ -40,7 +40,7 @@
   <Dialog.Content class='h-dvh overflow-hidden select-none p-0 max-h-[98%] md:max-h-[90%] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
     <Dialog.Title class='sr-only'>Settings</Dialog.Title>
     <Dialog.Description class='sr-only'>Customize your settings here.</Dialog.Description>
-    <Sidebar.Provider class='items-start' open={false}>
+    <Sidebar.Provider class='items-start' open={true}>
       <Sidebar.Root collapsible='icon'>
         <Sidebar.Content>
           <Sidebar.Group>

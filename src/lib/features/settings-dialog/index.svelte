@@ -1,10 +1,14 @@
 <script lang='ts'>
+  import type { AppSettings } from '$bindings/settings';
+  import { action_get_app_settings, action_set_app_settings } from '$lib/action/settings';
+  import LoadSpinner from '$lib/components/LoadSpinner.svelte';
   import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import { settingsStore } from '$lib/stores/open.svelte';
   import Link from '@lucide/svelte/icons/link';
   import Settings from '@lucide/svelte/icons/settings';
+  import { onMount } from 'svelte';
   import AdvancedElement from './advanced.svelte';
   import MainElement from './main.svelte';
   import PluginElement from './plugin.svelte';
@@ -17,6 +21,22 @@
       { name: 'Advanced', icon: Settings, element: AdvancedElement },
     ],
   };
+
+  let settings: AppSettings | undefined = $state();
+
+  async function init() {
+    settings = await action_get_app_settings();
+  }
+
+  $effect(() => {
+    if (settings !== undefined) {
+      action_set_app_settings(settings);
+    }
+  });
+
+  onMount(() => {
+    init();
+  });
 </script>
 
 <Dialog.Root bind:open={settingsStore.state}>
@@ -80,11 +100,15 @@
           </div>
         </header>
         <div class='flex flex-1 flex-col gap-4 overflow-y-auto p-4'>
-          {#if selected === null}
-            <MainElement />
+          {#if settings === undefined}
+            <LoadSpinner />
           {:else}
-            {@const Element = data.nav.find(item => item.name === selected)!.element}
-            <Element />
+            {#if selected === null}
+              <MainElement bind:settings />
+            {:else}
+              {@const Element = data.nav.find(item => item.name === selected)!.element}
+              <Element />
+            {/if}
           {/if}
         </div>
       </main>

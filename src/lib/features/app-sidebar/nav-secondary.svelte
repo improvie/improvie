@@ -13,7 +13,9 @@
       <Sidebar.MenuItem>
         <Sidebar.MenuButton
           onclick={() => {
-            sidebarToggler.toggle();
+            if (sidebarToggler.isMobile()) {
+              sidebarToggler.toggle();
+            }
             settingsStore.toggle();
           }}
         >

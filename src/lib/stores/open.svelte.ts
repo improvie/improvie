@@ -29,4 +29,10 @@ export class OpenStore {
 }
 
 export const settingsStore = new OpenStore();
-export const sidebarToggler: { toggle: () => void } = $state({ toggle: () => {} });
+export const sidebarToggler: {
+  toggle: () => void;
+  isMobile: () => boolean;
+} = $state({
+  toggle: () => {},
+  isMobile: () => false,
+});

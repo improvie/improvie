@@ -4,4 +4,5 @@
 
   const sidebar = useSidebar();
   sidebarToggler.toggle = () => sidebar.toggle();
+  sidebarToggler.isMobile = () => sidebar.isMobile;
 </script>

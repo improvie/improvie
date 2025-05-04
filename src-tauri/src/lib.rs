@@ -1,4 +1,5 @@
 use improvie_command::state::AppState;
+use improvie_logic::AppResult;
 use tauri::{Manager, async_runtime::block_on};
 
 mod handler;
@@ -28,13 +29,31 @@ pub fn run() {
             let data_dir = init::dev_folder();
             #[cfg(all(debug_assertions, not(mobile)))]
             let document_dir = data_dir.join("documents");
+            #[cfg(all(debug_assertions, not(mobile)))]
+            std::fs::create_dir_all(&document_dir)?;
 
             #[cfg(not(all(debug_assertions, not(mobile))))]
             let data_dir = app.path().app_data_dir()?;
-            #[cfg(not(all(debug_assertions, not(mobile))))]
-            let document_dir = app.path().document_dir()?.join(&app.config().identifier);
 
-            let app_state = block_on(AppState::new(data_dir, document_dir))?;
+            let app_state = block_on(AppState::new(data_dir))?;
+
+            #[cfg(all(debug_assertions, not(mobile)))]
+            block_on(async {
+                let mut settings = app_state
+                    .modules
+                    .settings_use_case()
+                    .get_app_settings()
+                    .await?;
+                settings.document_dir = Some(document_dir);
+                app_state
+                    .modules
+                    .settings_use_case()
+                    .set_app_settings(settings)
+                    .await?;
+
+                AppResult::Ok(())
+            })?;
+
             app.manage(app_state);
             Ok(())
         })

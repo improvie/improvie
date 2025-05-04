@@ -26,6 +26,7 @@ tauri-build = { version = "=2.2", features = [] }
 [dependencies]
 improvie-command.workspace = true
 improvie-plugin.workspace = true
+improvie-logic.workspace = true
 youtube.workspace = true
 
 serde.workspace = true

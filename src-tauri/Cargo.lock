@@ -2433,6 +2433,7 @@ version = "0.2.7"
 dependencies = [
  "fix-path-env",
  "improvie-command",
+ "improvie-logic",
  "improvie-plugin",
  "log",
  "serde",

@@ -116,6 +116,9 @@
       if (app_error.kind === 'YtInvalidUrl') {
         toast('Invalid Youtube URL');
       }
+      else if (app_error.kind === 'YtNotFoundDocumentDir') {
+        toast('Please set a document directory by going to settings');
+      }
       else {
         toast('Video download failed');
         Logger.app_error('Error importing youtube video', app_error);

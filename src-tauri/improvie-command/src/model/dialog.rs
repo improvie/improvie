@@ -1,52 +1,44 @@
 use std::path::PathBuf;
 
-use improvie_logic::def_unit_dyn_app_error;
-use tauri_plugin_dialog::FilePath;
+use improvie_logic::{constant::items::ContentKind, def_unit_dyn_app_error};
 
 def_unit_dyn_app_error! {
     pub struct NotAllowUrlOnFileDialog = "Not allow url on file dialog";
 }
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
-pub enum FileDialogKind {
-    Audio,
-    Video,
-    Image,
-}
+pub(crate) const IMAGE_FILTER: &[&str] = &["png", "jpeg", "gif"];
+pub(crate) const AUDIO_FILTER: &[&str] = &["mp3", "wav", "aac"];
+pub(crate) const VIDEO_FILTER: &[&str] = &["mp4"];
 
 #[derive(Debug, Clone, serde::Serialize)]
 #[cfg_attr(feature = "ts", bind::ts("file-dialog.ts"))]
-pub struct FileDialogResponse {
+pub struct ContentFileDialogResponse {
     pub path: PathBuf,
     pub name: String,
-    pub kind: FileDialogKind,
+    pub kind: ContentKind,
 }
 
-impl FileDialogResponse {
-    pub fn new(path: FilePath) -> Result<Self, NotAllowUrlOnFileDialog> {
-        match path {
-            FilePath::Url(_) => Err(NotAllowUrlOnFileDialog),
-            FilePath::Path(path_buf) => {
-                let Some(ext) = path_buf.extension() else {
-                    return Err(NotAllowUrlOnFileDialog);
-                };
-                let kind = match ext.to_string_lossy().as_ref() {
-                    "mp3" | "wav" | "aac" => FileDialogKind::Audio,
-                    "mp4" => FileDialogKind::Video,
-                    "png" | "jpeg" | "gif" => FileDialogKind::Image,
-                    _ => unreachable!(),
-                };
+impl ContentFileDialogResponse {
+    /// Create a new [`ContentFileDialogResponse`] from a [`PathBuf`].
+    /// Importantny, this function will check the file extension to determine the content kind.
+    pub fn new(path: PathBuf) -> Self {
+        let Some(ext) = path.extension() else {
+            unreachable!("File dialog should return a file with extension")
+        };
+        let ext = ext.to_string_lossy();
+        let ext = ext.as_ref();
 
-                #[allow(clippy::unwrap_used)]
-                let name = path_buf.file_stem().unwrap().to_string_lossy().to_string();
+        let kind = if AUDIO_FILTER.contains(&ext) {
+            ContentKind::Audio
+        } else if VIDEO_FILTER.contains(&ext) {
+            ContentKind::Video
+        } else {
+            unreachable!("File dialog should return a file with audio or video extension")
+        };
 
-                Ok(Self {
-                    path: path_buf,
-                    name,
-                    kind,
-                })
-            }
-        }
+        #[allow(clippy::unwrap_used)]
+        let name = path.file_stem().unwrap().to_string_lossy().to_string();
+
+        Self { path, name, kind }
     }
 }

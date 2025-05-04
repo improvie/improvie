@@ -19,8 +19,13 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub async fn new(data_dir: PathBuf, document_dir: PathBuf) -> Result<Self, InitDbError> {
+    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         let modules = Modules::new(data_dir.clone()).await?;
+
+        let document_dir = data_dir.join("documents");
+        if !document_dir.exists() {
+            std::fs::create_dir_all(&document_dir)?;
+        }
 
         log::info!("Start loading plugins");
         let mut pm = PluginManager::new(data_dir.clone());
@@ -61,8 +66,7 @@ pub mod tests {
                 .unwrap();
 
             let test_dir = test_dir();
-            let teset_document_dir = test_dir.join("documents");
-            let state = AppState::new(test_dir, teset_document_dir).await.unwrap();
+            let state = AppState::new(test_dir).await.unwrap();
             app.manage(state);
             Self { app }
         }

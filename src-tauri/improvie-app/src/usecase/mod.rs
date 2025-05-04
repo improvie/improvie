@@ -1,4 +1,4 @@
-pub mod halth_check;
+pub mod settings;
 pub mod items;
 pub mod plays;
 pub mod rules;

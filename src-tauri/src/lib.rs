@@ -26,15 +26,12 @@ pub fn run() {
 
             #[cfg(all(debug_assertions, not(mobile)))]
             let data_dir = init::dev_folder();
-            #[cfg(all(debug_assertions, not(mobile)))]
-            let document_dir = data_dir.join("documents");
 
             #[cfg(not(all(debug_assertions, not(mobile))))]
             let data_dir = app.path().app_data_dir()?;
-            #[cfg(not(all(debug_assertions, not(mobile))))]
-            let document_dir = app.path().document_dir()?.join(&app.config().identifier);
 
-            let app_state = block_on(AppState::new(data_dir, document_dir))?;
+            let app_state = block_on(AppState::new(data_dir))?;
+
             app.manage(app_state);
             Ok(())
         })

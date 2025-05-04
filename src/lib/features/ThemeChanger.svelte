@@ -6,7 +6,7 @@
   import { get_themes, set_current_theme } from '$lib/plugin/feature/theme.svelte';
   import { onMount } from 'svelte';
 
-  let { open }: { open: boolean } = $props();
+  let { open = $bindable() }: { open: boolean } = $props();
 
   const themes: ThemeFeature[] = $state([]);
 

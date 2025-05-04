@@ -3,6 +3,8 @@ use improvie_logic::impl_serialize_for_dyn_app_error;
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
 #[variant_name(prefix = "Yt")]
 pub enum YtError {
+    #[error("not found document dir")]
+    NotFoundDocumentDir,
     #[error("invalid url")]
     InvalidUrl,
     #[error("failed to download video")]

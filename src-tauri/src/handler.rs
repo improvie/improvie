@@ -1,9 +1,12 @@
-use improvie_command::command::{dialog, health_check, items, plays, plugin, rules, youtube};
+use improvie_command::command::{dialog, items, plays, plugin, rules, settings, youtube};
 
 pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
     tauri::generate_handler![
-        health_check::health_check,
+        // settings
+        settings::get_app_settings,
+        settings::set_app_settings,
+        // dialog
         dialog::file::open_select_content_dialog,
         dialog::file::open_select_thumbnail_dialog,
         // items

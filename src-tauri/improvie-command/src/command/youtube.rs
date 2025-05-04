@@ -41,7 +41,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
 ) -> Result<CreateContentResponse, YtError> {
     let downloaded = youtube::download_single_video(
         &video_url_or_id,
-        state.document_dir.to_path_buf(),
+        state.document_dir.clone(),
         |downloading_state| {
             log::debug!("Video Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-video", downloading_state);
@@ -62,7 +62,7 @@ pub async fn import_youtube_playlist<R: tauri::Runtime>(
 ) -> Result<Vec<CreateContentResponse>, YtError> {
     let downloaded = youtube::download_playlist(
         &playlist_url,
-        state.document_dir.to_path_buf(),
+        state.document_dir.clone(),
         move |downloading_state| {
             log::debug!("Playlist Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-playlist", downloading_state);

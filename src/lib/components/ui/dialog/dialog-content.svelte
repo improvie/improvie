@@ -10,6 +10,9 @@
 		class: className,
 		portalProps,
 		children,
+    // Added by the user -->
+    trapFocus = false, // disabled by default
+    // <-- Added by the user
 		...restProps
 	}: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
 		portalProps?: DialogPrimitive.PortalProps;

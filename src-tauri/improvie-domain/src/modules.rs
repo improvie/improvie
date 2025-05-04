@@ -1,10 +1,10 @@
 use crate::repository::{
-    health_check::HealthCheckRepository, items::ItemsRepository, plays::PlaystsRepository,
-    rules::RulesRepository,
+    items::ItemsRepository, plays::PlaystsRepository, rules::RulesRepository,
+    settings::SettingsRepository,
 };
 
 macros::def_module!(RepositoriesModule {
-    health_check_repository: HealthCheckRepository,
+    settings_repository: SettingsRepository,
     items_repository: ItemsRepository,
     playsts_repository: PlaystsRepository,
     rules_repository: RulesRepository,

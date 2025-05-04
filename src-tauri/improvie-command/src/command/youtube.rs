@@ -39,25 +39,16 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     parent_folder_id: Uid,
     video_url_or_id: String,
 ) -> Result<CreateContentResponse, YtError> {
-    let settings = state
-        .modules
-        .settings_use_case()
-        .get_app_settings()
-        .await
-        .map_err(|_| YtError::NotFoundDocumentDir)?;
-
-    let document_dir = match settings.document_dir {
-        Some(dir) => dir,
-        None => return Err(YtError::NotFoundDocumentDir),
-    };
-
-    let downloaded =
-        youtube::download_single_video(&video_url_or_id, document_dir, |downloading_state| {
+    let downloaded = youtube::download_single_video(
+        &video_url_or_id,
+        state.document_dir.clone(),
+        |downloading_state| {
             log::debug!("Video Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-video", downloading_state);
             Ok(())
-        })
-        .await?;
+        },
+    )
+    .await?;
 
     save(&state, parent_folder_id, downloaded).await
 }
@@ -69,25 +60,16 @@ pub async fn import_youtube_playlist<R: tauri::Runtime>(
     parent_folder_id: Uid,
     playlist_url: String,
 ) -> Result<Vec<CreateContentResponse>, YtError> {
-    let settings = state
-        .modules
-        .settings_use_case()
-        .get_app_settings()
-        .await
-        .map_err(|_| YtError::NotFoundDocumentDir)?;
-
-    let document_dir = match settings.document_dir {
-        Some(dir) => dir,
-        None => return Err(YtError::NotFoundDocumentDir),
-    };
-
-    let downloaded =
-        youtube::download_playlist(&playlist_url, document_dir, move |downloading_state| {
+    let downloaded = youtube::download_playlist(
+        &playlist_url,
+        state.document_dir.clone(),
+        move |downloading_state| {
             log::debug!("Playlist Downloading state: {:?}", downloading_state);
             let _ = app.emit("yt-download-progress-playlist", downloading_state);
             Ok(())
-        })
-        .await?;
+        },
+    )
+    .await?;
 
     let mut contents = Vec::new();
     for downloaded in downloaded {

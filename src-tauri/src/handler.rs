@@ -9,7 +9,6 @@ pub fn generate_handler<R: tauri::Runtime>()
         // dialog
         dialog::file::open_select_content_dialog,
         dialog::file::open_select_thumbnail_dialog,
-        dialog::folder::open_select_folder_dialog,
         // items
         items::get_items_hierarchy,
         items::get_contents,

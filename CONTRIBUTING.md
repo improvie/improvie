@@ -10,32 +10,45 @@ You can contribute to the project in the following ways:
    If you find any issues with the application, please report them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 2. **Feature Suggestions**
-   If you have ideas for new features or improvements, please propose them on [GitHub Issues](https://github.com/improvie/improvie/issues).
+   If you have new feature ideas or improvements, please propose them on [GitHub Issues](https://github.com/improvie/improvie/issues).
 
 3. **Code Improvements**
-   Fix bugs or implement new features and submit a pull request.
+   You can fix bugs or implement new features and submit a pull request.
 
 4. **Documentation Improvements**
-   Fix typos or add content to the documentation.
+   Corrections of typos or additions to the documentation are also welcome.
 
 5. **Adding Tests**
-   Add test cases to improve the quality of the application.
+   Contribute to improving the quality of the application by adding test cases.
 
-## 🧪 Coding Guidelines
+## 🛠 Coding Style
 
-- **Code Style**
-  Please follow the project's coding style. It is recommended to use formatters and linters such as `cargo fmt` and `cargo clippy`.
+- **JavaScript/TypeScript (Svelte)**
+  - Use `eslint` to check code style. Run `bun run lint` and use `bun run lint:fix` for automatic fixes.
+  - Use `svelte-check` for type checking. Run `bun run check` to verify.
 
-- **Documentation**
-  When adding new features or changing existing functionality, be sure to update or add relevant documentation.
+- **Rust**
+  - Use `rustfmt` to format code. Run `cargo fmt` for automatic formatting.
+  - Use `cargo clippy` for code linting.
 
-- **Testing**
-  When modifying existing code or adding new features, add or update tests as needed.
-  Before pushing changes, make sure all tests pass:
+- **Editor Settings**
+  - Follow the `.editorconfig` for tab and indent settings.
 
-  ```bash
-  cargo ci
-  ```
+## 📚 Documentation
+
+- If you add features or change specifications, be sure to update or add related documentation.
+- Write documentation clearly and concisely, including sample code if necessary.
+
+## 🧪 Testing
+
+- Ensure all tests pass before pushing changes.
+  - Use `bun test` to run tests under `src`.
+  - Use `cargo ci` to run tests under `src-tauri`.
+
+## 🔄 Git & GitHub
+
+- Write commit messages that clearly describe the changes.
+- When creating a pull request, link related issues and clearly explain the purpose of the changes.
 
 ## 📜 License
 

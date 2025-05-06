@@ -75,7 +75,18 @@
     />
   </Tabs.Content>
   <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
-    <video bind:this={video_element} crossorigin='anonymous' playsinline bind:volume={tracker.volume} bind:currentTime={tracker.currentTime} bind:paused={tracker.paused} bind:duration onended={onended} class='h-full w-auto object-contain' onclick={() => tracker.toggle_pause()}>
+    <video
+      bind:this={video_element}
+      crossorigin='anonymous'
+      playsinline
+      bind:volume={tracker.volume}
+      bind:currentTime={tracker.currentTime}
+      bind:paused={tracker.paused}
+      bind:duration
+      onended={onended}
+      class='aspect-video h-full w-auto object-contain'
+      onclick={() => tracker.toggle_pause()}
+    >
       {#if content_path}
         <source src={content_path} />
       {/if}

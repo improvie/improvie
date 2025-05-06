@@ -26,7 +26,7 @@
       onload={() => {
         failed = false;
       }}
-      class='w-full h-auto aspect-video object-cover'
+      class='h-full w-auto aspect-video object-contain'
     />
   {:else}
     <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>

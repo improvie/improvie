@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**A Tauri app to _"improve like the movie"_ — helping you organize local media and create playlists easily.**
+**A Tauri application with the concept of _"improve like the movie"_ that allows you to organize local media and easily create playlists**
 
 [![License](https://img.shields.io/github/license/improvie/improvie?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)
@@ -12,39 +12,34 @@ English | [日本語](./README-JA.md)
 
 </div>
 
-`improvie` is a lightweight desktop application built with [Tauri](https://tauri.app/) that lets you manage your local video and audio files with ease. You can browse your media, create custom playlists, and enjoy smooth playback — all in a clean and intuitive interface.
+`improvie` is a lightweight software built with [Tauri](https://tauri.app/),
+allowing you to easily manage local video and audio files.
+It provides a clean and intuitive interface for browsing media,
+creating custom playlists, and smooth playback.
 
 ## ✨ Features
 
-- 📂 **Local Media Management**
-  Import and organize video/audio files stored on your machine.
+- 📂 **Media Management**
+  Easily manage local video and audio files.
 
 - 🎵 **Playlist Creation**
-  Quickly create and edit playlists from your local media.
+  Create playlists by compiling your favorite songs and videos.
 
 - 🎧 **Lightweight Media Player**
-  Seamless playback experience optimized for local content.
+  A media player with a simple and intuitive interface.
 
 - ⚡ **Built with Tauri**
-  Fast and secure with a native feel.
+  Uses Tauri for a lightweight and fast application.
 
-- 🌐 **Multi-language Support**
-  Available in both English and Japanese, choose your preferred language.
+- 🌐 **Multilingual Support**
+  Supports Japanese and English, allowing users to use it in their preferred language.
 
 - 🎨 **Theme Customization**
   Customize the appearance of the application.
 
 ## 📥 Installation
 
-### System Requirements
-
-- **OS**: Windows 10/11, macOS 11+, Ubuntu 20.04+
-- **RAM**: 2GB+ recommended
-- **Disk Space**: 100MB+ free space and enough space for your media files
-
-### Download
-
-Get the latest release from the [GitHub releases page](https://github.com/improvie/improvie/releases/latest).
+The latest release can be downloaded from the [GitHub Releases page](https://github.com/improvie/improvie/releases/latest).
 
 ## 📸 Screenshots
 

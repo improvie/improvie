@@ -2,6 +2,7 @@
   import type { Content } from '$bindings/item';
   import FloatingTip from '$lib/components/FloatingTip.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
+  import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
@@ -108,7 +109,7 @@
     </div>
     <div class='gap-2 items-center h-full hidden sm:flex py-4'>
       {#if thumbnail_path}
-        <img class='h-full w-auto aspect-video object-cover' src={thumbnail_path} alt='Thumbnail not found.' />
+        <ImageLoader src={thumbnail_path} alt='Thumbnail not found.' />
       {/if}
       <div class='h-full flex items-center'>
         <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track?.title}</p>

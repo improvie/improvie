@@ -10,7 +10,7 @@
 
   let {
     src,
-    alt = 'Image not specified',
+    alt,
     failed = $bindable(false),
   }: Props = $props();
 </script>
@@ -44,7 +44,7 @@
       <ImageOffIcon class='w-9/16 h-auto aspect-square' />
     </Tooltip.Trigger>
     <Tooltip.Content>
-      <p>{alt}</p>
+      <p>Image not specified.</p>
     </Tooltip.Content>
   </Tooltip.Root>
 {/if}

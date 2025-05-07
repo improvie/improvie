@@ -32,24 +32,29 @@ jobs:
       - name: install frontend dependencies
         run: |
           bun install
+
+      - name: Check frontend dependencies
+        run: |
+          bun run check
+
       - name: Test and Lint frontend
         run: |
           bun test
-          bun lint
+          bun run lint
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
-
-      - name: Fmt
-        run: |
-          cd src-tauri
-          cargo fmt --all -- --check
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: ./src-tauri -> target
           key: ci-rust-cache-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Fmt
+        run: |
+          cd src-tauri
+          cargo fmt --all -- --check
 
       - name: Clippy
         run: |

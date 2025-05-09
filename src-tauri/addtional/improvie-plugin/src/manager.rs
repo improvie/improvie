@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use crate::{BoxResult, Plugin, PluginContext, PluginFeature, PluginMetadata, theme::ThemeFeature};
 
 pub struct PluginData {
-    pub metadata: PluginMetadata<'static>,
+    pub metadata: PluginMetadata,
     pub instance: Box<dyn Plugin>,
     pub is_loaded: bool,
     pub features: Vec<PluginFeature>,
@@ -121,7 +121,7 @@ impl PluginManager {
 
     pub async fn register_plugin(
         &mut self,
-        metadata: PluginMetadata<'static>,
+        metadata: PluginMetadata,
         mut instance: Box<dyn Plugin>,
     ) {
         let context = PluginContext::new(metadata.clone());
@@ -173,7 +173,7 @@ impl PluginManager {
         self.plugins.iter().filter(|data| data.is_loaded)
     }
 
-    pub fn get_loaded_plugins(&self) -> Vec<PluginMetadata<'static>> {
+    pub fn get_loaded_plugins(&self) -> Vec<PluginMetadata> {
         self.loaded_plugin()
             .map(|data| data.metadata.clone())
             .collect()

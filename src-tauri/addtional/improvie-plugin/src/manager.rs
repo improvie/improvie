@@ -1,6 +1,8 @@
 use std::path::PathBuf;
 
-use crate::{BoxResult, Plugin, PluginContext, PluginFeature, PluginMetadata, theme::ThemeFeature};
+use crate::{
+    Plugin, PluginContext, PluginLoadError, PluginFeature, PluginMetadata, theme::ThemeFeature,
+};
 
 pub struct PluginData {
     metadata: PluginMetadata,
@@ -29,6 +31,7 @@ impl PluginState {
 }
 
 impl PluginData {
+    #[must_use]
     pub async fn enable(&mut self) -> PluginState {
         match self.state {
             PluginState::Loaded => {
@@ -91,7 +94,7 @@ impl PluginManager {
         }
     }
 
-    pub async fn load_plugins(&mut self) -> BoxResult<()> {
+    pub async fn load_plugins(&mut self) -> Result<(), PluginLoadError> {
         let plugins_dir = self.data_dir.join(Self::PLUGIN_DIR);
         if !plugins_dir.exists() {
             std::fs::create_dir_all(&plugins_dir)?;
@@ -121,7 +124,7 @@ impl PluginManager {
         Ok(())
     }
 
-    pub async fn load_plugin(&mut self, path: &PathBuf) -> BoxResult<()> {
+    pub async fn load_plugin(&mut self, path: &PathBuf) -> Result<(), PluginLoadError> {
         let lib = unsafe { libloading::Library::new(path) }?;
 
         let plugin_fn = unsafe { lib.get::<fn() -> Box<dyn Plugin>>(b"plugin")? };
@@ -159,6 +162,22 @@ impl PluginManager {
         });
     }
 
+    #[must_use]
+    pub async fn enable_plugin(&mut self, name: &str) -> Option<PluginState> {
+        let opt = self
+            .plugins
+            .iter_mut()
+            .find(|data| data.metadata.name == name);
+
+        if let Some(data) = opt {
+            Some(data.enable().await)
+        } else {
+            log::warn!("Plugin {} not found", name);
+            None
+        }
+    }
+
+    #[must_use]
     pub async fn disable_plugin(&mut self, name: &str) -> bool {
         let opt = self
             .plugins
@@ -169,6 +188,7 @@ impl PluginManager {
             data.disable().await;
             true
         } else {
+            log::warn!("Plugin {} not found", name);
             false
         }
     }

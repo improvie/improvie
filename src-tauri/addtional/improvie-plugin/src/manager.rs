@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::{
-    Plugin, PluginContext, PluginLoadError, PluginFeature, PluginMetadata, theme::ThemeFeature,
+    Plugin, PluginContext, PluginFeature, PluginLoadError, PluginMetadata, features::ThemeFeature,
 };
 
 pub struct PluginData {

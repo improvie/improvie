@@ -1,4 +1,4 @@
-use improvie_plugin::{Plugin, PluginContext, PluginFeature};
+use improvie_plugin::{Plugin, PluginContext, features::PluginFeature};
 use themes::{black_theme, catppuccin_frappe_theme, tokyonight_night_theme, white_theme};
 
 improvie_plugin::metadata!();

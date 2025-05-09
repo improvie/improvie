@@ -1,4 +1,4 @@
-use improvie_plugin::theme::ThemeFeature;
+use improvie_plugin::features::ThemeFeature;
 
 pub fn tokyonight_night_theme() -> ThemeFeature<'static> {
     ThemeFeature {

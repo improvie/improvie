@@ -80,36 +80,7 @@ impl PluginManager {
         let metadata: &PluginMetadata =
             unsafe { &**lib.get::<*const PluginMetadata>(b"METADATA")? };
 
-        macro_rules! require_str {
-            ($var:expr) => {{
-                let var = $var.trim_ascii();
-                if var.is_empty() {
-                    return Err(format!("Plugin {path:?} has empty metadata").into());
-                }
-                var
-            }};
-        }
-
-        macro_rules! maybe_empty_str {
-            ($var:expr) => {{
-                let var = $var;
-                match var {
-                    Some(v) => {
-                        let v = v.trim_ascii();
-                        if v.is_empty() { None } else { Some(v) }
-                    }
-                    None => None,
-                }
-            }};
-        }
-
-        let metadata = PluginMetadata {
-            name: require_str!(metadata.name),
-            version: require_str!(metadata.version),
-            authors: maybe_empty_str!(metadata.authors),
-            description: maybe_empty_str!(metadata.description),
-            repository: maybe_empty_str!(metadata.repository),
-        };
+        let metadata = metadata.to_valid()?;
 
         let instance = plugin_fn();
 

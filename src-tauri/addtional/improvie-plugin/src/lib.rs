@@ -1,10 +1,12 @@
 use std::sync::OnceLock;
 
 mod context;
+mod error;
 mod features;
 mod manager;
 mod metadata;
 pub use context::*;
+pub use error::*;
 pub use features::*;
 pub use manager::*;
 pub use metadata::*;

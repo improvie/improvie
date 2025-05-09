@@ -1,6 +1,6 @@
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
 #[variant_name(prefix = "Plugin")]
-pub enum PluginError {
+pub enum PluginLoadError {
     #[error("plugin not found: {0}")]
     NotFound(String),
     #[error("plugin not loaded: {0}")]

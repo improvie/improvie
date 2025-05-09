@@ -18,12 +18,8 @@ pub static LOGGER: OnceLock<(&'static dyn log::Log, log::LevelFilter)> = OnceLoc
 pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
 pub type BoxResult<T> = std::result::Result<T, BoxError>;
 
-#[allow(unused_variables)]
 #[async_trait::async_trait]
 pub trait Plugin: Send + Sync + 'static {
-    async fn on_load(&mut self, ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>> {
-        Ok(vec![])
-    }
-
-    async fn on_unload(&mut self, ctx: &PluginContext) {}
+    async fn on_enable(&self, ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>>;
+    async fn on_disable(&self, ctx: &PluginContext);
 }

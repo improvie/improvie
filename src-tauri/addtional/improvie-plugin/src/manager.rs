@@ -3,25 +3,73 @@ use std::path::PathBuf;
 use crate::{BoxResult, Plugin, PluginContext, PluginFeature, PluginMetadata, theme::ThemeFeature};
 
 pub struct PluginData {
-    pub metadata: PluginMetadata,
-    pub instance: Box<dyn Plugin>,
-    pub is_loaded: bool,
-    pub features: Vec<PluginFeature>,
+    metadata: PluginMetadata,
+    instance: Box<dyn Plugin>,
+    state: PluginState,
+    features: Vec<PluginFeature>,
 }
 
 impl PluginData {
+    pub fn state(&self) -> &PluginState {
+        &self.state
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum PluginState {
+    Loaded,
+    LoadFailed(String),
+    Unloaded,
+}
+
+impl PluginState {
+    pub fn is_loaded(&self) -> bool {
+        matches!(self, PluginState::Loaded)
+    }
+}
+
+impl PluginData {
+    pub async fn enable(&mut self) -> PluginState {
+        match self.state {
+            PluginState::Loaded => {
+                log::warn!("Plugin {} is already loaded", self.metadata.name);
+                PluginState::Loaded
+            }
+            PluginState::LoadFailed(_) | PluginState::Unloaded => {
+                log::info!("Loading plugin {}", self.metadata.name);
+                let context = PluginContext::new(self.metadata.clone());
+                match self.instance.on_enable(&context).await {
+                    Ok(features) => {
+                        self.features = features;
+                        self.state = PluginState::Loaded;
+                        log::info!("Plugin {} loaded successfully", self.metadata.name);
+                    }
+                    Err(err) => {
+                        self.state = PluginState::LoadFailed(err.to_string());
+                        log::error!("Failed to load plugin {}: {}", self.metadata.name, err);
+                    }
+                }
+                self.state.clone()
+            }
+        }
+    }
+
     /// Unload the plugin.
     ///
     /// Returns `true` if the plugin was unloaded successfully,
     /// `false` if it was already unloaded.
-    pub async fn unload(&mut self) -> bool {
-        if self.is_loaded {
-            let context = PluginContext::new(self.metadata.clone());
-            self.instance.on_unload(&context).await;
-            self.is_loaded = false;
-            true
-        } else {
-            false
+    pub async fn disable(&mut self) {
+        match self.state {
+            PluginState::Loaded => {
+                log::info!("Unloading plugin {}", self.metadata.name);
+                let context = PluginContext::new(self.metadata.clone());
+                self.instance.on_disable(&context).await;
+                self.state = PluginState::Unloaded;
+                log::info!("Plugin {} unloaded successfully", self.metadata.name);
+            }
+            _ => {
+                log::warn!("Plugin {} is already unloaded", self.metadata.name);
+            }
         }
     }
 }
@@ -90,58 +138,49 @@ impl PluginManager {
         Ok(())
     }
 
-    pub async fn register_plugin(
-        &mut self,
-        metadata: PluginMetadata,
-        mut instance: Box<dyn Plugin>,
-    ) {
+    pub async fn register_plugin(&mut self, metadata: PluginMetadata, instance: Box<dyn Plugin>) {
         let context = PluginContext::new(metadata.clone());
 
-        let on_load = instance.on_load(&context).await;
+        let on_load = instance.on_enable(&context).await;
 
-        let is_loaded = on_load.is_ok();
-
-        let features = match on_load {
-            Ok(ok) => ok,
-            Err(e) => {
-                log::error!("Error plugin on load: {e}");
-                vec![]
+        let (state, features) = match on_load {
+            Ok(features) => (PluginState::Loaded, features),
+            Err(err) => {
+                log::error!("Failed to load plugin {}: {}", metadata.name, err);
+                (PluginState::LoadFailed(err.to_string()), vec![])
             }
         };
 
         self.plugins.push(PluginData {
             metadata,
             instance,
-            is_loaded,
+            state,
             features,
         });
     }
 
-    pub async fn unload_plugin(&mut self, name: &str) -> BoxResult<()> {
+    pub async fn disable_plugin(&mut self, name: &str) -> bool {
         let opt = self
             .plugins
             .iter_mut()
             .find(|data| data.metadata.name == name);
 
         if let Some(data) = opt {
-            if data.unload().await {
-                Ok(())
-            } else {
-                Err(format!("Plugin {name} is not loaded").into())
-            }
+            data.disable().await;
+            true
         } else {
-            Err(format!("Plugin {name} not found").into())
+            false
         }
     }
 
-    pub async fn unload_plugins(&mut self) {
+    pub async fn disable_plugins(&mut self) {
         for plugin in &mut self.plugins {
-            plugin.unload().await;
+            plugin.disable().await;
         }
     }
 
     fn loaded_plugin(&self) -> impl Iterator<Item = &PluginData> {
-        self.plugins.iter().filter(|data| data.is_loaded)
+        self.plugins.iter().filter(|data| data.state.is_loaded())
     }
 
     pub fn get_loaded_plugins(&self) -> Vec<PluginMetadata> {

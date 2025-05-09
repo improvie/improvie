@@ -1,4 +1,4 @@
-use crate::PluginError;
+use crate::PluginLoadError;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct PluginMetadata {
@@ -10,12 +10,12 @@ pub struct PluginMetadata {
 }
 
 impl PluginMetadata {
-    pub fn to_valid(&self) -> Result<PluginMetadata, PluginError> {
+    pub fn to_valid(&self) -> Result<PluginMetadata, PluginLoadError> {
         macro_rules! require_str {
             ($var:ident) => {{
                 let var = self.$var.trim();
                 if var.is_empty() {
-                    return Err(PluginError::InvalidMetadata {
+                    return Err(PluginLoadError::InvalidMetadata {
                         plugin_name: self.name.to_string(),
                         field_name: stringify!($var),
                         filed_value: var.to_string(),

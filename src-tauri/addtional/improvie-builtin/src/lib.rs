@@ -16,7 +16,7 @@ impl BuiltinPlugin {
 
 #[async_trait::async_trait]
 impl Plugin for BuiltinPlugin {
-    async fn on_load(&mut self, _ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>> {
+    async fn on_enable(&self, _ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>> {
         Ok(vec![
             PluginFeature::Theme(white_theme()),
             PluginFeature::Theme(black_theme()),
@@ -24,4 +24,6 @@ impl Plugin for BuiltinPlugin {
             PluginFeature::Theme(tokyonight_night_theme()),
         ])
     }
+
+    async fn on_disable(&self, _ctx: &PluginContext) {}
 }

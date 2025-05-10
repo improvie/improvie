@@ -2548,7 +2548,9 @@ dependencies = [
  "async-trait",
  "libloading 0.8.6",
  "log",
+ "more-convert",
  "serde",
+ "thiserror 2.0.12",
  "tokio",
 ]
 

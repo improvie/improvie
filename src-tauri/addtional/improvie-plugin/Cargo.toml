@@ -9,5 +9,7 @@ log.workspace = true
 async-trait.workspace = true
 tokio.workspace = true
 serde.workspace = true
+thiserror.workspace = true
+more-convert.workspace = true
 
 libloading = "0.8"

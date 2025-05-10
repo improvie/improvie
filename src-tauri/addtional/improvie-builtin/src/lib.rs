@@ -1,4 +1,4 @@
-use improvie_plugin::{BoxResult, Plugin, PluginContext, PluginFeature};
+use improvie_plugin::{Plugin, PluginContext, features::PluginFeature};
 use themes::{black_theme, catppuccin_frappe_theme, tokyonight_night_theme, white_theme};
 
 improvie_plugin::metadata!();
@@ -16,7 +16,10 @@ impl BuiltinPlugin {
 
 #[async_trait::async_trait]
 impl Plugin for BuiltinPlugin {
-    async fn on_load(&mut self, _ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>> {
+    async fn on_enable(
+        &self,
+        _ctx: &PluginContext,
+    ) -> Result<Vec<PluginFeature>, Box<dyn std::error::Error + Send + Sync>> {
         Ok(vec![
             PluginFeature::Theme(white_theme()),
             PluginFeature::Theme(black_theme()),
@@ -24,4 +27,6 @@ impl Plugin for BuiltinPlugin {
             PluginFeature::Theme(tokyonight_night_theme()),
         ])
     }
+
+    async fn on_disable(&self, _ctx: &PluginContext) {}
 }

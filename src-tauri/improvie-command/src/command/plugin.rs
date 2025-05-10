@@ -1,5 +1,5 @@
 use improvie_logic::AppResult;
-use improvie_plugin::theme::ThemeFeature;
+use improvie_plugin::features::ThemeFeature;
 
 use crate::state::TauriAppState;
 

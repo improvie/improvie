@@ -1,15 +1,15 @@
 use crate::PluginMetadata;
 
 pub struct PluginContext {
-    metadata: PluginMetadata<'static>,
+    metadata: PluginMetadata,
 }
 
 impl PluginContext {
-    pub fn new(metadata: PluginMetadata<'static>) -> Self {
+    pub fn new(metadata: PluginMetadata) -> Self {
         Self { metadata }
     }
 
-    pub fn metadata(&self) -> &PluginMetadata<'static> {
+    pub fn metadata(&self) -> &PluginMetadata {
         &self.metadata
     }
 }

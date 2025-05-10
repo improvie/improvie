@@ -1,27 +1,26 @@
+use features::PluginFeature;
 use std::sync::OnceLock;
 
 mod context;
-mod features;
+mod error;
 mod manager;
 mod metadata;
-pub use context::*;
-pub use features::*;
+pub use context::PluginContext;
+pub use error::*;
 pub use manager::*;
-pub use metadata::*;
+pub use metadata::PluginMetadata;
+
+pub mod features;
 
 mod macros;
 
 pub static LOGGER: OnceLock<(&'static dyn log::Log, log::LevelFilter)> = OnceLock::new();
 
-pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
-pub type BoxResult<T> = std::result::Result<T, BoxError>;
-
-#[allow(unused_variables)]
 #[async_trait::async_trait]
 pub trait Plugin: Send + Sync + 'static {
-    async fn on_load(&mut self, ctx: &PluginContext) -> BoxResult<Vec<PluginFeature>> {
-        Ok(vec![])
-    }
-
-    async fn on_unload(&mut self, ctx: &PluginContext) {}
+    async fn on_enable(
+        &self,
+        ctx: &PluginContext,
+    ) -> Result<Vec<PluginFeature>, Box<dyn std::error::Error + Send + Sync>>;
+    async fn on_disable(&self, ctx: &PluginContext);
 }

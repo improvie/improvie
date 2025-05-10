@@ -16,7 +16,7 @@ pub enum YtError {
     #[error("failed to create content: {0}")]
     SaveError(#[from] improvie_logic::AppError),
     #[error("failed to create ffmpeg context: {0}")]
-    Ffmpeg(#[from] ez_ffmpeg::error::Error),
+    Ffmpeg(Box<dyn std::error::Error + Send + Sync>),
 }
 
 impl_serialize_for_dyn_app_error!(YtError);

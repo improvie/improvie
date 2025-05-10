@@ -18,8 +18,8 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 default = []
 run-test = ["ts"]
 ts = ["improvie-command/ts"]
-static = ["ffmpeg-sys-next/static"]
-build = ["ffmpeg-sys-next/build"]
+static = ["dep:ffmpeg-sys-next", "ffmpeg-sys-next/static", "youtube/include"]
+build = ["dep:ffmpeg-sys-next", "ffmpeg-sys-next/build", "youtube/include"]
 
 [build-dependencies]
 tauri-build = { version = "=2.2", features = [] }
@@ -41,7 +41,7 @@ tauri-plugin-dialog.workspace = true
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "=2.4.0"
 
-ffmpeg-sys-next = { git = "https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git", branch = "master" }
+ffmpeg-sys-next = { git = "https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git", branch = "master", optional = true }
 
 [patch.crates-io]
 ffmpeg-sys-next = { git = "https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git", branch = "master" }

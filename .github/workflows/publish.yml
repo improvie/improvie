@@ -61,7 +61,7 @@ jobs:
           sudo apt-get install --no-install-recommends clang curl pkg-config xz-utils libxv-dev
           curl -L https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-lgpl-shared.tar.xz -o ffmpeg.tar.xz
           tar -xf ffmpeg.tar.xz
-          echo "FFMPEG_DIR=/home/runner/work/rust-ffmpeg/rust-ffmpeg/ffmpeg-master-latest-linux64-lgpl-shared" >> $GITHUB_ENV
+          echo "FFMPEG_DIR=$GITHUB_WORKSPACE/ffmpeg-master-latest-linux64-lgpl-shared" >> $GITHUB_ENV
 
       - name: install dependencies (mac only)
         if: matrix.platform == 'macos-latest'

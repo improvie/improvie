@@ -64,6 +64,7 @@ jobs:
           vcpkgDirectory: "${{ github.workspace }}/vcpkg"
           runVcpkgInstall: true
           vcpkgJsonGlob: "**/vcpkg.json"
+          runVcpkgFormatString: '[`install`, `--recurse`, `--clean-after-build`, `--triplet`, `$[env.VCPKG_DEFAULT_TRIPLET]`]'
         env:
           VCPKG_TARGET_TRIPLET: ${{ matrix.vcpkg-triplet }}
 

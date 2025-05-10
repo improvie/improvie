@@ -14,6 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: tauri requirements # ref: https://tauri.app/start/prerequisites/#linux
+        run: |
+          apt-get update
+          apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 

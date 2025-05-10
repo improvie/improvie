@@ -9,16 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: jrottenberg/ffmpeg:7.1-ubuntu
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          apt update
-          apt install -y --no-install-recommends clang curl pkg-config ca-certificates
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable

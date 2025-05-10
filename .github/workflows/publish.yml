@@ -17,12 +17,15 @@ jobs:
         include:
           - platform: macos-latest
             target: aarch64-apple-darwin
+            vcpkg-triplet: arm64-osx
 
           - platform: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
+            vcpkg-triplet: x64-linux
 
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
+            vcpkg-triplet: x64-windows-static
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -57,33 +60,20 @@ jobs:
           # Install dependencies for tauri
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev libasound2-dev libappindicator3-dev librsvg2-dev patchelf yasm
-          # Install ffmpeg
-          sudo apt-get install --no-install-recommends clang curl pkg-config xz-utils libxv-dev
-          curl -L https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-lgpl-shared.tar.xz -o ffmpeg.tar.xz
-          tar -xf ffmpeg.tar.xz
-          echo "FFMPEG_DIR=$GITHUB_WORKSPACE/ffmpeg-master-latest-linux64-lgpl-shared" >> $GITHUB_ENV
 
-      - name: install dependencies (mac only)
-        if: matrix.platform == 'macos-latest'
-        run: |
-          brew install ffmpeg
-
-      # ref: https://github.com/zmwangx/rust-ffmpeg/blob/master/.github/workflows/build.yml#L68
-      - name: install dependencies (windows only)
-        if: matrix.platform == 'windows-latest'
-        run: |
-          $VCINSTALLDIR = $(& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath)
-          Add-Content $env:GITHUB_ENV "LIBCLANG_PATH=${VCINSTALLDIR}\VC\Tools\LLVM\x64\bin`n"
-          Invoke-WebRequest "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full-shared.7z" -OutFile ffmpeg-release-full-shared.7z
-          7z x ffmpeg-release-full-shared.7z
-          mkdir ffmpeg
-          mv ffmpeg-*/* ffmpeg/
-          Add-Content $env:GITHUB_ENV "FFMPEG_DIR=${pwd}\ffmpeg`n"
-          Add-Content $env:GITHUB_PATH "${pwd}\ffmpeg\bin`n"
+      - name: Setup vcpkg and install ffmpeg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: "${{ github.workspace }}/vcpkg"
+          runVcpkgInstall: true
+          vcpkgJsonGlob: "**/vcpkg.json"
+        env:
+          VCPKG_TARGET_TRIPLET: ${{ matrix.vcpkg-triplet }}
 
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FFMPEG_DIR: ${{ github.workspace }}/vcpkg/installed/${{ matrix.vcpkg-triplet }}
         with:
           tagName: app-v__VERSION__
           releaseName: App v__VERSION__

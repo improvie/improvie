@@ -17,7 +17,7 @@ mod macros {
                 $($variable:ident: $repository:ident,)*
             }
         ) => {
-            pub trait $module: Clone + Send + Sync + Sized + 'static {
+            pub trait $module: Send + Sync + Sized + 'static {
                 $(
                     type $repository: $repository;
                 )*

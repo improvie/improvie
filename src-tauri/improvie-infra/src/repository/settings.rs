@@ -2,14 +2,14 @@ use improvie_domain::repository::settings::SettingsRepository;
 use improvie_logic::model::settings::AppSettings;
 use uid::Uid;
 
-use crate::model::health_check::AppSettingsRow;
+use crate::model::settings::AppSettingsRow;
 
 use super::def_repository_impl;
 
-def_repository_impl!(HealthCheckRepositoryImpl);
+def_repository_impl!(SettingsRepositoryImpl);
 
 #[async_trait::async_trait]
-impl SettingsRepository for HealthCheckRepositoryImpl {
+impl SettingsRepository for SettingsRepositoryImpl {
     async fn get_app_settings(&self) -> improvie_logic::AppResult<AppSettings> {
         let row: AppSettingsRow = sqlx::query_as::<_, AppSettingsRow>(
             "SELECT id, settings, created_at FROM app_settings WHERE id = ?",

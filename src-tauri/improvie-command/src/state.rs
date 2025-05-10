@@ -6,11 +6,6 @@ use tauri::{State, async_runtime::Mutex};
 
 use crate::modules::Modules;
 
-#[cfg(test)]
-pub type AppRuntime = tauri::test::MockRuntime;
-#[cfg(not(test))]
-pub type AppRuntime = tauri::Wry;
-
 pub struct AppState {
     pub modules: Arc<Modules>,
     pub pm: Arc<Mutex<PluginManager>>,

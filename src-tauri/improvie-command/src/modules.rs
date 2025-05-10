@@ -10,7 +10,7 @@ use improvie_infra::{
 
 macros::def_modules!(
     RepositoriesModuleImpl,
-    pub struct Modules {
+    Modules {
         settings_use_case: SettingsUseCase,
         items_use_case: ItemsUseCase,
         plays_use_case: PlaysUseCase,
@@ -29,23 +29,27 @@ impl Modules {
 mod macros {
     macro_rules! def_modules {
     (
-        $repository:ident, $pub:ident $struct:ident $name:ident
+        $repository:ident, $name:ident
         { $($variable:ident: $usecase:ident,)* }
     ) => {
-        $pub $struct $name {
+        pub struct $name {
             $($variable: $usecase<$repository>,)*
         }
 
         impl $name {
-            $pub fn new_with_db(db: DbPool) -> Self {
+            fn new_with_db(db: DbPool) -> Self {
+                use std::sync::Arc;
+
                 let repository = $repository::new(db);
+                let repository = Arc::new(repository);
+
                 Self {
-                    $($variable: $usecase::new(repository.clone()),)*
+                    $($variable: $usecase::new(Arc::clone(&repository)),)*
                 }
             }
 
             $(
-                $pub fn $variable(&self) -> &$usecase<$repository> {
+                pub fn $variable(&self) -> &$usecase<$repository> {
                     &self.$variable
                 }
             )*

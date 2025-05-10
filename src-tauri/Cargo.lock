@@ -2519,7 +2519,6 @@ dependencies = [
 name = "improvie"
 version = "0.3.0"
 dependencies = [
- "ffmpeg-sys-next",
  "fix-path-env",
  "improvie-command",
  "improvie-logic",

@@ -7,40 +7,25 @@ on:
   pull_request:
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
-    container: jrottenberg/ffmpeg:7.1-ubuntu
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: tauri requirements # ref: https://tauri.app/start/prerequisites/#linux
         run: |
-          apt update
-          apt install -y --no-install-recommends clang curl pkg-config zip unzip
-
-      - name: Cache Bun modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: bun-modules-${{ hashFiles('bun.lock') }}
-      - name: setup bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - name: install frontend dependencies
-        run: |
-          bun install
-
-      - name: Check frontend dependencies
-        run: |
-          bun run check
-
-      - name: Test and Lint frontend
-        run: |
-          bun test
-          bun run lint
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -70,3 +55,32 @@ jobs:
         run: |
           cd src
           git diff --exit-code -- bindings/
+
+  frontned:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Bun modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: bun-modules-${{ hashFiles('bun.lock') }}
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: install frontend dependencies
+        run: |
+          bun install
+
+      - name: Check frontend dependencies
+        run: |
+          bun run check
+
+      - name: Test and Lint frontend
+        run: |
+          bun test
+          bun run lint

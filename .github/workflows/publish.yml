@@ -57,9 +57,8 @@ jobs:
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
-          # Install dependencies for tauri
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev libasound2-dev libappindicator3-dev librsvg2-dev patchelf yasm
+          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev libasound2-dev libappindicator3-dev librsvg2-dev patchelf nasm yasm
 
       - name: Setup vcpkg and install ffmpeg
         uses: lukka/run-vcpkg@v11

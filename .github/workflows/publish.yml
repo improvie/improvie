@@ -68,6 +68,7 @@ jobs:
         run: |
           brew install ffmpeg
 
+      # ref: https://github.com/zmwangx/rust-ffmpeg/blob/master/.github/workflows/build.yml#L68
       - name: install dependencies (windows only)
         if: matrix.platform == 'windows-latest'
         run: |

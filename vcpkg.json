@@ -10,5 +10,11 @@
         "all-gpl"
       ]
     }
+  ],
+  "overrides": [
+    {
+      "name": "ffmpeg",
+      "version": "7.1.1"
+    }
   ]
 }

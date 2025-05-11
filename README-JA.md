@@ -56,11 +56,14 @@
 
 ### FFmpeg
 
-This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded [https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
+このソフトウェアには、[FFmpeg](http://ffmpeg.org)からのコードが含まれており、[GPLv2.0 or later](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)の下でライセンスされています。
 
-- Version: 7.1.1
-- License: GPLv2.0 or later
-- Link type: Static
-- Build system: [vcpkg](https://github.com/microsoft/vcpkg)
-- vcpkg commit: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
-- more information: [vcpkg.json](./vcpkg.json)
+GPLの要件に従い、FFmpegの完全な対応するソースコードを以下のURLから取得できます:
+[https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
+
+- **Version**: 7.1.1
+- **License**: GPLv2.0 or later
+- **Link Type**: Static
+- **Build System**: [vcpkg](https://github.com/microsoft/vcpkg)
+- **vcpkg Commit**: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
+- **Build Info**: See [vcpkg.json](./vcpkg.json)

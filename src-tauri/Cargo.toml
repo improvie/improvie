@@ -18,6 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 default = []
 run-test = ["ts"]
 ts = ["improvie-command/ts"]
+include = ["youtube/include"]
 static = ["youtube/static"]
 
 [build-dependencies]

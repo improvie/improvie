@@ -9,7 +9,7 @@
     "beforeBuildCommand": "bun run build",
     "frontendDist": "../build",
     "features": [
-      "static"
+      "include"
     ]
   },
   "app": {

@@ -23,7 +23,7 @@ jobs:
 
           - platform: windows-latest
             target: x86_64-pc-windows-msvc
-            vcpkg-triplet: x64-windows-static
+            vcpkg-triplet: x64-windows-static-md
 
     runs-on: ${{ matrix.platform }}
     steps:

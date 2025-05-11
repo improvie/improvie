@@ -56,10 +56,11 @@ This project is licensed under the [GPLv3.0](LICENSE).
 
 ### FFmpeg
 
-This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded <a href=https://github.com/FFmpeg/FFmpeg/tree/n7.1.1>here</a>
+This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded [https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
 
-- version: 7.1.1
-- license: GPLv2.0 or later
-- source: [https://github.com/FFmpeg/FFmpeg/tree/n7.1.1](https://github.com/FFmpeg/FFmpeg/tree/n7.1.1)
-- link: static
-- build: by vcpkg
+- Version: 7.1.1
+- License: GPLv2.0 or later
+- Link type: Static
+- Build system: [vcpkg](https://github.com/microsoft/vcpkg)
+- vcpkg commit: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
+- more information: [vcpkg.json](./vcpkg.json)

@@ -35,7 +35,7 @@
     "active": true,
     "shortDescription": "A Tauri app to 'improve like the movie' — helping you organize local media and create playlists easily.",
     "copyright": "Copyright © 2025 improvie",
-    "license": "Apache-2.0",
+    "license": "GPL-3.0",
     "licenseFile": "../LICENSE",
     "publisher": "improvie",
     "targets": "all",

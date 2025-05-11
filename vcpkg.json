@@ -4,7 +4,11 @@
   "dependencies": [
     {
       "name": "ffmpeg",
-      "version>=": "7.1.1"
+      "version>=": "7.1.1",
+      "default-features": false,
+      "features": [
+        "all-gpl"
+      ]
     }
   ]
 }

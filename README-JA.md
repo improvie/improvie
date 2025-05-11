@@ -52,9 +52,14 @@
 
 ## 📜 ライセンス
 
-このプロジェクトは[Apache License 2.0](LICENSE)の下でライセンスされています。
+このプロジェクトは[GPLv3.0](LICENSE)の下でライセンスされています。
 
-## 📢 フィードバック
+### FFmpeg
 
-バグ報告や機能リクエストは[GitHub Issues](https://github.com/improvie/improvie/issues)にお寄せください。
-一般的な質問やディスカッションは[GitHub Discussions](https://github.com/improvie/improvie/discussions)をご利用ください。
+This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded <a href=https://github.com/FFmpeg/FFmpeg/tree/n7.1.1>here</a>
+
+- version: 7.1.1
+- license: GPLv2.0 or later
+- source: [https://github.com/FFmpeg/FFmpeg/tree/n7.1.1](https://github.com/FFmpeg/FFmpeg/tree/n7.1.1)
+- link: static
+- build: by vcpkg

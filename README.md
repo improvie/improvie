@@ -52,9 +52,14 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more infor
 
 ## 📜 License
 
-This project is licensed under the [Apache License 2.0](LICENSE).
+This project is licensed under the [GPLv3.0](LICENSE).
 
-## 📢 Feedback
+### FFmpeg
 
-For bug reports or feature requests, please use [GitHub Issues](https://github.com/improvie/improvie/issues).
-For general questions or discussions, please use [GitHub Discussions](https://github.com/improvie/improvie/discussions).
+This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded <a href=https://github.com/FFmpeg/FFmpeg/tree/n7.1.1>here</a>
+
+- version: 7.1.1
+- license: GPLv2.0 or later
+- source: [https://github.com/FFmpeg/FFmpeg/tree/n7.1.1](https://github.com/FFmpeg/FFmpeg/tree/n7.1.1)
+- link: static
+- build: by vcpkg

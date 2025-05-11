@@ -7,8 +7,20 @@
       "version>=": "7.1.1",
       "default-features": false,
       "features": [
-        "all-gpl"
+        "gpl",
+        "avcodec",
+        "avdevice",
+        "avfilter",
+        "avformat",
+        "swresample",
+        "swscale"
       ]
+    }
+  ],
+  "overrides": [
+    {
+      "name": "ffmpeg",
+      "version": "7.1.1"
     }
   ]
 }

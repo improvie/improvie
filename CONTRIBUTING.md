@@ -52,7 +52,7 @@ You can contribute to the project in the following ways:
 
 ## 📜 License
 
-By contributing to this project, you agree that your contributions will be licensed under the [Apache License 2.0](./LICENSE).
+By contributing to this project, you agree that your contributions will be licensed under the [GPLv3.0](./LICENSE).
 
 ## 💬 Support
 

@@ -30,8 +30,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: ./src-tauri -> target
-          key: ci-rust-cache-${{ hashFiles('**/Cargo.lock') }}
+          workspaces: src-tauri -> target
 
       - name: Fmt
         run: |

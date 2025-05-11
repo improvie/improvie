@@ -66,7 +66,7 @@ jobs:
           vcpkgJsonGlob: "**/vcpkg.json"
         env:
           VCPKG_INSTALLED_DIR: "${{ github.workspace }}/vcpkg/installed"
-          VCPKG_TARGET_TRIPLET: ${{ matrix.vcpkg-triplet }}
+          VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg-triplet }}
 
       - uses: tauri-apps/tauri-action@v0
         env:

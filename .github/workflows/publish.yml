@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
-    branches:
-      - main
 
 jobs:
   publish-tauri:
@@ -16,16 +14,16 @@ jobs:
       matrix:
         include:
           - platform: macos-latest
-            args: --features build-ffmpeg
             target: aarch64-apple-darwin
+            vcpkg-triplet: arm64-osx
 
           - platform: ubuntu-22.04
-            args: --features build-ffmpeg
             target: x86_64-unknown-linux-gnu
+            vcpkg-triplet: x64-linux
 
           - platform: windows-latest
-            args: --features static-ffmpeg
             target: x86_64-pc-windows-msvc
+            vcpkg-triplet: x64-windows-static-md
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -52,67 +50,28 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: ./src-tauri -> target
-          key: rust-cache-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+          key: publish-rust-cache-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libasound2-dev libappindicator3-dev librsvg2-dev patchelf yasm
+          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev libasound2-dev libappindicator3-dev librsvg2-dev patchelf nasm yasm
 
-      - name: install dependencies (mac only)
-        if: matrix.platform == 'macos-latest'
-        run: |
-          export RUSTFLAGS="-C link-arg=-lc++"
-
-      - name: Install LLVM and Clang (windows only)
-        if: matrix.platform == 'windows-latest'
-        uses: KyleMayes/install-llvm-action@v1
+      - name: Setup vcpkg and install ffmpeg
+        uses: lukka/run-vcpkg@v11
         with:
-          version: "10.0"
-          directory: ${{ github.workspace }}/clang
-
-      - name: Cache vcpkg (windows only)
-        id: cache
-        if: matrix.platform == 'windows-latest'
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ github.workspace }}/vcpkg
-          key: vcpkg-windows
-
-      - name: Build vcpkg (windows only)
-        if: matrix.platform == 'windows-latest' && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          git clone https://github.com/microsoft/vcpkg --depth 1
-          ./vcpkg/bootstrap-vcpkg.bat
-
-      - name: install dependencies (windows only)
-        if: matrix.platform == 'windows-latest'
-        run: |
-          choco install -y yasm
-          ./vcpkg/vcpkg install ffmpeg:x64-windows-static
+          vcpkgDirectory: "${{ github.workspace }}/vcpkg"
+          runVcpkgInstall: true
+          vcpkgJsonGlob: "**/vcpkg.json"
+        env:
+          VCPKG_INSTALLED_DIR: "${{ github.workspace }}/vcpkg/installed"
+          VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg-triplet }}
 
       - uses: tauri-apps/tauri-action@v0
-        if: matrix.platform == 'windows-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FFMPEG_DIR: ${{ github.workspace }}/vcpkg/installed/x64-windows-static
-          RUSTFLAGS: -Ctarget-feature=+crt-static
-          LIBCLANG_PATH: ${{ github.workspace }}/clang/lib
-          LLVM_CONFIG_PATH: ${{ github.workspace }}/clang/bin/llvm-config
-        with:
-          tagName: app-v__VERSION__
-          releaseName: App v__VERSION__
-          releaseBody: See the assets to download this version and install.
-          releaseDraft: true
-          prerelease: false
-          args: --target ${{ matrix.target }} ${{ matrix.args }}
-
-      - uses: tauri-apps/tauri-action@v0
-        if: matrix.platform != 'windows-latest'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FFMPEG_DIR: ${{ github.workspace }}/vcpkg/installed/${{ matrix.vcpkg-triplet }}
         with:
           tagName: app-v__VERSION__
           releaseName: App v__VERSION__

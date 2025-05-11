@@ -9,6 +9,7 @@ description.workspace = true
 [features]
 default = []
 ts = ["dep:bind", "dep:ts-rs"]
+static = ["include", "ez-ffmpeg/static"]
 include = ["dep:ez-ffmpeg"]
 
 [dependencies]

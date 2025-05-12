@@ -60,13 +60,10 @@
 
 ### FFmpeg
 
-このソフトウェアには、[FFmpeg](http://ffmpeg.org)からのコードが含まれており、[GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)の下でライセンスされています。
-
-GPLの要件に従い、FFmpegの完全な対応するソースコードを以下のURLから取得できます:
-[https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
+このソフトウェアには、[FFmpeg](http://ffmpeg.org)からのコードが含まれており、[LGPL-2.1](./src-tauri/licenses/LGPLv2.1.txt)の下でライセンスされています。
 
 - **Version**: 7.1.1
-- **License**: GPLv2.0
+- **License**: LGPLv2.1
 - **Link Type**: Static
 - **Build System**: [vcpkg](https://github.com/microsoft/vcpkg)
 - **vcpkg Commit**: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`

@@ -52,17 +52,17 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more infor
 
 ## 📜 License
 
-This project is licensed under the [GPLv3.0](LICENSE).
+This project is licensed under the [GPL-2.0](LICENSE).
 
 ### FFmpeg
 
-This software includes code from [FFmpeg](http://ffmpeg.org), which is licensed under the [GPLv2.0 or later](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+This software includes code from [FFmpeg](http://ffmpeg.org), which is licensed under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 Per the requirements of the GPL, you can obtain the complete corresponding source code for FFmpeg from the following URL:  
 [https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
 
 - **Version**: 7.1.1
-- **License**: GPLv2.0 or later
+- **License**: GPLv2.0
 - **Link Type**: Static
 - **Build System**: [vcpkg](https://github.com/microsoft/vcpkg)
 - **vcpkg Commit**: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`

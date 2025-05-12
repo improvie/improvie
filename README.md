@@ -60,7 +60,7 @@ This software includes the [LINE Seed JP](https://seed.line.me/index_jp.html) fo
 
 ### FFmpeg
 
-This software includes code from [FFmpeg](http://ffmpeg.org), which is licensed under the [LGPL-2.1](./src-tauri/licenses/LGPLv2.1.txt).
+This software statically links the [FFmpeg](http://ffmpeg.org) library, licensed under [LGPL-2.1](./src-tauri/licenses/LGPLv2.1.txt).
 
 - **Version**: 7.1.1
 - **License**: LGPLv2.1
@@ -68,3 +68,51 @@ This software includes code from [FFmpeg](http://ffmpeg.org), which is licensed 
 - **Build System**: [vcpkg](https://github.com/microsoft/vcpkg)
 - **vcpkg Commit**: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
 - **Build Info**: See [vcpkg.json](./vcpkg.json)
+
+This software statically links FFmpeg.
+In compliance with the LGPL v2.1 license,
+the source code of this application and
+its build instructions are provided to allow users to modify or re-link FFmpeg.
+
+## 🛠 Development
+
+### Required Tools
+
+- [bun](https://bun.sh/): JavaScript all-in-one toolkit
+- [rust](https://www.rust-lang.org/tools/install): Rust programming language
+- [tauri-cli](https://v2.tauri.app/reference/cli/): Tauri CLI
+- [FFmpeg](https://ffmpeg.org/): Video and audio processing library
+
+### Running the Application
+
+After installing `FFmpeg`, you can start the application with the following command:
+
+```bash
+cargo tauri dev
+```
+
+### Building the Application
+
+You need to build `FFmpeg` using `vcpkg`.
+
+```bash
+# Run this in the root directory of this repository
+
+# For non-Windows systems
+vcpkg install
+# For Windows systems, run the following instead:
+vcpkg install --triplet x64-windows-static-md
+```
+
+This will create a directory called `vcpkg_installed`, which will contain subdirectories specific to each OS (the following are examples):
+
+- Windows: `vcpkg_installed/x64-windows-static-md`
+- macOS: `vcpkg_installed/arm64-osx`
+- Linux: `vcpkg_installed/x64-linux`
+
+Afterward, build the application with the following command:
+
+```bash
+# Replace 'arm64-osx' with your OS-specific directory
+FFMPEG_DIR=./vcpkg_installed/arm64-osx cargo tauri build
+```

@@ -49,13 +49,3 @@ You can contribute to the project in the following ways:
 
 - Write commit messages that clearly describe the changes.
 - When creating a pull request, link related issues and clearly explain the purpose of the changes.
-
-## 📜 License
-
-By contributing to this project, you agree that your contributions will be licensed under the [GPL-2.0](./LICENSE).
-
-## 💬 Support
-
-If you have questions or need support, please use [GitHub Discussions](https://github.com/improvie/improvie/discussions).
-
-We look forward to your contributions! 🎉

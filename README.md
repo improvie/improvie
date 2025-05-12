@@ -52,7 +52,7 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more infor
 
 ## 📜 License
 
-This project is licensed under the [GPL-2.0](LICENSE).
+This project is licensed under the [Apache 2.0](LICENSE).
 
 ### LINE Seed JP
 

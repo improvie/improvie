@@ -54,6 +54,10 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more infor
 
 This project is licensed under the [GPL-2.0](LICENSE).
 
+### LINE Seed JP
+
+This software includes the [LINE Seed JP](https://seed.line.me/index_jp.html) font, which is licensed under the [OFL-1.1](./src-tauri/licenses/OFL.txt).
+
 ### FFmpeg
 
 This software includes code from [FFmpeg](http://ffmpeg.org), which is licensed under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).

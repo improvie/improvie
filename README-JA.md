@@ -54,6 +54,10 @@
 
 このプロジェクトは[GPL-2.0](LICENSE)の下でライセンスされています。
 
+### LINE Seed JP
+
+このソフトウェアには、[LINE Seed JP](https://seed.line.me/index_jp.html)フォントが含まれており、[OFL-1.1](./src-tauri/licenses/OFL.txt)の下でライセンスされています。
+
 ### FFmpeg
 
 このソフトウェアには、[FFmpeg](http://ffmpeg.org)からのコードが含まれており、[GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)の下でライセンスされています。

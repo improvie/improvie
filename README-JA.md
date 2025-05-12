@@ -52,15 +52,67 @@
 
 ## 📜 ライセンス
 
-このプロジェクトは[GPLv3.0](LICENSE)の下でライセンスされています。
+このプロジェクトは[Apache 2.0](LICENSE)の下でライセンスされています。
+
+### LINE Seed JP
+
+このソフトウェアには、[LINE Seed JP](https://seed.line.me/index_jp.html)フォントが含まれており、[OFL-1.1](./src-tauri/licenses/OFL.txt)の下でライセンスされています。
 
 ### FFmpeg
 
-This software uses code of <a href=http://ffmpeg.org>FFmpeg</a> licensed under the <a href=https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>GPLv2.0 or later</a> and its source can be downloaded [https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz](https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz)
+このソフトウェアは、[FFmpeg](http://ffmpeg.org) のライブラリを静的にリンクしており、[LGPL-2.1](./src-tauri/licenses/LGPLv2.1.txt) の下でライセンスされています。
 
-- Version: 7.1.1
-- License: GPLv2.0 or later
-- Link type: Static
-- Build system: [vcpkg](https://github.com/microsoft/vcpkg)
-- vcpkg commit: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
-- more information: [vcpkg.json](./vcpkg.json)
+- **Version**: 7.1.1
+- **License**: LGPLv2.1
+- **Link Type**: Static
+- **Build System**: [vcpkg](https://github.com/microsoft/vcpkg)
+- **vcpkg Commit**: `3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c`
+- **Build Info**: See [vcpkg.json](./vcpkg.json)
+
+このソフトウェアはFFmpegを静的リンクしています。
+LGPL v2.1ライセンスに基づき、ユーザーがFFmpegを変更または再リンクできるよう、
+本アプリケーションのソースコードおよびビルド手順を提供しています。
+
+## 🛠 開発
+
+### 必要なツール
+
+- [bun](https://bun.sh/): JavaScript all in one toolkit
+- [rust](https://www.rust-lang.org/ja/tools/install): Rust programming language
+- [tauri-cli](https://v2.tauri.app/ja/reference/cli/): Tauri CLI
+- [FFmpeg](https://ffmpeg.org/): Video and audio processing library
+
+### アプリの起動
+
+`FFmpeg` をインストールしたならば、以下のコマンドでアプリが起動します。
+
+```bash
+cargo tauri dev
+```
+
+### アプリのビルド
+
+`vcpkg` を使用して`FFmpeg`をビルドする必要があります。
+
+```bash
+# この`repository`のルートディレクトリで実行
+
+# windows以外の場合
+vcpkg install
+# windowsの場合は、以下を実行してください。
+vcpkg install --triplet x64-windows-static-md
+```
+
+そしたら `vcpkg_installed` というディレクトリができます。
+そこでOSごとに別々にディレクトリーができます。(以下はあくまで一例です)
+
+- windows: `vcpkg_installed/x64-windows-static-md`
+- macOS: `vcpkg_installed/arm64-osx`
+- linux: `vcpkg_installed/x64-linux`
+
+その後、以下のコマンドでアプリをビルドします。
+
+```bash
+# arm64-osxのところは各自のOSに合わせてください
+FFMPEG_DIR=./vcpkg_installed/arm64-osx cargo tauri build
+```

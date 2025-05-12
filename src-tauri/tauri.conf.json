@@ -9,7 +9,7 @@
     "beforeBuildCommand": "bun run build",
     "frontendDist": "../build",
     "features": [
-      "static"
+      "include"
     ]
   },
   "app": {
@@ -35,7 +35,7 @@
     "active": true,
     "shortDescription": "A Tauri app to 'improve like the movie' — helping you organize local media and create playlists easily.",
     "copyright": "Copyright © 2025 improvie",
-    "license": "GPL-3.0",
+    "license": "Apache-2.0",
     "licenseFile": "../LICENSE",
     "publisher": "improvie",
     "targets": "all",
@@ -45,6 +45,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "licenses/"
     ]
   }
 }

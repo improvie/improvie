@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**A Tauri application with the concept of _"improve like the movie"_ that allows you to organize local media and easily create playlists**
+**A Tauri application with the concept of _"improve like the movie"_ that allows you to organize media file and easily create playlists**
 
 [![License](https://img.shields.io/github/license/improvie/improvie?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)

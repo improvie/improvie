@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**ローカルメディアを整理しプレイリストを簡単に作成できる _"improve like the movie"_ をコンセプトにしたTauriアプリ**
+**メディアファイルを整理しプレイリストを簡単に作成できる _"improve like the movie"_ をコンセプトにしたTauriアプリ**
 
 [![License](https://img.shields.io/github/license/improvie/improvie?style=flat-square)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/improvie/improvie?style=flat-square)](https://github.com/improvie/improvie/releases/latest)

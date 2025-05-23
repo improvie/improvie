@@ -13,19 +13,14 @@ improvie-domain.workspace = true
 improvie-logic.workspace = true
 uid.workspace = true
 
-tauri.workspace = true
 serde.workspace = true
 chrono.workspace = true
 serde_json.workspace = true
 log.workspace = true
 more-convert.workspace = true
-tauri-plugin-dialog.workspace = true
 thiserror.workspace = true
 bind = { workspace = true, optional = true }
 ts-rs = { workspace = true, optional = true }
-
-[dev-dependencies]
-tauri = { workspace = true, features = ["test"] }
 
 [lints]
 workspace = true

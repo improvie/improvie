@@ -26,6 +26,9 @@ more-convert.workspace = true
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }
 
+[dev-dependencies]
+tauri = { workspace = true, features = ["test"] }
+
 [features]
 default = []
 ts = [

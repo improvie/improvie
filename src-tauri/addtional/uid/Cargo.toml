@@ -6,6 +6,7 @@ edition = "2024"
 [features]
 default = []
 ts = ["dep:bind", "dep:ts-rs"]
+db = ["sqlx"]
 
 [dependencies]
 uuid = { version = "=1.16.0", features = [
@@ -14,7 +15,7 @@ uuid = { version = "=1.16.0", features = [
   "macro-diagnostics",
   "serde",
 ] }
-sqlx = { workspace = true, features = ["uuid"] }
+sqlx = { workspace = true, features = ["uuid"], optional = true }
 serde.workspace = true
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }

@@ -1,6 +1,7 @@
 use std::fmt;
 
 use serde::{Deserialize, Serialize, Serializer};
+#[cfg(feature = "db")]
 use sqlx::{
     Decode, Encode, Sqlite, Type,
     encode::IsNull,
@@ -88,12 +89,14 @@ impl<'de> Deserialize<'de> for Uid {
     }
 }
 
+#[cfg(feature = "db")]
 impl Type<Sqlite> for Uid {
     fn type_info() -> SqliteTypeInfo {
         Hyphenated::type_info()
     }
 }
 
+#[cfg(feature = "db")]
 impl<'q> Encode<'q, Sqlite> for Uid {
     fn encode_by_ref(
         &self,
@@ -103,6 +106,7 @@ impl<'q> Encode<'q, Sqlite> for Uid {
     }
 }
 
+#[cfg(feature = "db")]
 impl Decode<'_, Sqlite> for Uid {
     fn decode(value: SqliteValueRef<'_>) -> Result<Self, BoxDynError> {
         Hyphenated::decode(value).map(|v| Self(v.into_uuid()))

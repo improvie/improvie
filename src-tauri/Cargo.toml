@@ -87,7 +87,7 @@ tauri = { version = "=2.5.1", features = [
   "protocol-asset",
   "macos-private-api",
 ] }
-tauri-plugin-dialog = "=2.2.1"
+tauri-plugin-dialog = "=2.2.2"
 
 # async/concurrency/parallelism
 tokio = { version = "=1.45.0", features = ["full"] }
@@ -108,7 +108,7 @@ thiserror = "=2.0"
 chrono = { version = "=0.4.41", features = ["serde"] }
 rand = "=0.9.1"
 ts-rs = { version = "=10.1.0", features = ["uuid-impl", "chrono-impl"] }
-more-convert = { version = "=0.11.1", features = ["utils"] }
+more-convert = { version = "=0.13.0", features = ["utils"] }
 
 # macros
 proc-macro2 = "=1.0"
@@ -118,7 +118,7 @@ seq-macro = "=0.3.6"
 
 # others
 log = "=0.4.27"
-sqlx = { version = "=0.8.5", features = [
+sqlx = { version = "=0.8.6", features = [
   "sqlite",
   "tls-rustls",
   "runtime-tokio",

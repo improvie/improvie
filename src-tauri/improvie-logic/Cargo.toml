@@ -7,18 +7,20 @@ edition.workspace = true
 [features]
 default = []
 ts = ["uid/ts", "dep:bind", "dep:ts-rs"]
+db = ["sqlx"]
 
 [dependencies]
 uid.workspace = true
 
 thiserror.workspace = true
-sqlx.workspace = true
 chrono.workspace = true
 serde.workspace = true
 rand.workspace = true
 more-convert.workspace = true
 bind = { workspace = true, optional = true }
 ts-rs = { workspace = true, optional = true }
+
+sqlx = { workspace = true, optional = true }
 
 [lints]
 workspace = true

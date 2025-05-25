@@ -1,4 +1,4 @@
-use std::{path::PathBuf, sync::Arc};
+use std::path::PathBuf;
 
 use improvie_infra::persistence::db::InitDbError;
 use improvie_plugin::PluginManager;
@@ -7,8 +7,8 @@ use tauri::{State, async_runtime::Mutex};
 use crate::modules::Modules;
 
 pub struct AppState {
-    pub modules: Arc<Modules>,
-    pub pm: Arc<Mutex<PluginManager>>,
+    pub modules: Modules,
+    pub pm: Mutex<PluginManager>,
     pub data_dir: PathBuf,
     pub document_dir: PathBuf,
 }
@@ -30,11 +30,12 @@ impl AppState {
         )
         .await;
         let _ = pm.load_plugins().await;
-        let pm = Arc::new(Mutex::new(pm));
         log::info!("Plugins loaded");
 
+        let pm = Mutex::new(pm);
+
         Ok(Self {
-            modules: Arc::new(modules),
+            modules,
             pm,
             data_dir,
             document_dir,

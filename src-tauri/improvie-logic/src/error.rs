@@ -8,6 +8,7 @@ pub type AppResult<T> = std::result::Result<T, AppError>;
 #[variant_name(prefix = "App")]
 pub enum AppError {
     #[error("db error: {0}")]
+    #[cfg(feature = "db")]
     Db(#[from] sqlx::Error),
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),

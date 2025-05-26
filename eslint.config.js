@@ -3,6 +3,7 @@ import antfu from '@antfu/eslint-config';
 export default antfu({
   ignores: [
     'src-tauri',
+    'vcpkg_installed',
     'package-json.json',
     'bun.lock',
     'components.json',

@@ -2619,7 +2619,6 @@ dependencies = [
  "bind",
  "chrono",
  "more-convert",
- "rand 0.9.1",
  "serde",
  "sqlx",
  "thiserror 2.0.12",

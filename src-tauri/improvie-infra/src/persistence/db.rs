@@ -1,5 +1,5 @@
 use sqlx::ConnectOptions;
-use std::{fs::OpenOptions, path::PathBuf};
+use std::{fs::OpenOptions, path::Path};
 
 use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
 
@@ -24,8 +24,8 @@ pub enum InitDbError {
 }
 
 impl DbPool {
-    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
-        std::fs::create_dir_all(&data_dir)?;
+    pub async fn new(data_dir: &Path) -> Result<Self, InitDbError> {
+        std::fs::create_dir_all(data_dir)?;
         let join = data_dir.join("data.sql");
         OpenOptions::new()
             .write(true)

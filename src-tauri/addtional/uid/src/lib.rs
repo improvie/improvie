@@ -8,7 +8,6 @@ use sqlx::{
     error::BoxDynError,
     sqlite::{SqliteArgumentValue, SqliteTypeInfo, SqliteValueRef},
 };
-use uuid::fmt::Hyphenated;
 
 // ref: [uuid crate](https://github.com/uuid-rs/uuid/blob/main/src/macros.rs)
 #[macro_export]
@@ -92,7 +91,7 @@ impl<'de> Deserialize<'de> for Uid {
 #[cfg(feature = "db")]
 impl Type<Sqlite> for Uid {
     fn type_info() -> SqliteTypeInfo {
-        Hyphenated::type_info()
+        uuid::fmt::Hyphenated::type_info()
     }
 }
 
@@ -109,6 +108,6 @@ impl<'q> Encode<'q, Sqlite> for Uid {
 #[cfg(feature = "db")]
 impl Decode<'_, Sqlite> for Uid {
     fn decode(value: SqliteValueRef<'_>) -> Result<Self, BoxDynError> {
-        Hyphenated::decode(value).map(|v| Self(v.into_uuid()))
+        uuid::fmt::Hyphenated::decode(value).map(|v| Self(v.into_uuid()))
     }
 }

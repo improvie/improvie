@@ -11,19 +11,21 @@ pub struct PluginMetadata {
 
 impl PluginMetadata {
     pub fn to_valid(&self) -> Result<PluginMetadata, PluginLoadError> {
-        macro_rules! require_str {
-            ($var:ident) => {{
-                let var = self.$var.trim();
-                if var.is_empty() {
-                    return Err(PluginLoadError::InvalidMetadata {
-                        plugin_name: self.name.to_string(),
-                        field_name: stringify!($var),
-                        filed_value: var.to_string(),
-                    });
-                } else {
-                    var
-                }
-            }};
+        fn require_str(
+            s: &'static str,
+            field_name: &'static str,
+            plugin_name: &str,
+        ) -> Result<&'static str, PluginLoadError> {
+            let s = s.trim();
+            if s.is_empty() {
+                Err(PluginLoadError::InvalidMetadata {
+                    plugin_name: plugin_name.to_string(),
+                    field_name,
+                    filed_value: s.to_string(),
+                })
+            } else {
+                Ok(s)
+            }
         }
 
         fn filter_empty(s: Option<&'static str>) -> Option<&'static str> {
@@ -34,8 +36,8 @@ impl PluginMetadata {
         }
 
         Ok(PluginMetadata {
-            name: require_str!(name),
-            version: require_str!(version),
+            name: require_str(self.name, "name", self.name)?,
+            version: require_str(self.version, "version", self.name)?,
             authors: filter_empty(self.authors),
             description: filter_empty(self.description),
             repository: filter_empty(self.repository),

@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use uid::Uid;
 
+// TOOD: もっといい感じに修正する、serdeはSized要求するからsea_ormとかそこら辺を参考にRuleを実装する
+
 pub struct RuleFeature<R: RuleGenerator> {
     pub name: &'static str,
     pub generator: R,

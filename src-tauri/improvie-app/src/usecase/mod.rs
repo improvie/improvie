@@ -6,11 +6,11 @@ pub mod settings;
 macro_rules! def_use_case {
     ($ident:ident) => {
         pub struct $ident<R: RepositoriesModule> {
-            repository: &'static R,
+            repository: std::sync::Arc<R>,
         }
 
         impl<R: RepositoriesModule> $ident<R> {
-            pub fn new(repository: &'static R) -> Self {
+            pub fn new(repository: std::sync::Arc<R>) -> Self {
                 Self { repository }
             }
         }

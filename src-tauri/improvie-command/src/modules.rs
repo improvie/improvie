@@ -18,14 +18,6 @@ macros::def_modules!(
     }
 );
 
-impl Modules {
-    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
-        let db = DbPool::new(data_dir).await?;
-        let modules = Self::new_with_db(db);
-        Ok(modules)
-    }
-}
-
 mod macros {
     macro_rules! def_modules {
     (
@@ -37,11 +29,8 @@ mod macros {
         }
 
         impl $name {
-            fn new_with_db(db: DbPool) -> Self {
+            pub fn new_with_repository(repository: Arc<$repository>) -> Self {
                 use std::sync::Arc;
-
-                let repository = $repository::new(db);
-                let repository = Arc::new(repository);
 
                 Self {
                     $($variable: $usecase::new(Arc::clone(&repository)),)*

@@ -14,9 +14,10 @@ pub fn run() {
         builder = builder.plugin(tauri_plugin_window_state::Builder::new().build());
     }
 
+    builder = builder.plugin(tauri_plugin_dialog::init());
+    builder = builder.plugin(init::log::init_log_plugin());
+
     builder
-        .plugin(tauri_plugin_dialog::init())
-        .plugin(init::log::init_log_plugin())
         .setup(move |app| {
             let result = improvie_plugin::LOGGER.set((log::logger(), init::log::LOG_LEVEL_FILTER));
 

@@ -90,9 +90,9 @@ tauri = { version = "=2.5.1", features = [
 tauri-plugin-dialog = "=2.2.2"
 
 # async/concurrency/parallelism
-tokio = { version = "=1.45.0", features = ["full"] }
+tokio = { version = "=1.45.1", features = ["full"] }
 async-trait = "=0.1"
-reqwest = { version = "=0.12.15", default-features = false, features = [
+reqwest = { version = "=0.12.18", default-features = false, features = [
   "json",
   "stream",
   "rustls-tls",
@@ -124,6 +124,9 @@ sqlx = { version = "=0.8.6", features = [
   "chrono",
 ] }
 
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-window-state = "=2.2.2"
+
 [workspace.lints.rust]
 nonstandard_style = { level = "warn", priority = -1 }
 unreachable_pub = "warn"
@@ -141,6 +144,3 @@ needless_continue = "warn"
 needless_for_each = "warn"
 needless_raw_string_hashes = "warn"
 needless_raw_strings = "warn"
-
-[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-window-state = "2"

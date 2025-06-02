@@ -1,5 +1,7 @@
 # improvie
 
+## This branch is archived. for if we adpot the plugin system again
+
 <div align="center">
 
 **A Tauri application with the concept of _"improve like the movie"_ that allows you to organize media file and easily create playlists**

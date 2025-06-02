@@ -1,12 +1,7 @@
-use std::path::PathBuf;
-
 use improvie_app::usecase::{
     items::ItemsUseCase, plays::PlaysUseCase, rules::RulesUseCase, settings::SettingsUseCase,
 };
-use improvie_infra::{
-    modules::RepositoriesModuleImpl,
-    persistence::db::{DbPool, InitDbError},
-};
+use improvie_infra::modules::RepositoriesModuleImpl;
 
 macros::def_modules!(
     RepositoriesModuleImpl,
@@ -29,11 +24,9 @@ mod macros {
         }
 
         impl $name {
-            pub fn new_with_repository(repository: Arc<$repository>) -> Self {
-                use std::sync::Arc;
-
+            pub fn new_with_repository(repository: std::sync::Arc<$repository>) -> Self {
                 Self {
-                    $($variable: $usecase::new(Arc::clone(&repository)),)*
+                    $($variable: $usecase::new(std::sync::Arc::clone(&repository)),)*
                 }
             }
 

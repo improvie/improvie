@@ -23,3 +23,8 @@ pub async fn update_rules(
         .update_rules(playlist_id, rules)
         .await
 }
+
+#[tauri::command]
+pub async fn get_rules_format(rules: Vec<Rule>) -> Vec<RuleFormat> {
+    rules.iter().flat_map(|rule| rule.formats()).collect()
+}

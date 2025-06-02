@@ -1,6 +1,25 @@
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
+use rand::seq::IndexedRandom;
+use serde::{Deserialize, Serialize};
 
 use uid::Uid;
+
+#[derive(Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
+pub struct RuleFormat {
+    pub content_id: Uid,
+    pub range_start: Option<u32>,
+    pub range_end: Option<u32>,
+}
+
+impl RuleFormat {
+    pub fn new(content_id: Uid, range_start: Option<u32>, range_end: Option<u32>) -> Self {
+        Self {
+            content_id,
+            range_start,
+            range_end,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
@@ -11,20 +30,33 @@ pub enum Rule {
     Range(RangeRule),
     Loop(LoopRule),
     Random(RandomRule),
-    Unknown(UnknownRule),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
-pub struct UnknownRule {
-    pub plugin_name: String,
-    pub rule_name: String,
+pub trait RuleFormatIter {
+    fn formats(&self) -> Vec<RuleFormat>;
+}
+
+impl RuleFormatIter for Rule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        match self {
+            Rule::Content(rule) => rule.formats(),
+            Rule::Range(rule) => rule.formats(),
+            Rule::Loop(rule) => rule.formats(),
+            Rule::Random(rule) => rule.formats(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
 pub struct ContentRule {
     pub content_id: Uid,
+}
+
+impl RuleFormatIter for ContentRule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        vec![RuleFormat::new(self.content_id, None, None)]
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -35,6 +67,16 @@ pub struct RangeRule {
     pub range_end: Option<u32>,
 }
 
+impl RuleFormatIter for RangeRule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        vec![RuleFormat::new(
+            self.content_id,
+            self.range_start,
+            self.range_end,
+        )]
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
 pub struct LoopRule {
@@ -42,50 +84,55 @@ pub struct LoopRule {
     pub times: u8,
 }
 
+impl RuleFormatIter for LoopRule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        let mut formats = Vec::new();
+        for _ in 0..self.times {
+            for rule in &self.rules {
+                formats.extend(rule.formats());
+            }
+        }
+        formats
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
 pub struct RandomRule {
-    /// u8 is the weight
-    pub rules: Vec<(u8, Rule)>,
+    // u8 is the weight
+    pub rules: Vec<(Rule, u8)>,
     pub times: u8,
     pub duplicate: bool,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct RuleGeneratorRaw {
-    pub plugin_name: String,
-    pub rule_name: String,
-    pub json: String,
-}
+impl RuleFormatIter for RandomRule {
+    fn formats(&self) -> Vec<RuleFormat> {
+        let rng = &mut rand::rng();
+        let mut formats = Vec::new();
+        if self.duplicate {
+            for _ in 0..self.times {
+                let Ok((rule, _)) = self.rules.choose_weighted(rng, |item| item.1) else {
+                    return formats;
+                };
 
-pub trait RuleTypeable: Serialize + DeserializeOwned {
-    fn types() -> &'static [(&'static str, RuleDataType)];
-}
+                for format in rule.formats() {
+                    formats.push(format);
+                }
+            }
+        } else {
+            let Ok(rules) = self
+                .rules
+                .choose_multiple_weighted(rng, self.times as usize, |item| item.1)
+            else {
+                return formats;
+            };
+            for (rule, _) in rules {
+                for format in rule.formats() {
+                    formats.push(format);
+                }
+            }
+        }
 
-pub trait RuleGenerator: RuleTypeable + Send + Sync + 'static {
-    fn name() -> &'static str;
-
-    fn generate_rules(&mut self) -> Vec<Rule>;
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
-#[cfg_attr(feature = "ts", ts(rename = "RuleDataType"))]
-pub enum RuleDataType {
-    /// The value brought is u64
-    Unsigned { min: u64, max: u64 },
-    /// The value brought is i64
-    Signed { min: i64, max: i64 },
-    /// The value brought is f64
-    Float { min: f64, max: f64 },
-    /// The value brought is a String
-    Input {
-        min_length: usize,
-        max_length: usize,
-    },
-    /// The value brought is a bool
-    CheckBox,
-    /// The value brought is a Ulid
-    ContentPicker,
-    // TODO: radio and select
+        formats
+    }
 }

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use uid::Uid;
 
-// TOOD: もっといい感じに修正する、serdeはSized要求するからsea_ormとかそこら辺を参考にRuleを実装する
+// TODO: もっといい感じに修正する、serdeはSized要求するからsea_ormとかそこら辺を参考にRuleを実装する
 
 pub struct RuleFeature<R: RuleGenerator> {
     pub name: &'static str,
@@ -67,7 +67,7 @@ pub struct RandomRule {
     pub duplicate: bool,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RuleGeneratorRaw {
     pub plugin_name: String,
     pub rule_name: String,
@@ -86,7 +86,6 @@ pub trait RuleGenerator: RuleTypeable + Send + Sync + 'static {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
-#[cfg_attr(feature = "ts", ts(rename = "RuleDataType"))]
 pub enum RuleDataType {
     /// The value brought is u64
     Unsigned { min: u64, max: u64 },

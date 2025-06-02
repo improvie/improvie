@@ -36,7 +36,6 @@ ts = [
   "dep:ts-rs",
   "improvie-logic/ts",
   "improvie-app/ts",
-  "improvie-plugin/ts",
   "youtube/ts",
   "uid/ts",
 ]

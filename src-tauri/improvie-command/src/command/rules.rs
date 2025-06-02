@@ -1,4 +1,7 @@
-use improvie_logic::AppResult;
+use improvie_logic::{
+    AppResult,
+    logic::rule::{Rule, RuleFormat, RuleFormatIter},
+};
 use uid::Uid;
 
 use crate::state::TauriAppState;

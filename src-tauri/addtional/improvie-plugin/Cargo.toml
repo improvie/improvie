@@ -4,21 +4,12 @@ version.workspace = true
 authors.workspace = true
 edition.workspace = true
 
-[features]
-default = []
-ts = ["dep:bind", "dep:ts-rs"]
-
 [dependencies]
-improvie-logic.workspace = true
-uid.workspace = true
-
 log.workspace = true
 async-trait.workspace = true
+tokio.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 more-convert.workspace = true
-
-ts-rs = { workspace = true, optional = true }
-bind = { workspace = true, optional = true }
 
 libloading = "0.8"

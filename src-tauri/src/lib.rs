@@ -6,7 +6,6 @@ mod init;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    #[allow(unused_mut)]
     let mut builder = tauri::Builder::default();
 
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
@@ -14,16 +13,11 @@ pub fn run() {
         builder = builder.plugin(tauri_plugin_window_state::Builder::new().build());
     }
 
+    builder = builder.plugin(tauri_plugin_dialog::init());
+    builder = builder.plugin(init::log::init_log_plugin());
+
     builder
-        .plugin(tauri_plugin_dialog::init())
-        .plugin(init::log::init_log_plugin())
         .setup(move |app| {
-            let result = improvie_plugin::LOGGER.set((log::logger(), init::log::LOG_LEVEL_FILTER));
-
-            if result.is_err() {
-                log::error!("Failed to set logger. not logging on plugin");
-            }
-
             #[cfg(all(debug_assertions, not(mobile)))]
             let data_dir = init::dev_folder();
 

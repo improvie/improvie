@@ -67,7 +67,7 @@
             src={thumbnail_path}
           />
         </div>
-        <p class='line-clamp-3 select-text'>{playlist.title}</p>
+        <p class='line-clamp-3'>{playlist.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>

@@ -57,5 +57,5 @@
     {/if}
   </div>
   <ImageLoader src={thumbnail_path} />
-  <h2 class='line-clamp-2 select-text'>{content.title}</h2>
+  <h2 class='line-clamp-2'>{content.title}</h2>
 </Card.Root>

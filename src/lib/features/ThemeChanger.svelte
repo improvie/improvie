@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import type { ThemeFeature } from '$lib/plugin/feature/theme.svelte';
+  import type { ThemeFeature } from '$lib/stores/theme.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog';
   import Separator from '$lib/components/ui/separator/separator.svelte';
-  import { get_themes, set_current_theme } from '$lib/plugin/feature/theme.svelte';
+  import { get_themes, set_current_theme } from '$lib/stores/theme.svelte';
   import { onMount } from 'svelte';
 
   let { open = $bindable() }: { open: boolean } = $props();

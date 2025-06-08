@@ -1,42 +1,34 @@
 use std::path::PathBuf;
 
-use improvie_infra::persistence::db::InitDbError;
-use improvie_plugin::PluginManager;
-use tauri::{State, async_runtime::Mutex};
+use improvie_infra::{
+    modules::RepositoriesModuleImpl,
+    persistence::db::{DbPool, InitDbError},
+};
+use tauri::State;
 
 use crate::modules::Modules;
 
 pub struct AppState {
     pub modules: Modules,
-    pub pm: Mutex<PluginManager>,
     pub data_dir: PathBuf,
     pub document_dir: PathBuf,
 }
 
 impl AppState {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
-        let modules = Modules::new(data_dir.clone()).await?;
+        let db = DbPool::new(data_dir.clone()).await?;
+        let repository = RepositoriesModuleImpl::new(db);
+        let repository = std::sync::Arc::new(repository);
+
+        let modules = Modules::new_with_repository(repository);
 
         let document_dir = data_dir.join("documents");
         if !document_dir.exists() {
             std::fs::create_dir_all(&document_dir)?;
         }
 
-        log::info!("Start loading plugins");
-        let mut pm = PluginManager::new(data_dir.clone());
-        pm.register_plugin(
-            improvie_builtin::METADATA.clone(),
-            Box::new(improvie_builtin::BuiltinPlugin::new()),
-        )
-        .await;
-        let _ = pm.load_plugins().await;
-        log::info!("Plugins loaded");
-
-        let pm = Mutex::new(pm);
-
         Ok(Self {
             modules,
-            pm,
             data_dir,
             document_dir,
         })

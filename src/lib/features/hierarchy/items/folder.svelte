@@ -43,7 +43,7 @@
         <div class='flex items-center justify-center'>
           <FolderIcon class='w-9/16 h-auto aspect-square' />
         </div>
-        <p class='line-clamp-3 select-text'>{folder.title}</p>
+        <p class='line-clamp-3'>{folder.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>
     <ContextMenu.Content>

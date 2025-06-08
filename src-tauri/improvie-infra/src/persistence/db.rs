@@ -1,6 +1,7 @@
-use std::{borrow::Borrow, fs::OpenOptions, path::PathBuf};
+use sqlx::ConnectOptions;
+use std::{fs::OpenOptions, path::PathBuf};
 
-use sqlx::SqlitePool;
+use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
 
 use crate::repository::MIGRATOR;
 
@@ -32,7 +33,19 @@ impl DbPool {
             .truncate(false)
             .open(&join)?;
 
-        let connect = SqlitePool::connect(join.to_string_lossy().borrow()).await?;
+        let option = SqliteConnectOptions::new().filename(&join);
+        #[cfg(debug_assertions)]
+        let option =
+            if option_env!("ENABLE_SQLX_LOG").is_some_and(|v| v.parse::<bool>().is_ok_and(|b| b)) {
+                log::debug!("enable sqlx logging");
+                option
+            } else {
+                log::debug!(
+                    "disable sqlx logging for readability. Set `ENABLE_SQLX_LOG=true` to enable it."
+                );
+                option.disable_statement_logging()
+            };
+        let connect = SqlitePool::connect_with(option).await?;
         MIGRATOR
             .run(&connect)
             .await

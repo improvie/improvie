@@ -5,8 +5,8 @@ use crate::repository::{
 
 macros::def_module!(RepositoriesModule {
     settings_repository: SettingsRepository,
-    items_repository: ItemsRepository,
-    playsts_repository: PlaystsRepository,
+    items_repository: ItemsRepository<DbTx>,
+    playsts_repository: PlaystsRepository<DbTx>,
     rules_repository: RulesRepository,
 });
 
@@ -14,12 +14,14 @@ mod macros {
     macro_rules! def_module {
         (
             $module:ident {
-                $($variable:ident: $repository:ident,)*
+                $($variable:ident: $repository:ident$(<$tx:ident>)?,)*
             }
         ) => {
             pub trait $module: Send + Sync + Sized + 'static {
+                type DbTx: crate::persistence::db::DbTx;
+
                 $(
-                    type $repository: $repository;
+                    type $repository: $repository $(<$tx = Self::$tx>)?;
                 )*
 
                 $(

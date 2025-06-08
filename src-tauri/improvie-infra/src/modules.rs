@@ -38,6 +38,7 @@ mod macros {
         }
 
         impl $trait for $name {
+            type DbTx = crate::persistence::db::DbTx;
             $(
                 type $repository = $impl;
                 fn $variable(&self) -> &Self::$repository {

@@ -27,10 +27,11 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl PlaystsRepository for PlaylistsRepositoryImpl {
+    type DbTx = DbTx;
     async fn get_play_folders(&self) -> AppResult<Vec<PlayFolder>> {
         let rows = sqlx::query_as::<_, PlayFolderRow>(
             "
-SELECT 
+SELECT
     pi.id, pi.title, pi.description, pi.created_at
 FROM play_folders AS pf
 INNER JOIN play_items AS pi ON pi.id = pf.item_id
@@ -82,7 +83,7 @@ SELECT
 FROM favorite_playlists
 ",
         )
-        .fetch_one(&mut *tx)
+        .fetch_one(tx.as_mut())
         .await?;
 
         let result = sqlx::query(
@@ -91,7 +92,7 @@ INSERT INTO favorite_playlists (playlist_id, sort_order) VALUES (?, ?)",
         )
         .bind(playlist_id)
         .bind(max_number + 1)
-        .execute(&mut *tx)
+        .execute(tx.as_mut())
         .await;
 
         tx_check!(result, tx);
@@ -110,7 +111,7 @@ DELETE FROM favorite_playlists
 WHERE playlist_id = ?",
         )
         .bind(playlist_id)
-        .execute(&mut *tx)
+        .execute(tx.as_mut())
         .await;
 
         tx_check!(result, tx);
@@ -123,7 +124,7 @@ WHERE playlist_id = ?",
     async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> AppResult<PlayFolderNode> {
         let rows = sqlx::query_as::<_, PlayCurrentNodeRaw>(
             "
-SELECT 
+SELECT
     hpi.child_id, pi.kind AS child_kind, hpi.sort_order
 FROM hierarchical_play_items AS hpi
 INNER JOIN play_items AS pi ON pi.id = hpi.child_id
@@ -235,7 +236,7 @@ FROM folder_hierarchy
 
         let folder_result = sqlx::query("INSERT INTO play_folders (item_id) VALUES (?)")
             .bind(folder.item.id)
-            .execute(&mut *tx)
+            .execute(tx.as_mut())
             .await;
 
         tx_check!(folder_result, tx);
@@ -267,7 +268,7 @@ FROM folder_hierarchy
                 .bind(content.item.id)
                 .bind(&content.thumbnail_path)
                 .bind(sqlx::types::Json(Vec::<Rule>::new()))
-                .execute(&mut *tx)
+                .execute(tx.as_mut())
                 .await;
 
         tx_check!(playlist_result, tx);
@@ -302,7 +303,7 @@ FROM item_hierarchy
 ",
         )
         .bind(play_id)
-        .fetch_all(&mut *tx)
+        .fetch_all(tx.as_mut())
         .await?;
 
         play_item_uids.push(play_id);
@@ -319,7 +320,7 @@ WHERE id IN (
         }
         separated.push_unseparated(")");
 
-        builder.build().execute(&mut *tx).await?;
+        builder.build().execute(tx.as_mut()).await?;
 
         tx.commit().await?;
 
@@ -337,7 +338,7 @@ WHERE id = ?
         )
         .bind(&name)
         .bind(play_id)
-        .execute(&mut *tx)
+        .execute(tx.as_mut())
         .await;
 
         tx_check!(result, tx);
@@ -357,7 +358,7 @@ async fn add_play_item(tx: &mut DbTx, item: &PlayItem, kind: PlayItemKind) -> Ap
     .bind(&item.description)
     .bind(kind)
     .bind(item.created_at)
-    .execute(&mut **tx)
+    .execute(tx.as_mut())
     .await;
 
     tx_check!(item_result, tx);
@@ -368,14 +369,14 @@ async fn add_play_item(tx: &mut DbTx, item: &PlayItem, kind: PlayItemKind) -> Ap
 async fn add_play_hierarchy(tx: &mut DbTx, parent_folder_id: Uid, item_id: Uid) -> AppResult<()> {
     let sort_order: u32 = sqlx::query_scalar(
         "
-SELECT 
+SELECT
     MAX(sort_order)
 FROM hierarchical_play_items
 WHERE parent_folder_id = ?
 ",
     )
     .bind(parent_folder_id)
-    .fetch_one(&mut **tx)
+    .fetch_one(tx.as_mut())
     .await?;
 
     let sort_order = sort_order + 1;
@@ -389,23 +390,23 @@ WHERE parent_folder_id = ? AND sort_order >= ?
     )
     .bind(parent_folder_id)
     .bind(sort_order)
-    .execute(&mut **tx)
+    .execute(tx.as_mut())
     .await;
 
     shift_result?;
 
     let hierarchy_result = sqlx::query(
         "
-INSERT INTO hierarchical_play_items 
+INSERT INTO hierarchical_play_items
     (parent_folder_id, child_id, sort_order, created_at)
-VALUES 
+VALUES
     (?, ?, ?, ?)",
     )
     .bind(parent_folder_id)
     .bind(item_id)
     .bind(sort_order)
     .bind(Utc::now())
-    .execute(&mut **tx)
+    .execute(tx.as_mut())
     .await;
 
     tx_check!(hierarchy_result, tx);

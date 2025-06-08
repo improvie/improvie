@@ -5,8 +5,6 @@ use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
 
 use crate::repository::MIGRATOR;
 
-pub type DbTx = sqlx::Transaction<'static, sqlx::Sqlite>;
-
 pub struct DbPool(SqlitePool);
 
 impl Clone for DbPool {
@@ -57,8 +55,62 @@ impl DbPool {
         self.0.clone()
     }
 
-    pub async fn begin(&self) -> sqlx::Result<sqlx::Transaction<'static, sqlx::Sqlite>> {
-        self.0.begin().await
+    pub async fn begin(&self) -> sqlx::Result<DbTx> {
+        self.0.begin().await.map(DbTx::new)
+    }
+}
+
+pub struct DbTx(sqlx::Transaction<'static, sqlx::Sqlite>);
+
+impl improvie_domain::persistence::db::DbTx for DbTx {}
+
+impl DbTx {
+    fn new(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
+        Self(tx)
+    }
+
+    pub fn tx(&mut self) -> &mut sqlx::Transaction<'static, sqlx::Sqlite> {
+        &mut self.0
+    }
+
+    pub async fn commit(self) -> sqlx::Result<()> {
+        self.0.commit().await
+    }
+
+    pub async fn rollback(self) -> sqlx::Result<()> {
+        self.0.rollback().await
+    }
+}
+
+impl From<sqlx::Transaction<'static, sqlx::Sqlite>> for DbTx {
+    fn from(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
+        Self::new(tx)
+    }
+}
+
+impl AsMut<sqlx::SqliteConnection> for DbTx {
+    fn as_mut(&mut self) -> &mut sqlx::SqliteConnection {
+        self.0.as_mut()
+    }
+}
+
+impl std::ops::Deref for DbTx {
+    type Target = sqlx::Transaction<'static, sqlx::Sqlite>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl std::ops::DerefMut for DbTx {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl From<DbTx> for sqlx::Transaction<'static, sqlx::Sqlite> {
+    fn from(tx: DbTx) -> Self {
+        tx.0
     }
 }
 

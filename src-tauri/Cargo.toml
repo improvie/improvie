@@ -26,7 +26,6 @@ tauri-build = { version = "=2.2", features = [] }
 
 [dependencies]
 improvie-command.workspace = true
-improvie-plugin.workspace = true
 improvie-logic.workspace = true
 youtube.workspace = true
 
@@ -52,12 +51,9 @@ members = [
   "improvie-command",
   "improvie-logic",
   "improvie-app",
-  "addtional/improvie-plugin",
-  "addtional/improvie-builtin",
   "addtional/uid",
   "addtional/bind",
   "addtional/youtube",
-  "prebuild",
 ]
 resolver = "3"
 
@@ -76,8 +72,6 @@ improvie-logic = { path = "improvie-logic" }
 improvie-command = { path = "improvie-command" }
 
 # addtional
-improvie-plugin = { path = "addtional/improvie-plugin" }
-improvie-builtin = { path = "addtional/improvie-builtin" }
 uid = { path = "addtional/uid" }
 youtube = { path = "addtional/youtube" }
 bind = { path = "addtional/bind" }

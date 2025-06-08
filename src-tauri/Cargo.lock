@@ -2525,7 +2525,6 @@ dependencies = [
  "fix-path-env",
  "improvie-command",
  "improvie-logic",
- "improvie-plugin",
  "log",
  "serde",
  "serde_json",
@@ -2555,25 +2554,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "improvie-builtin"
-version = "0.4.0"
-dependencies = [
- "async-trait",
- "improvie-plugin",
-]
-
-[[package]]
 name = "improvie-command"
 version = "0.1.0"
 dependencies = [
  "bind",
  "futures-util",
  "improvie-app",
- "improvie-builtin",
  "improvie-domain",
  "improvie-infra",
  "improvie-logic",
- "improvie-plugin",
  "log",
  "more-convert",
  "reqwest",
@@ -2628,19 +2617,6 @@ dependencies = [
  "thiserror 2.0.12",
  "ts-rs",
  "uid",
-]
-
-[[package]]
-name = "improvie-plugin"
-version = "0.4.0"
-dependencies = [
- "async-trait",
- "libloading 0.8.8",
- "log",
- "more-convert",
- "serde",
- "thiserror 2.0.12",
- "tokio",
 ]
 
 [[package]]
@@ -3914,14 +3890,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85eae3c4ed2f50dcfe72643da4befc30deadb458a9b590d720cde2f2b1e97da9"
 dependencies = [
  "zerocopy",
-]
-
-[[package]]
-name = "prebuild"
-version = "0.4.0"
-dependencies = [
- "improvie-builtin",
- "serde_json",
 ]
 
 [[package]]

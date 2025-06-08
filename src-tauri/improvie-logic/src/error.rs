@@ -32,6 +32,8 @@ pub trait DynAppError: std::error::Error + Send + Sync + 'static {
     }
 }
 
+pub type DynAppResult<T> = std::result::Result<T, Box<dyn DynAppError>>;
+
 impl<T> DynAppError for T
 where
     T: std::error::Error + Send + Sync + 'static + VariantName,

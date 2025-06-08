@@ -8,6 +8,14 @@ use crate::{
     },
 };
 
+async fn begin(db: &DbPool) -> improvie_logic::AppResult<crate::persistence::db::DbTx> {
+    let result = db.begin();
+    match result.await {
+        Ok(tx) => Ok(tx),
+        Err(e) => Err(improvie_logic::AppError::from(e)),
+    }
+}
+
 macros::def_repositories_module!(
     RepositoriesModule,
     RepositoriesModuleImpl {
@@ -26,6 +34,7 @@ mod macros {
         { $($variable:ident: $impl:ident = $repository:ident,)* }
     ) => {
         pub struct $name {
+            db : DbPool,
             $($variable: $impl,)*
         }
 
@@ -33,6 +42,7 @@ mod macros {
             pub fn new(db: DbPool) -> Self {
                 Self {
                     $($variable: $impl::new(db.clone()),)*
+                    db,
                 }
             }
         }
@@ -45,6 +55,10 @@ mod macros {
                     &self.$variable
                 }
             )*
+
+            fn begin(&self) -> impl Future<Output = improvie_logic::AppResult<Self::DbTx>> {
+                begin(&self.db)
+            }
         }
 
         };

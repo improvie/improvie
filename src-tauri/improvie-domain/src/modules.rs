@@ -27,6 +27,8 @@ mod macros {
                 $(
                     fn $variable(&self) -> &Self::$repository;
                 )*
+
+                fn begin(&self) -> impl Future<Output = improvie_logic::AppResult<Self::DbTx>>;
             }
         };
     }

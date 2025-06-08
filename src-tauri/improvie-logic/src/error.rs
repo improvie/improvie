@@ -24,7 +24,7 @@ pub trait DynAppError: std::error::Error + Send + Sync + 'static {
     fn error_kind(&self) -> &'static str;
 
     #[inline(always)]
-    fn boxed(self) -> Box<Self>
+    fn boxed(self) -> Box<dyn DynAppError>
     where
         Self: std::marker::Sized,
     {

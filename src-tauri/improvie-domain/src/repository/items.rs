@@ -10,7 +10,7 @@ use crate::model::items::{CreateContentModel, CreateFolderModel};
 
 #[async_trait::async_trait]
 pub trait ItemsRepository {
-    type DbTx: crate::persistence::db::DbTx;
+    type DbConnection<'a>: crate::persistence::db::DbConnection<'a>;
 
     async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode>;
 

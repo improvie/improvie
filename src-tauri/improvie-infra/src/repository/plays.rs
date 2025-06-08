@@ -27,7 +27,7 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl PlaystsRepository for PlaylistsRepositoryImpl {
-    type DbTx = DbTx;
+    type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
     async fn get_play_folders(&self) -> AppResult<Vec<PlayFolder>> {
         let rows = sqlx::query_as::<_, PlayFolderRow>(
             "

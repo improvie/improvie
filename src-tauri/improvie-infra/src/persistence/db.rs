@@ -1,3 +1,4 @@
+use improvie_logic::{DynAppError, DynAppResult};
 use sqlx::ConnectOptions;
 use std::{fs::OpenOptions, path::PathBuf};
 
@@ -5,11 +6,86 @@ use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
 
 use crate::repository::MIGRATOR;
 
+pub enum DbConnection<'a> {
+    Pool(&'a DbPool),
+    Tx(&'a DbTx),
+}
+
+impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a> {
+    type DbPool = DbPool;
+    type DbTx = DbTx;
+
+    fn new_pool(pool: &'a Self::DbPool) -> Self {
+        Self::Pool(pool)
+    }
+
+    fn new_tx(tx: &'a Self::DbTx) -> Self {
+        Self::Tx(tx)
+    }
+}
+
+#[derive(Clone)]
 pub struct DbPool(SqlitePool);
 
-impl Clone for DbPool {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
+impl DbPool {
+    pub fn pool(&self) -> SqlitePool {
+        self.0.clone()
+    }
+
+    pub async fn begin(&self) -> DynAppResult<DbTx> {
+        let result = self.0.begin().await;
+        match result {
+            Ok(tx) => Ok(DbTx::new(tx)),
+            Err(e) => Err(crate::DbErr(e).boxed()),
+        }
+    }
+}
+
+impl improvie_domain::persistence::db::DbPool for DbPool {
+    type DbConnection<'a> = DbConnection<'a>;
+    type DbTx = DbTx;
+
+    fn begin(&self) -> impl Future<Output = DynAppResult<Self::DbTx>> {
+        self.begin()
+    }
+}
+
+pub struct DbTx(sqlx::Transaction<'static, sqlx::Sqlite>);
+
+impl DbTx {
+    fn new(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
+        Self(tx)
+    }
+
+    pub fn tx(&mut self) -> &mut sqlx::Transaction<'static, sqlx::Sqlite> {
+        &mut self.0
+    }
+
+    pub async fn commit(self) -> DynAppResult<()> {
+        self.0.commit().await.map_err(|e| crate::DbErr(e).boxed())
+    }
+
+    pub async fn rollback(self) -> DynAppResult<()> {
+        self.0.rollback().await.map_err(|e| crate::DbErr(e).boxed())
+    }
+}
+
+impl AsMut<sqlx::SqliteConnection> for DbTx {
+    fn as_mut(&mut self) -> &mut sqlx::SqliteConnection {
+        self.0.as_mut()
+    }
+}
+
+impl improvie_domain::persistence::db::DbTx for DbTx {
+    type DbConnection<'a> = DbConnection<'a>;
+    type DbPool = DbPool;
+
+    fn commit(self) -> impl Future<Output = improvie_logic::DynAppResult<()>> {
+        self.commit()
+    }
+
+    fn rollback(self) -> impl Future<Output = improvie_logic::DynAppResult<()>> {
+        self.rollback()
     }
 }
 
@@ -49,68 +125,6 @@ impl DbPool {
             .await
             .map_err(|err| sqlx::Error::Migrate(Box::new(err)))?;
         Ok(Self(connect))
-    }
-
-    pub fn pool(&self) -> SqlitePool {
-        self.0.clone()
-    }
-
-    pub async fn begin(&self) -> sqlx::Result<DbTx> {
-        self.0.begin().await.map(DbTx::new)
-    }
-}
-
-pub struct DbTx(sqlx::Transaction<'static, sqlx::Sqlite>);
-
-impl improvie_domain::persistence::db::DbTx for DbTx {}
-
-impl DbTx {
-    fn new(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
-        Self(tx)
-    }
-
-    pub fn tx(&mut self) -> &mut sqlx::Transaction<'static, sqlx::Sqlite> {
-        &mut self.0
-    }
-
-    pub async fn commit(self) -> sqlx::Result<()> {
-        self.0.commit().await
-    }
-
-    pub async fn rollback(self) -> sqlx::Result<()> {
-        self.0.rollback().await
-    }
-}
-
-impl From<sqlx::Transaction<'static, sqlx::Sqlite>> for DbTx {
-    fn from(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
-        Self::new(tx)
-    }
-}
-
-impl AsMut<sqlx::SqliteConnection> for DbTx {
-    fn as_mut(&mut self) -> &mut sqlx::SqliteConnection {
-        self.0.as_mut()
-    }
-}
-
-impl std::ops::Deref for DbTx {
-    type Target = sqlx::Transaction<'static, sqlx::Sqlite>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl std::ops::DerefMut for DbTx {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl From<DbTx> for sqlx::Transaction<'static, sqlx::Sqlite> {
-    fn from(tx: DbTx) -> Self {
-        tx.0
     }
 }
 

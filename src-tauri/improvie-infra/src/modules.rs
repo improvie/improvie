@@ -8,14 +8,6 @@ use crate::{
     },
 };
 
-async fn begin(db: &DbPool) -> improvie_logic::AppResult<crate::persistence::db::DbTx> {
-    let result = db.begin();
-    match result.await {
-        Ok(tx) => Ok(tx),
-        Err(e) => Err(improvie_logic::AppError::from(e)),
-    }
-}
-
 macros::def_repositories_module!(
     RepositoriesModule,
     RepositoriesModuleImpl {
@@ -48,17 +40,14 @@ mod macros {
         }
 
         impl $trait for $name {
-            type DbTx = crate::persistence::db::DbTx;
+            type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
+
             $(
                 type $repository = $impl;
                 fn $variable(&self) -> &Self::$repository {
                     &self.$variable
                 }
             )*
-
-            fn begin(&self) -> impl Future<Output = improvie_logic::AppResult<Self::DbTx>> {
-                begin(&self.db)
-            }
         }
 
         };

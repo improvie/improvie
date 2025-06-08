@@ -5,8 +5,8 @@ use crate::repository::{
 
 macros::def_module!(RepositoriesModule {
     settings_repository: SettingsRepository,
-    items_repository: ItemsRepository<DbTx>,
-    playsts_repository: PlaystsRepository<DbTx>,
+    items_repository: = for ItemsRepository<DbConnection>,
+    playsts_repository: = for PlaystsRepository<DbConnection>,
     rules_repository: RulesRepository,
 });
 
@@ -14,21 +14,21 @@ mod macros {
     macro_rules! def_module {
         (
             $module:ident {
-                $($variable:ident: $repository:ident$(<$tx:ident>)?,)*
+                $($variable:ident: $( = $fo:ident )?$repository:ident$(<$tx:ident>)?,)*
             }
         ) => {
             pub trait $module: Send + Sync + Sized + 'static {
-                type DbTx: crate::persistence::db::DbTx;
+                type DbConnection<'a>: crate::persistence::db::DbConnection<'a>;
 
                 $(
-                    type $repository: $repository $(<$tx = Self::$tx>)?;
+                    type $repository: $($fo<'a>)? $repository $(<$tx<'a> = Self::$tx<'a>>)?;
                 )*
 
                 $(
                     fn $variable(&self) -> &Self::$repository;
                 )*
 
-                fn begin(&self) -> impl Future<Output = improvie_logic::AppResult<Self::DbTx>>;
+                // fn connection(&self) -> &Self::DbConnection<'_>;
             }
         };
     }

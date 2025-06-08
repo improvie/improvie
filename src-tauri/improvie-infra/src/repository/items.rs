@@ -25,7 +25,7 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    type DbTx = DbTx;
+    type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
 
     async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode> {
         let rows = sqlx::query_as::<_, CurrentNodeRaw>(

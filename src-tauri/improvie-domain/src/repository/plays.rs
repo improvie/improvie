@@ -10,7 +10,7 @@ use crate::model::plays::{CreatePlayFolderModel, CreatePlaylistModel};
 
 #[async_trait::async_trait]
 pub trait PlaystsRepository {
-    type DbTx: crate::persistence::db::DbTx;
+    type DbConnection<'a>: crate::persistence::db::DbConnection<'a>;
 
     async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> AppResult<PlayFolderNode>;
 

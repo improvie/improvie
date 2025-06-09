@@ -6,7 +6,7 @@ use improvie_domain::{
     repository::items::ItemsRepository,
 };
 use improvie_logic::{
-    AppResult,
+    DynAppResult,
     constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
@@ -15,6 +15,7 @@ use sqlx::QueryBuilder;
 use uid::Uid;
 
 use crate::{
+    DbErr,
     model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
     persistence::db::DbTx,
 };
@@ -27,7 +28,7 @@ def_repository_impl!(ItemsRepositoryImpl);
 impl ItemsRepository for ItemsRepositoryImpl {
     type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
 
-    async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode> {
+    async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
         let rows = sqlx::query_as::<_, CurrentNodeRaw>(
             "
 SELECT
@@ -39,7 +40,8 @@ WHERE hi.parent_folder_id = ?
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await?;
+        .await
+        .map_err(DbErr)?;
 
         let mut items: Vec<ItemNode> = vec![];
         for row in rows {
@@ -68,7 +70,7 @@ WHERE hi.parent_folder_id = ?
     async fn get_items_hierarchy_loop(
         &self,
         folder_id: Uid,
-    ) -> AppResult<HashMap<Uid, FolderNode>> {
+    ) -> DynAppResult<HashMap<Uid, FolderNode>> {
         let rows = sqlx::query_as::<_, NodeRaw>(
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
@@ -98,7 +100,8 @@ FROM folder_hierarchy
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await?;
+        .await
+        .map_err(DbErr)?;
 
         let mut nodes: HashMap<Uid, FolderNode> = HashMap::new();
         for row in rows {
@@ -126,7 +129,7 @@ FROM folder_hierarchy
         Ok(nodes)
     }
 
-    async fn get_contents(&self) -> AppResult<Vec<Content>> {
+    async fn get_contents(&self) -> DynAppResult<Vec<Content>> {
         let row: Vec<ContentRaw> = sqlx::query_as(
             "
 SELECT
@@ -137,12 +140,13 @@ INNER JOIN items AS i ON c.item_id = i.id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await?;
+        .await
+        .map_err(DbErr)?;
 
         Ok(row.vec_into())
     }
 
-    async fn get_folders(&self) -> AppResult<Vec<Folder>> {
+    async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
         let row: Vec<FolderRaw> = sqlx::query_as(
             "
 SELECT
@@ -152,12 +156,13 @@ INNER JOIN items AS i ON f.item_id = i.id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await?;
+        .await
+        .map_err(DbErr)?;
 
         Ok(row.vec_into())
     }
 
-    async fn create_folder(&self, model: CreateFolderModel) -> AppResult<Folder> {
+    async fn create_folder(&self, model: CreateFolderModel) -> DynAppResult<Folder> {
         let folder = Folder {
             item: Item {
                 id: Uid::now(),
@@ -185,7 +190,7 @@ INNER JOIN items AS i ON f.item_id = i.id
         Ok(folder)
     }
 
-    async fn create_content(&self, model: CreateContentModel) -> AppResult<Content> {
+    async fn create_content(&self, model: CreateContentModel) -> DynAppResult<Content> {
         let content = Content {
             item: Item {
                 id: Uid::now(),
@@ -221,7 +226,7 @@ INNER JOIN items AS i ON f.item_id = i.id
         Ok(content)
     }
 
-    async fn delete_item(&self, item_id: Uid) -> AppResult<Vec<Uid>> {
+    async fn delete_item(&self, item_id: Uid) -> DynAppResult<Vec<Uid>> {
         let mut tx = self.db.begin().await?;
 
         let mut item_uids = sqlx::query_scalar::<_, Uid>(
@@ -245,7 +250,8 @@ FROM item_hierarchy
         )
         .bind(item_id)
         .fetch_all(tx.as_mut())
-        .await?;
+        .await
+        .map_err(DbErr)?;
 
         item_uids.push(item_id);
 
@@ -261,14 +267,14 @@ WHERE id IN (
         }
         separated.push_unseparated(")");
 
-        builder.build().execute(tx.as_mut()).await?;
+        builder.build().execute(tx.as_mut()).await.map_err(DbErr)?;
 
         tx.commit().await?;
 
         Ok(item_uids)
     }
 
-    async fn update_item_name(&self, item_id: Uid, new_name: String) -> AppResult<()> {
+    async fn update_item_name(&self, item_id: Uid, new_name: String) -> DynAppResult<()> {
         let mut tx = self.db.begin().await?;
         let result = sqlx::query(
             "
@@ -290,7 +296,7 @@ WHERE id = ?
     }
 }
 
-async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {
+async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> DynAppResult<()> {
     let item_result = sqlx::query(
         "INSERT INTO items (id, title, description, kind, created_at) VALUES (?, ?, ?, ?, ?)",
     )
@@ -307,7 +313,7 @@ async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> AppResult<()> {
     Ok(())
 }
 
-async fn add_hierarchy(tx: &mut DbTx, parent_folder_id: Uid, item_id: Uid) -> AppResult<()> {
+async fn add_hierarchy(tx: &mut DbTx, parent_folder_id: Uid, item_id: Uid) -> DynAppResult<()> {
     let sort_order: u32 = sqlx::query_scalar(
         "
 SELECT
@@ -318,7 +324,8 @@ WHERE parent_folder_id = ?
     )
     .bind(parent_folder_id)
     .fetch_one(tx.as_mut())
-    .await?;
+    .await
+    .map_err(DbErr)?;
 
     let sort_order = sort_order + 1;
 
@@ -334,7 +341,7 @@ WHERE parent_folder_id = ? AND sort_order >= ?
     .execute(tx.as_mut())
     .await;
 
-    shift_result?;
+    shift_result.map_err(DbErr)?;
 
     let hierarchy_result = sqlx::query(
         "

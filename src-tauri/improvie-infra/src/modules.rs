@@ -26,6 +26,7 @@ mod macros {
         { $($variable:ident: $impl:ident = $repository:ident,)* }
     ) => {
         pub struct $name {
+            #[allow(dead_code)]
             db : DbPool,
             $($variable: $impl,)*
         }

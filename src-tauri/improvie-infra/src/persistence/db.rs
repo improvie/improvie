@@ -1,4 +1,4 @@
-use improvie_logic::{DynAppError, DynAppResult};
+use improvie_logic::DynAppResult;
 use sqlx::ConnectOptions;
 use std::{fs::OpenOptions, path::PathBuf};
 
@@ -36,17 +36,18 @@ impl DbPool {
         let result = self.0.begin().await;
         match result {
             Ok(tx) => Ok(DbTx::new(tx)),
-            Err(e) => Err(crate::DbErr(e).boxed()),
+            Err(e) => Err(crate::DbErr(e).into()),
         }
     }
 }
 
+#[async_trait::async_trait]
 impl improvie_domain::persistence::db::DbPool for DbPool {
     type DbConnection<'a> = DbConnection<'a>;
     type DbTx = DbTx;
 
-    fn begin(&self) -> impl Future<Output = DynAppResult<Self::DbTx>> {
-        self.begin()
+    async fn begin(&self) -> DynAppResult<Self::DbTx> {
+        self.begin().await
     }
 }
 
@@ -62,11 +63,11 @@ impl DbTx {
     }
 
     pub async fn commit(self) -> DynAppResult<()> {
-        self.0.commit().await.map_err(|e| crate::DbErr(e).boxed())
+        self.0.commit().await.map_err(|e| crate::DbErr(e).into())
     }
 
     pub async fn rollback(self) -> DynAppResult<()> {
-        self.0.rollback().await.map_err(|e| crate::DbErr(e).boxed())
+        self.0.rollback().await.map_err(|e| crate::DbErr(e).into())
     }
 }
 
@@ -76,16 +77,17 @@ impl AsMut<sqlx::SqliteConnection> for DbTx {
     }
 }
 
+#[async_trait::async_trait]
 impl improvie_domain::persistence::db::DbTx for DbTx {
     type DbConnection<'a> = DbConnection<'a>;
     type DbPool = DbPool;
 
-    fn commit(self) -> impl Future<Output = improvie_logic::DynAppResult<()>> {
-        self.commit()
+    async fn commit(self) -> improvie_logic::DynAppResult<()> {
+        self.commit().await
     }
 
-    fn rollback(self) -> impl Future<Output = improvie_logic::DynAppResult<()>> {
-        self.rollback()
+    async fn rollback(self) -> improvie_logic::DynAppResult<()> {
+        self.rollback().await
     }
 }
 

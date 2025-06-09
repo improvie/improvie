@@ -8,6 +8,7 @@ pub trait DbConnection<'a>: Send + Sync {
     fn new_tx(tx: &'a Self::DbTx) -> Self;
 }
 
+#[async_trait::async_trait]
 pub trait DbPool: Send + Sync + 'static {
     type DbConnection<'a>: DbConnection<'a, DbPool = Self, DbTx = Self::DbTx>;
     type DbTx: DbTx;
@@ -17,9 +18,10 @@ pub trait DbPool: Send + Sync + 'static {
     }
 
     /// Begins a new database transaction.
-    fn begin(&self) -> impl Future<Output = DynAppResult<Self::DbTx>>;
+    async fn begin(&self) -> DynAppResult<Self::DbTx>;
 }
 
+#[async_trait::async_trait]
 pub trait DbTx: Send + Sync + 'static {
     type DbConnection<'a>: DbConnection<'a, DbPool = Self::DbPool, DbTx = Self>;
     type DbPool: DbPool<DbTx = Self>;
@@ -29,8 +31,8 @@ pub trait DbTx: Send + Sync + 'static {
     }
 
     /// Commits the transaction.
-    fn commit(self) -> impl Future<Output = DynAppResult<()>>;
+    async fn commit(self) -> DynAppResult<()>;
 
     /// Rolls back the transaction.
-    fn rollback(self) -> impl Future<Output = DynAppResult<()>>;
+    async fn rollback(self) -> DynAppResult<()>;
 }

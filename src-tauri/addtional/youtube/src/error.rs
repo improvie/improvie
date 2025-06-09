@@ -1,4 +1,4 @@
-use improvie_logic::impl_serialize_for_dyn_app_error;
+use improvie_logic::{BoxDynAppError, impl_serialize_for_dyn_app_error};
 
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
 #[variant_name(prefix = "Yt")]
@@ -14,7 +14,7 @@ pub enum YtError {
     #[error("http error: {0}")]
     Http(#[from] rusty_ytdl::VideoError),
     #[error("failed to create content: {0}")]
-    SaveError(#[from] improvie_logic::AppError),
+    SaveError(BoxDynAppError),
     #[error("failed to create ffmpeg context: {0}")]
     Ffmpeg(Box<dyn std::error::Error + Send + Sync>),
 }

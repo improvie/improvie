@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
 use improvie_logic::model::items::{Content, Folder};
-use improvie_logic::{AppResult, model::items::FolderNode};
+use improvie_logic::{DynAppResult, model::items::FolderNode};
 use uid::Uid;
 
 use crate::model::items::{
@@ -15,29 +15,32 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
     pub async fn get_items_hierarchy_loop(
         &self,
         folder_id: Uid,
-    ) -> AppResult<HashMap<Uid, FolderNode>> {
+    ) -> DynAppResult<HashMap<Uid, FolderNode>> {
         self.repository
             .items_repository()
             .get_items_hierarchy_loop(folder_id)
             .await
     }
 
-    pub async fn get_items_hierarchy_current(&self, folder_id: Uid) -> AppResult<FolderNode> {
+    pub async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
         self.repository
             .items_repository()
             .get_items_hierarchy_current(folder_id)
             .await
     }
 
-    pub async fn get_contents(&self) -> AppResult<Vec<Content>> {
+    pub async fn get_contents(&self) -> DynAppResult<Vec<Content>> {
         self.repository.items_repository().get_contents().await
     }
 
-    pub async fn get_folders(&self) -> AppResult<Vec<Folder>> {
+    pub async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
         self.repository.items_repository().get_folders().await
     }
 
-    pub async fn create_folder(&self, model: CreateFolderDto) -> AppResult<CreateFolderResponse> {
+    pub async fn create_folder(
+        &self,
+        model: CreateFolderDto,
+    ) -> DynAppResult<CreateFolderResponse> {
         let parent_folder_id = model.item.parent_folder_id;
 
         let folder = self
@@ -61,7 +64,7 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
     pub async fn create_content(
         &self,
         model: CreateContentDto,
-    ) -> AppResult<CreateContentResponse> {
+    ) -> DynAppResult<CreateContentResponse> {
         let parent_folder_id = model.item.parent_folder_id;
 
         let content = self
@@ -82,14 +85,14 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         })
     }
 
-    pub async fn delete_item(&self, item_id: Uid) -> AppResult<Vec<Uid>> {
+    pub async fn delete_item(&self, item_id: Uid) -> DynAppResult<Vec<Uid>> {
         self.repository
             .items_repository()
             .delete_item(item_id)
             .await
     }
 
-    pub async fn update_item_name(&self, item_id: Uid, name: String) -> AppResult<()> {
+    pub async fn update_item_name(&self, item_id: Uid, name: String) -> DynAppResult<()> {
         self.repository
             .items_repository()
             .update_item_name(item_id, name)

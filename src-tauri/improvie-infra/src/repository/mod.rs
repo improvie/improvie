@@ -9,11 +9,11 @@ macro_rules! tx_match {
     ($result:expr,$tx:expr,{$($t:tt)*}) => {
         match $result {
             Ok(r) if r.rows_affected() == 0 => {
-                return Err(improvie_logic::AppError::Db(sqlx::Error::RowNotFound));
+                return Err(improvie_logic::DbErr(sqlx::Error::RowNotFound).into());
             }
             $($t)*
             Err(err) => {
-                return Err(err.into());
+                return Err(improvie_logic::DbErr(err).into());
             }
         }
     };

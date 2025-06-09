@@ -26,6 +26,7 @@ mod macros {
         { $($variable:ident: $impl:ident = $repository:ident,)* }
     ) => {
         pub struct $name {
+            db : DbPool,
             $($variable: $impl,)*
         }
 
@@ -33,17 +34,31 @@ mod macros {
             pub fn new(db: DbPool) -> Self {
                 Self {
                     $($variable: $impl::new(db.clone()),)*
+                    db,
                 }
             }
         }
 
+        #[async_trait::async_trait]
         impl $trait for $name {
+            type DbConnection<'a> = $crate::persistence::db::DbConnection<'a>;
+            type DbPool = $crate::persistence::db::DbPool;
+            type DbTx = $crate::persistence::db::DbTx;
+
             $(
                 type $repository = $impl;
                 fn $variable(&self) -> &Self::$repository {
                     &self.$variable
                 }
             )*
+
+            fn pool(&self) -> Self::DbPool {
+                self.db.clone()
+            }
+
+            async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx> {
+                self.db.begin().await
+            }
         }
 
         };

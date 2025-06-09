@@ -10,7 +10,7 @@ def_repository_impl!(SettingsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl SettingsRepository for SettingsRepositoryImpl {
-    async fn get_app_settings(&self) -> improvie_logic::AppResult<AppSettings> {
+    async fn get_app_settings(&self) -> improvie_logic::DynAppResult<AppSettings> {
         let row: AppSettingsRow = sqlx::query_as::<_, AppSettingsRow>(
             "SELECT id, settings, created_at FROM app_settings WHERE id = ?",
         )
@@ -21,7 +21,7 @@ impl SettingsRepository for SettingsRepositoryImpl {
         Ok(row.settings)
     }
 
-    async fn set_app_settings(&self, settings: AppSettings) -> improvie_logic::AppResult<()> {
+    async fn set_app_settings(&self, settings: AppSettings) -> improvie_logic::DynAppResult<()> {
         sqlx::query("UPDATE app_settings SET settings = ? WHERE id = ?")
             .bind(sqlx::types::Json(settings))
             .bind(Uid::nil())

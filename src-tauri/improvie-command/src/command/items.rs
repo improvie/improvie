@@ -4,7 +4,7 @@ use improvie_app::model::items::{
     CreateContentDto, CreateContentResponse, CreateFolderDto, CreateFolderResponse,
 };
 use improvie_logic::{
-    AppResult,
+    DynAppResult,
     model::items::{Content, Folder, FolderNode},
 };
 use uid::Uid;
@@ -15,7 +15,7 @@ use crate::state::TauriAppState;
 pub async fn get_items_hierarchy(
     state: TauriAppState<'_>,
     folder_id: Uid,
-) -> AppResult<HashMap<Uid, FolderNode>> {
+) -> DynAppResult<HashMap<Uid, FolderNode>> {
     state
         .modules
         .items_use_case()
@@ -24,12 +24,12 @@ pub async fn get_items_hierarchy(
 }
 
 #[tauri::command]
-pub async fn get_contents(state: TauriAppState<'_>) -> AppResult<Vec<Content>> {
+pub async fn get_contents(state: TauriAppState<'_>) -> DynAppResult<Vec<Content>> {
     state.modules.items_use_case().get_contents().await
 }
 
 #[tauri::command]
-pub async fn get_folders(state: TauriAppState<'_>) -> AppResult<Vec<Folder>> {
+pub async fn get_folders(state: TauriAppState<'_>) -> DynAppResult<Vec<Folder>> {
     state.modules.items_use_case().get_folders().await
 }
 
@@ -37,7 +37,7 @@ pub async fn get_folders(state: TauriAppState<'_>) -> AppResult<Vec<Folder>> {
 pub async fn create_folder(
     state: TauriAppState<'_>,
     dto: CreateFolderDto,
-) -> AppResult<CreateFolderResponse> {
+) -> DynAppResult<CreateFolderResponse> {
     state.modules.items_use_case().create_folder(dto).await
 }
 
@@ -45,12 +45,12 @@ pub async fn create_folder(
 pub async fn create_content(
     state: TauriAppState<'_>,
     dto: CreateContentDto,
-) -> AppResult<CreateContentResponse> {
+) -> DynAppResult<CreateContentResponse> {
     state.modules.items_use_case().create_content(dto).await
 }
 
 #[tauri::command]
-pub async fn delete_item(state: TauriAppState<'_>, item_id: Uid) -> AppResult<Vec<Uid>> {
+pub async fn delete_item(state: TauriAppState<'_>, item_id: Uid) -> DynAppResult<Vec<Uid>> {
     state.modules.items_use_case().delete_item(item_id).await
 }
 
@@ -59,7 +59,7 @@ pub async fn update_item_name(
     state: TauriAppState<'_>,
     item_id: Uid,
     name: String,
-) -> AppResult<()> {
+) -> DynAppResult<()> {
     state
         .modules
         .items_use_case()

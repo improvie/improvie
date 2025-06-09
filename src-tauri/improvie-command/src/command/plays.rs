@@ -4,7 +4,7 @@ use improvie_app::model::plays::{
     CreatePlayFolderDto, CreatePlayFolderResponse, CreatePlaylistDto, CreatePlaylistResponse,
 };
 use improvie_logic::{
-    AppResult,
+    DynAppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
 use uid::Uid;
@@ -12,17 +12,17 @@ use uid::Uid;
 use crate::state::TauriAppState;
 
 #[tauri::command]
-pub async fn get_play_folders(state: TauriAppState<'_>) -> AppResult<Vec<PlayFolder>> {
+pub async fn get_play_folders(state: TauriAppState<'_>) -> DynAppResult<Vec<PlayFolder>> {
     state.modules.plays_use_case().get_play_folders().await
 }
 
 #[tauri::command]
-pub async fn get_playlists(state: TauriAppState<'_>) -> AppResult<Vec<Playlist>> {
+pub async fn get_playlists(state: TauriAppState<'_>) -> DynAppResult<Vec<Playlist>> {
     state.modules.plays_use_case().get_playlists().await
 }
 
 #[tauri::command]
-pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<Uid>> {
+pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> DynAppResult<Vec<Uid>> {
     state
         .modules
         .plays_use_case()
@@ -31,7 +31,7 @@ pub async fn get_favorite_playlists(state: TauriAppState<'_>) -> AppResult<Vec<U
 }
 
 #[tauri::command]
-pub async fn add_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppResult<()> {
+pub async fn add_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> DynAppResult<()> {
     state
         .modules
         .plays_use_case()
@@ -40,7 +40,7 @@ pub async fn add_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppResu
 }
 
 #[tauri::command]
-pub async fn remove_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppResult<()> {
+pub async fn remove_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> DynAppResult<()> {
     state
         .modules
         .plays_use_case()
@@ -52,7 +52,7 @@ pub async fn remove_favorite_playlist(state: TauriAppState<'_>, id: Uid) -> AppR
 pub async fn get_plays_hierarchy(
     state: TauriAppState<'_>,
     folder_id: Uid,
-) -> AppResult<HashMap<Uid, PlayFolderNode>> {
+) -> DynAppResult<HashMap<Uid, PlayFolderNode>> {
     state
         .modules
         .plays_use_case()
@@ -64,7 +64,7 @@ pub async fn get_plays_hierarchy(
 pub async fn create_play_folder(
     state: TauriAppState<'_>,
     dto: CreatePlayFolderDto,
-) -> AppResult<CreatePlayFolderResponse> {
+) -> DynAppResult<CreatePlayFolderResponse> {
     state.modules.plays_use_case().create_play_folder(dto).await
 }
 
@@ -72,12 +72,12 @@ pub async fn create_play_folder(
 pub async fn create_playlist(
     state: TauriAppState<'_>,
     dto: CreatePlaylistDto,
-) -> AppResult<CreatePlaylistResponse> {
+) -> DynAppResult<CreatePlaylistResponse> {
     state.modules.plays_use_case().create_playlist(dto).await
 }
 
 #[tauri::command]
-pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uid) -> AppResult<Vec<Uid>> {
+pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uid) -> DynAppResult<Vec<Uid>> {
     state
         .modules
         .plays_use_case()
@@ -90,7 +90,7 @@ pub async fn update_play_item_name(
     state: TauriAppState<'_>,
     play_id: Uid,
     name: String,
-) -> AppResult<()> {
+) -> DynAppResult<()> {
     state
         .modules
         .plays_use_case()

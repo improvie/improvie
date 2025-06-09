@@ -7,8 +7,8 @@
   import { Button } from './ui/button';
   import * as Tooltip from './ui/tooltip/index';
 
-  type Props = WithElementRef<HTMLButtonAttributes> &
-    WithElementRef<HTMLAnchorAttributes> & {
+  type Props = WithElementRef<HTMLButtonAttributes>
+    & WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
       content: Snippet;
       children: Snippet;

@@ -17,8 +17,11 @@ mod macros {
                 $($variable:ident: $repository:ident$(<$for_ident:ident $tx:ident>)?,)*
             }
         ) => {
+            #[async_trait::async_trait]
             pub trait $module: Send + Sync + Sized + 'static {
-                type DbConnection<'a>: crate::persistence::db::DbConnection<'a>;
+                type DbConnection<'a>: $crate::persistence::db::DbConnection<'a>;
+                type DbPool: for<'a> $crate::persistence::db::DbPool<DbConnection<'a> = Self::DbConnection<'a>, DbTx = Self::DbTx>;
+                type DbTx: for<'a> $crate::persistence::db::DbTx<DbConnection<'a> = Self::DbConnection<'a>, DbPool = Self::DbPool>;
 
                 $(
                     type $repository: $($for_ident<'a>)? $repository $(<$tx<'a> = Self::$tx<'a>>)?;
@@ -28,7 +31,8 @@ mod macros {
                     fn $variable(&self) -> &Self::$repository;
                 )*
 
-                // fn connection(&self) -> &Self::DbConnection<'_>;
+                fn pool(&self) -> Self::DbPool;
+                async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
             }
         };
     }

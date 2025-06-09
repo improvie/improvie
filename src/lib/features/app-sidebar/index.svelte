@@ -5,7 +5,7 @@
   import NavSecondary from '$lib/features/app-sidebar/nav-secondary.svelte';
 </script>
 
-<Sidebar.Root class='border-r-0 select-none'>
+<Sidebar.Root collapsible='icon' class='border-r-0 select-none'>
   <Sidebar.Header>
     <NavMain />
   </Sidebar.Header>

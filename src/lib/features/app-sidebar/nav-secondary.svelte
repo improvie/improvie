@@ -7,39 +7,35 @@
   let is_open_theme: boolean = $state(false);
 </script>
 
-<Sidebar.Group>
-  <Sidebar.GroupContent>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton
-          onclick={() => {
-            if (sidebarToggler.isMobile()) {
-              sidebarToggler.toggle();
-            }
-            settingsStore.toggle();
-          }}
-        >
-          <Settings2 />
-          <span>Settings</span>
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton
-          onclick={() => {
-            is_open_theme = !is_open_theme;
-          }}
-        >
-          <Palette />
-          <span>Theme</span>
-        </Sidebar.MenuButton>
-        <ThemeChanger bind:open={is_open_theme} />
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <MessageCircleQuestion />
-          <span>Help</span>
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.GroupContent>
-</Sidebar.Group>
+<Sidebar.Menu>
+  <Sidebar.MenuItem>
+    <Sidebar.MenuButton
+      onclick={() => {
+        if (sidebarToggler.isMobile()) {
+          sidebarToggler.toggle();
+        }
+        settingsStore.toggle();
+      }}
+    >
+      <Settings2 />
+      <span>Settings</span>
+    </Sidebar.MenuButton>
+  </Sidebar.MenuItem>
+  <Sidebar.MenuItem>
+    <Sidebar.MenuButton
+      onclick={() => {
+        is_open_theme = !is_open_theme;
+      }}
+    >
+      <Palette />
+      <span class='capitalize'>Theme</span>
+    </Sidebar.MenuButton>
+    <ThemeChanger bind:open={is_open_theme} />
+  </Sidebar.MenuItem>
+  <Sidebar.MenuItem>
+    <Sidebar.MenuButton>
+      <MessageCircleQuestion />
+      <span class='capitalize'>Help</span>
+    </Sidebar.MenuButton>
+  </Sidebar.MenuItem>
+</Sidebar.Menu>

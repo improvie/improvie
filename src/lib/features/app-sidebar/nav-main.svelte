@@ -26,7 +26,7 @@
           goto(path);
         }}
       >
-        <Icon></Icon>
+        <Icon />
         <span class='capitalize'>{name}</span>
       </Sidebar.MenuButton>
     {/each}

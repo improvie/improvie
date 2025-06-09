@@ -16,15 +16,15 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.8.2",
-    "@lucide/svelte": "^0.513.0",
     "@tauri-apps/api": "^2.5.0",
     "@tauri-apps/plugin-log": "~2.4.0",
-    "clsx": "^2.1.1",
     "paneforge": "^0.0.6",
-    "sveltekit-i18n": "^2.4.2",
-    "tailwind-merge": "^3.3.0"
+    "sveltekit-i18n": "^2.4.2"
   },
   "devDependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.0",
+    "@lucide/svelte": "^0.513.0",
     "@antfu/eslint-config": "^4.14.1",
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.21.3",
@@ -39,7 +39,6 @@
     "formsnap": "^2.0.1",
     "globals": "^16.2.0",
     "layerchart": "1.0.11",
-    "mode-watcher": "^1.0.7",
     "svelte": "^5.33.18",
     "svelte-check": "^4.2.1",
     "svelte-eslint-parser": "^1.2.0",

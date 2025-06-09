@@ -1,22 +1,20 @@
 <script lang='ts'>
-  import type { ThemeFeature } from '$lib/stores/theme.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog';
   import Separator from '$lib/components/ui/separator/separator.svelte';
-  import { get_themes, set_current_theme } from '$lib/stores/theme.svelte';
-  import { onMount } from 'svelte';
+  import { set_current_theme } from '$lib/stores/theme.svelte';
 
   let { open = $bindable() }: { open: boolean } = $props();
 
-  const themes: ThemeFeature[] = $state([]);
+  type Theme = {
+    name: string;
+    value: string;
+  };
 
-  onMount(() => {
-    get_themes().then((res_themes) => {
-      res_themes.forEach((theme) => {
-        themes.push(theme);
-      });
-    });
-  });
+  const themes: Theme[] = [
+    { name: 'Light', value: 'light' },
+    { name: 'Dark', value: 'dark' },
+  ];
 </script>
 
 <Dialog.Root bind:open>
@@ -31,7 +29,7 @@
             size='sm'
             class='w-full'
             onclick={() => {
-              set_current_theme(theme);
+              set_current_theme(theme.value);
             }}
           >
             {theme.name}

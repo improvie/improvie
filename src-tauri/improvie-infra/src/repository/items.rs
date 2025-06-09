@@ -15,7 +15,6 @@ use sqlx::QueryBuilder;
 use uid::Uid;
 
 use crate::{
-    DbErr,
     model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
     persistence::db::DbTx,
 };
@@ -40,8 +39,7 @@ WHERE hi.parent_folder_id = ?
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         let mut items: Vec<ItemNode> = vec![];
         for row in rows {
@@ -100,8 +98,7 @@ FROM folder_hierarchy
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         let mut nodes: HashMap<Uid, FolderNode> = HashMap::new();
         for row in rows {
@@ -140,8 +137,7 @@ INNER JOIN items AS i ON c.item_id = i.id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         Ok(row.vec_into())
     }
@@ -156,8 +152,7 @@ INNER JOIN items AS i ON f.item_id = i.id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         Ok(row.vec_into())
     }
@@ -250,8 +245,7 @@ FROM item_hierarchy
         )
         .bind(item_id)
         .fetch_all(tx.as_mut())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         item_uids.push(item_id);
 
@@ -267,7 +261,7 @@ WHERE id IN (
         }
         separated.push_unseparated(")");
 
-        builder.build().execute(tx.as_mut()).await.map_err(DbErr)?;
+        builder.build().execute(tx.as_mut()).await?;
 
         tx.commit().await?;
 
@@ -324,8 +318,7 @@ WHERE parent_folder_id = ?
     )
     .bind(parent_folder_id)
     .fetch_one(tx.as_mut())
-    .await
-    .map_err(DbErr)?;
+    .await?;
 
     let sort_order = sort_order + 1;
 
@@ -341,7 +334,7 @@ WHERE parent_folder_id = ? AND sort_order >= ?
     .execute(tx.as_mut())
     .await;
 
-    shift_result.map_err(DbErr)?;
+    shift_result?;
 
     let hierarchy_result = sqlx::query(
         "

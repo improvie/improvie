@@ -1,4 +1,5 @@
-use improvie_logic::{BoxDynAppError, impl_serialize_for_dyn_app_error};
+use improvie_logic::{BoxDynAppError, DynAppError, impl_serialize_for_dyn_app_error};
+use more_convert::VariantName;
 
 #[derive(Debug, thiserror::Error, more_convert::VariantName)]
 #[variant_name(prefix = "Yt")]
@@ -17,6 +18,12 @@ pub enum YtError {
     SaveError(BoxDynAppError),
     #[error("failed to create ffmpeg context: {0}")]
     Ffmpeg(Box<dyn std::error::Error + Send + Sync>),
+}
+
+impl DynAppError for YtError {
+    fn error_kind(&self) -> &'static str {
+        self.variant_name()
+    }
 }
 
 impl_serialize_for_dyn_app_error!(YtError);

@@ -1,12 +1,12 @@
 use improvie_domain::repository::rules::RulesRepository;
-use improvie_logic::{AppResult, logic::rule::Rule};
+use improvie_logic::{DynAppResult, logic::rule::Rule};
 use sqlx::types::Json;
 
 super::def_repository_impl!(RulesRepositoryImpl);
 
 #[async_trait::async_trait]
 impl RulesRepository for RulesRepositoryImpl {
-    async fn get_rules(&self, playlist_id: uid::Uid) -> AppResult<Vec<Rule>> {
+    async fn get_rules(&self, playlist_id: uid::Uid) -> DynAppResult<Vec<Rule>> {
         let row = sqlx::query_scalar::<_, Json<Vec<Rule>>>(
             "
 SELECT rules
@@ -21,7 +21,7 @@ WHERE item_id = ?
         Ok(row.0)
     }
 
-    async fn update_rules(&self, playlist_id: uid::Uid, rules: Vec<Rule>) -> AppResult<()> {
+    async fn update_rules(&self, playlist_id: uid::Uid, rules: Vec<Rule>) -> DynAppResult<()> {
         sqlx::query(
             "
 UPDATE playlists

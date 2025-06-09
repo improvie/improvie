@@ -1,4 +1,4 @@
-use improvie_logic::DynAppResult;
+use improvie_logic::{DynAppError, DynAppResult};
 use sqlx::ConnectOptions;
 use std::{fs::OpenOptions, path::PathBuf};
 
@@ -36,7 +36,7 @@ impl DbPool {
         let result = self.0.begin().await;
         match result {
             Ok(tx) => Ok(DbTx::new(tx)),
-            Err(e) => Err(crate::DbErr(e).into()),
+            Err(e) => Err(improvie_logic::DbErr(e).into()),
         }
     }
 }
@@ -63,11 +63,17 @@ impl DbTx {
     }
 
     pub async fn commit(self) -> DynAppResult<()> {
-        self.0.commit().await.map_err(|e| crate::DbErr(e).into())
+        self.0
+            .commit()
+            .await
+            .map_err(|e| improvie_logic::DbErr(e).into())
     }
 
     pub async fn rollback(self) -> DynAppResult<()> {
-        self.0.rollback().await.map_err(|e| crate::DbErr(e).into())
+        self.0
+            .rollback()
+            .await
+            .map_err(|e| improvie_logic::DbErr(e).into())
     }
 }
 
@@ -91,12 +97,18 @@ impl improvie_domain::persistence::db::DbTx for DbTx {
     }
 }
 
-#[derive(Debug, thiserror::Error, more_convert::VariantName)]
+#[derive(Debug, thiserror::Error)]
 pub enum InitDbError {
     #[error("create database error: {0}")]
     Db(#[from] sqlx::Error),
     #[error("create database error with io: {0}")]
     Io(#[from] std::io::Error),
+}
+
+impl DynAppError for InitDbError {
+    fn error_kind(&self) -> &'static str {
+        "InitDbError"
+    }
 }
 
 impl DbPool {

@@ -1,5 +1,5 @@
 use improvie_logic::{
-    AppResult,
+    DynAppResult,
     logic::rule::{Rule, RuleFormat, RuleFormatIter},
 };
 use uid::Uid;
@@ -7,7 +7,7 @@ use uid::Uid;
 use crate::state::TauriAppState;
 
 #[tauri::command]
-pub async fn get_rules(state: TauriAppState<'_>, playlist_id: Uid) -> AppResult<Vec<Rule>> {
+pub async fn get_rules(state: TauriAppState<'_>, playlist_id: Uid) -> DynAppResult<Vec<Rule>> {
     state.modules.rules_use_case().get_rules(playlist_id).await
 }
 
@@ -16,7 +16,7 @@ pub async fn update_rules(
     state: TauriAppState<'_>,
     playlist_id: Uid,
     rules: Vec<Rule>,
-) -> AppResult<()> {
+) -> DynAppResult<()> {
     state
         .modules
         .rules_use_case()

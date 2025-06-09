@@ -16,7 +16,6 @@ use sqlx::QueryBuilder;
 use uid::Uid;
 
 use crate::{
-    DbErr,
     model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow},
     persistence::db::DbTx,
     repository::tx_check,
@@ -39,8 +38,7 @@ INNER JOIN play_items AS pi ON pi.id = pf.item_id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         Ok(rows.vec_into())
     }
@@ -55,8 +53,7 @@ INNER JOIN play_items AS pi ON pi.id = pl.item_id
 ",
         )
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         Ok(rows.vec_into())
     }
@@ -71,8 +68,7 @@ ORDER BY sort_order
         )
         .bind(Uid::nil())
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         Ok(rows.vec_into())
     }
@@ -88,8 +84,7 @@ FROM favorite_playlists
 ",
         )
         .fetch_one(tx.as_mut())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         let result = sqlx::query(
             "
@@ -138,8 +133,7 @@ WHERE hpi.parent_folder_id = ?
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         let mut children: Vec<PlayItemNode> = vec![];
         for row in rows {
@@ -198,8 +192,7 @@ FROM folder_hierarchy
         )
         .bind(folder_id)
         .fetch_all(&self.db.pool())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         let mut nodes: HashMap<Uid, PlayFolderNode> = HashMap::new();
         for row in rows {
@@ -311,8 +304,7 @@ FROM item_hierarchy
         )
         .bind(play_id)
         .fetch_all(tx.as_mut())
-        .await
-        .map_err(DbErr)?;
+        .await?;
 
         play_item_uids.push(play_id);
 
@@ -328,7 +320,7 @@ WHERE id IN (
         }
         separated.push_unseparated(")");
 
-        builder.build().execute(tx.as_mut()).await.map_err(DbErr)?;
+        builder.build().execute(tx.as_mut()).await?;
 
         tx.commit().await?;
 
@@ -389,8 +381,7 @@ WHERE parent_folder_id = ?
     )
     .bind(parent_folder_id)
     .fetch_one(tx.as_mut())
-    .await
-    .map_err(DbErr)?;
+    .await?;
 
     let sort_order = sort_order + 1;
 
@@ -406,7 +397,7 @@ WHERE parent_folder_id = ? AND sort_order >= ?
     .execute(tx.as_mut())
     .await;
 
-    shift_result.map_err(DbErr)?;
+    shift_result?;
 
     let hierarchy_result = sqlx::query(
         "

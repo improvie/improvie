@@ -1,25 +1,3 @@
-use more_convert::VariantName;
-
-// TODO: もっといい感じのエラーにする
-
-pub type AppResult<T> = std::result::Result<T, AppError>;
-
-#[derive(Debug, thiserror::Error, more_convert::VariantName)]
-#[variant_name(prefix = "App")]
-pub enum AppError {
-    #[error("db error: {0}")]
-    #[cfg(feature = "db")]
-    Db(#[from] sqlx::Error),
-    #[error("io error: {0}")]
-    Io(#[from] std::io::Error),
-    #[error("not ready on {0}: {1}")]
-    NotReady(&'static str, String),
-    #[error("errored on {0}: {1}")]
-    Errored(&'static str, String),
-}
-
-crate::impl_serialize_for_dyn_app_error!(AppError);
-
 pub trait DynAppError: std::error::Error + Send + Sync + 'static {
     fn error_kind(&self) -> &'static str;
 
@@ -29,15 +7,6 @@ pub trait DynAppError: std::error::Error + Send + Sync + 'static {
         Self: std::marker::Sized,
     {
         Box::new(self)
-    }
-}
-
-impl<T> DynAppError for T
-where
-    T: std::error::Error + Send + Sync + 'static + VariantName,
-{
-    fn error_kind(&self) -> &'static str {
-        self.variant_name()
     }
 }
 
@@ -84,6 +53,35 @@ where
 crate::impl_serialize_for_dyn_app_error!(BoxDynAppError, 0);
 
 pub type DynAppResult<T> = std::result::Result<T, BoxDynAppError>;
+
+#[cfg(feature = "db")]
+mod db {
+    #[derive(Debug, thiserror::Error)]
+    #[error("Database error: {0}")]
+    pub struct DbErr(pub sqlx::Error);
+
+    crate::impl_serialize_for_dyn_app_error!(DbErr);
+
+    impl From<sqlx::Error> for DbErr {
+        fn from(error: sqlx::Error) -> Self {
+            Self(error)
+        }
+    }
+
+    impl From<sqlx::Error> for super::BoxDynAppError {
+        fn from(error: sqlx::Error) -> Self {
+            super::BoxDynAppError::new(DbErr::from(error))
+        }
+    }
+
+    impl super::DynAppError for DbErr {
+        fn error_kind(&self) -> &'static str {
+            "DbErr"
+        }
+    }
+}
+
+pub use db::*;
 
 mod macros {
     #[macro_export]

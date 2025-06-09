@@ -116,7 +116,7 @@
       </div>
     </div>
     <div class='gap-2 flex items-center mr-6'>
-      <FloatingTip side='left' class='p-4 w-40'>
+      <FloatingTip disableMobile side='left' class='p-4 w-40'>
         {#snippet trigger()}
           {#if tracker.volume === 0}
             <VolumeOffIcon />

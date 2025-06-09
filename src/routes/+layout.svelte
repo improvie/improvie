@@ -8,7 +8,7 @@
   import { initSlots } from '$lib/stores/index.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
-  import { get_themes } from '$lib/stores/theme.svelte';
+  import { init_theme } from '$lib/stores/theme.svelte';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { loadTranslations } from '$lib/translations/translations';
   import Sealed from './sealed.svelte';
@@ -20,10 +20,10 @@
   loadTranslations(defaultLanguage, '/');
 
   $effect.pre(() => {
+    init_theme();
     tracker.init();
     init_items();
     init_play_items();
-    get_themes();
   });
 
   const slots = initSlots();

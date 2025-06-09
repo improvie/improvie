@@ -6,6 +6,7 @@
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
   import { action_update_rules } from '$lib/action/rules';
+  import IconText from '$lib/components/IconText.svelte';
   import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -44,7 +45,6 @@
     }}
     variant='ghost'
     size='icon'
-    class='mr-1'
   >
     <SquareMenuIcon />
   </Button>
@@ -73,7 +73,7 @@
         <ContextMenu.Item onclick={() => {
           open = true;
         }}>
-          <ListPlusIcon class='mr-1' />Add Rule
+          <IconText icon={ListPlusIcon} text='Add Rule' />
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>

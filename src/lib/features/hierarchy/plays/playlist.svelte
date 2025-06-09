@@ -1,6 +1,7 @@
 <script lang='ts'>
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import RenameElement from '$lib/components/element/RenameElement.svelte';
+  import IconText from '$lib/components/IconText.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
@@ -76,11 +77,11 @@
       </ContextMenu.Item>
       {#if is_favorite}
         <ContextMenu.Item onclick={() => removeFavoritePlaylist(playlist.id)} class='text-destructive'>
-          <StarOffIcon class='mr-1 size-4' />Unfavorite
+          <IconText icon={StarOffIcon} text='Unfavorite' />
         </ContextMenu.Item>
       {:else}
         <ContextMenu.Item onclick={() => addFavoritePlaylist(playlist.id)}>
-          <StarIcon class='mr-1 size-4' />Favorite
+          <IconText icon={StarIcon} text='Favorite' />
         </ContextMenu.Item>
       {/if}
       <ContextMenu.Separator />

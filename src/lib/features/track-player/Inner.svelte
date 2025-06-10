@@ -3,6 +3,7 @@
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
+  import Separator from '$lib/components/ui/separator/separator.svelte';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
@@ -45,10 +46,6 @@
     }
     tracker.currentTime = value;
   }
-
-  const time = $derived.by(() => {
-    return `${to_readable_time(tracker.currentTime)} / ${to_readable_time(duration)}`;
-  });
 
   const thumbnail_path = $derived.by(() => {
     if (!track?.thumbnail_path) {
@@ -111,7 +108,15 @@
           {/snippet}
         </IconButton>
       {/if}
-      <p class='text-primary text-sm font-mono hidden md:inline-block'>{time}</p>
+      <div class='flex-col items-center text-primary text-sm font-mono hidden sm:flex'>
+        <p>
+          {to_readable_time(tracker.currentTime)}
+        </p>
+        <Separator class='!h-[3px] bg-muted-foreground' />
+        <p>
+          {to_readable_time(duration)}
+        </p>
+      </div>
     </div>
     <div class='gap-2 flex items-center h-full' role='button' tabindex='-1' onclick={() => {
       tracker.external_open = !tracker.external_open;

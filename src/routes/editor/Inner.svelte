@@ -52,8 +52,8 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex flex-col md:flex-row h-full w-full'>
-  <div class='h-full mx-auto w-4/5 sm:w-3/5 md:pl-6 md:w-2/5'>
+<div class='flex flex-col lg:flex-row h-full w-full'>
+  <div class='h-full mx-auto w-4/5 sm:w-3/5 md:w-2/5 lg:pl-6'>
     {#await playlist_thumbnail_path}
       <ImageLoader loading src={null} />
     {:then src}

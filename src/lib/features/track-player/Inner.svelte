@@ -69,7 +69,11 @@
 
 <Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row'>
+  <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row' role='button' tabindex='-1' onclick={(event) => {
+    if (event.target === event.currentTarget) {
+      tracker.external_open = !tracker.external_open;
+    }
+  }} onkeydown={() => {}}>
     <div class='gap-2 flex items-center'>
       <div class='hidden sm:block'>
         {#if is_playlist}
@@ -109,7 +113,9 @@
       {/if}
       <p class='text-primary text-sm font-mono hidden md:inline-block'>{time}</p>
     </div>
-    <div class='gap-2 flex items-center h-full'>
+    <div class='gap-2 flex items-center h-full' role='button' tabindex='-1' onclick={() => {
+      tracker.external_open = !tracker.external_open;
+    }} onkeydown={() => {}}>
       <div class='h-full block sm:hidden md:block'>
         {#if thumbnail_path}
           <ImageLoader direction='vertical' src={thumbnail_path} />

@@ -17,3 +17,7 @@ export async function action_get_rules_format(rules: RuleType[]): Promise<RuleFo
   const format = await invoke<RuleFormat[]>('get_rules_format', { rules });
   return format;
 }
+
+export async function actinn_get_first_rule_format(rules: RuleType[]): Promise<RuleFormat | undefined> {
+  return await invoke<RuleFormat | undefined>('get_first_rule_format', { rules });
+}

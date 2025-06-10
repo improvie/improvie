@@ -1,24 +1,38 @@
 <script lang='ts'>
   import { FileXIcon, ImageOffIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
   import * as Tooltip from './ui/tooltip/index';
 
   interface Props {
-    src: string | undefined;
+    src: string | undefined | null;
     alt?: string;
     failed?: boolean;
+    local?: boolean;
   }
 
   let {
-    src,
-    alt,
+    src = $bindable(),
+    alt = $bindable(),
     failed = $bindable(false),
+    local = false,
   }: Props = $props();
+
+  const imageSrc: string | undefined = $derived.by(() => {
+    if (src === undefined || src === null) {
+      return undefined;
+    }
+    if (local) {
+      return convertFileSrc(src);
+    }
+    return src;
+  });
+
 </script>
 
-{#if src}
+{#if imageSrc}
   {#if !failed}
     <img
-      src={src}
+      src={imageSrc}
       alt={alt}
       onerror={() => {
         failed = true;

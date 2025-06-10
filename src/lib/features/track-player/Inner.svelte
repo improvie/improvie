@@ -67,10 +67,10 @@
   />
 </div>
 
-<Card.Root class={cn('sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
+<Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='w-full h-full flex justify-between gap-1'>
-    <div class='ml-6 gap-2 flex items-center'>
+  <div class='px-6 w-full h-full flex justify-between gap-1'>
+    <div class='gap-2 flex items-center'>
       {#if is_playlist}
         <IconButton onclick={() => {
           tracker.previous();
@@ -107,15 +107,15 @@
       {/if}
       <p class='text-primary text-sm font-mono'>{time}</p>
     </div>
-    <div class='gap-2 items-center h-full hidden sm:flex py-4'>
+    <div class='gap-2 items-center h-full hidden sm:flex'>
       {#if thumbnail_path}
-        <ImageLoader src={thumbnail_path} alt='Thumbnail not found.' />
+        <ImageLoader direction='vertical' src={thumbnail_path} />
       {/if}
       <div class='h-full flex items-center'>
-        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track?.title}</p>
+        <p class='text-primary text-sm text-wrap max-w-[30rem] line-clamp-3'>{track?.title}</p>
       </div>
     </div>
-    <div class='gap-2 flex items-center mr-6'>
+    <div class='gap-2 flex items-center'>
       <FloatingTip disableMobile side='left' class='p-4 w-40'>
         {#snippet trigger()}
           {#if tracker.volume === 0}

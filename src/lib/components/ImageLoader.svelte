@@ -1,18 +1,44 @@
 <script lang='ts'>
   import { FileXIcon, ImageOffIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
+  import { tv } from 'tailwind-variants';
   import * as Tooltip from './ui/tooltip/index';
 
   interface Props {
     src: string | undefined | null;
     alt?: string;
+    direction?: 'horizontal' | 'vertical';
     failed?: boolean;
     local?: boolean;
   }
 
+  const variants = tv({
+    variants: {
+      direction: {
+        horizontal: 'w-full',
+        vertical: 'h-full',
+      },
+      target: {
+        img: 'aspect-video object-cover',
+        trigger: 'flex justify-center',
+      },
+    },
+  });
+
+  const iconVariants = tv({
+    base: 'aspect-square',
+    variants: {
+      direction: {
+        horizontal: 'w-9/16 h-auto',
+        vertical: 'h-9/16 w-auto',
+      },
+    },
+  });
+
   let {
-    src = $bindable(),
-    alt = $bindable(),
+    src,
+    alt,
+    direction = 'horizontal',
     failed = $bindable(false),
     local = false,
   }: Props = $props();
@@ -40,12 +66,12 @@
       onload={() => {
         failed = false;
       }}
-      class='h-full w-auto aspect-video object-contain'
+      class={variants({ direction, target: 'img' })}
     />
   {:else}
     <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
-      <Tooltip.Trigger class='w-full h-fit flex justify-center'>
-        <FileXIcon class='w-9/16 h-auto aspect-square' />
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <FileXIcon class={iconVariants({ direction })} />
       </Tooltip.Trigger>
       <Tooltip.Content>
         <p>Image load failed.</p>
@@ -54,8 +80,8 @@
   {/if}
 {:else}
   <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
-    <Tooltip.Trigger class='w-full h-fit flex justify-center'>
-      <ImageOffIcon class='w-9/16 h-auto aspect-square' />
+    <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+      <ImageOffIcon class={iconVariants({ direction })} />
     </Tooltip.Trigger>
     <Tooltip.Content>
       <p>Image not specified.</p>

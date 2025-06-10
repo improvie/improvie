@@ -1,10 +1,10 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
-  import FloatingTip from '$lib/components/FloatingTip.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Slider } from '$lib/components/ui/slider/index.js';
+  import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
@@ -116,17 +116,18 @@
       </div>
     </div>
     <div class='gap-2 flex items-center'>
-      <FloatingTip disableMobile side='left' class='p-4 w-40'>
-        {#snippet trigger()}
+      <Tooltip.Root>
+        <Tooltip.Trigger class='hidden md:block'>
           {#if tracker.volume === 0}
             <VolumeOffIcon />
           {:else}
             <Volume2Icon />
           {/if}
-        {/snippet}
-
-        <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
-      </FloatingTip>
+        </Tooltip.Trigger>
+        <Tooltip.Content side='left' class='p-4 w-40 bg-secondary' arrowClasses='bg-secondary'>
+          <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
       <IconButton variant={tracker.is_looping ? 'secondary' : 'outline'} onclick={() => {
         tracker.toggle_loop();

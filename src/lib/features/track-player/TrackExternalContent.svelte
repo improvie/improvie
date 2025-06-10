@@ -54,7 +54,7 @@
 </script>
 
 <Tabs.Root bind:value class='container mx-auto text-center h-full'>
-  <Tabs.List class='absolute top-2 -translate-x-1/2'>
+  <Tabs.List class='absolute top-2 left-1/2 -translate-x-1/2 flex items-center justify-center'>
     <Tabs.Trigger value='thumbnail'>Thumbnail</Tabs.Trigger>
     {#if is_video}
       <Tabs.Trigger value='video'>Video</Tabs.Trigger>

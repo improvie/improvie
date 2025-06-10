@@ -15,6 +15,6 @@
 </script>
 
 <p class={className}>
-  <Icon class='mr-1 size-4 inline-block align-middle' />
+  <Icon class='mr-1 inline-block align-middle' />
   {text}
 </p>

@@ -29,13 +29,20 @@
     ...restProps
   }: Props = $props();
 
+  const finalVariant = $derived.by(() => {
+    if (variant !== undefined) {
+      return variant;
+    }
+    return pressed ? 'default' : 'outline';
+  });
+
 </script>
 
 <Tooltip.Root delayDuration={delayDuration} disableHoverableContent disableCloseOnTriggerClick>
   <Tooltip.Trigger>
     <Button
       type={type}
-      variant={variant || pressed ? 'default' : 'outline'}
+      variant={finalVariant}
       size='icon'
       class={className}
       {...restProps}

@@ -3,24 +3,30 @@
 </script>
 
 <script lang='ts'>
-  import type { Content } from '$bindings/item';
-
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
   import { actinn_get_first_rule_format, action_update_rules } from '$lib/action/rules';
+  import FilledIcon from '$lib/components/FilledIcon.svelte';
+  import IconButton from '$lib/components/IconButton.svelte';
   import IconText from '$lib/components/IconText.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
+  import Button from '$lib/components/ui/button/button.svelte';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { contents } from '$lib/stores/items/content';
+  import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn } from '$lib/utils';
-  import { ListPlusIcon } from '@lucide/svelte';
+  import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
   let rules = $state(prop_rules);
+  const isFavorite = $derived.by(() => {
+    return $favoritePlaylists.includes(playlist.id);
+  });
   const playlist_thumbnail_path: Promise<string | undefined> = $derived.by(async () => {
     if (playlist.thumbnail_path) {
       return playlist.thumbnail_path;
@@ -46,8 +52,8 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex flex-col md:flex-row h-full w-full pl-6'>
-  <div class='h-full w-1/3'>
+<div class='flex flex-col md:flex-row h-full w-full'>
+  <div class='h-full mx-auto w-4/5 sm:w-3/5 md:pl-6 md:w-2/5'>
     {#await playlist_thumbnail_path}
       <ImageLoader loading src={null} />
     {:then src}
@@ -55,9 +61,47 @@
     {:catch}
       <ImageLoader src={null} />
     {/await}
-    <div class='flex flex-col gap-2 mt-2'>
-      <h1 class='text-2xl text-center font-bold line-clamp-2'>{playlist.title}</h1>
-      <p class='text-muted-foreground line-clamp-3'>{playlist.description}</p>
+    <div class='flex items-center justify-center gap-4 mt-2'>
+      <IconButton onclick={() => {
+        if (isFavorite) {
+          removeFavoritePlaylist(playlist.id);
+        }
+        else {
+          addFavoritePlaylist(playlist.id);
+        }
+      }}>
+        <FilledIcon icon={StarIcon} filled={isFavorite} />
+        {#snippet content()}
+          <p>{isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</p>
+        {/snippet}
+      </IconButton>
+      <IconButton variant='default' class='size-12' onclick={() => {
+        tracker.set_rules_by_type(rules);
+      }}>
+        <FilledIcon icon={PlayIcon} filled class='size-8' />
+        {#snippet content()}
+          <p>Play</p>
+        {/snippet}
+      </IconButton>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <IconButton>
+            <EllipsisVerticalIcon />
+            {#snippet content()}
+              <p>More</p>
+            {/snippet}
+          </IconButton>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>
+            <Button variant='ghost' size='sm' class='p-0' onclick={() => {
+              tracker.set_rules_by_type_shuffle(rules);
+            }}>
+              <IconText icon={ShuffleIcon} text='Shuffle Play' />
+            </Button>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </div>
   </div>
   <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>

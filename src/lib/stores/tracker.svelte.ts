@@ -96,6 +96,12 @@ export class Tracker {
     this.set_rules(formats);
   }
 
+  public async set_rules_by_type_shuffle(rules: RuleType[]): Promise<void> {
+    const formats = await action_get_rules_format(rules);
+    formats.sort(() => Math.random() - 0.5); // Shuffle the rules
+    this.set_rules(formats);
+  }
+
   public update_current_track() {
     if (this.is_playlist()) {
       const prev_track_id = this.current_track_id;

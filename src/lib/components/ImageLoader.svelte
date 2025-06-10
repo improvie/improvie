@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { FileXIcon, ImageOffIcon } from '@lucide/svelte';
+  import { FileXIcon, ImageOffIcon, LoaderIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { tv } from 'tailwind-variants';
   import * as Tooltip from './ui/tooltip/index';
@@ -8,6 +8,7 @@
     src: string | undefined | null;
     alt?: string;
     direction?: 'horizontal' | 'vertical';
+    loading?: boolean;
     failed?: boolean;
     local?: boolean;
   }
@@ -40,6 +41,7 @@
     alt,
     direction = 'horizontal',
     failed = $bindable(false),
+    loading = false,
     local = false,
   }: Props = $props();
 
@@ -79,12 +81,23 @@
     </Tooltip.Root>
   {/if}
 {:else}
-  <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
-    <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
-      <ImageOffIcon class={iconVariants({ direction })} />
-    </Tooltip.Trigger>
-    <Tooltip.Content>
-      <p>Image not specified.</p>
-    </Tooltip.Content>
-  </Tooltip.Root>
+  {#if loading}
+    <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <LoaderIcon class={iconVariants({ direction })} />
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <p>Image is loading...</p>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  {:else}
+    <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <ImageOffIcon class={iconVariants({ direction })} />
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <p>Image not specified.</p>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  {/if}
 {/if}

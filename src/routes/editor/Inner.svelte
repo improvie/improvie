@@ -21,12 +21,19 @@
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
   let rules = $state(prop_rules);
-  const first_content: Promise<Content | undefined> = $derived.by(async () => {
+  const playlist_thumbnail_path: Promise<string | undefined> = $derived.by(async () => {
+    if (playlist.thumbnail_path) {
+      return playlist.thumbnail_path;
+    }
     const format = await actinn_get_first_rule_format(rules);
     if (format === undefined) {
       return undefined;
     }
-    return contents.get(format.content_id);
+    const content = contents.get(format.content_id);
+    if (content === undefined) {
+      return undefined;
+    }
+    return content.thumbnail_path ? content.thumbnail_path : undefined;
   });
   $effect(() => {
     action_update_rules(playlist.id, rules);
@@ -39,21 +46,18 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex flex-col md:flex-row h-full w-full'>
+<div class='flex flex-col md:flex-row h-full w-full pl-6'>
   <div class='h-full w-1/3'>
-    <div class='aspect-video'>
-      {#await first_content}
-        <div class='w-full h-full flex items-center justify-center'>Loading...</div>
-      {:then content}
-        {#if content}
-          <ImageLoader local bind:src={content.thumbnail_path} bind:alt={content.title} />
-        {:else}
-          <div class='w-full h-full flex items-center justify-center'>No content available.</div>
-        {/if}
-      {:catch e}
-        {console.error(e)}
-        <div class='w-full h-full flex items-center justify-center'>Error loading content.</div>
-      {/await}
+    {#await playlist_thumbnail_path}
+      <ImageLoader loading src={null} />
+    {:then src}
+      <ImageLoader local src={src} />
+    {:catch}
+      <ImageLoader src={null} />
+    {/await}
+    <div class='flex flex-col gap-2 mt-2'>
+      <h1 class='text-2xl text-center font-bold line-clamp-2'>{playlist.title}</h1>
+      <p class='text-muted-foreground line-clamp-3'>{playlist.description}</p>
     </div>
   </div>
   <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>

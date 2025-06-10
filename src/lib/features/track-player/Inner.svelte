@@ -147,11 +147,7 @@
       <IconButton pressed={tracker.is_looping} onclick={() => {
         tracker.toggle_loop();
       }}>
-        {#if tracker.is_looping}
-          <RepeatIcon />
-        {:else}
-          <RepeatIcon />
-        {/if}
+        <RepeatIcon />
         {#snippet content()}
           {#if tracker.is_looping}
             <p>stop loop</p>

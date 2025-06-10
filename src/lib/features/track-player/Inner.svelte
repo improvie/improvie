@@ -69,18 +69,20 @@
 
 <Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='px-6 w-full h-full flex justify-between gap-1'>
+  <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row'>
     <div class='gap-2 flex items-center'>
-      {#if is_playlist}
-        <IconButton onclick={() => {
-          tracker.previous();
-        }}>
-          <ChevronsLeftIcon />
-          {#snippet content()}
-            <p>previous</p>
-          {/snippet}
-        </IconButton>
-      {/if}
+      <div class='hidden sm:block'>
+        {#if is_playlist}
+          <IconButton onclick={() => {
+            tracker.previous();
+          }}>
+            <ChevronsLeftIcon />
+            {#snippet content()}
+              <p>previous</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+      </div>
       <IconButton onclick={() => tracker.toggle_pause()}>
         {#if tracker.paused}
           <PlayIcon />
@@ -105,17 +107,19 @@
           {/snippet}
         </IconButton>
       {/if}
-      <p class='text-primary text-sm font-mono'>{time}</p>
+      <p class='text-primary text-sm font-mono hidden md:inline-block'>{time}</p>
     </div>
-    <div class='gap-2 items-center h-full hidden sm:flex'>
-      {#if thumbnail_path}
-        <ImageLoader direction='vertical' src={thumbnail_path} />
-      {/if}
+    <div class='gap-2 flex items-center h-full'>
+      <div class='h-full block sm:hidden md:block'>
+        {#if thumbnail_path}
+          <ImageLoader direction='vertical' src={thumbnail_path} />
+        {/if}
+      </div>
       <div class='h-full flex items-center'>
         <p class='text-primary text-sm text-wrap max-w-[30rem] line-clamp-3'>{track?.title}</p>
       </div>
     </div>
-    <div class='gap-2 flex items-center'>
+    <div class='gap-2 items-center hidden sm:flex'>
       <Tooltip.Root>
         <Tooltip.Trigger class='hidden md:block'>
           {#if tracker.volume === 0}

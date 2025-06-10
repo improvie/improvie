@@ -72,7 +72,7 @@
 {#if playlist !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
-      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
+      <Card.Root class='p-3 gap-1' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
           {#await playlist_thumbnail_path}
             <ImageLoader loading src={null} />

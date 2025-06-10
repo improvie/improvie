@@ -52,10 +52,8 @@
 {#if content !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
-      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
-        <ImageLoader
-          src={thumbnail_path}
-        />
+      <Card.Root class='p-3 gap-1' ondblclick={() => dblclick()}>
+        <ImageLoader src={thumbnail_path} />
         <p class='line-clamp-3'>{content.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>

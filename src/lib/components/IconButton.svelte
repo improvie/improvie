@@ -10,6 +10,7 @@
   type Props = WithElementRef<HTMLButtonAttributes>
     & WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
+      pressed?: boolean;
       content: Snippet;
       children: Snippet;
       delayDuration?: number;
@@ -18,7 +19,8 @@
 
   const {
     class: className,
-    variant = 'outline',
+    variant,
+    pressed = false,
     type = 'button',
     content,
     children,
@@ -33,7 +35,7 @@
   <Tooltip.Trigger>
     <Button
       type={type}
-      variant={variant}
+      variant={variant || pressed ? 'default' : 'outline'}
       size='icon'
       class={className}
       {...restProps}

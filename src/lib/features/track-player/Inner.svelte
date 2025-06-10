@@ -129,7 +129,7 @@
         </Tooltip.Content>
       </Tooltip.Root>
 
-      <IconButton variant={tracker.is_looping ? 'secondary' : 'outline'} onclick={() => {
+      <IconButton pressed={tracker.is_looping} onclick={() => {
         tracker.toggle_loop();
       }}>
         {#if tracker.is_looping}

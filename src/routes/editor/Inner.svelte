@@ -20,7 +20,7 @@
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn } from '$lib/utils';
-  import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, RepeatIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
+  import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
   let rules = $state(prop_rules);
@@ -52,7 +52,7 @@
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
-<div class='flex flex-col lg:flex-row h-full w-full'>
+<div class='flex flex-col lg:flex-row h-dvh w-full'>
   <div class='h-full mx-auto w-4/5 sm:w-3/5 md:w-2/5 lg:pl-6'>
     {#await playlist_thumbnail_path}
       <ImageLoader loading src={null} />
@@ -61,63 +61,47 @@
     {:catch}
       <ImageLoader src={null} />
     {/await}
-    <div class='flex relative justify-between items-center mt-2 p-2 w-full'>
-      <div class='flex gap-4 absolute left-1/2 -translate-x-1/2'>
-        <IconButton onclick={() => {
-          if (isFavorite) {
-            removeFavoritePlaylist(playlist.id);
-          }
-          else {
-            addFavoritePlaylist(playlist.id);
-          }
-        }}>
-          <FilledIcon icon={StarIcon} filled={isFavorite} />
-          {#snippet content()}
-            <p>{isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</p>
-          {/snippet}
-        </IconButton>
-        <IconButton variant='default' class='size-12' onclick={() => {
-          tracker.set_rules_by_type(rules);
-        }}>
-          <FilledIcon icon={PlayIcon} filled class='size-8' />
-          {#snippet content()}
-            <p>Play</p>
-          {/snippet}
-        </IconButton>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <IconButton>
-              <EllipsisVerticalIcon />
-              {#snippet content()}
-                <p>More</p>
-              {/snippet}
-            </IconButton>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>
-              <Button variant='ghost' size='sm' class='p-0' onclick={() => {
-                tracker.set_rules_by_type_shuffle(rules);
-              }}>
-                <IconText icon={ShuffleIcon} text='Shuffle Play' />
-              </Button>
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </div>
-      <div class='flex gap-4 ml-auto'>
-        <IconButton pressed={tracker.is_looping} onclick={() => {
-          tracker.toggle_loop();
-        }}>
-          <RepeatIcon />
-          {#snippet content()}
-            {#if tracker.is_looping}
-              <p>stop loop</p>
-            {:else}
-              <p>start loop</p>
-            {/if}
-          {/snippet}
-        </IconButton>
-      </div>
+    <div class='flex justify-center items-center gap-3 p-3 w-full'>
+      <IconButton onclick={() => {
+        if (isFavorite) {
+          removeFavoritePlaylist(playlist.id);
+        }
+        else {
+          addFavoritePlaylist(playlist.id);
+        }
+      }}>
+        <FilledIcon icon={StarIcon} filled={isFavorite} />
+        {#snippet content()}
+          <p>{isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</p>
+        {/snippet}
+      </IconButton>
+      <IconButton variant='default' class='size-12' onclick={() => {
+        tracker.set_rules_by_type(rules);
+      }}>
+        <FilledIcon icon={PlayIcon} filled class='size-8' />
+        {#snippet content()}
+          <p>Play</p>
+        {/snippet}
+      </IconButton>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <IconButton>
+            <EllipsisVerticalIcon />
+            {#snippet content()}
+              <p>More</p>
+            {/snippet}
+          </IconButton>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>
+            <Button variant='ghost' size='sm' class='p-0' onclick={() => {
+              tracker.set_rules_by_type_shuffle(rules);
+            }}>
+              <IconText icon={ShuffleIcon} text='Shuffle Play' />
+            </Button>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </div>
   </div>
   <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>

@@ -84,7 +84,7 @@
       bind:paused={tracker.paused}
       bind:duration
       onended={onended}
-      class='aspect-video h-full w-auto object-contain'
+      class='aspect-video w-full h-fit object-contain'
       onclick={() => tracker.toggle_pause()}
     >
       {#if content_path}

@@ -2,6 +2,7 @@ import type { Content } from '$bindings/item';
 import type { RuleFormat, RuleType } from '$bindings/rule';
 import { action_get_rules_format } from '$lib/action/rules';
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
+import { shuffle } from '$lib/utils';
 import { contents } from './items/content';
 
 export class Tracker {
@@ -98,7 +99,7 @@ export class Tracker {
 
   public async set_rules_by_type_shuffle(rules: RuleType[]): Promise<void> {
     const formats = await action_get_rules_format(rules);
-    formats.sort(() => Math.random() - 0.5); // Shuffle the rules
+    shuffle(formats);
     this.set_rules(formats);
   }
 

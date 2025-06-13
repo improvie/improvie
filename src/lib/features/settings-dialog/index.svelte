@@ -41,7 +41,7 @@
 
 <Dialog.Root bind:open={settingsStore.state}>
   <Dialog.Content class='h-dvh overflow-hidden select-none p-0 max-h-[98%] md:max-h-[90%] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px]'>
-    <Sidebar.Provider class='items-start' open={true} style='--sidebar-width: 10rem; --sidebar-width-mobile: 10rem;'>
+    <Sidebar.Provider class='items-start' open={true} style='--sidebar-width: 10rem;'>
       <Sidebar.Root collapsible='icon'>
         <Sidebar.Header>
           <Sidebar.MenuButton size='lg' isActive={selected === null} onclick={() => (selected = null)}>

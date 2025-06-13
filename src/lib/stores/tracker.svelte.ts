@@ -81,11 +81,15 @@ export class Tracker {
   }
 
   public set_rules(rules: RuleFormat[]) {
+    const prev_track_id = this.current_track_id;
     this.clear_track();
 
     this.play_rules = rules;
     if (rules.length > 0) {
       this.update_current_track();
+      if (prev_track_id === undefined) {
+        this.paused = true;
+      }
     }
     else {
       this.current_track_id = undefined;
@@ -105,13 +109,9 @@ export class Tracker {
 
   public update_current_track() {
     if (this.is_playlist()) {
-      const prev_track_id = this.current_track_id;
       this.currentTime = 0;
-      this.paused = false;
       this.current_track_id = this.play_rules[this.current_rule_idx].content_id;
-      if (prev_track_id === this.current_track_id) {
-        this.paused = false;
-      }
+      this.paused = false;
     }
   }
 

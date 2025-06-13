@@ -1,5 +1,4 @@
 use improvie_logic::{DynAppError, DynAppResult};
-use sqlx::ConnectOptions;
 use std::{fs::OpenOptions, path::PathBuf};
 
 use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
@@ -131,6 +130,7 @@ impl DbPool {
                 log::debug!(
                     "disable sqlx logging for readability. Set `ENABLE_SQLX_LOG=true` to enable it."
                 );
+                use sqlx::ConnectOptions;
                 option.disable_statement_logging()
             };
         let connect = SqlitePool::connect_with(option).await?;

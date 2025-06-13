@@ -10,6 +10,7 @@
   type Props = WithElementRef<HTMLButtonAttributes>
     & WithElementRef<HTMLAnchorAttributes> & {
       variant?: ButtonVariant;
+      pressed?: boolean;
       content: Snippet;
       children: Snippet;
       delayDuration?: number;
@@ -18,7 +19,8 @@
 
   const {
     class: className,
-    variant = 'outline',
+    variant,
+    pressed = false,
     type = 'button',
     content,
     children,
@@ -27,13 +29,20 @@
     ...restProps
   }: Props = $props();
 
+  const finalVariant = $derived.by(() => {
+    if (variant !== undefined) {
+      return variant;
+    }
+    return pressed ? 'default' : 'outline';
+  });
+
 </script>
 
 <Tooltip.Root delayDuration={delayDuration} disableHoverableContent disableCloseOnTriggerClick>
   <Tooltip.Trigger>
     <Button
       type={type}
-      variant={variant}
+      variant={finalVariant}
       size='icon'
       class={className}
       {...restProps}

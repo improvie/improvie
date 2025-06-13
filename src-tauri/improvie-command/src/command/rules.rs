@@ -28,3 +28,8 @@ pub async fn update_rules(
 pub async fn get_rules_format(rules: Vec<Rule>) -> Vec<RuleFormat> {
     rules.iter().flat_map(|rule| rule.formats()).collect()
 }
+
+#[tauri::command]
+pub async fn get_first_rule_format(rules: Vec<Rule>) -> Option<RuleFormat> {
+    rules.iter().find_map(|rule| rule.first())
+}

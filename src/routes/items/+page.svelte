@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import IconText from '$lib/components/IconText.svelte';
   import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
@@ -44,7 +45,6 @@
     }}
     variant='ghost'
     size='icon'
-    class='mr-1'
   >
     <CloudDownloadIcon />
   </Button>
@@ -65,12 +65,12 @@
       <ContextMenu.Item onclick={() => {
         is_open_create_content = true;
       }}>
-        <CirclePlusIcon class='mr-1 size-4' />Add Item
+        <IconText icon={CirclePlusIcon} text='Add Item' />
       </ContextMenu.Item>
       <ContextMenu.Item onclick={() => {
         is_open_create_folder = true;
       }}>
-        <FolderIcon class='mr-1 size-4' />Add Folder
+        <IconText icon={FolderIcon} text='Add Folder' />
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>

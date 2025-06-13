@@ -34,6 +34,7 @@ pub enum Rule {
 
 pub trait RuleFormatIter {
     fn formats(&self) -> Vec<RuleFormat>;
+    fn first(&self) -> Option<RuleFormat>;
 }
 
 impl RuleFormatIter for Rule {
@@ -43,6 +44,14 @@ impl RuleFormatIter for Rule {
             Rule::Range(rule) => rule.formats(),
             Rule::Loop(rule) => rule.formats(),
             Rule::Random(rule) => rule.formats(),
+        }
+    }
+    fn first(&self) -> Option<RuleFormat> {
+        match self {
+            Rule::Content(rule) => rule.first(),
+            Rule::Range(rule) => rule.first(),
+            Rule::Loop(rule) => rule.first(),
+            Rule::Random(rule) => rule.first(),
         }
     }
 }
@@ -56,6 +65,9 @@ pub struct ContentRule {
 impl RuleFormatIter for ContentRule {
     fn formats(&self) -> Vec<RuleFormat> {
         vec![RuleFormat::new(self.content_id, None, None)]
+    }
+    fn first(&self) -> Option<RuleFormat> {
+        Some(RuleFormat::new(self.content_id, None, None))
     }
 }
 
@@ -75,6 +87,13 @@ impl RuleFormatIter for RangeRule {
             self.range_end,
         )]
     }
+    fn first(&self) -> Option<RuleFormat> {
+        Some(RuleFormat::new(
+            self.content_id,
+            self.range_start,
+            self.range_end,
+        ))
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -93,6 +112,9 @@ impl RuleFormatIter for LoopRule {
             }
         }
         formats
+    }
+    fn first(&self) -> Option<RuleFormat> {
+        self.rules.first().and_then(|rule| rule.first())
     }
 }
 
@@ -134,5 +156,13 @@ impl RuleFormatIter for RandomRule {
         }
 
         formats
+    }
+
+    fn first(&self) -> Option<RuleFormat> {
+        if let Some((rule, _)) = self.rules.first() {
+            rule.first()
+        } else {
+            None
+        }
     }
 }

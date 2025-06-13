@@ -35,26 +35,23 @@
     }
     return convertFileSrc(track.thumbnail_path);
   });
-
-  let video_element: HTMLVideoElement | undefined = $state();
+  let video_element: HTMLVideoElement;
 
   $effect(() => {
-    if (video_element) {
-      if (content_path) {
-        video_element.load();
-        video_element.play().catch((error) => {
-          Logger.error(`Error playing video: ${error}`);
-        });
-      }
-      else {
-        video_element.pause();
-      }
+    if (content_path) {
+      video_element.load();
+      video_element.play().catch((error) => {
+        Logger.error(`Error playing video: ${error}`);
+      });
+    }
+    else {
+      video_element.pause();
     }
   });
 </script>
 
 <Tabs.Root bind:value class='container mx-auto text-center h-full'>
-  <Tabs.List class='absolute top-2 -translate-x-1/2'>
+  <Tabs.List class='absolute top-2 left-1/2 -translate-x-1/2 flex items-center justify-center'>
     <Tabs.Trigger value='thumbnail'>Thumbnail</Tabs.Trigger>
     {#if is_video}
       <Tabs.Trigger value='video'>Video</Tabs.Trigger>
@@ -84,12 +81,11 @@
       bind:paused={tracker.paused}
       bind:duration
       onended={onended}
-      class='aspect-video h-full w-auto object-contain'
+      class='aspect-video w-full h-fit object-contain'
       onclick={() => tracker.toggle_pause()}
+      poster={thumbnail_path}
     >
-      {#if content_path}
-        <source src={content_path} />
-      {/if}
+      <source src={content_path} />
       <track kind='captions' />
     </video>
   </Tabs.Content>

@@ -39,7 +39,7 @@
 {#if folder !== undefined}
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
-      <Card.Root class='p-3 h-full' ondblclick={() => dblclick()}>
+      <Card.Root class='p-3 gap-1' ondblclick={() => dblclick()}>
         <div class='flex items-center justify-center'>
           <FolderIcon class='w-9/16 h-auto aspect-square' />
         </div>

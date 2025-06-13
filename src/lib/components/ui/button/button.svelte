@@ -48,9 +48,24 @@
 		href = undefined,
 		type = "button",
 		disabled,
+    focusable = false, // Added by User
 		children,
+    onclick,
 		...restProps
-	}: ButtonProps = $props();
+	}: ButtonProps
+  // Added by User
+  & {
+    focusable?: boolean;
+  } = $props();
+
+  // Added by User
+  function handleClick(event: any) {
+    if (!focusable) {
+      const elm: any | undefined = document.activeElement || undefined;
+      elm?.blur()
+    }
+    onclick?.(event);
+  }
 </script>
 
 {#if href}
@@ -62,6 +77,7 @@
 		aria-disabled={disabled}
 		role={disabled ? "link" : undefined}
 		tabindex={disabled ? -1 : undefined}
+    onclick={handleClick}
 		{...restProps}
 	>
 		{@render children?.()}
@@ -71,6 +87,7 @@
 		bind:this={ref}
 		data-slot="button"
 		class={cn(buttonVariants({ variant, size }), className)}
+    onclick={handleClick}
 		{type}
 		{disabled}
 		{...restProps}

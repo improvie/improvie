@@ -167,7 +167,7 @@
           <Dialog.Title>Import Youtube</Dialog.Title>
         </Dialog.Header>
 
-        <Tabs.Root bind:value={download_type} class='mt-2 md:-mt-6 flex justify-center'>
+        <Tabs.Root bind:value={download_type} class='mt-2 md:-mt-6 flex items-center'>
           <Tabs.List>
             <Tabs.Trigger value='video'>Video</Tabs.Trigger>
             <Tabs.Trigger value='playlist'>Playlist</Tabs.Trigger>

@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import IconText from '$lib/components/IconText.svelte';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import CreatePlayFolderDialog from '$lib/features/dialog/plays/CreatePlayFolderDialog.svelte';
@@ -39,12 +40,12 @@
       <ContextMenu.Item onclick={() => {
         is_open_create_playlist = true;
       }} class='flex items-center'>
-        <CirclePlusIcon class='mr-1 size-4' />Add Playlsit
+        <IconText icon={CirclePlusIcon} text='Add Playlist' />
       </ContextMenu.Item>
       <ContextMenu.Item onclick={() => {
         is_open_create_play_folder = true;
       }} class='flex items-center'>
-        <FolderIcon class='mr-1 size-4' />Add Folder
+        <IconText icon={FolderIcon} text='Add Folder' />
       </ContextMenu.Item>
     </ContextMenu.Content>
   </ContextMenu.Root>

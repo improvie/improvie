@@ -1,7 +1,11 @@
 <script>
 
   import { PencilIcon } from '@lucide/svelte';
+  import IconText from '../IconText.svelte';
 
 </script>
 
-<p><PencilIcon class='mr-1 size-4 inline-block align-middle' />Rename</p>
+<IconText
+  icon={PencilIcon}
+  text='Rename'
+/>

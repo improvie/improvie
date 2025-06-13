@@ -1,24 +1,66 @@
 <script lang='ts'>
-  import { FileXIcon, ImageOffIcon } from '@lucide/svelte';
+  import { FileXIcon, ImageOffIcon, LoaderIcon } from '@lucide/svelte';
+  import { convertFileSrc } from '@tauri-apps/api/core';
+  import { tv } from 'tailwind-variants';
   import * as Tooltip from './ui/tooltip/index';
 
   interface Props {
-    src: string | undefined;
+    src: string | undefined | null;
     alt?: string;
+    direction?: 'horizontal' | 'vertical';
+    loading?: boolean;
     failed?: boolean;
+    local?: boolean;
   }
+
+  const variants = tv({
+    variants: {
+      direction: {
+        horizontal: 'w-full',
+        vertical: 'h-full',
+      },
+      target: {
+        img: 'aspect-video object-cover',
+        trigger: 'flex justify-center',
+      },
+    },
+  });
+
+  const iconVariants = tv({
+    base: 'aspect-square',
+    variants: {
+      direction: {
+        horizontal: 'w-9/16 h-auto',
+        vertical: 'h-9/16 w-auto',
+      },
+    },
+  });
 
   let {
     src,
     alt,
+    direction = 'horizontal',
     failed = $bindable(false),
+    loading = false,
+    local = false,
   }: Props = $props();
+
+  const imageSrc: string | undefined = $derived.by(() => {
+    if (src === undefined || src === null) {
+      return undefined;
+    }
+    if (local) {
+      return convertFileSrc(src);
+    }
+    return src;
+  });
+
 </script>
 
-{#if src}
+{#if imageSrc}
   {#if !failed}
     <img
-      src={src}
+      src={imageSrc}
       alt={alt}
       onerror={() => {
         failed = true;
@@ -26,12 +68,12 @@
       onload={() => {
         failed = false;
       }}
-      class='h-full w-auto aspect-video object-contain'
+      class={variants({ direction, target: 'img' })}
     />
   {:else}
     <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
-      <Tooltip.Trigger class='w-full h-fit flex justify-center'>
-        <FileXIcon class='w-9/16 h-auto aspect-square' />
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <FileXIcon class={iconVariants({ direction })} />
       </Tooltip.Trigger>
       <Tooltip.Content>
         <p>Image load failed.</p>
@@ -39,12 +81,23 @@
     </Tooltip.Root>
   {/if}
 {:else}
-  <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
-    <Tooltip.Trigger class='w-full h-fit flex justify-center'>
-      <ImageOffIcon class='w-9/16 h-auto aspect-square' />
-    </Tooltip.Trigger>
-    <Tooltip.Content>
-      <p>Image not specified.</p>
-    </Tooltip.Content>
-  </Tooltip.Root>
+  {#if loading}
+    <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <LoaderIcon class={iconVariants({ direction })} />
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <p>Image is loading...</p>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  {:else}
+    <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>
+      <Tooltip.Trigger class={variants({ direction, target: 'trigger' })}>
+        <ImageOffIcon class={iconVariants({ direction })} />
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <p>Image not specified.</p>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  {/if}
 {/if}

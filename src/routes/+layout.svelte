@@ -5,6 +5,7 @@
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
   import SettingsDialog from '$lib/features/settings-dialog/index.svelte';
   import TrackPlayer from '$lib/features/track-player/index.svelte';
+  import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
   import { initSlots } from '$lib/stores/index.svelte';
   import { init_items } from '$lib/stores/items';
   import { init_play_items } from '$lib/stores/plays';
@@ -27,11 +28,16 @@
   });
 
   const slots = initSlots();
+
+  let open = $state(getLocalStorageOrDefault('root-sidebar-open', 'true') === 'true');
+  $effect(() => {
+    setLocalStorage('root-sidebar-open', open ? 'true' : 'false');
+  });
 </script>
 
 <Toaster />
 
-<Sidebar.Provider>
+<Sidebar.Provider bind:open class='items-center' style='--sidebar-width: 10rem;'>
   <Sealed />
   <AppSidebar />
   <Sidebar.Inset class='select-none'>

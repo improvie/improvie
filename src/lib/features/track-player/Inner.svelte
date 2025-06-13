@@ -1,14 +1,14 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
-  import FloatingTip from '$lib/components/FloatingTip.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
+  import Separator from '$lib/components/ui/separator/separator.svelte';
   import { Slider } from '$lib/components/ui/slider/index.js';
+  import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   const { track }: { track: Content | undefined } = $props();
@@ -46,17 +46,6 @@
     tracker.currentTime = value;
   }
 
-  const time = $derived.by(() => {
-    return `${to_readable_time(tracker.currentTime)} / ${to_readable_time(duration)}`;
-  });
-
-  const thumbnail_path = $derived.by(() => {
-    if (!track?.thumbnail_path) {
-      return undefined;
-    }
-    return convertFileSrc(track.thumbnail_path);
-  });
-
 </script>
 
 <div class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
@@ -67,20 +56,26 @@
   />
 </div>
 
-<Card.Root class={cn('sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
-  <Slider class='absolute -translate-y-1/2 left-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
-  <div class='w-full h-full flex justify-between gap-1'>
-    <div class='ml-6 gap-2 flex items-center'>
-      {#if is_playlist}
-        <IconButton onclick={() => {
-          tracker.previous();
-        }}>
-          <ChevronsLeftIcon />
-          {#snippet content()}
-            <p>previous</p>
-          {/snippet}
-        </IconButton>
-      {/if}
+<Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
+  <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
+  <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row' role='button' tabindex='-1' onclick={(event) => {
+    if (event.target === event.currentTarget) {
+      tracker.external_open = !tracker.external_open;
+    }
+  }} onkeydown={() => {}}>
+    <div class='gap-2 flex items-center'>
+      <div class='hidden sm:block'>
+        {#if is_playlist}
+          <IconButton onclick={() => {
+            tracker.previous();
+          }}>
+            <ChevronsLeftIcon />
+            {#snippet content()}
+              <p>previous</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+      </div>
       <IconButton onclick={() => tracker.toggle_pause()}>
         {#if tracker.paused}
           <PlayIcon />
@@ -105,37 +100,44 @@
           {/snippet}
         </IconButton>
       {/if}
-      <p class='text-primary text-sm font-mono'>{time}</p>
-    </div>
-    <div class='gap-2 items-center h-full hidden sm:flex py-4'>
-      {#if thumbnail_path}
-        <ImageLoader src={thumbnail_path} alt='Thumbnail not found.' />
-      {/if}
-      <div class='h-full flex items-center'>
-        <p class='text-primary text-wrap max-w-[30rem] py-1 line-clamp-3'>{track?.title}</p>
+      <div class='flex-col items-center text-primary text-sm font-mono hidden sm:flex'>
+        <p>
+          {to_readable_time(tracker.currentTime)}
+        </p>
+        <Separator class='!h-[3px] bg-muted-foreground' />
+        <p>
+          {to_readable_time(duration)}
+        </p>
       </div>
     </div>
-    <div class='gap-2 flex items-center mr-6'>
-      <FloatingTip disableMobile side='left' class='p-4 w-40'>
-        {#snippet trigger()}
+    <div class='gap-2 flex items-center h-full' role='button' tabindex='-1' onclick={() => {
+      tracker.external_open = !tracker.external_open;
+    }} onkeydown={() => {}}>
+      <div class='h-full block sm:hidden md:block'>
+        <ImageLoader direction='vertical' local src={track?.thumbnail_path} />
+      </div>
+      <div class='h-full flex items-center'>
+        <p class='text-primary text-sm text-wrap max-w-[30rem] line-clamp-3'>{track?.title}</p>
+      </div>
+    </div>
+    <div class='gap-2 items-center hidden sm:flex'>
+      <Tooltip.Root>
+        <Tooltip.Trigger class='hidden md:block'>
           {#if tracker.volume === 0}
             <VolumeOffIcon />
           {:else}
             <Volume2Icon />
           {/if}
-        {/snippet}
+        </Tooltip.Trigger>
+        <Tooltip.Content side='left' class='p-4 w-40 bg-secondary' arrowClasses='bg-secondary'>
+          <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-        <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
-      </FloatingTip>
-
-      <IconButton variant={tracker.is_looping ? 'secondary' : 'outline'} onclick={() => {
+      <IconButton pressed={tracker.is_looping} onclick={() => {
         tracker.toggle_loop();
       }}>
-        {#if tracker.is_looping}
-          <RepeatIcon />
-        {:else}
-          <RepeatIcon />
-        {/if}
+        <RepeatIcon />
         {#snippet content()}
           {#if tracker.is_looping}
             <p>stop loop</p>

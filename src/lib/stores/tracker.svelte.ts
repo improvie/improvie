@@ -2,6 +2,7 @@ import type { Content } from '$bindings/item';
 import type { RuleFormat, RuleType } from '$bindings/rule';
 import { action_get_rules_format } from '$lib/action/rules';
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
+import { shuffle } from '$lib/utils';
 import { contents } from './items/content';
 
 export class Tracker {
@@ -80,11 +81,15 @@ export class Tracker {
   }
 
   public set_rules(rules: RuleFormat[]) {
+    const prev_track_id = this.current_track_id;
     this.clear_track();
 
     this.play_rules = rules;
     if (rules.length > 0) {
       this.update_current_track();
+      if (prev_track_id === undefined) {
+        this.paused = true;
+      }
     }
     else {
       this.current_track_id = undefined;
@@ -96,15 +101,17 @@ export class Tracker {
     this.set_rules(formats);
   }
 
+  public async set_rules_by_type_shuffle(rules: RuleType[]): Promise<void> {
+    const formats = await action_get_rules_format(rules);
+    shuffle(formats);
+    this.set_rules(formats);
+  }
+
   public update_current_track() {
     if (this.is_playlist()) {
-      const prev_track_id = this.current_track_id;
       this.currentTime = 0;
-      this.paused = false;
       this.current_track_id = this.play_rules[this.current_rule_idx].content_id;
-      if (prev_track_id === this.current_track_id) {
-        this.paused = false;
-      }
+      this.paused = false;
     }
   }
 

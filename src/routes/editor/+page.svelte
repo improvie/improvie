@@ -17,14 +17,14 @@
 </script>
 
 {#if playlist === undefined}
-  <div class='w-full h-full flex justify-center items-center'>Playlist not found. please try again later.</div>
+  <div class='w-full h-dvh flex justify-center items-center'>Playlist not found. please try again later.</div>
 {:else}
   {#await playlist[1]}
-    <div class='w-full h-full flex justify-center items-center'>Loading...</div>
+    <div class='w-full h-dvh flex justify-center items-center'>Loading...</div>
   {:then rules}
     <PlaylistInner playlist={playlist[0]} rules={rules} />
   {:catch e}
     {console.error(e)}
-    <div class='w-full h-full flex justify-center items-center'>Your request failed. Please try again later.</div>
+    <div class='w-full h-dvh flex justify-center items-center'>Your request failed. Please try again later.</div>
   {/await}
 {/if}

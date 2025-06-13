@@ -1,13 +1,29 @@
 use improvie_logic::{DynAppError, DynAppResult};
 use std::{fs::OpenOptions, path::PathBuf};
 
-use sqlx::{SqlitePool, sqlite::SqliteConnectOptions};
+use sqlx::{SqlitePool, pool::maybe::MaybePoolConnection, sqlite::SqliteConnectOptions};
 
 use crate::repository::MIGRATOR;
 
 pub enum DbConnection<'a> {
     Pool(&'a DbPool),
-    Tx(&'a DbTx),
+    Tx(&'a mut DbTx),
+}
+
+impl DbConnection<'_> {
+    pub async fn conn(&mut self) -> DynAppResult<MaybePoolConnection<sqlx::Sqlite>> {
+        match self {
+            DbConnection::Pool(pool) => {
+                let pool = pool.pool_ref();
+                let pool_conn = pool.acquire().await?;
+                Ok(pool_conn.into())
+            }
+            DbConnection::Tx(tx) => {
+                let conn = tx.as_mut();
+                Ok(conn.into())
+            }
+        }
+    }
 }
 
 impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a> {
@@ -18,7 +34,7 @@ impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a>
         Self::Pool(pool)
     }
 
-    fn new_tx(tx: &'a Self::DbTx) -> Self {
+    fn new_tx(tx: &'a mut Self::DbTx) -> Self {
         Self::Tx(tx)
     }
 }
@@ -27,6 +43,10 @@ impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a>
 pub struct DbPool(SqlitePool);
 
 impl DbPool {
+    pub fn pool_ref(&self) -> &SqlitePool {
+        &self.0
+    }
+
     pub fn pool(&self) -> SqlitePool {
         self.0.clone()
     }

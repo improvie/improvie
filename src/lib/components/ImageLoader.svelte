@@ -23,7 +23,7 @@
       },
       target: {
         img: 'aspect-video object-cover',
-        trigger: 'flex justify-center',
+        trigger: 'flex justify-center items-center',
       },
     },
   });

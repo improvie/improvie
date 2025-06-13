@@ -20,7 +20,7 @@
 
   const is_video = $derived(track?.kind === 'Video');
 
-  let value: string = $derived(is_video ? 'video' : 'thumbnail');
+  let value: string = $state(track?.kind === 'Video' ? 'video' : 'thumbnail');
 
   const content_path = $derived.by(() => {
     if (!track?.content_path) {
@@ -67,27 +67,32 @@
     {/if}
   </Tabs.List>
   <div class='pt-2 h-full flex flex-col items-center justify-center'>
-    <ImageLoader
-      src={thumbnail_path}
-      class={cn(value !== 'thumbnail' && 'hidden')}
-    />
+    <div class='w-full h-fit aspect-video'>
+      <div class={cn(value !== 'thumbnail' && 'hidden')}>
+        <ImageLoader
+          src={thumbnail_path}
+        />
+      </div>
+      <div class={cn(value !== 'video' && 'hidden')}>
+        <video
+          bind:this={video_element}
+          crossorigin='anonymous'
+          playsinline
+          bind:volume={tracker.volume}
+          bind:currentTime={tracker.currentTime}
+          bind:paused={tracker.paused}
+          bind:duration
+          onended={onended}
+          class='object-cover'
+          onclick={() => tracker.toggle_pause()}
+          poster={thumbnail_path}
+        >
+          <source src={content_path} />
+          <track kind='captions' />
+        </video>
+      </div>
+    </div>
 
-    <video
-      bind:this={video_element}
-      crossorigin='anonymous'
-      playsinline
-      bind:volume={tracker.volume}
-      bind:currentTime={tracker.currentTime}
-      bind:paused={tracker.paused}
-      bind:duration
-      onended={onended}
-      class={cn('aspect-video w-full h-fit object-contain', value !== 'video' && 'hidden')}
-      onclick={() => tracker.toggle_pause()}
-      poster={thumbnail_path}
-    >
-      <source src={content_path} />
-      <track kind='captions' />
-    </video>
     <div class='flex sm:hidden'>
       <p>Impl the menu for mobile</p>
       <!-- TODO: Implement the menu for mobile -->

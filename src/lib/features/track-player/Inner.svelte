@@ -9,7 +9,6 @@
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
-  import { convertFileSrc } from '@tauri-apps/api/core';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   const { track }: { track: Content | undefined } = $props();
@@ -46,13 +45,6 @@
     }
     tracker.currentTime = value;
   }
-
-  const thumbnail_path = $derived.by(() => {
-    if (!track?.thumbnail_path) {
-      return undefined;
-    }
-    return convertFileSrc(track.thumbnail_path);
-  });
 
 </script>
 
@@ -122,9 +114,7 @@
       tracker.external_open = !tracker.external_open;
     }} onkeydown={() => {}}>
       <div class='h-full block sm:hidden md:block'>
-        {#if thumbnail_path}
-          <ImageLoader direction='vertical' src={thumbnail_path} />
-        {/if}
+        <ImageLoader direction='vertical' local src={track?.thumbnail_path} />
       </div>
       <div class='h-full flex items-center'>
         <p class='text-primary text-sm text-wrap max-w-[30rem] line-clamp-3'>{track?.title}</p>

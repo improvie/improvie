@@ -35,20 +35,17 @@
     }
     return convertFileSrc(track.thumbnail_path);
   });
-
-  let video_element: HTMLVideoElement | undefined = $state();
+  let video_element: HTMLVideoElement;
 
   $effect(() => {
-    if (video_element) {
-      if (content_path) {
-        video_element.load();
-        video_element.play().catch((error) => {
-          Logger.error(`Error playing video: ${error}`);
-        });
-      }
-      else {
-        video_element.pause();
-      }
+    if (content_path) {
+      video_element.load();
+      video_element.play().catch((error) => {
+        Logger.error(`Error playing video: ${error}`);
+      });
+    }
+    else {
+      video_element.pause();
     }
   });
 </script>
@@ -86,10 +83,9 @@
       onended={onended}
       class='aspect-video w-full h-fit object-contain'
       onclick={() => tracker.toggle_pause()}
+      poster={thumbnail_path}
     >
-      {#if content_path}
-        <source src={content_path} />
-      {/if}
+      <source src={content_path} />
       <track kind='captions' />
     </video>
   </Tabs.Content>

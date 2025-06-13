@@ -81,6 +81,7 @@ mod db {
     }
 }
 
+#[cfg(feature = "db")]
 pub use db::*;
 
 mod macros {

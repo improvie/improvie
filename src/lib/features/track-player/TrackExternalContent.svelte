@@ -66,12 +66,12 @@
       </Tooltip.Root>
     {/if}
   </Tabs.List>
-  <Tabs.Content value='thumbnail' class={cn('pt-2 h-full flex items-center justify-center', value !== 'thumbnail' && 'hidden')}>
+  <div class='pt-2 h-full flex flex-col items-center justify-center'>
     <ImageLoader
       src={thumbnail_path}
+      class={cn(value !== 'thumbnail' && 'hidden')}
     />
-  </Tabs.Content>
-  <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
+
     <video
       bind:this={video_element}
       crossorigin='anonymous'
@@ -81,12 +81,16 @@
       bind:paused={tracker.paused}
       bind:duration
       onended={onended}
-      class='aspect-video w-full h-fit object-contain'
+      class={cn('aspect-video w-full h-fit object-contain', value !== 'video' && 'hidden')}
       onclick={() => tracker.toggle_pause()}
       poster={thumbnail_path}
     >
       <source src={content_path} />
       <track kind='captions' />
     </video>
-  </Tabs.Content>
+    <div class='flex sm:hidden'>
+      <p>Impl the menu for mobile</p>
+      <!-- TODO: Implement the menu for mobile -->
+    </div>
+  </div>
 </Tabs.Root>

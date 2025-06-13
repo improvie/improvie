@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import { cn } from '$lib/utils';
   import { FileXIcon, ImageOffIcon, LoaderIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { tv } from 'tailwind-variants';
@@ -11,6 +12,7 @@
     loading?: boolean;
     failed?: boolean;
     local?: boolean;
+    class?: string;
   }
 
   const variants = tv({
@@ -43,6 +45,7 @@
     failed = $bindable(false),
     loading = false,
     local = false,
+    class: className,
   }: Props = $props();
 
   const imageSrc: string | undefined = $derived.by(() => {
@@ -68,7 +71,7 @@
       onload={() => {
         failed = false;
       }}
-      class={variants({ direction, target: 'img' })}
+      class={cn(variants({ direction, target: 'img' }), className)}
     />
   {:else}
     <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>

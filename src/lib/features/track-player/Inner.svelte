@@ -48,13 +48,46 @@
 
 </script>
 
-<div class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'hidden')}>
+<div id='external' class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'custom-hidden')}>
   <TrackExternalContent
     track={track}
     bind:duration
     onended={onended}
   />
 </div>
+
+<style>
+  #external {
+    animation: slide-up 0.3s ease-out forwards;
+  }
+
+  #external.custom-hidden {
+    animation: slide-down 0.3s ease-in forwards;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      display: none;
+      transform: translateY(100%);
+    }
+  }
+</style>
 
 <Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
   <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />

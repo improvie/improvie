@@ -4,6 +4,7 @@
   import { Toaster } from '$lib/components/ui/sonner';
   import AppSidebar from '$lib/features/app-sidebar/index.svelte';
   import SettingsDialog from '$lib/features/settings-dialog/index.svelte';
+  import Shortcuts from '$lib/features/Shortcuts.svelte';
   import TrackPlayer from '$lib/features/track-player/index.svelte';
   import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
   import { initSlots } from '$lib/stores/index.svelte';
@@ -34,6 +35,8 @@
     setLocalStorage('root-sidebar-open', open ? 'true' : 'false');
   });
 </script>
+
+<Shortcuts />
 
 <Toaster />
 

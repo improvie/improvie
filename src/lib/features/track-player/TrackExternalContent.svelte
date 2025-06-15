@@ -36,13 +36,14 @@
     return convertFileSrc(track.thumbnail_path);
   });
   let video_element: HTMLVideoElement;
-
   $effect(() => {
     if (content_path) {
       video_element.load();
+      tracker.paused = true;
       video_element.play().catch((error) => {
         Logger.error(`Error playing video: ${error}`);
       });
+      tracker.paused = false;
     }
     else {
       video_element.pause();

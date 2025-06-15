@@ -2,7 +2,6 @@
   import type { Content } from '$bindings/item';
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
-  import * as Card from '$lib/components/ui/card/index.js';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
@@ -97,8 +96,17 @@
   }
 </style>
 
-<Card.Root class={cn('py-3 sticky bottom-0 h-20 z-40 rounded-none', track || 'hidden')}>
-  <Slider class='absolute top-0' type='single' bind:value={sliderCurrentTime} onValueChange={sliderChange} max={duration} step={1} min={0} />
+<div class={cn('bg-card py-3 sticky bottom-0 h-20 z-40', track || 'hidden')}>
+  <Slider
+    class='absolute top-0 max-sm:data-[hidden=true]:hidden'
+    data-hidden={tracker.external_open}
+    type='single'
+    bind:value={sliderCurrentTime}
+    onValueChange={sliderChange}
+    max={duration}
+    step={1}
+    min={0}
+  />
   <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row' role='button' tabindex='-1' onclick={(event) => {
     if (event.target === event.currentTarget) {
       tracker.external_open = !tracker.external_open;
@@ -207,4 +215,4 @@
 
     </div>
   </div>
-</Card.Root>
+</div>

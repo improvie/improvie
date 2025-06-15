@@ -96,10 +96,12 @@
   }
 </style>
 
-<div class={cn('bg-card py-3 sticky bottom-0 h-20 z-40', track || 'hidden')}>
+<div
+  class={cn('group bg-card py-3 sticky bottom-0 h-20 z-40', track || 'hidden')}
+  data-hidden={tracker.external_open}
+>
   <Slider
-    class='absolute top-0 max-sm:data-[hidden=true]:hidden'
-    data-hidden={tracker.external_open}
+    class='absolute top-0 max-sm:group-data-[hidden=true]:hidden'
     type='single'
     bind:value={sliderCurrentTime}
     onValueChange={sliderChange}
@@ -125,7 +127,10 @@
           </IconButton>
         {/if}
       </div>
-      <IconButton onclick={() => tracker.toggle_pause()}>
+      <IconButton
+        onclick={() => tracker.toggle_pause()}
+        class='max-sm:group-data-[hidden=true]:hidden'
+      >
         {#if tracker.paused}
           <PlayIcon />
         {:else}
@@ -140,9 +145,10 @@
         {/snippet}
       </IconButton>
       {#if is_playlist}
-        <IconButton onclick={() => {
-          tracker.next();
-        }}>
+        <IconButton
+          class='max-sm:group-data-[hidden=true]:hidden'
+          onclick={() => { tracker.next(); }}
+        >
           <ChevronsRightIcon />
           {#snippet content()}
             <p>next</p>

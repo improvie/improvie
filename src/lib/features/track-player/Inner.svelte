@@ -13,6 +13,8 @@
 
   const { track }: { track: Content | undefined } = $props();
 
+  const is_running = $derived(track !== undefined);
+
   const is_playlist = $derived(tracker.is_playlist());
 
   let duration = $state(0);
@@ -48,7 +50,11 @@
 
 </script>
 
-<div id='external' class={cn('bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none', tracker.external_open || 'custom-hidden')}>
+<div id='external' class={cn(
+  'bg-card text-card-foreground sticky z-40 bottom-20 pt-10 pb-5 h-[calc(100dvh-80px)] rounded-none',
+  (tracker.external_open && 'custom-show') || 'custom-hidden',
+  (is_running && 'custom-running') || 'custom-stopped',
+)}>
   <TrackExternalContent
     track={track}
     bind:duration
@@ -57,10 +63,12 @@
 </div>
 
 <style>
-  #external {
+  #external.custom-stopped {
+    visibility: hidden;
+  }
+  #external.custom-show {
     animation: slide-up 0.3s ease-out forwards;
   }
-
   #external.custom-hidden {
     animation: slide-down 0.3s ease-in forwards;
   }

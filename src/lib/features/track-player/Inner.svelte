@@ -115,9 +115,7 @@
     <div class='gap-2 flex items-center'>
       <div class='hidden sm:block'>
         {#if is_playlist}
-          <IconButton onclick={() => {
-            tracker.previous();
-          }}>
+          <IconButton onclick={() => { tracker.previous(); }}>
             <ChevronsLeftIcon />
             {#snippet content()}
               <p>previous</p>

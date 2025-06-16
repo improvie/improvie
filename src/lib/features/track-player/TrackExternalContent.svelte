@@ -1,5 +1,6 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
+  import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
@@ -7,6 +8,7 @@
   import { Logger } from '$lib/logger';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
+  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
@@ -24,6 +26,7 @@
   } = $props();
 
   const is_video = $derived(track?.kind === 'Video');
+  const is_playlist = $derived(tracker.is_playlist());
 
   let value: string = $state(track?.kind === 'Video' ? 'video' : 'thumbnail');
 
@@ -99,7 +102,7 @@
       </div>
     </div>
 
-    <div class='w-full flex sm:hidden absolute bottom-0 p-6'>
+    <div class='w-full flex flex-col sm:hidden absolute bottom-0 p-6 gap-4'>
       <div class='w-full flex flex-col gap-1'>
         <Slider
           type='single'
@@ -113,6 +116,78 @@
           <span>{TimeFormat.format_secs(TimeFormat.PlainHms, sliderCurrentTime)}</span>
           <span>{TimeFormat.format_secs(TimeFormat.PlainHms, duration)}</span>
         </div>
+      </div>
+      <div class='flex items-center justify-between px-8'>
+        <IconButton
+          class='scale-110'
+          onclick={() => { tracker.toggle_external_open(); }}
+        >
+          {#if tracker.external_open}
+            <PanelTopOpenIcon />
+          {:else}
+            <PanelBottomOpenIcon />
+          {/if}
+          {#snippet content()}
+            {#if tracker.external_open}
+              <p>close</p>
+            {:else}
+              <p>open</p>
+            {/if}
+          {/snippet}
+        </IconButton>
+        {#if is_playlist}
+          <IconButton
+            class='scale-110'
+            onclick={() => { tracker.previous(); }}
+          >
+            <ChevronsLeftIcon />
+            {#snippet content()}
+              <p>previous</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+        <IconButton
+          onclick={() => tracker.toggle_pause()}
+          class='scale-160'
+        >
+          {#if tracker.paused}
+            <PlayIcon />
+          {:else}
+            <PauseIcon />
+          {/if}
+          {#snippet content()}
+            {#if tracker.paused}
+              <p>start content</p>
+            {:else}
+              <p>pause content</p>
+            {/if}
+          {/snippet}
+        </IconButton>
+        {#if is_playlist}
+          <IconButton
+            class='scale-110'
+            onclick={() => { tracker.next(); }}
+          >
+            <ChevronsRightIcon />
+            {#snippet content()}
+              <p>next</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+        <IconButton
+          class='scale-110'
+          pressed={tracker.is_looping}
+          onclick={() => { tracker.toggle_loop(); }}
+        >
+          <RepeatIcon />
+          {#snippet content()}
+            {#if tracker.is_looping}
+              <p>stop loop</p>
+            {:else}
+              <p>start loop</p>
+            {/if}
+          {/snippet}
+        </IconButton>
       </div>
     </div>
   </div>

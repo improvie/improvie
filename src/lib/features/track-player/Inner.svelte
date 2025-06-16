@@ -20,10 +20,6 @@
 
   let sliderCurrentTime = $state(0);
 
-  function to_readable_time(time: number) {
-    return TimeFormat.format_secs(TimeFormat.PlainHms, time);
-  }
-
   function onended() {
     if (tracker.next()) {
       sliderCurrentTime = 0;
@@ -58,6 +54,8 @@
     track={track}
     bind:duration
     onended={onended}
+    bind:sliderCurrentTime
+    sliderChange={sliderChange}
   />
 </div>
 
@@ -157,11 +155,11 @@
       {/if}
       <div class='flex-col items-center text-primary text-sm font-mono hidden sm:flex'>
         <p>
-          {to_readable_time(tracker.currentTime)}
+          {TimeFormat.format_secs(TimeFormat.PlainHms, tracker.currentTime)}
         </p>
         <Separator class='!h-[3px] bg-muted-foreground' />
         <p>
-          {to_readable_time(duration)}
+          {TimeFormat.format_secs(TimeFormat.PlainHms, duration)}
         </p>
       </div>
     </div>

@@ -80,7 +80,6 @@ async fn download_single_video_internal(
     audio?;
     let has_thumbnail = thumbnail?;
 
-    // TODO: add progress callback
     crate::ffmpeg::merge_video_audio(&video_temp_path, &audio_path, &video_path).await?;
     std::fs::remove_file(&video_temp_path)?;
     std::fs::remove_file(&audio_path)?;
@@ -118,11 +117,9 @@ async fn download_video(
 
     let total_size = stream.content_length() as u64;
 
-    let temp_path = std::env::temp_dir().join(format!("{}.temp.mp4", video.get_video_id()));
-
     let mut downloaded: u64 = 0;
 
-    let mut video_file = std::fs::File::create(&temp_path)?;
+    let mut video_file = std::fs::File::create(video_path)?;
 
     while let Some(chunk) = stream.chunk().await? {
         video_file.write_all(&chunk)?;
@@ -138,10 +135,6 @@ async fn download_video(
 
     video_file.flush()?;
     drop(video_file);
-
-    crate::ffmpeg::movflags_faststart(&temp_path, video_path).await?;
-
-    std::fs::remove_file(&temp_path)?;
 
     Ok(())
 }
@@ -160,15 +153,9 @@ async fn download_audio(
         },
     )?;
 
-    let temp_path = std::env::temp_dir().join(format!("{}.temp.aac", video.get_video_id()));
-
     audio_format
-        .download(video.get_client(), &DownloadOptions::default(), &temp_path)
+        .download(video.get_client(), &DownloadOptions::default(), audio_path)
         .await?;
-
-    crate::ffmpeg::audio_to_acc(&temp_path, audio_path).await?;
-
-    std::fs::remove_file(&temp_path)?;
 
     Ok(())
 }

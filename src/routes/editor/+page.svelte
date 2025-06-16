@@ -1,13 +1,17 @@
 <script lang='ts'>
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
+  import { page } from '$app/state';
   import { action_get_rules } from '$lib/action/rules';
-  import { current_playlist_id } from '$lib/stores/plays';
   import { playlists } from '$lib/stores/plays/playlist';
   import { PlaylistInner } from './Inner.svelte';
 
   const playlist: [ Playlist, Promise<RuleType[]> ] | undefined = $derived.by(() => {
-    const playlist = playlists.get($current_playlist_id);
+    const current_playlist_id = page.url.searchParams.get('id');
+    if (current_playlist_id === null) {
+      return undefined;
+    }
+    const playlist = playlists.get(current_playlist_id);
     if (playlist === undefined) {
       return undefined;
     }

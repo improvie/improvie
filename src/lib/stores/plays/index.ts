@@ -10,11 +10,8 @@ import { writable } from 'svelte/store';
 import { play_folders } from './folder';
 import { playlists } from './playlist';
 
-export const current_playlist_id: Writable<string> = writable(UUID_NIL);
-
 export function select_playlist(playlist_id: string) {
-  current_playlist_id.set(playlist_id);
-  goto('/editor');
+  goto(`/editor?id=${playlist_id}`);
 }
 
 export const current_play_folder_ids: Writable<string[]> = writable([UUID_NIL]);

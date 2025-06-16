@@ -1,26 +1,34 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
+  import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
+  import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { Logger } from '$lib/logger';
   import { tracker } from '$lib/stores/tracker.svelte';
-  import { cn } from '$lib/utils';
+  import { cn, TimeFormat } from '$lib/utils';
+  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
     track,
     duration = $bindable(),
     onended,
+    sliderCurrentTime = $bindable(),
+    sliderChange,
   }: {
     track: Content | undefined;
     duration: number;
     onended: () => void;
+    sliderCurrentTime: number;
+    sliderChange: (value: number) => void;
   } = $props();
 
   const is_video = $derived(track?.kind === 'Video');
+  const is_playlist = $derived(tracker.is_playlist());
 
-  let value: string = $derived(is_video ? 'video' : 'thumbnail');
+  let value: string = $state(track?.kind === 'Video' ? 'video' : 'thumbnail');
 
   const content_path = $derived.by(() => {
     if (!track?.content_path) {
@@ -36,13 +44,14 @@
     return convertFileSrc(track.thumbnail_path);
   });
   let video_element: HTMLVideoElement;
-
   $effect(() => {
     if (content_path) {
       video_element.load();
+      tracker.paused = true;
       video_element.play().catch((error) => {
         Logger.error(`Error playing video: ${error}`);
       });
+      tracker.paused = false;
     }
     else {
       video_element.pause();
@@ -66,27 +75,120 @@
       </Tooltip.Root>
     {/if}
   </Tabs.List>
-  <Tabs.Content value='thumbnail' class={cn('pt-2 h-full flex items-center justify-center', value !== 'thumbnail' && 'hidden')}>
-    <ImageLoader
-      src={thumbnail_path}
-    />
-  </Tabs.Content>
-  <Tabs.Content value='video' class={cn('pt-2 h-full flex items-center justify-center', value !== 'video' && 'hidden')}>
-    <video
-      bind:this={video_element}
-      crossorigin='anonymous'
-      playsinline
-      bind:volume={tracker.volume}
-      bind:currentTime={tracker.currentTime}
-      bind:paused={tracker.paused}
-      bind:duration
-      onended={onended}
-      class='aspect-video w-full h-fit object-contain'
-      onclick={() => tracker.toggle_pause()}
-      poster={thumbnail_path}
-    >
-      <source src={content_path} />
-      <track kind='captions' />
-    </video>
-  </Tabs.Content>
+  <div class='pt-2 h-full flex flex-col relative'>
+    <div class='w-full h-fit aspect-video absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
+      <div class={cn(value !== 'thumbnail' && 'hidden')}>
+        <ImageLoader
+          src={thumbnail_path}
+        />
+      </div>
+      <div class={cn(value !== 'video' && 'hidden')}>
+        <video
+          bind:this={video_element}
+          crossorigin='anonymous'
+          playsinline
+          bind:volume={tracker.volume}
+          bind:currentTime={tracker.currentTime}
+          bind:paused={tracker.paused}
+          bind:duration
+          onended={onended}
+          class='object-cover'
+          onclick={() => tracker.toggle_pause()}
+          poster={thumbnail_path}
+        >
+          <source src={content_path} />
+          <track kind='captions' />
+        </video>
+      </div>
+    </div>
+
+    <div class='w-full flex flex-col sm:hidden absolute bottom-0 p-6 gap-4'>
+      <div class='w-full flex flex-col gap-1'>
+        <Slider
+          type='single'
+          bind:value={sliderCurrentTime}
+          onValueChange={sliderChange}
+          max={duration}
+          step={1}
+          min={0}
+        />
+        <div class='flex justify-between text-xs text-muted-foreground'>
+          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, sliderCurrentTime)}</span>
+          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, duration)}</span>
+        </div>
+      </div>
+      <div class='flex items-center justify-between px-8'>
+        <IconButton
+          class='scale-110'
+          onclick={() => { tracker.toggle_external_open(); }}
+        >
+          {#if tracker.external_open}
+            <PanelTopOpenIcon />
+          {:else}
+            <PanelBottomOpenIcon />
+          {/if}
+          {#snippet content()}
+            {#if tracker.external_open}
+              <p>close</p>
+            {:else}
+              <p>open</p>
+            {/if}
+          {/snippet}
+        </IconButton>
+        {#if is_playlist}
+          <IconButton
+            class='scale-110'
+            onclick={() => { tracker.previous(); }}
+          >
+            <ChevronsLeftIcon />
+            {#snippet content()}
+              <p>previous</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+        <IconButton
+          onclick={() => tracker.toggle_pause()}
+          class='scale-160'
+        >
+          {#if tracker.paused}
+            <PlayIcon />
+          {:else}
+            <PauseIcon />
+          {/if}
+          {#snippet content()}
+            {#if tracker.paused}
+              <p>start content</p>
+            {:else}
+              <p>pause content</p>
+            {/if}
+          {/snippet}
+        </IconButton>
+        {#if is_playlist}
+          <IconButton
+            class='scale-110'
+            onclick={() => { tracker.next(); }}
+          >
+            <ChevronsRightIcon />
+            {#snippet content()}
+              <p>next</p>
+            {/snippet}
+          </IconButton>
+        {/if}
+        <IconButton
+          class='scale-110'
+          pressed={tracker.is_looping}
+          onclick={() => { tracker.toggle_loop(); }}
+        >
+          <RepeatIcon />
+          {#snippet content()}
+            {#if tracker.is_looping}
+              <p>stop loop</p>
+            {:else}
+              <p>start loop</p>
+            {/if}
+          {/snippet}
+        </IconButton>
+      </div>
+    </div>
+  </div>
 </Tabs.Root>

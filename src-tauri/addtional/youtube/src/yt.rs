@@ -1,107 +1,97 @@
-use std::{
-    io::Write,
-    path::{Path, PathBuf},
-    sync::Arc,
-};
+use std::{io::Write, path::PathBuf, sync::Arc};
 
-use rusty_ytdl::{
-    DownloadOptions, Video, VideoInfo, VideoOptions, VideoQuality, VideoSearchOptions,
-    choose_format, search::Playlist,
-};
-use tokio::task::JoinHandle;
-
-use crate::{YtPlaylistDownloadState, YtVideoDownloadState, model::SingleVideoDownload};
+use crate::{YtVideoDownloading, YtVideoRequest, YtVideoState, model::YtVideoDownloadComplete};
+use rusty_ytdl::{DownloadOptions, VideoOptions, VideoQuality, VideoSearchOptions, choose_format};
 
 pub async fn download_single_video(
-    video_url: &str,
+    request: YtVideoRequest,
     target_dir: PathBuf,
-    callback: impl Fn(YtVideoDownloadState) -> Result<(), crate::YtError>,
-) -> Result<SingleVideoDownload, crate::YtError> {
-    let video = Video::new(video_url)?;
+    callback: Arc<impl Fn(YtVideoState) -> bool + Send + Sync + 'static>,
+) -> Result<bool, crate::YtError> {
+    let final_video_path = target_dir.join(format!("{}.mp4", request.video_id));
+    let download_video_path = target_dir.join(format!("{}.temp.mp4", request.video_id));
+    let download_audio_path = target_dir.join(format!("{}.aac", request.video_id));
+    let thumbnail_path = target_dir.join(format!("{}.jpg", request.video_id));
 
-    download_single_video_internal(video, target_dir, callback).await
-}
+    enum Local {
+        HasThumbnail(bool),
+        CallbackFailed,
+    }
 
-pub async fn download_playlist(
-    playlist_url: &str,
-    target_dir: PathBuf,
-    callback: impl Fn(YtPlaylistDownloadState) -> Result<(), crate::YtError> + Send + Sync + 'static,
-) -> Result<Vec<SingleVideoDownload>, crate::YtError> {
-    let playlist = Playlist::get(playlist_url, None).await?;
-    let callback = Arc::new(callback);
-
-    let mut join_downloads = Vec::new();
-    for (i, video) in playlist.videos.into_iter().enumerate() {
-        let join: JoinHandle<Result<SingleVideoDownload, crate::YtError>> = tokio::spawn({
-            let target_dir = target_dir.clone();
+    let local = tokio::task::LocalSet::new();
+    let local: Local = local
+        .run_until({
             let callback = Arc::clone(&callback);
-            let video = Video::new(video.id)?;
+            let video_url = request.video_url.clone();
+            let audio_url = request.audio_url.clone();
+            let thumbnail_url = request.thumbnail_url.clone();
+
+            let thumbnail_path = thumbnail_path.clone();
+            let download_video_path = download_video_path.clone();
+            let download_audio_path = download_audio_path.clone();
             async move {
-                let download = download_single_video_internal(video, target_dir, |state| {
-                    callback(YtPlaylistDownloadState { index: i, state })
-                })
-                .await?;
-                Ok(download)
+                let video_process = tokio::task::spawn_local(download_video(
+                    video_url,
+                    download_video_path,
+                    Arc::new(move |state| callback(YtVideoState::Downloading(state))),
+                ));
+                let audio_process =
+                    tokio::task::spawn_local(download_audio(audio_url, download_audio_path));
+                let has_thumbnail = if let Some(thumbnail_url) = thumbnail_url {
+                    download_thumbnail(thumbnail_url, thumbnail_path).await?;
+                    true
+                } else {
+                    false
+                };
+
+                audio_process
+                    .await
+                    .map_err(|_| crate::YtError::JoinError)??;
+
+                let is_callback_success = video_process
+                    .await
+                    .map_err(|_| crate::YtError::JoinError)??;
+
+                if !is_callback_success {
+                    return Ok(Local::CallbackFailed);
+                }
+
+                Ok::<Local, crate::YtError>(Local::HasThumbnail(has_thumbnail))
             }
-        });
+        })
+        .await?;
 
-        join_downloads.push(join);
-    }
+    let has_thumbnail = match local {
+        Local::HasThumbnail(has_thumbnail) => has_thumbnail,
+        Local::CallbackFailed => return Ok(false),
+    };
 
-    let mut downloads = Vec::new();
-    for join in join_downloads {
-        let download = join.await.map_err(|_| crate::YtError::JoinError)??;
-        downloads.push(download);
-    }
+    crate::ffmpeg::merge_video_audio(
+        &download_video_path,
+        &download_audio_path,
+        &final_video_path,
+    )
+    .await?;
 
-    Ok(downloads)
-}
+    std::fs::remove_file(&download_video_path)?;
+    std::fs::remove_file(&download_audio_path)?;
 
-async fn download_single_video_internal(
-    video: Video<'_>,
-    target_dir: PathBuf,
-    callback: impl Fn(YtVideoDownloadState) -> Result<(), crate::YtError>,
-) -> Result<SingleVideoDownload, crate::YtError> {
-    let info = video.get_info().await?;
-    let title = info.video_details.title.clone();
-    let id = info.video_details.video_id.clone();
-
-    let video_path = target_dir.join(format!("{}.mp4", &id));
-    let video_temp_path = target_dir.join(format!("{}.temp.mp4", &id));
-    let audio_path = target_dir.join(format!("{}.aac", &id));
-    let thumbnail_path = target_dir.join(format!("{}.jpg", &id));
-
-    let (video, audio, thumbnail) = tokio::join!(
-        download_video(&video, &info, &video_temp_path, &callback),
-        download_audio(&video, &info, &audio_path),
-        download_thumbnail(&video, &info, &thumbnail_path),
-    );
-    video?;
-    audio?;
-    let has_thumbnail = thumbnail?;
-
-    crate::ffmpeg::merge_video_audio(&video_temp_path, &audio_path, &video_path).await?;
-    std::fs::remove_file(&video_temp_path)?;
-    std::fs::remove_file(&audio_path)?;
-
-    Ok(SingleVideoDownload {
-        title,
-        id,
-        video_path,
+    Ok(callback(YtVideoState::Completed(YtVideoDownloadComplete {
+        title: request.content_title,
+        video_path: final_video_path,
         thumbnail_path: if has_thumbnail {
             Some(thumbnail_path)
         } else {
             None
         },
-    })
+    })))
 }
 
 async fn download_video(
-    video: &Video<'_>,
-    info: &VideoInfo,
-    video_path: &Path,
-    callback: impl Fn(YtVideoDownloadState) -> Result<(), crate::YtError>,
-) -> Result<(), crate::YtError> {
+    video_url: String,
+    download_path: PathBuf,
+    callback: Arc<impl Fn(YtVideoDownloading) -> bool + Sync + 'static>,
+) -> Result<bool, crate::YtError> {
     let video_format = choose_format(
         &info.formats,
         &VideoOptions {
@@ -125,7 +115,7 @@ async fn download_video(
         video_file.write_all(&chunk)?;
         downloaded += chunk.len() as u64;
         let progress = (downloaded as f64 / total_size as f64) * 100.0;
-        let state = YtVideoDownloadState {
+        let state = YtVideoDownloading {
             downloaded_mb: downloaded / 1024 / 1024,
             total_mb: total_size / 1024 / 1024,
             percentage: progress as u8,
@@ -139,11 +129,7 @@ async fn download_video(
     Ok(())
 }
 
-async fn download_audio(
-    video: &Video<'_>,
-    info: &VideoInfo,
-    audio_path: &Path,
-) -> Result<(), crate::YtError> {
+async fn download_audio(audio_url: String, audio_path: PathBuf) -> Result<(), crate::YtError> {
     let audio_format = choose_format(
         &info.formats,
         &VideoOptions {
@@ -166,30 +152,18 @@ async fn download_audio(
 ///
 /// Returns `true` if the thumbnail was downloaded successfully, `false` not found thumbnail.
 async fn download_thumbnail(
-    video: &Video<'_>,
-    info: &VideoInfo,
-    thumbnail_path: &Path,
-) -> Result<bool, crate::YtError> {
-    let thumbnail_url = info
-        .video_details
-        .thumbnails
-        .iter()
-        .max_by(|a, b| a.width.cmp(&b.width).then(a.height.cmp(&b.height)))
-        .map(|t| t.url.clone());
-
-    if let Some(thumbnail_url) = thumbnail_url {
-        let client = video.get_client().clone();
-        let bytes = client
-            .get(thumbnail_url)
-            .send()
-            .await
-            .map_err(|e| crate::YtError::Http(rusty_ytdl::VideoError::ReqwestMiddleware(e)))?
-            .bytes()
-            .await
-            .map_err(|e| crate::YtError::Http(rusty_ytdl::VideoError::Reqwest(e)))?;
-        std::fs::write(thumbnail_path, bytes)?;
-        Ok(true)
-    } else {
-        Ok(false)
-    }
+    thumbnail_url: String,
+    thumbnail_path: PathBuf,
+) -> Result<(), crate::YtError> {
+    let client = video.get_client().clone();
+    let bytes = client
+        .get(thumbnail_url)
+        .send()
+        .await
+        .map_err(|e| crate::YtError::Http(rusty_ytdl::VideoError::ReqwestMiddleware(e)))?
+        .bytes()
+        .await
+        .map_err(|e| crate::YtError::Http(rusty_ytdl::VideoError::Reqwest(e)))?;
+    std::fs::write(thumbnail_path, bytes)?;
+    Ok(true)
 }

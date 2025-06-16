@@ -1,14 +1,14 @@
 use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
 use tauri::{AppHandle, Emitter};
 use uid::Uid;
-use youtube::{SingleVideoDownload, YtError};
+use youtube::{YtError, YtVideoDownloadComplete};
 
 use crate::state::TauriAppState;
 
 async fn save(
     state: &TauriAppState<'_>,
     parent_folder_id: Uid,
-    downloaded: SingleVideoDownload,
+    downloaded: YtVideoDownloadComplete,
 ) -> Result<CreateContentResponse, YtError> {
     let dto = CreateContentDto {
         item: CreateBaseItemDto {

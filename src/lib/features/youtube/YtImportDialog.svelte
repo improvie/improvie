@@ -93,6 +93,7 @@
         <YtImportVideo
           parent_folder_id={parent_folder_id}
           videoId={$formData.targets.videoId!}
+          bind:processing={start_processing}
         />
       {:else if download_type === 'playlist'}
         <YtImportPlaylist

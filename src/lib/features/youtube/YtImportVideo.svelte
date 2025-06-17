@@ -1,9 +1,45 @@
 <script lang='ts'>
-  const {
+  import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import { getVideoDetail, type VideoDetail } from '$lib/youtube';
+  import { toast } from 'svelte-sonner';
+
+  let {
     parent_folder_id,
     videoId,
+    processing = $bindable(),
   }: {
     parent_folder_id: string;
     videoId: string;
+    processing: boolean;
   } = $props();
+
+  let detail: VideoDetail | undefined = $state();
+
+  async function init() {
+    try {
+      detail = await getVideoDetail(videoId);
+    }
+    catch (error) {
+      console.error('Failed to fetch video details:', error);
+      toast.error('Failed to fetch video details. Please check the video ID and try again.');
+      processing = false;
+    }
+  }
+
+  $effect(() => {
+    init();
+  });
 </script>
+
+{#if detail}
+  <Dialog.Header>
+    <Dialog.Title>Select format</Dialog.Title>
+  </Dialog.Header>
+{:else}
+  <Dialog.Header>
+    <Dialog.Title>importing video...</Dialog.Title>
+    <Dialog.Description>
+      Please wait while we fetch the video details.
+    </Dialog.Description>
+  </Dialog.Header>
+{/if}

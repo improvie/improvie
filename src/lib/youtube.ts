@@ -1,4 +1,7 @@
-import Innertube, { Helpers, YTNodes} from 'youtubei.js';
+import type { YtVideoRequest } from '$bindings/yt';
+import type { Helpers } from 'youtubei.js';
+import { invoke } from '@tauri-apps/api/core';
+import Innertube, { YTNodes } from 'youtubei.js';
 
 export interface PlaylistDetail {
   playlist_id: string;
@@ -18,6 +21,7 @@ export interface VideoDetail {
 export interface YtFormat {
   type: 'audio' | 'video';
   quality: string;
+  mime_type: string;
   // only used for video format
   quality_label: string | undefined;
   url: string;
@@ -72,6 +76,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     .map((format) => {
       return {
         type: format.has_video ? 'video' : 'audio',
+        mime_type: format.mime_type,
         quality: format.quality!,
         quality_label: format.quality_label,
         url: `${format.decipher(player)}&cpn=${cpn}`,
@@ -88,7 +93,6 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   };
 }
 
-
 export async function getPlaylistDetail(playlistId: string, videoId?: string): Promise<PlaylistDetail> {
   interface TempPlaylist {
     info: {
@@ -98,17 +102,17 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
         width: number;
         height: number;
       }[];
-    },
+    };
     items: Helpers.YTNode[];
   }
 
   let playlist: TempPlaylist;
   if (videoId) {
     const endpoint = new YTNodes.NavigationEndpoint({
-      'NavigationEndpoint': {
-        'videoId': videoId,
-        'playlistId': playlistId,
-      }
+      NavigationEndpoint: {
+        videoId,
+        playlistId,
+      },
     });
     const info = await client.getInfo(endpoint, 'MWEB');
     const playlistInfo = info.playlist;
@@ -121,8 +125,9 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
         thumbnails: [],
       },
       items: playlistInfo.contents,
-    }
-  } else {
+    };
+  }
+  else {
     playlist = await client.getPlaylist(playlistId);
   }
   const title = playlist.info.title;
@@ -148,4 +153,57 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
     thumbnail_url,
     videos,
   };
+}
+
+function getCodecsFromMimeType(mimeType: string): string[] {
+  if (!mimeType.includes('codecs=')) {
+    return [];
+  }
+  const params = mimeType.split(';');
+  if (params.length < 2) {
+    return [];
+  }
+  const codecsParam = params.find(param => param.trim().startsWith('codecs='));
+  if (!codecsParam) {
+    return [];
+  }
+  let codecs = codecsParam.split('=')[1];
+  if (codecs.startsWith('"') && codecs.endsWith('"')) {
+    codecs = codecs.slice(1, -1); // Remove quotes if present
+  }
+  return codecs.split(',').map(codec => codec.trim());
+}
+
+export function getBestAudio(formats: YtFormat[]): YtFormat | undefined {
+  const AUDIO_ENCODING_RANKS: string[] = ['mp4a', 'mp3', 'vorbis', 'aac', 'opus', 'flac'];
+  return formats
+    .filter(format => format.type === 'audio')
+    .sort((a, b) => {
+      const aCodecs = getCodecsFromMimeType(a.mime_type);
+      const bCodecs = getCodecsFromMimeType(b.mime_type);
+      const aRank = AUDIO_ENCODING_RANKS.findIndex(codec => aCodecs.includes(codec));
+      const bRank = AUDIO_ENCODING_RANKS.findIndex(codec => bCodecs.includes(codec));
+      if (aRank === -1 && bRank === -1) {
+        return 0; // Both formats have no recognized audio codec
+      }
+      if (aRank === -1) {
+        return 1; // a has no recognized audio codec, b is better
+      }
+      if (bRank === -1) {
+        return -1; // b has no recognized audio codec, a is better
+      }
+      return aRank - bRank; // Compare ranks
+    })[0];
+}
+
+// use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`
+export async function import_youtube_video(request: YtVideoRequest): Promise<boolean> {
+  try {
+    await invoke('import_youtube_video', request);
+    return true;
+  }
+  catch (error) {
+    console.error('Error importing YouTube video:', error);
+    return false;
+  }
 }

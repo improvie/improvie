@@ -39,6 +39,7 @@ tauri-plugin-dialog.workspace = true
 # tauri plugin and config
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "=2.4.0"
+tauri-plugin-cors-fetch = "=4.0.0"
 
 [patch.crates-io]
 ffmpeg-sys-next = { git = "https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git", branch = "master" }

@@ -15,6 +15,7 @@ pub fn run() {
 
     builder = builder.plugin(tauri_plugin_dialog::init());
     builder = builder.plugin(init::log::init_log_plugin());
+    builder = builder.plugin(tauri_plugin_cors_fetch::init());
 
     builder
         .setup(move |app| {

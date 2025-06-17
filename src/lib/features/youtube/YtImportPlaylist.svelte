@@ -1,9 +1,11 @@
 <script lang='ts'>
-  let {
+  const {
     parent_folder_id,
-    url,
+    playlistId,
+    videoId,
   }: {
     parent_folder_id: string;
-    url: string;
+    playlistId: string;
+    videoId: string | undefined;
   } = $props();
 </script>

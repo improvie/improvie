@@ -1,9 +1,9 @@
 <script lang='ts'>
-  let {
+  const {
     parent_folder_id,
-    url,
+    videoId,
   }: {
     parent_folder_id: string;
-    url: string;
+    videoId: string;
   } = $props();
 </script>

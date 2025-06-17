@@ -21,24 +21,39 @@
 
   let download_type = $state<'video' | 'playlist'>('video');
 
+  interface Targets {
+    videoId?: string;
+    playlistId?: string;
+  }
+
   const formSchema = z.object({
-    url: z.string().nonempty().url().superRefine((value, ctx) => {
+    targets: z.string().nonempty().url().transform<Targets>((value, ctx) => {
       const url = new URL(value);
+      const list = url.searchParams.get('list');
       if (download_type === 'playlist') {
-        if (!url.searchParams.has('list')) {
+        if (list === null || list === '') {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Invalid YouTube URL. It must contain a playlist ID.',
           });
-          return;
+          return {};
+        }
+        // 'RD' is a prefix for mixlist, require videoId in this case
+        if (!list.startsWith('RD')) {
+          return { playlistId: list };
         }
       }
-      if (!url.searchParams.has('v')) {
+      const videoId = url.searchParams.get('v');
+      if (videoId === null || videoId === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Invalid YouTube URL. It must contain a video ID.',
         });
       }
+      return {
+        videoId: videoId ?? undefined,
+        playlistId: list ?? undefined,
+      };
     }),
   });
 
@@ -77,12 +92,13 @@
       {#if download_type === 'video'}
         <YtImportVideo
           parent_folder_id={parent_folder_id}
-          url={$formData.url}
+          videoId={$formData.targets.videoId!}
         />
       {:else if download_type === 'playlist'}
         <YtImportPlaylist
           parent_folder_id={parent_folder_id}
-          url={$formData.url}
+          playlistId={$formData.targets.playlistId!}
+          videoId={$formData.targets.videoId}
         />
       {/if}
     {:else}
@@ -99,7 +115,7 @@
         </Tabs.Root>
 
         <div class='grid gap-4 py-4'>
-          <Form.Field {form} name='url'>
+          <Form.Field {form} name='targets'>
             <Form.Control>
               {#snippet children({ props })}
                 <div class='grid grid-cols-5 items-center gap-4'>
@@ -107,7 +123,7 @@
                   <Input
                     class='col-span-4'
                     {...props}
-                    bind:value={$formData.url}
+                    bind:value={$formData.targets}
                     spellcheck='false'
                   />
                 </div>

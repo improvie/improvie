@@ -1,9 +1,16 @@
-import Innertube from 'youtubei.js';
+import Innertube, { Helpers, YTNodes} from 'youtubei.js';
+
+export interface PlaylistDetail {
+  playlist_id: string;
+  title: string;
+  thumbnail_url: string | undefined;
+  videos: VideoDetail[];
+}
 
 export interface VideoDetail {
-  thumbnail_url: string | undefined;
   video_id: string;
   title: string;
+  thumbnail_url: string | undefined;
 
   formats: YtFormat[];
 }
@@ -78,5 +85,67 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     video_id: videoId,
     title,
     formats,
+  };
+}
+
+
+export async function getPlaylistDetail(playlistId: string, videoId?: string): Promise<PlaylistDetail> {
+  interface TempPlaylist {
+    info: {
+      title?: string | undefined;
+      thumbnails: {
+        url: string;
+        width: number;
+        height: number;
+      }[];
+    },
+    items: Helpers.YTNode[];
+  }
+
+  let playlist: TempPlaylist;
+  if (videoId) {
+    const endpoint = new YTNodes.NavigationEndpoint({
+      'NavigationEndpoint': {
+        'videoId': videoId,
+        'playlistId': playlistId,
+      }
+    });
+    const info = await client.getInfo(endpoint, 'MWEB');
+    const playlistInfo = info.playlist;
+    if (!playlistInfo) {
+      throw new Error('No playlist information available for this video.');
+    }
+    playlist = {
+      info: {
+        title: playlistInfo.title,
+        thumbnails: [],
+      },
+      items: playlistInfo.contents,
+    }
+  } else {
+    playlist = await client.getPlaylist(playlistId);
+  }
+  const title = playlist.info.title;
+
+  if (!title) {
+    throw new Error('No title available for this playlist.');
+  }
+
+  const thumbnail_url = playlist.info.thumbnails?.sort((a, b) => b.width - a.width)[0]?.url;
+
+  const promises: Promise<VideoDetail>[] = [];
+  for (const video of playlist.items) {
+    if ('video_id' in video && typeof video.video_id === 'string') {
+      const videoId = video.video_id;
+      promises.push(getVideoDetail(videoId));
+    }
+  }
+  const videos: VideoDetail[] = await Promise.all(promises);
+
+  return {
+    playlist_id: playlistId,
+    title,
+    thumbnail_url,
+    videos,
   };
 }

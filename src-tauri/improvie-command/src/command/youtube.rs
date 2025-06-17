@@ -7,12 +7,22 @@ use crate::state::TauriAppState;
 
 // TODO: add beautiful log
 
+#[derive(Debug, thiserror::Error)]
+#[error("YouTube error: {0}")]
+pub struct YtErrorWrapper(#[from] pub YtError);
+
+improvie_logic::impl_serialize_for_dyn_app_error!(
+    YtErrorWrapper,
+    kind = "YtError",
+    message = "YouTube error"
+);
+
 #[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
     request: YtVideoRequest,
-) -> Result<(), YtError> {
+) -> Result<(), YtErrorWrapper> {
     let downloaded = youtube::download_single_video(
         state.client.clone(),
         request,

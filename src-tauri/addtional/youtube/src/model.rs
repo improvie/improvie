@@ -14,9 +14,17 @@ pub struct YtVideoRequest {
 #[derive(Debug, Clone, serde::Serialize)]
 #[cfg_attr(feature = "ts", bind::ts("yt.ts"))]
 pub enum YtVideoState {
-    Idle,
-    Downloading(YtVideoDownloading),
-    Completed(YtVideoDownloadComplete),
+    Idle {
+        video_id: String,
+    },
+    Downloading {
+        video_id: String,
+        state: YtVideoDownloading,
+    },
+    Completed {
+        video_id: String,
+        state: YtVideoDownloadComplete,
+    },
 }
 
 #[derive(Debug, Clone, serde::Serialize)]

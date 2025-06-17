@@ -22,7 +22,24 @@
   let download_type = $state<'video' | 'playlist'>('video');
 
   const formSchema = z.object({
-    url: z.string().nonempty().url(),
+    url: z.string().nonempty().url().superRefine((value, ctx) => {
+      const url = new URL(value);
+      if (download_type === 'playlist') {
+        if (!url.searchParams.has('list')) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid YouTube URL. It must contain a playlist ID.',
+          });
+          return;
+        }
+      }
+      if (!url.searchParams.has('v')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid YouTube URL. It must contain a video ID.',
+        });
+      }
+    }),
   });
 
   const form = superForm(defaults(zod(formSchema)), {

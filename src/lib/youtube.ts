@@ -251,7 +251,9 @@ export function getGoodVideos(formats: YtFormat[]): YtFormat[] {
 // use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`
 export async function import_youtube_video(request: YtVideoRequest): Promise<boolean> {
   try {
-    return await invoke<boolean>('import_youtube_video', request);
+    return await invoke<boolean>('import_youtube_video', {
+      request,
+    });
   }
   catch (error) {
     console.error('Error importing YouTube video:', error);

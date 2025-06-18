@@ -33,9 +33,20 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
             true
         }),
     )
-    .await?;
+    .await;
 
-    log::info!("Video downloaded: {}", downloaded);
-
-    Ok(downloaded)
+    match downloaded {
+        Ok(true) => {
+            log::info!("Video downloaded successfully");
+            Ok(true)
+        }
+        Ok(false) => {
+            log::warn!("Video download was not successful. failed on callback");
+            Ok(false)
+        }
+        Err(e) => {
+            log::error!("Error downloading video: {:?}", e);
+            Err(YtErrorWrapper(e))
+        }
+    }
 }

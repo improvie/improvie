@@ -88,6 +88,9 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     });
 
   const video_formats: YtFormat[] = formats.filter(format => format.type === 'video');
+  if (video_formats.length === 0) {
+    throw new Error('No suitable video format found for this video.');
+  }
 
   const bestAudio = getBestAudio(formats);
   if (!bestAudio) {

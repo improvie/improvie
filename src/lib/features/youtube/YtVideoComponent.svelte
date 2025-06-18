@@ -3,9 +3,9 @@
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
-  import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import * as RadioGroup from '$lib/components/ui/radio-group/index.js';
+  import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 
   const {
     parent_folder_id,
@@ -15,34 +15,37 @@
     detail: VideoDetail;
   } = $props();
 
+  let downloadUrl = $state<string>(detail.video_formats[0].url);
+
 </script>
 
-<Card.Root class='w-full flex flex-row p-4'>
-  <div class='flex flex-col w-fit h-30 gap-2'>
+<Card.Root class='sm:max-w-md flex flex-row p-4 h-52'>
+  <div class='flex flex-col gap-2'>
     <ImageLoader
       src={detail.thumbnail_url}
       alt={detail.title}
       direction='vertical'
+      class='h-32'
       lazy
     />
-    <p class='text-md text-wrap line-clamp-3'>
+    <p class='text-sm text-wrap line-clamp-2'>
       {detail.title}
     </p>
   </div>
-  <div class='flex flex-col w-full gap-2'>
-    <Label for='format'>Select Format</Label>
-    <RadioGroup.Root class='flex flex-col gap-2'>
-      {#each detail.video_formats as format}
-        <div class='flex items-center space-x-2'>
-          <RadioGroup.Item value={format.url} id={format.url} />
-          <Label for={format.url}>{format.quality_label} - {format.mime_type}</Label>
-        </div>
-      {/each}
-    </RadioGroup.Root>
+  <div class='flex flex-col justify-between'>
+    <ScrollArea class='h-32'>
+      <RadioGroup.Root bind:value={downloadUrl} class='flex flex-col gap-2'>
+        {#each detail.video_formats as format}
+          <div class='flex items-center space-x-2'>
+            <RadioGroup.Item value={format.url} id={format.url} />
+            <Label for={format.url}>{format.quality_label}</Label>
+          </div>
+        {/each}
+      </RadioGroup.Root>
+    </ScrollArea>
     <Button
-      class='mt-4'
       onclick={() => {
-      // Handle import logic here
+
       }}
     >
       Import Video

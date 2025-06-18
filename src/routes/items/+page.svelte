@@ -35,7 +35,9 @@
   });
 </script>
 
-<YtImportDialog bind:open={yt_open} parent_folder_id={current_folder_id} />
+{#if yt_open}
+  <YtImportDialog bind:open={yt_open} parent_folder_id={current_folder_id} />
+{/if}
 
 {#snippet header()}
   <Button

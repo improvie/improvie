@@ -22,7 +22,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
     request: YtVideoRequest,
-) -> Result<(), YtErrorWrapper> {
+) -> Result<bool, YtErrorWrapper> {
     let downloaded = youtube::download_single_video(
         state.client.clone(),
         request,
@@ -37,5 +37,5 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
 
     log::info!("Video downloaded: {}", downloaded);
 
-    Ok(())
+    Ok(downloaded)
 }

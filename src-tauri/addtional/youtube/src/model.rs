@@ -13,6 +13,7 @@ pub struct YtVideoRequest {
 
 #[derive(Debug, Clone, serde::Serialize)]
 #[cfg_attr(feature = "ts", bind::ts("yt.ts"))]
+#[serde(tag = "type", content = "data")]
 pub enum YtVideoState {
     Idle {
         video_id: String,

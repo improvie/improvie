@@ -97,7 +97,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     throw new Error('No suitable audio format found for this video.');
   }
 
-  const thumbnail_url = videoInfo.basic_info?.thumbnail?.sort((a, b) => b.width - a.width)[0]?.url;
+  const thumbnail_url = getBestThumbnailUrl(videoInfo.basic_info?.thumbnail || []);
 
   return {
     thumbnail_url,
@@ -155,7 +155,7 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
     throw new Error('No title available for this playlist.');
   }
 
-  const thumbnail_url = playlist.info.thumbnails?.sort((a, b) => b.width - a.width)[0]?.url;
+  const thumbnail_url = getBestThumbnailUrl(playlist.info.thumbnails);
 
   const promises: Promise<VideoDetail>[] = [];
   for (const video of playlist.items) {
@@ -172,6 +172,14 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
     thumbnail_url,
     videos,
   };
+}
+
+function getBestThumbnailUrl(thumbnails: { url: string; width: number; height: number }[]): string | undefined {
+  if (!thumbnails || thumbnails.length === 0) {
+    return undefined;
+  }
+  const bestThumbnail = thumbnails.sort((a, b) => b.width - a.width)[0];
+  return bestThumbnail.url;
 }
 
 function getCodecsFromMimeType(mimeType: string): string[] {

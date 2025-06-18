@@ -2,6 +2,7 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { getVideoDetail, type VideoDetail } from '$lib/youtube';
   import { toast } from 'svelte-sonner';
+  import YtVideoComponent from './YtVideoComponent.svelte';
 
   let {
     parent_folder_id,
@@ -35,6 +36,10 @@
   <Dialog.Header>
     <Dialog.Title>Select format</Dialog.Title>
   </Dialog.Header>
+  <YtVideoComponent
+    parent_folder_id={parent_folder_id}
+    detail={detail}
+  />
 {:else}
   <Dialog.Header>
     <Dialog.Title>importing video...</Dialog.Title>

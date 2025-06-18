@@ -16,7 +16,8 @@ export interface VideoDetail {
   title: string;
   thumbnail_url: string | undefined;
 
-  formats: YtFormat[];
+  video_formats: YtFormat[];
+  best_audio: YtFormat;
 }
 
 export interface YtFormat {
@@ -86,13 +87,21 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
       };
     });
 
+  const video_formats: YtFormat[] = formats.filter(format => format.type === 'video');
+
+  const bestAudio = getBestAudio(formats);
+  if (!bestAudio) {
+    throw new Error('No suitable audio format found for this video.');
+  }
+
   const thumbnail_url = videoInfo.basic_info?.thumbnail?.sort((a, b) => b.width - a.width)[0]?.url;
 
   return {
     thumbnail_url,
     video_id: videoId,
     title,
-    formats,
+    video_formats,
+    best_audio: bestAudio,
   };
 }
 

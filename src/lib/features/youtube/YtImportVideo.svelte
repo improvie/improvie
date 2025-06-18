@@ -33,9 +33,6 @@
 </script>
 
 {#if detail}
-  <Dialog.Header>
-    <Dialog.Title>Select format</Dialog.Title>
-  </Dialog.Header>
   <YtVideoComponent
     parent_folder_id={parent_folder_id}
     detail={detail}

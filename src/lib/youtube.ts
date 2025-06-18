@@ -40,7 +40,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     throw new Error('Player is not defined in the session. This usually means that the player script could not be loaded.');
   }
 
-  const videoInfo = await client.getInfo(videoId, 'MWEB');
+  const videoInfo = await client.getInfo(videoId, 'WEB_EMBEDDED');
 
   if (videoInfo.playability_status?.status !== 'OK') {
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
@@ -133,7 +133,7 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
         playlistId,
       },
     });
-    const info = await client.getInfo(endpoint, 'MWEB');
+    const info = await client.getInfo(endpoint, 'WEB_EMBEDDED');
     const playlistInfo = info.playlist;
     if (!playlistInfo) {
       throw new Error('No playlist information available for this video.');

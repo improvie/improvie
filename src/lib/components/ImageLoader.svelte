@@ -13,6 +13,7 @@
     failed?: boolean;
     local?: boolean;
     class?: string;
+    lazy?: boolean;
   }
 
   const variants = tv({
@@ -46,6 +47,7 @@
     loading = false,
     local = false,
     class: className,
+    lazy = false,
   }: Props = $props();
 
   const imageSrc: string | undefined = $derived.by(() => {
@@ -72,6 +74,7 @@
         failed = false;
       }}
       class={cn(variants({ direction, target: 'img' }), className)}
+      loading={lazy ? 'lazy' : 'eager'}
     />
   {:else}
     <Tooltip.Root delayDuration={500} disableHoverableContent disableCloseOnTriggerClick>

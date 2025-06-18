@@ -1,7 +1,8 @@
 import type { YtVideoRequest } from '$bindings/yt';
 import type { Helpers } from 'youtubei.js';
 import { invoke } from '@tauri-apps/api/core';
-import Innertube, { YTNodes } from 'youtubei.js';
+import Innertube from 'youtubei.js';
+import { YTNodes } from 'youtubei.js';
 
 export interface PlaylistDetail {
   playlist_id: string;
@@ -27,10 +28,12 @@ export interface YtFormat {
   url: string;
 }
 
-// eslint-disable-next-line antfu/no-top-level-await
-const client = await Innertube.create();
+let client: Innertube | undefined = $state(undefined);
 
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
+  if (!client) {
+    client = await Innertube.create();
+  }
   const player = client.actions.session.player;
   if (player === undefined) {
     throw new Error('Player is not defined in the session. This usually means that the player script could not be loaded.');
@@ -104,6 +107,10 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
       }[];
     };
     items: Helpers.YTNode[];
+  }
+
+  if (!client) {
+    client = await Innertube.create();
   }
 
   let playlist: TempPlaylist;

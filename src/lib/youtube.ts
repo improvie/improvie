@@ -87,7 +87,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
       };
     });
 
-  const video_formats: YtFormat[] = formats.filter(format => format.type === 'video');
+  const video_formats: YtFormat[] = getGoodVideos(formats);
   if (video_formats.length === 0) {
     throw new Error('No suitable video format found for this video.');
   }
@@ -213,6 +213,39 @@ export function getBestAudio(formats: YtFormat[]): YtFormat | undefined {
       }
       return aRank - bRank; // Compare ranks
     })[0];
+}
+
+function getVideoQuality(format: YtFormat): number {
+  if (!format.quality_label) {
+    return 0;
+  }
+  // quali_label is usually a string like "1080p", "720p", etc.
+  const qualityMatch = format.quality_label.match(/(\d+)/);
+  if (qualityMatch) {
+    return Number.parseInt(qualityMatch[1], 10); // Extract the numeric part
+  }
+  return 0;
+}
+
+export function getGoodVideos(formats: YtFormat[]): YtFormat[] {
+  const sorted = formats
+    .filter(format => format.type === 'video')
+    .sort((a, b) => {
+      const aQuality = getVideoQuality(a);
+      const bQuality = getVideoQuality(b);
+      return bQuality - aQuality;
+    });
+  const uniqueQualities: Set<string> = new Set();
+  return sorted.filter((format) => {
+    if (!format.quality_label) {
+      return false;
+    }
+    if (uniqueQualities.has(format.quality_label)) {
+      return false;
+    }
+    uniqueQualities.add(format.quality_label);
+    return true;
+  });
 }
 
 // use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`

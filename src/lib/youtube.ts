@@ -31,15 +31,19 @@ export interface YtFormat {
 
 let client: Innertube | undefined;
 
-export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
+async function getClient(): Promise<Innertube> {
   if (!client) {
-    client = await Innertube.create();
+    client = await Innertube.create({
+      generate_session_locally: false,
+      enable_session_cache: false,
+      retrieve_player: true,
+    });
   }
-  const player = client.actions.session.player;
-  if (player === undefined) {
-    throw new Error('Player is not defined in the session. This usually means that the player script could not be loaded.');
-  }
+  return client;
+}
 
+export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
+  const client = await getClient();
   const videoInfo = await client.getInfo(videoId, 'WEB_EMBEDDED');
 
   if (videoInfo.playability_status?.status !== 'OK') {
@@ -62,8 +66,6 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
 
   const allFormats = [...videoInfo.streaming_data?.formats || [], ...videoInfo.streaming_data?.adaptive_formats || []];
 
-  const cpn = videoInfo.cpn;
-
   const formats: YtFormat[] = allFormats
     .filter((format) => {
       if (format.has_video && format.has_audio) {
@@ -83,7 +85,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
         mime_type: format.mime_type,
         quality: format.quality!,
         quality_label: format.quality_label,
-        url: `${format.decipher(player)}&cpn=${cpn}`,
+        url: format.decipher(client.actions.session.player),
       };
     });
 
@@ -121,9 +123,7 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
     items: Helpers.YTNode[];
   }
 
-  if (!client) {
-    client = await Innertube.create();
-  }
+  const client = await getClient();
 
   let playlist: TempPlaylist;
   if (videoId) {

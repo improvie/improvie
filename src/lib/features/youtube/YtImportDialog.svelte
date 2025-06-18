@@ -27,29 +27,38 @@
   }
 
   const formSchema = z.object({
-    targets: z.string().nonempty().url().transform<Targets>((value, ctx) => {
+    targets: z.string().nonempty().url().superRefine((value, ctx) => {
       const url = new URL(value);
       const list = url.searchParams.get('list');
+      const videoId = url.searchParams.get('v');
+
       if (download_type === 'playlist') {
-        if (list === null || list === '') {
+        if (!list) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Invalid YouTube URL. It must contain a playlist ID.',
           });
-          return {};
         }
-        // 'RD' is a prefix for mixlist, require videoId in this case
-        if (!list.startsWith('RD')) {
-          return { playlistId: list };
+        // 'RD' prefix indicates a mixlist, require videoId for mixlist
+        else if (list.startsWith('RD') && !videoId) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid YouTube URL for mixlist. It must contain a video ID.',
+          });
         }
       }
+      else {
+        if (!videoId) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid YouTube URL. It must contain a video ID.',
+          });
+        }
+      }
+    }).transform<Targets>((value) => {
+      const url = new URL(value);
+      const list = url.searchParams.get('list');
       const videoId = url.searchParams.get('v');
-      if (videoId === null || videoId === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Invalid YouTube URL. It must contain a video ID.',
-        });
-      }
       return {
         videoId: videoId ?? undefined,
         playlistId: list ?? undefined,

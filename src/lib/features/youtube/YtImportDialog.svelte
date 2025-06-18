@@ -22,8 +22,18 @@
   let download_type = $state<'video' | 'playlist'>('video');
 
   const formSchema = z.object({
-    targets: z.string().nonempty().url().superRefine((value, ctx) => {
-      const url = new URL(value);
+    url: z.string().nonempty().url().superRefine((value, ctx) => {
+      let url: URL;
+      try {
+        url = new URL(value);
+      }
+      catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid YouTube URL.',
+        });
+        return;
+      }
       const list = url.searchParams.get('list');
       const videoId = url.searchParams.get('v');
 
@@ -60,13 +70,6 @@
   });
 
   const { form: formData, enhance, validateForm } = form;
-
-  $effect(() => {
-    if (!open) {
-      form.reset();
-    }
-  });
-
   let start_processing = $state(false);
 
   async function handleSubmit(event: Event) {
@@ -83,9 +86,9 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content class='sm:max-w-xl'>
+  <Dialog.Content class='sm:max-w-xl' interactOutsideBehavior='ignore'>
     {#if start_processing}
-      {@const url = new URL($formData.targets)}
+      {@const url = new URL($formData.url)}
       {@const videoId = url.searchParams.get('v') ?? undefined}
       {@const playlistId = url.searchParams.get('list') ?? undefined}
       {#if download_type === 'video'}
@@ -115,7 +118,7 @@
         </Tabs.Root>
 
         <div class='grid gap-4 py-4'>
-          <Form.Field {form} name='targets'>
+          <Form.Field {form} name='url'>
             <Form.Control>
               {#snippet children({ props })}
                 <div class='grid grid-cols-5 items-center gap-4'>
@@ -123,7 +126,7 @@
                   <Input
                     class='col-span-4'
                     {...props}
-                    bind:value={$formData.targets}
+                    bind:value={$formData.url}
                     spellcheck='false'
                   />
                 </div>

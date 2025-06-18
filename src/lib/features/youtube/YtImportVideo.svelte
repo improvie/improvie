@@ -39,7 +39,7 @@
   />
 {:else}
   <Dialog.Header>
-    <Dialog.Title>importing video...</Dialog.Title>
+    <Dialog.Title>Fetching video...</Dialog.Title>
     <Dialog.Description>
       Please wait while we fetch the video details.
     </Dialog.Description>

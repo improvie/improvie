@@ -28,7 +28,7 @@ export interface YtFormat {
   url: string;
 }
 
-let client: Innertube | undefined = $state(undefined);
+let client: Innertube | undefined;
 
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   if (!client) {

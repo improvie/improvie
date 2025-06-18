@@ -21,11 +21,6 @@
 
   let download_type = $state<'video' | 'playlist'>('video');
 
-  interface Targets {
-    videoId?: string;
-    playlistId?: string;
-  }
-
   const formSchema = z.object({
     targets: z.string().nonempty().url().superRefine((value, ctx) => {
       const url = new URL(value);
@@ -55,14 +50,6 @@
           });
         }
       }
-    }).transform<Targets>((value) => {
-      const url = new URL(value);
-      const list = url.searchParams.get('list');
-      const videoId = url.searchParams.get('v');
-      return {
-        videoId: videoId ?? undefined,
-        playlistId: list ?? undefined,
-      };
     }),
   });
 
@@ -98,17 +85,20 @@
 <Dialog.Root bind:open>
   <Dialog.Content class='sm:max-w-xl'>
     {#if start_processing}
+      {@const url = new URL($formData.targets)}
+      {@const videoId = url.searchParams.get('v') ?? undefined}
+      {@const playlistId = url.searchParams.get('list') ?? undefined}
       {#if download_type === 'video'}
         <YtImportVideo
           parent_folder_id={parent_folder_id}
-          videoId={$formData.targets.videoId!}
+          videoId={videoId!}
           bind:processing={start_processing}
         />
       {:else if download_type === 'playlist'}
         <YtImportPlaylist
           parent_folder_id={parent_folder_id}
-          playlistId={$formData.targets.playlistId!}
-          videoId={$formData.targets.videoId}
+          playlistId={playlistId!}
+          videoId={videoId}
         />
       {/if}
     {:else}

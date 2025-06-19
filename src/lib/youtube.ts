@@ -1,8 +1,8 @@
 import type { YtVideoRequest } from '$bindings/yt';
-import type { Helpers } from 'youtubei.js';
+import type { Helpers } from 'youtubei.js/web';
 import { invoke } from '@tauri-apps/api/core';
-import Innertube, { ClientType, Log } from 'youtubei.js';
-import { YTNodes } from 'youtubei.js';
+import Innertube, { Log, UniversalCache, YTNodes } from 'youtubei.js/web';
+import { generatePoToken } from './potoken';
 
 export interface PlaylistDetail {
   playlist_id: string;
@@ -34,11 +34,12 @@ let client: Innertube | undefined;
 async function getClient(): Promise<Innertube> {
   if (!client) {
     Log.setLevel(Log.Level.DEBUG, Log.Level.INFO, Log.Level.WARNING, Log.Level.ERROR);
+    const data = await generatePoToken();
     client = await Innertube.create({
-      cache: new UniversalCache(false),
-      enable_session_cache: false,
+      po_token: data.poToken,
+      visitor_data: data.visitorData,
+      cache: new UniversalCache(true),
       generate_session_locally: true,
-      client_type: ClientType.WEB_EMBEDDED,
     });
   }
   return client;
@@ -46,7 +47,7 @@ async function getClient(): Promise<Innertube> {
 
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const client = await getClient();
-  const videoInfo = await client.getBasicInfo(videoId, 'WEB_EMBEDDED');
+  const videoInfo = await client.getBasicInfo(videoId, 'IOS');
 
   if (videoInfo.playability_status?.status !== 'OK') {
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
@@ -135,7 +136,7 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
         playlistId,
       },
     });
-    const info = await client.getInfo(endpoint, 'WEB_EMBEDDED');
+    const info = await client.getInfo(endpoint, 'IOS');
     const playlistInfo = info.playlist;
     if (!playlistInfo) {
       throw new Error('No playlist information available for this video.');

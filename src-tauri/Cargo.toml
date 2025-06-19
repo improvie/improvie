@@ -48,6 +48,7 @@ tauri-plugin-cors-fetch = { version = "=4.0.0", default-features = false, featur
   "json",
   "stream",
   "rustls-tls",
+  "multipart",
 ] }
 
 [patch.crates-io]
@@ -97,6 +98,7 @@ tauri-plugin-dialog = "=2.2.2"
 tokio = { version = "=1.45.1", features = ["full"] }
 async-trait = "=0.1"
 reqwest = { version = "=0.12.18", default-features = false, features = [
+  "multipart",
   "charset",
   "cookies",
   "system-proxy",

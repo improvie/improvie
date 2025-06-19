@@ -91,19 +91,21 @@
       {@const url = new URL($formData.url)}
       {@const videoId = url.searchParams.get('v') ?? undefined}
       {@const playlistId = url.searchParams.get('list') ?? undefined}
-      {#if download_type === 'video'}
-        <YtImportVideo
-          parent_folder_id={parent_folder_id}
-          videoId={videoId!}
-          bind:processing={start_processing}
-        />
-      {:else if download_type === 'playlist'}
-        <YtImportPlaylist
-          parent_folder_id={parent_folder_id}
-          playlistId={playlistId!}
-          videoId={videoId}
-        />
-      {/if}
+      <div class='flex flex-col items-center'>
+        {#if download_type === 'video'}
+          <YtImportVideo
+            parent_folder_id={parent_folder_id}
+            videoId={videoId!}
+            bind:processing={start_processing}
+          />
+        {:else if download_type === 'playlist'}
+          <YtImportPlaylist
+            parent_folder_id={parent_folder_id}
+            playlistId={playlistId!}
+            videoId={videoId}
+          />
+        {/if}
+      </div>
     {:else}
       <form method='POST' use:enhance onsubmit={handleSubmit}>
         <Dialog.Header>

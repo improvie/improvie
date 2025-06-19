@@ -1,7 +1,7 @@
 import type { YtVideoRequest } from '$bindings/yt';
 import type { Helpers } from 'youtubei.js';
 import { invoke } from '@tauri-apps/api/core';
-import Innertube from 'youtubei.js';
+import Innertube, { ClientType, Log } from 'youtubei.js';
 import { YTNodes } from 'youtubei.js';
 
 export interface PlaylistDetail {
@@ -33,10 +33,12 @@ let client: Innertube | undefined;
 
 async function getClient(): Promise<Innertube> {
   if (!client) {
+    Log.setLevel(Log.Level.DEBUG, Log.Level.INFO, Log.Level.WARNING, Log.Level.ERROR);
     client = await Innertube.create({
-      generate_session_locally: false,
+      cache: new UniversalCache(false),
       enable_session_cache: false,
-      retrieve_player: true,
+      generate_session_locally: true,
+      client_type: ClientType.WEB_EMBEDDED,
     });
   }
   return client;
@@ -44,7 +46,7 @@ async function getClient(): Promise<Innertube> {
 
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const client = await getClient();
-  const videoInfo = await client.getInfo(videoId, 'WEB_EMBEDDED');
+  const videoInfo = await client.getBasicInfo(videoId, 'WEB_EMBEDDED');
 
   if (videoInfo.playability_status?.status !== 'OK') {
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
@@ -85,7 +87,7 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
         mime_type: format.mime_type,
         quality: format.quality!,
         quality_label: format.quality_label,
-        url: format.decipher(client.actions.session.player),
+        url: format.decipher(client.session.player),
       };
     });
 

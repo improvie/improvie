@@ -36,13 +36,24 @@ impl ChunkStream {
 
         let mut content_length = content_length.unwrap_or(0);
 
+        // TODO: maybe need headers to get content length
         if content_length == 0 {
+            log::info!(
+                "Content length is not provided, fetching from URL: {}",
+                link
+            );
             content_length = client
                 .get(&link)
                 .send()
                 .await?
+                .error_for_status()?
                 .content_length()
                 .ok_or(crate::YtError::UrlMissing)?;
+
+            if content_length == 0 {
+                log::error!("Content length is 0 for URL: {}", link);
+                return Err(crate::YtError::UrlMissing);
+            }
         }
 
         Ok(Self {

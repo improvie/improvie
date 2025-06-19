@@ -27,12 +27,12 @@ pub async fn download_single_video(
             client.clone(),
             video_url,
             download_video_path,
-            Arc::new(move |state| {
+            move |state| {
                 callback(YtVideoState::Downloading {
                     video_id: video_id.clone(),
                     state,
                 })
-            }),
+            },
         ));
         let audio_process = tokio::spawn(crate::download::download_audio(
             client.clone(),

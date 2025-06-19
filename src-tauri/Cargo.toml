@@ -39,7 +39,16 @@ tauri-plugin-dialog.workspace = true
 # tauri plugin and config
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 tauri-plugin-log = "=2.4.0"
-tauri-plugin-cors-fetch = "=4.0.0"
+tauri-plugin-cors-fetch = { version = "=4.0.0", default-features = false, features = [
+  "charset",
+  "cookies",
+  "macos-system-configuration",
+  "zstd",
+  "http2",
+  "json",
+  "stream",
+  "rustls-tls",
+] }
 
 [patch.crates-io]
 ffmpeg-sys-next = { git = "https://github.com/moriyoshi-kasuga/rust-ffmpeg-sys.git", branch = "master" }
@@ -88,9 +97,15 @@ tauri-plugin-dialog = "=2.2.2"
 tokio = { version = "=1.45.1", features = ["full"] }
 async-trait = "=0.1"
 reqwest = { version = "=0.12.18", default-features = false, features = [
+  "charset",
+  "cookies",
+  "system-proxy",
+  "zstd",
+  "http2",
   "json",
   "stream",
   "rustls-tls",
+  "macos-system-configuration",
 ] }
 bytes = "=1.10.1"
 futures-util = "=0.3.31"

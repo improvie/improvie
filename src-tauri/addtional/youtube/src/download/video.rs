@@ -1,4 +1,4 @@
-use std::{io::Write, path::PathBuf, sync::Arc};
+use std::{io::Write, path::PathBuf};
 
 use crate::YtVideoDownloading;
 
@@ -8,7 +8,7 @@ pub(crate) async fn download_video(
     client: reqwest::Client,
     video_url: String,
     download_path: PathBuf,
-    callback: Arc<impl Fn(YtVideoDownloading) -> bool + Sync + 'static>,
+    callback: impl Fn(YtVideoDownloading) -> bool,
 ) -> Result<bool, crate::YtError> {
     let stream = ChunkStream::new(client, video_url, None, None).await?;
 

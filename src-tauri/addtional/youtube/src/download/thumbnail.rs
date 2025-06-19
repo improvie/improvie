@@ -12,6 +12,8 @@ pub(crate) async fn download_thumbnail(
         .error_for_status()?
         .bytes()
         .await?;
+
+    log::debug!("Starting thumbnail download to {:?}", thumbnail_path);
     std::fs::write(thumbnail_path, bytes)?;
     Ok(())
 }

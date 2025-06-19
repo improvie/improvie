@@ -9,8 +9,9 @@ pub(crate) async fn download_audio(
 ) -> Result<(), crate::YtError> {
     let stream = ChunkStream::new(client, audio_url, None, None).await?;
 
-    let mut file = std::fs::File::create(audio_path)?;
+    let mut file = std::fs::File::create(&audio_path)?;
 
+    log::debug!("Starting audio download to {:?}", audio_path);
     while let Some(chunk) = stream.chunk().await? {
         file.write_all(&chunk)?;
     }

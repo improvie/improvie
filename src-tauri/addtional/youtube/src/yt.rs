@@ -11,6 +11,11 @@ pub async fn download_single_video(
     let file_name = request
         .file_name
         .unwrap_or_else(|| request.process_id.clone());
+    log::debug!(
+        "Downloading Youtube video with file name {} and process id {}",
+        file_name,
+        request.process_id
+    );
     let final_video_path = target_dir.join(format!("{}.mp4", file_name));
     let download_video_path = target_dir.join(format!("{}.temp.mp4", file_name));
     let download_audio_path = target_dir.join(format!("{}.aac", file_name));
@@ -19,6 +24,10 @@ pub async fn download_single_video(
     callback(YtVideoState::Idle {
         process_id: request.process_id.clone(),
     });
+    log::debug!(
+        "Starting download video with process id: {}",
+        request.process_id
+    );
 
     if final_video_path.exists()
         && request
@@ -91,8 +100,8 @@ pub async fn download_single_video(
     )
     .await?;
 
-    std::fs::remove_file(&download_video_path)?;
-    std::fs::remove_file(&download_audio_path)?;
+    let _ = std::fs::remove_file(&download_video_path);
+    let _ = std::fs::remove_file(&download_audio_path);
 
     Ok(callback(YtVideoState::Completed {
         process_id: request.process_id.clone(),

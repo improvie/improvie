@@ -1,7 +1,7 @@
 import type { YtVideoRequest } from '$bindings/yt';
 import type { Helpers } from 'youtubei.js/web';
 import { invoke } from '@tauri-apps/api/core';
-import Innertube, { Log, UniversalCache, YTNodes } from 'youtubei.js/web';
+import Innertube, { UniversalCache, YTNodes } from 'youtubei.js/web';
 import { generatePoToken } from './potoken';
 
 export interface PlaylistDetail {
@@ -33,7 +33,6 @@ let client: Innertube | undefined;
 
 async function getClient(): Promise<Innertube> {
   if (!client) {
-    Log.setLevel(Log.Level.DEBUG, Log.Level.INFO, Log.Level.WARNING, Log.Level.ERROR);
     const data = await generatePoToken();
     client = await Innertube.create({
       po_token: data.poToken,

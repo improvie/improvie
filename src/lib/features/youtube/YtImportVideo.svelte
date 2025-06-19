@@ -1,6 +1,7 @@
 <script lang='ts'>
+  import type { VideoDetail } from '$lib/youtube';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
-  import { getVideoDetail, type VideoDetail } from '$lib/youtube';
+  import { getVideoDetail } from '$lib/youtube';
   import { toast } from 'svelte-sonner';
   import YtVideoComponent from './YtVideoComponent.svelte';
 

@@ -8,13 +8,36 @@ pub async fn download_single_video(
     target_dir: PathBuf,
     callback: Arc<impl Fn(YtVideoState) -> bool + Send + Sync + 'static>,
 ) -> Result<bool, crate::YtError> {
-    let final_video_path = target_dir.join(format!("{}.mp4", request.video_id));
-    let download_video_path = target_dir.join(format!("{}.temp.mp4", request.video_id));
-    let download_audio_path = target_dir.join(format!("{}.aac", request.video_id));
-    let thumbnail_path = target_dir.join(format!("{}.jpg", request.video_id));
+    let file_name = request
+        .file_name
+        .unwrap_or_else(|| request.process_id.clone());
+    let final_video_path = target_dir.join(format!("{}.mp4", file_name));
+    let download_video_path = target_dir.join(format!("{}.temp.mp4", file_name));
+    let download_audio_path = target_dir.join(format!("{}.aac", file_name));
+    let thumbnail_path = target_dir.join(format!("{}.jpg", file_name));
+
+    callback(YtVideoState::Idle {
+        process_id: request.process_id.clone(),
+    });
+
+    if final_video_path.exists()
+        && request
+            .thumbnail_url
+            .as_ref()
+            .is_some_and(|_| thumbnail_path.exists())
+    {
+        log::info!("Video already exists, skipping download");
+        return Ok(callback(YtVideoState::Completed {
+            process_id: request.process_id.clone(),
+            state: YtVideoDownloadComplete {
+                video_path: final_video_path,
+                thumbnail_path: request.thumbnail_url.map(|_| thumbnail_path),
+            },
+        }));
+    }
 
     let has_thumbnail = {
-        let video_id = request.video_id.clone();
+        let process_id = request.process_id.clone();
         let callback = Arc::clone(&callback);
         let video_url = request.video_url.clone();
         let audio_url = request.audio_url.clone();
@@ -29,7 +52,7 @@ pub async fn download_single_video(
             download_video_path,
             move |state| {
                 callback(YtVideoState::Downloading {
-                    video_id: video_id.clone(),
+                    process_id: process_id.clone(),
                     state,
                 })
             },
@@ -72,9 +95,8 @@ pub async fn download_single_video(
     std::fs::remove_file(&download_audio_path)?;
 
     Ok(callback(YtVideoState::Completed {
-        video_id: request.video_id.clone(),
+        process_id: request.process_id.clone(),
         state: YtVideoDownloadComplete {
-            title: request.content_title,
             video_path: final_video_path,
             thumbnail_path: if has_thumbnail {
                 Some(thumbnail_path)

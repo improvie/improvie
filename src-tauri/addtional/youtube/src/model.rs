@@ -3,8 +3,9 @@ use std::path::PathBuf;
 #[derive(Debug, Clone, serde::Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("yt.ts"))]
 pub struct YtVideoRequest {
-    pub video_id: String,
-    pub content_title: String,
+    pub process_id: String,
+    // If the file name is not provided, use the process_id as the file name
+    pub file_name: Option<String>,
 
     pub video_url: String,
     pub audio_url: String,
@@ -16,14 +17,14 @@ pub struct YtVideoRequest {
 #[serde(tag = "type", content = "data")]
 pub enum YtVideoState {
     Idle {
-        video_id: String,
+        process_id: String,
     },
     Downloading {
-        video_id: String,
+        process_id: String,
         state: YtVideoDownloading,
     },
     Completed {
-        video_id: String,
+        process_id: String,
         state: YtVideoDownloadComplete,
     },
 }
@@ -39,7 +40,6 @@ pub struct YtVideoDownloading {
 #[derive(Debug, Clone, serde::Serialize)]
 #[cfg_attr(feature = "ts", bind::ts("yt.ts"))]
 pub struct YtVideoDownloadComplete {
-    pub title: String,
     pub video_path: PathBuf,
     pub thumbnail_path: Option<PathBuf>,
 }

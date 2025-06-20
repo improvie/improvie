@@ -37,7 +37,7 @@ async function getClient(): Promise<Innertube> {
     client = await Innertube.create({
       po_token: data.poToken,
       visitor_data: data.visitorData,
-      cache: new UniversalCache(true),
+      cache: new UniversalCache(false),
       generate_session_locally: true,
     });
   }

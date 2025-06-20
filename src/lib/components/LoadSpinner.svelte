@@ -1,8 +1,12 @@
 <script lang='ts'>
+  import { cn } from '$lib/utils';
   import { LoaderCircleIcon } from '@lucide/svelte';
 
+  const {
+    class: className,
+  }: {
+    class?: string;
+  } = $props();
 </script>
 
-<div class='flex items-center justify-center animate-spin'>
-  <LoaderCircleIcon class='size-20' />
-</div>
+<LoaderCircleIcon class={cn('animate-spin', className)} />

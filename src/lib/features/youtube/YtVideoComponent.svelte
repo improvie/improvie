@@ -1,7 +1,10 @@
 <script lang='ts'>
   import type { YtVideoDownloadComplete, YtVideoState } from '$bindings/yt';
   import type { VideoDetail } from '$lib/youtube';
+  import CircleProgress from '$lib/components/CircleProgress.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
+  import LoadSpinner from '$lib/components/LoadSpinner.svelte';
+  import { Badge } from '$lib/components/ui/badge/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
@@ -9,6 +12,7 @@
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import { create_content } from '$lib/stores/items/content';
   import { import_youtube_video } from '$lib/youtube';
+  import { CircleCheckIcon } from '@lucide/svelte';
   import { listen } from '@tauri-apps/api/event';
 
   const {
@@ -20,6 +24,7 @@
   } = $props();
 
   let downloadUrl = $state<string>(detail.video_formats[0].url);
+  let quality = $state<string>(detail.video_formats[0].quality_label || 'xxxp');
 
   let started = $state<boolean>(false);
   let process = $state<YtVideoState | undefined>(undefined);
@@ -77,7 +82,7 @@
     const selectFormat = detail.video_formats.find(
       format => format.url === downloadUrl,
     );
-    const quality = selectFormat?.quality_label || 'xxxp';
+    quality = selectFormat?.quality_label || 'xxxp';
     import_youtube_video({
       process_id: detail.video_id,
       file_name: `${detail.video_id}-${quality}`,
@@ -89,8 +94,8 @@
 
 </script>
 
-<Card.Root class='sm:max-w-md flex flex-row p-4 h-52'>
-  <div class='flex flex-col gap-2'>
+<Card.Root class='sm:w-md flex flex-row p-4 h-52'>
+  <div class='flex flex-col gap-2 w-57'>
     <ImageLoader
       src={detail.thumbnail_url}
       alt={detail.title}
@@ -102,7 +107,7 @@
       {detail.title}
     </p>
   </div>
-  <div class='flex flex-col justify-between'>
+  <div class='flex-1 flex flex-col justify-between h-full'>
     {#if !started}
       <ScrollArea class='h-32'>
         <RadioGroup.Root bind:value={downloadUrl} class='flex flex-col gap-2'>
@@ -122,14 +127,27 @@
         Import Video
       </Button>
     {:else}
-      <div class='flex flex-col gap-2'>
+      <div class='flex flex-col items-center gap-2 w-full h-full'>
+        <Badge variant='outline'>
+          Quality: {quality}
+        </Badge>
         {#if process}
-          <p class='text-sm'>Status: {process.type}</p>
           {#if process.type === 'Downloading'}
-            <p class='text-sm'>Progress: {process.data.state.percentage}%</p>
+            <CircleProgress
+              class='size-28'
+              max={100}
+              min={0}
+              value={process.data.state.percentage}
+              gaugePrimaryClass=''
+              gaugeSecondaryClass='rgba(0, 50, 100, 0.1)'
+            />
+          {:else if process.type === 'Idle'}
+            <LoadSpinner class='size-28' />
+          {:else if process.type === 'Completed'}
+            <CircleCheckIcon class='size-28' />
           {/if}
         {:else}
-          <p class='text-sm'>Importing...</p>
+          <LoadSpinner class='size-28' />
         {/if}
       </div>
     {/if}

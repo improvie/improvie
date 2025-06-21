@@ -137,9 +137,9 @@
               class='size-28'
               max={100}
               min={0}
-              value={process.data.state.percentage}
-              gaugePrimaryClass=''
-              gaugeSecondaryClass='rgba(0, 50, 100, 0.1)'
+              bind:value={process.data.state.percentage}
+              gaugePrimaryClass='stroke-destructive'
+              gaugeSecondaryClass='stroke-secondary'
             />
           {:else if process.type === 'Idle'}
             <LoadSpinner class='size-28' />

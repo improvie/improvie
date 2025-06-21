@@ -4,7 +4,7 @@
 
   const {
     max = 100,
-    value = 0,
+    value = $bindable(0),
     min = 0,
     gaugePrimaryClass,
     gaugeSecondaryClass,
@@ -20,7 +20,7 @@
 
   const circumference = 2 * Math.PI * 45;
   const percentPx = circumference / 100;
-  const currentPercent = ((value - min) / (max - min)) * 100;
+  const currentPercent = $derived(((value - min) / (max - min)) * 100);
 </script>
 
 <div

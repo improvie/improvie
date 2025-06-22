@@ -27,6 +27,9 @@ pub enum YtVideoState {
         process_id: String,
         state: YtVideoDownloadComplete,
     },
+    Error {
+        process_id: String,
+    },
 }
 
 #[derive(Debug, Clone, serde::Serialize)]

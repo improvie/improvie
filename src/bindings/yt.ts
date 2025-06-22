@@ -6,4 +6,4 @@ export type YtVideoDownloading = { downloaded_mb: bigint, total_mb: bigint, perc
 
 export type YtVideoRequest = { process_id: string, file_name: string | null, video_url: string, audio_url: string, thumbnail_url: string | null, };
 
-export type YtVideoState = { "type": "Idle", "data": { process_id: string, } } | { "type": "Downloading", "data": { process_id: string, state: YtVideoDownloading, } } | { "type": "Completed", "data": { process_id: string, state: YtVideoDownloadComplete, } };
+export type YtVideoState = { "type": "Idle", "data": { process_id: string, } } | { "type": "Downloading", "data": { process_id: string, state: YtVideoDownloading, } } | { "type": "Completed", "data": { process_id: string, state: YtVideoDownloadComplete, } } | { "type": "Error", "data": { process_id: string, } };

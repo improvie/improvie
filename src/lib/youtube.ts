@@ -258,6 +258,7 @@ export function getGoodVideos(formats: YtFormat[]): YtFormat[] {
   });
 }
 
+// returns a bollean indicating whether the callback was successfully notified
 // use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`
 export async function import_youtube_video(request: YtVideoRequest): Promise<boolean> {
   try {

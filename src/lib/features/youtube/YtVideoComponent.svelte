@@ -14,6 +14,7 @@
   import { import_youtube_video } from '$lib/youtube';
   import { CircleCheckIcon } from '@lucide/svelte';
   import { listen } from '@tauri-apps/api/event';
+  import { toast } from 'svelte-sonner';
 
   const {
     parent_folder_id,
@@ -50,6 +51,14 @@
         }
         process = payload;
         saveContent(payload.data.state);
+        break;
+      case 'Error':
+        if (payload.data.process_id !== detail.video_id) {
+          return;
+        }
+        process = payload;
+        toast.error(`Error downloading video. Can you try again?`);
+        started = false;
         break;
     }
   });

@@ -8,6 +8,23 @@ pub async fn download_single_video(
     target_dir: PathBuf,
     callback: Arc<impl Fn(YtVideoState) -> bool + Send + Sync + 'static>,
 ) -> Result<bool, crate::YtError> {
+    let process_id = request.process_id.clone();
+    let cloendback = Arc::clone(&callback);
+    match download_single_video_internal(client, request, target_dir, cloendback).await {
+        Ok(success) => Ok(success),
+        Err(e) => {
+            callback(YtVideoState::Error { process_id });
+            Err(e)
+        }
+    }
+}
+
+async fn download_single_video_internal(
+    client: reqwest::Client,
+    request: YtVideoRequest,
+    target_dir: PathBuf,
+    callback: Arc<impl Fn(YtVideoState) -> bool + Send + Sync + 'static>,
+) -> Result<bool, crate::YtError> {
     let file_name = request
         .file_name
         .unwrap_or_else(|| request.process_id.clone());

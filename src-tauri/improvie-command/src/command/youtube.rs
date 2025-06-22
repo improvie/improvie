@@ -21,7 +21,10 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
     state: TauriAppState<'_>,
     request: YtVideoRequest,
 ) -> Result<bool, YtErrorWrapper> {
-    log::debug!("Importing YouTube video with process id: {:?}", request.process_id);
+    log::debug!(
+        "Importing YouTube video with process id: {:?}",
+        request.process_id
+    );
     let downloaded = youtube::download_single_video(
         state.client.clone(),
         request,

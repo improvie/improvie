@@ -115,5 +115,5 @@ Afterward, build the application with the following command:
 ```bash
 # Replace 'arm64-osx' with your OS-specific directory
 # `--features static` is static linking of FFmpeg (default is dynamic linking)
-FFMPEG_DIR=./vcpkg_installed/arm64-osx cargo tauri build --features static
+FFMPEG_DIR=$PWD/vcpkg_installed/arm64-osx cargo tauri build --features static
 ```

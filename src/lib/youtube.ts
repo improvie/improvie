@@ -258,6 +258,22 @@ export function getGoodVideos(formats: YtFormat[]): YtFormat[] {
   });
 }
 
+export function extractIdsFromUrl(url: URL): {
+  videoId?: string;
+  playlistId?: string;
+} {
+  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.toString().match(regExp);
+  const videoId = (match && match[7].length === 11) ? match[7] : undefined;
+
+  const playlistId = url.searchParams.get('list') || undefined;
+
+  return {
+    videoId,
+    playlistId,
+  };
+}
+
 // returns a bollean indicating whether the callback was successfully notified
 // use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`
 export async function import_youtube_video(request: YtVideoRequest): Promise<boolean> {

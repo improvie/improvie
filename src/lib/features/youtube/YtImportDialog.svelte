@@ -4,6 +4,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
+  import { extractIdsFromUrl } from '$lib/youtube';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
@@ -34,31 +35,28 @@
         });
         return;
       }
-      const list = url.searchParams.get('list');
-      const videoId = url.searchParams.get('v');
+      const ids = extractIdsFromUrl(url);
 
-      if (download_type === 'playlist') {
-        if (!list) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Invalid YouTube URL. It must contain a playlist ID.',
-          });
-        }
-        // 'RD' prefix indicates a mixlist, require videoId for mixlist
-        else if (list.startsWith('RD') && !videoId) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Invalid YouTube URL for mixlist. It must contain a video ID.',
-          });
-        }
-      }
-      else {
-        if (!videoId) {
+      if (download_type === 'video') {
+        if (!ids.videoId) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Invalid YouTube URL. It must contain a video ID.',
           });
         }
+      }
+      else if (!ids.playlistId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid YouTube URL. It must contain a playlist ID.',
+        });
+      }
+      // 'RD' prefix indicates a mixlist, require videoId for mixlist
+      else if (ids.playlistId.startsWith('RD') && !ids.videoId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid YouTube URL for mixlist. It must contain a video ID.',
+        });
       }
     }),
   });
@@ -93,8 +91,7 @@
   >
     {#if start_processing}
       {@const url = new URL($formData.url)}
-      {@const videoId = url.searchParams.get('v') ?? undefined}
-      {@const playlistId = url.searchParams.get('list') ?? undefined}
+      {@const { videoId, playlistId } = extractIdsFromUrl(url)}
       <div class='flex flex-col items-center'>
         {#if download_type === 'video'}
           <YtImportVideo

@@ -103,6 +103,7 @@
             parent_folder_id={parent_folder_id}
             playlistId={playlistId!}
             videoId={videoId}
+            bind:processing={start_processing}
           />
         {/if}
       </div>

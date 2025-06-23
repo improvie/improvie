@@ -13,6 +13,7 @@
     failed?: boolean;
     local?: boolean;
     class?: string;
+    style?: string;
     lazy?: boolean;
   }
 
@@ -47,6 +48,7 @@
     loading = false,
     local = false,
     class: className,
+    style,
     lazy = false,
   }: Props = $props();
 
@@ -74,6 +76,7 @@
         failed = false;
       }}
       class={cn(variants({ direction, target: 'img' }), className)}
+      style={style}
       loading={lazy ? 'lazy' : 'eager'}
     />
   {:else}

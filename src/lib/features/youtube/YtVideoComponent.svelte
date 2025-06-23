@@ -103,13 +103,16 @@
 
 </script>
 
-<Card.Root class='sm:w-md flex flex-row p-4 h-52'>
+<Card.Root
+  class='sm:w-md flex flex-row p-4'
+  style='height: var(--item-height); --main-item-height: calc(var(--item-height) - 80px);'
+>
   <div class='flex flex-col gap-2 w-57'>
     <ImageLoader
       src={detail.thumbnail_url}
       alt={detail.title}
       direction='vertical'
-      class='h-32'
+      style='height: var(--main-item-height);'
       lazy
     />
     <p class='text-sm text-wrap line-clamp-2'>
@@ -118,7 +121,9 @@
   </div>
   <div class='flex-1 flex flex-col justify-between h-full'>
     {#if !started}
-      <ScrollArea class='h-32'>
+      <ScrollArea
+        style='height: var(--main-item-height);'
+      >
         <RadioGroup.Root bind:value={downloadUrl} class='flex flex-col gap-2'>
           {#each detail.video_formats as format}
             <div class='flex items-center space-x-2'>
@@ -136,7 +141,9 @@
         Import Video
       </Button>
     {:else}
-      <div class='flex flex-col items-center gap-2 w-full h-full'>
+      <div
+        class='flex flex-col items-center gap-2 w-full h-full'
+      >
         <Badge variant='outline'>
           Quality: {quality}
         </Badge>

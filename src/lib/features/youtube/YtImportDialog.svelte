@@ -86,7 +86,11 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content class='sm:max-w-xl' interactOutsideBehavior='ignore'>
+  <Dialog.Content
+    class='sm:max-w-xl'
+    interactOutsideBehavior='ignore'
+    style='--item-height: 208px;'
+  >
     {#if start_processing}
       {@const url = new URL($formData.url)}
       {@const videoId = url.searchParams.get('v') ?? undefined}

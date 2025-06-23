@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": "http://asset.localhost",
+      "csp": "script-src 'unsafe-eval';",
       "assetProtocol": {
         "enable": true,
         "scope": [

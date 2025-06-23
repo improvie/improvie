@@ -114,5 +114,5 @@ vcpkg install --triplet x64-windows-static-md
 
 ```bash
 # arm64-osxのところは各自のOSに合わせてください
-FFMPEG_DIR=./vcpkg_installed/arm64-osx cargo tauri build
+FFMPEG_DIR=$PWD/vcpkg_installed/arm64-osx cargo tauri build
 ```

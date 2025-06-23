@@ -9,6 +9,7 @@ use tauri::State;
 use crate::modules::Modules;
 
 pub struct AppState {
+    pub client: reqwest::Client,
     pub modules: Modules,
     pub data_dir: PathBuf,
     pub document_dir: PathBuf,
@@ -28,6 +29,7 @@ impl AppState {
         }
 
         Ok(Self {
+            client: reqwest::Client::new(),
             modules,
             data_dir,
             document_dir,

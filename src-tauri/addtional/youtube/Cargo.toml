@@ -15,21 +15,15 @@ include = ["dep:ez-ffmpeg"]
 [dependencies]
 tokio.workspace = true
 serde.workspace = true
-improvie-logic.workspace = true
 reqwest.workspace = true
 thiserror.workspace = true
 log.workspace = true
-futures-util.workspace = true
-more-convert.workspace = true
+bytes.workspace = true
 
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }
 
 ez-ffmpeg = { version = "=0.4.3", features = ["async"], optional = true }
-rusty_ytdl = { git = "https://github.com/moriyoshi-kasuga/rusty_ytdl", default-features = false, features = [
-  "rustls-tls",
-  "search",
-] }
 
 [lints]
 workspace = true

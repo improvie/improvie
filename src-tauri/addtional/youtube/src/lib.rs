@@ -1,3 +1,5 @@
+mod download;
+
 mod error;
 
 mod model;

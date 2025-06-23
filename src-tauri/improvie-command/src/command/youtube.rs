@@ -1,81 +1,54 @@
-use improvie_app::model::items::{CreateBaseItemDto, CreateContentDto, CreateContentResponse};
+use std::sync::Arc;
+
 use tauri::{AppHandle, Emitter};
-use uid::Uid;
-use youtube::{SingleVideoDownload, YtError};
+use youtube::{YtError, YtVideoRequest};
 
 use crate::state::TauriAppState;
 
-async fn save(
-    state: &TauriAppState<'_>,
-    parent_folder_id: Uid,
-    downloaded: SingleVideoDownload,
-) -> Result<CreateContentResponse, YtError> {
-    let dto = CreateContentDto {
-        item: CreateBaseItemDto {
-            parent_folder_id,
-            title: downloaded.title,
-            description: None,
-        },
-        kind: improvie_logic::constant::items::ContentKind::Video,
-        content_path: downloaded.video_path.to_string_lossy().to_string(),
-        thumbnail_path: downloaded
-            .thumbnail_path
-            .map(|p| p.to_string_lossy().to_string()),
-    };
+#[derive(Debug, thiserror::Error)]
+#[error("YouTube error: {0}")]
+pub struct YtErrorWrapper(#[from] pub YtError);
 
-    let result = state.modules.items_use_case().create_content(dto).await;
-    match result {
-        Ok(content) => Ok(content),
-        Err(err) => Err(YtError::SaveError(err)),
-    }
-}
-
-// TODO: add beautiful log
+improvie_logic::impl_serialize_for_dyn_app_error!(
+    YtErrorWrapper,
+    kind = "YtError",
+    message = "YouTube error"
+);
 
 #[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(
     app: AppHandle<R>,
     state: TauriAppState<'_>,
-    parent_folder_id: Uid,
-    video_url_or_id: String,
-) -> Result<CreateContentResponse, YtError> {
+    request: YtVideoRequest,
+) -> Result<bool, YtErrorWrapper> {
+    log::debug!(
+        "Importing YouTube video with process id: {:?}",
+        request.process_id
+    );
     let downloaded = youtube::download_single_video(
-        &video_url_or_id,
+        state.client.clone(),
+        request,
         state.document_dir.clone(),
-        |downloading_state| {
+        Arc::new(move |downloading_state| {
             log::debug!("Video Downloading state: {:?}", downloading_state);
-            let _ = app.emit("yt-download-progress-video", downloading_state);
-            Ok(())
-        },
+            let _ = app.emit("yt-downloading-state", downloading_state);
+            true
+        }),
     )
-    .await?;
+    .await;
 
-    save(&state, parent_folder_id, downloaded).await
-}
-
-#[tauri::command]
-pub async fn import_youtube_playlist<R: tauri::Runtime>(
-    app: AppHandle<R>,
-    state: TauriAppState<'_>,
-    parent_folder_id: Uid,
-    playlist_url: String,
-) -> Result<Vec<CreateContentResponse>, YtError> {
-    let downloaded = youtube::download_playlist(
-        &playlist_url,
-        state.document_dir.clone(),
-        move |downloading_state| {
-            log::debug!("Playlist Downloading state: {:?}", downloading_state);
-            let _ = app.emit("yt-download-progress-playlist", downloading_state);
-            Ok(())
-        },
-    )
-    .await?;
-
-    let mut contents = Vec::new();
-    for downloaded in downloaded {
-        let content = save(&state, parent_folder_id, downloaded).await?;
-        contents.push(content);
+    match downloaded {
+        Ok(true) => {
+            log::info!("Video downloaded successfully");
+            Ok(true)
+        }
+        Ok(false) => {
+            log::warn!("Video download was not successful. failed on callback");
+            Ok(false)
+        }
+        Err(e) => {
+            log::error!("Error downloading video: {:?}", e);
+            Err(YtErrorWrapper(e))
+        }
     }
-
-    Ok(contents)
 }

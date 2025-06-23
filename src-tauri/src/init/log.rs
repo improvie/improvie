@@ -21,9 +21,7 @@ pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
             ],
             #[cfg(not(all(debug_assertions, not(mobile))))]
             [
-                #[cfg(mobile)]
                 Target::new(TargetKind::Stdout),
-                #[cfg(mobile)]
                 Target::new(TargetKind::Webview),
                 Target::new(TargetKind::LogDir { file_name: None }),
             ],

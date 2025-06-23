@@ -1,5 +1,6 @@
 <script lang='ts'>
   import type { PlaylistDetail } from '$lib/youtube';
+  import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
   import { getPlaylistDetail } from '$lib/youtube';
@@ -34,15 +35,49 @@
   $effect(() => {
     init();
   });
+
+  const videos: YtVideoComponent[] = $state([]);
+
+  async function importAllVideos() {
+    if (!detail) {
+      toast.error('No playlist details available to import videos.');
+      return;
+    }
+
+    const videoCount = detail.videos.length;
+    let importedCount = 0;
+    for (const video of videos) {
+      video.importVideo().then(() => {
+        importedCount++;
+        if (importedCount === videoCount) {
+          toast.success(`Successfully imported ${videoCount} videos from the playlist.`);
+          return;
+        }
+        if (importedCount % 5 === 0) {
+          toast.info(`Imported ${importedCount} of ${videoCount} videos...`);
+        }
+      }).catch(() => {
+        console.error('Error importing video');
+        toast.error('Error importing video. Please try again later.');
+      });
+    }
+  }
+
 </script>
 
 {#if detail}
+  <div class='flex flex-col gap-2 mb-4'>
+    <Button variant='destructive' onclick={importAllVideos}>
+      Import {detail.videos.length} videos from playlist
+    </Button>
+  </div>
   <ScrollArea style='max-height: calc(var(--item-height) * 3 + 16px);'>
     <div class='flex flex-col gap-2 w-full h-full'>
-      {#each detail.videos as videoDetail}
+      {#each detail.videos as videoDetail, i}
         <YtVideoComponent
           parent_folder_id={parent_folder_id}
           detail={videoDetail}
+          bind:this={videos[i]}
         />
       {/each}
     </div>

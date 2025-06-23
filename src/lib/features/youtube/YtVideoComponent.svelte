@@ -83,7 +83,7 @@
     };
   });
 
-  function importVideo() {
+  export async function importVideo(): Promise<void> {
     if (started) {
       return;
     }
@@ -92,7 +92,7 @@
       format => format.url === downloadUrl,
     );
     quality = selectFormat?.quality_label || 'xxxp';
-    import_youtube_video({
+    await import_youtube_video({
       process_id: detail.video_id,
       file_name: `${detail.video_id}-${quality}`,
       video_url: downloadUrl,

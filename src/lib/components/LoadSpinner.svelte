@@ -1,12 +1,15 @@
 <script lang='ts'>
+  import type { IconProps } from '@lucide/svelte';
   import { cn } from '$lib/utils';
   import { LoaderCircleIcon } from '@lucide/svelte';
 
   const {
     class: className,
-  }: {
-    class?: string;
-  } = $props();
+    ...restProps
+  }: IconProps = $props();
 </script>
 
-<LoaderCircleIcon class={cn('animate-spin', className)} />
+<LoaderCircleIcon
+  class={cn('animate-spin', className)}
+  {...restProps}
+/>

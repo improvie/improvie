@@ -12,7 +12,7 @@ pub(crate) async fn download_video(
 ) -> Result<bool, crate::YtError> {
     let stream = ChunkStream::new(client, video_url, None, None).await?;
 
-    let total_size = stream.content_length() as u64;
+    let total_size = stream.content_length();
 
     let mut downloaded: u64 = 0;
 

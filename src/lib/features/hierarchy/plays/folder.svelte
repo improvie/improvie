@@ -40,7 +40,7 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
       <Card.Root class='p-3 gap-1' ondblclick={() => dblclick()}>
-        <div class='flex items-center justify-center'>
+        <div class='w-full flex items-center justify-center'>
           <FolderIcon class='w-9/16 h-auto aspect-square' />
         </div>
         <p class='line-clamp-3'>{folder.title}</p>

@@ -275,6 +275,10 @@ export function extractIdsFromUrl(url: URL): {
   };
 }
 
+export function isMixList(playlistId: string): boolean {
+  return playlistId.startsWith('RD');
+}
+
 // returns a bollean indicating whether the callback was successfully notified
 // use `listen('yt-downloading-state', (event: YtVideoState) => { ... })`
 export async function import_youtube_video(request: YtVideoRequest): Promise<boolean> {

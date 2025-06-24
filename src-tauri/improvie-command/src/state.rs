@@ -16,17 +16,12 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
+    pub async fn new(data_dir: PathBuf, document_dir: PathBuf) -> Result<Self, InitDbError> {
         let db = DbPool::new(data_dir.clone()).await?;
         let repository = RepositoriesModuleImpl::new(db);
         let repository = std::sync::Arc::new(repository);
 
         let modules = Modules::new_with_repository(repository);
-
-        let document_dir = data_dir.join("documents");
-        if !document_dir.exists() {
-            std::fs::create_dir_all(&document_dir)?;
-        }
 
         Ok(Self {
             client: reqwest::Client::new(),

@@ -73,15 +73,13 @@
   <ContextMenu.Root>
     <ContextMenu.Trigger class='z-20'>
       <Card.Root class='p-3 gap-1' ondblclick={() => dblclick()}>
-        <div class='flex items-center justify-center'>
-          {#await playlist_thumbnail_path}
-            <ImageLoader loading src={null} />
-          {:then src}
-            <ImageLoader local src={src} />
-          {:catch}
-            <ImageLoader src={null} />
-          {/await}
-        </div>
+        {#await playlist_thumbnail_path}
+          <ImageLoader loading src={null} />
+        {:then src}
+          <ImageLoader local src={src} />
+        {:catch}
+          <ImageLoader src={null} />
+        {/await}
         <p class='line-clamp-3'>{playlist.title}</p>
       </Card.Root>
     </ContextMenu.Trigger>

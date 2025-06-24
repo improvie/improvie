@@ -262,9 +262,10 @@ export function extractIdsFromUrl(url: URL): {
   videoId?: string;
   playlistId?: string;
 } {
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  const match = url.toString().match(regExp);
-  const videoId = (match && match[7].length === 11) ? match[7] : undefined;
+  const videoRegExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(shorts\/)|(watch\?))\??v?=?([^#&?]*).*/;
+
+  const match = url.toString().match(videoRegExp);
+  const videoId = (match && match[8] !== undefined && match[8].length === 11) ? match[8] : undefined;
 
   const playlistId = url.searchParams.get('list') || undefined;
 

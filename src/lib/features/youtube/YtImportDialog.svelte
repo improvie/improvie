@@ -83,11 +83,24 @@
 
 </script>
 
+<!-- svelte-ignore css_unused_selector -->
+<style>
+  #yt-import-dialog {
+    --item-height: 208px;
+  }
+
+  @media (width <= 640px) {
+    #yt-import-dialog {
+      --item-height: 160px;
+    }
+  }
+</style>
+
 <Dialog.Root bind:open>
   <Dialog.Content
-    class='sm:max-w-xl'
+    class='max-w-sm sm:max-w-xl'
     interactOutsideBehavior='ignore'
-    style='--item-height: 208px;'
+    id='yt-import-dialog'
   >
     {#if start_processing}
       {@const url = new URL($formData.url)}

@@ -107,7 +107,10 @@
   class='sm:w-md flex flex-row p-4'
   style='height: var(--item-height); --main-item-height: calc(var(--item-height) - 80px);'
 >
-  <div class='flex flex-col gap-2 w-57'>
+  <div
+    class='flex flex-col gap-2'
+    style='width: calc(var(--main-item-height) * 16 / 9);'
+  >
     <ImageLoader
       src={detail.thumbnail_url}
       alt={detail.title}

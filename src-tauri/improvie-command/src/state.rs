@@ -51,7 +51,8 @@ pub mod tests {
                 .unwrap();
 
             let test_dir = test_dir();
-            let state = AppState::new(test_dir).await.unwrap();
+            let document_dir = test_dir.join("documents");
+            let state = AppState::new(test_dir, document_dir).await.unwrap();
             app.manage(state);
             Self { app }
         }

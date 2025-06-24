@@ -92,7 +92,7 @@
           bind:paused={tracker.paused}
           bind:duration
           onended={onended}
-          class='object-cover'
+          class='aspect-video object-contain w-full h-full'
           onclick={() => tracker.toggle_pause()}
           poster={thumbnail_path}
         >

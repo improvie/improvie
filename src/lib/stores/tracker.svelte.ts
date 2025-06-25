@@ -13,8 +13,8 @@ export class Tracker {
   public paused: boolean = $state(false);
   public currentTime: number = $state(0);
 
-  public is_looping: boolean = $state()!;
-  public volume: number = $state()!;
+  public is_looping: boolean = $state(false);
+  public volume: number = $state(0.5);
 
   public init() {
     this.is_looping

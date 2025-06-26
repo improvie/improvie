@@ -97,22 +97,21 @@
 
 </script>
 
-<!-- svelte-ignore css_unused_selector -->
-<style>
-  #yt-import-dialog {
-    --item-height: 208px;
-  }
-
-  @media (width <= 640px) {
-    #yt-import-dialog {
-      --item-height: 160px;
-    }
-  }
-</style>
-
 <Dialog.Root bind:open>
+  <style global>
+    #yt-import-dialog {
+      --item-height: 208px;
+    }
+
+    @media (width <= 640px) {
+      #yt-import-dialog {
+        --item-height: 160px;
+      }
+    }
+  </style>
+
   <Dialog.Content
-    class='max-w-sm sm:max-w-xl max-h-[calc(var(--item-height)*3+16px)]'
+    class='max-w-sm sm:max-w-xl'
     interactOutsideBehavior='ignore'
     id='yt-import-dialog'
   >

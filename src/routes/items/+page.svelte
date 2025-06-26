@@ -2,6 +2,7 @@
   import IconText from '$lib/components/IconText.svelte';
   import { Button } from '$lib/components/ui/button';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
+  import { ScrollArea } from '$lib/components/ui/scroll-area';
   import Separator from '$lib/components/ui/separator/separator.svelte';
   import CreateContentDialog from '$lib/features/dialog/items/CreateContentDialog.svelte';
   import CreateFolderDialog from '$lib/features/dialog/items/CreateFolderDialog.svelte';
@@ -59,31 +60,33 @@
 <Separator class='mb-2' />
 <ItemPageBreadcrumb />
 <Separator class='my-2' />
-<div class='w-full h-dvh relative overflow-y-auto'>
-  <ContextMenu.Root>
-    <ContextMenu.Trigger class='absolute w-full h-full z-10'>
-    </ContextMenu.Trigger>
-    <ContextMenu.Content>
-      <ContextMenu.Item onclick={() => {
-        is_open_create_content = true;
-      }}>
-        <IconText icon={CirclePlusIcon} text='Add Item' />
-      </ContextMenu.Item>
-      <ContextMenu.Item onclick={() => {
-        is_open_create_folder = true;
-      }}>
-        <IconText icon={FolderIcon} text='Add Folder' />
-      </ContextMenu.Item>
-    </ContextMenu.Content>
-  </ContextMenu.Root>
+<ScrollArea>
+  <div class='w-full h-dvh relative'>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger class='absolute w-full h-full z-10'>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item onclick={() => {
+          is_open_create_content = true;
+        }}>
+          <IconText icon={CirclePlusIcon} text='Add Item' />
+        </ContextMenu.Item>
+        <ContextMenu.Item onclick={() => {
+          is_open_create_folder = true;
+        }}>
+          <IconText icon={FolderIcon} text='Add Folder' />
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
 
-  <div class='absolute grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-    {#each node as child}
-      {#if child.kind === 'Folder'}
-        <HierarchyFolder folder_id={child.id} bind:rename_data />
-      {:else if child.kind === 'Content'}
-        <HierarchyContent content_id={child.id} bind:rename_data />
-      {/if}
-    {/each}
+    <div class='absolute top-0 pb-50 w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+      {#each node as child}
+        {#if child.kind === 'Folder'}
+          <HierarchyFolder folder_id={child.id} bind:rename_data />
+        {:else if child.kind === 'Content'}
+          <HierarchyContent content_id={child.id} bind:rename_data />
+        {/if}
+      {/each}
+    </div>
   </div>
-</div>
+</ScrollArea>

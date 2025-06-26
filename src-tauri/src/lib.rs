@@ -19,13 +19,27 @@ pub fn run() {
 
     builder
         .setup(move |app| {
-            #[cfg(all(debug_assertions, not(mobile)))]
-            let data_dir = init::dev_folder();
+            cfg_if::cfg_if! {
+                if #[cfg(all(debug_assertions, not(mobile)))] {
+                    let data_dir = init::dev_folder();
+                } else {
+                    let data_dir = app.path().app_data_dir()?;
+                }
+            };
 
-            #[cfg(not(all(debug_assertions, not(mobile))))]
-            let data_dir = app.path().app_data_dir()?;
+            cfg_if::cfg_if! {
+                if #[cfg(mobile)] {
+                    let document_dir = data_dir.clone();
+                } else {
+                    let document_dir = data_dir.join("documents");
+                }
+            }
 
-            let app_state = block_on(AppState::new(data_dir))?;
+            if !document_dir.exists() {
+                std::fs::create_dir_all(&document_dir)?;
+            }
+
+            let app_state = block_on(AppState::new(data_dir, document_dir))?;
 
             app.manage(app_state);
             Ok(())

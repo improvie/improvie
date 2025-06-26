@@ -164,9 +164,7 @@
     <div class='gap-2 flex items-center h-full' role='button' tabindex='-1' onclick={() => {
       tracker.external_open = !tracker.external_open;
     }} onkeydown={() => {}}>
-      <div class='h-full block sm:hidden md:block'>
-        <ImageLoader direction='vertical' local src={track?.thumbnail_path} />
-      </div>
+      <ImageLoader direction='vertical' local src={track?.thumbnail_path} class='sm:max-md:hidden' />
       <div class='h-full flex items-center'>
         <p class='text-primary text-sm text-wrap max-w-[30rem] line-clamp-3'>{track?.title}</p>
       </div>

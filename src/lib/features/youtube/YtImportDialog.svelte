@@ -4,7 +4,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
-  import { extractIdsFromUrl } from '$lib/youtube';
+  import { extractIdsFromUrl, isMixList } from '$lib/youtube';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
@@ -21,6 +21,9 @@
   } = $props();
 
   let download_type = $state<'video' | 'playlist'>('video');
+
+  let videoId: string | undefined = $state();
+  let playlistId: string | undefined = $state();
 
   const formSchema = z.object({
     url: z.string().nonempty().url().superRefine((value, ctx) => {
@@ -43,6 +46,7 @@
             code: z.ZodIssueCode.custom,
             message: 'Invalid YouTube URL. It must contain a video ID.',
           });
+          return;
         }
       }
       else if (!ids.playlistId) {
@@ -50,14 +54,24 @@
           code: z.ZodIssueCode.custom,
           message: 'Invalid YouTube URL. It must contain a playlist ID.',
         });
+        return;
       }
-      // 'RD' prefix indicates a mixlist, require videoId for mixlist
-      else if (ids.playlistId.startsWith('RD') && !ids.videoId) {
+      else if (isMixList(ids.playlistId) && ids.videoId === undefined) {
+        if (url.searchParams.get('si') !== null) {
+          // this url is a mixlist, and copied from the share button on mobile
+          videoId = ids.playlistId.substring(2);
+          playlistId = ids.playlistId;
+          return;
+        }
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Invalid YouTube URL for mixlist. It must contain a video ID.',
         });
+        return;
       }
+
+      videoId = ids.videoId;
+      playlistId = ids.playlistId;
     }),
   });
 
@@ -84,14 +98,24 @@
 </script>
 
 <Dialog.Root bind:open>
+  <style global>
+    #yt-import-dialog {
+      --item-height: 208px;
+    }
+
+    @media (width <= 640px) {
+      #yt-import-dialog {
+        --item-height: 160px;
+      }
+    }
+  </style>
+
   <Dialog.Content
-    class='sm:max-w-xl'
+    class='max-w-sm sm:max-w-xl'
     interactOutsideBehavior='ignore'
-    style='--item-height: 208px;'
+    id='yt-import-dialog'
   >
     {#if start_processing}
-      {@const url = new URL($formData.url)}
-      {@const { videoId, playlistId } = extractIdsFromUrl(url)}
       <div class='flex flex-col items-center'>
         {#if download_type === 'video'}
           <YtImportVideo

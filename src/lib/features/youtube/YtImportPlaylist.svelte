@@ -71,8 +71,11 @@
       Import {detail.videos.length} videos from playlist
     </Button>
   </div>
-  <ScrollArea style='max-height: calc(var(--item-height) * 3 + 16px);'>
-    <div class='flex flex-col gap-2 w-full h-full'>
+  <ScrollArea>
+    <div
+      class='flex flex-col gap-2 w-full h-max'
+      style='max-height: calc(var(--item-height) * 3 + 16px);'
+    >
       {#each detail.videos as videoDetail, i}
         <YtVideoComponent
           parent_folder_id={parent_folder_id}

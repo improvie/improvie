@@ -30,6 +30,7 @@ pub enum Rule {
     Range(RangeRule),
     Loop(LoopRule),
     Random(RandomRule),
+    Unknown,
 }
 
 pub trait RuleFormatIter {
@@ -44,6 +45,7 @@ impl RuleFormatIter for Rule {
             Rule::Range(rule) => rule.formats(),
             Rule::Loop(rule) => rule.formats(),
             Rule::Random(rule) => rule.formats(),
+            Rule::Unknown => Vec::new(),
         }
     }
     fn first(&self) -> Option<RuleFormat> {
@@ -52,6 +54,7 @@ impl RuleFormatIter for Rule {
             Rule::Range(rule) => rule.first(),
             Rule::Loop(rule) => rule.first(),
             Rule::Random(rule) => rule.first(),
+            Rule::Unknown => None,
         }
     }
 }

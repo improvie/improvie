@@ -1,8 +1,18 @@
 use improvie_domain::model::rules::RuleData;
-use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
 use uid::Uid;
+
+mod loop_rule;
+pub use loop_rule::*;
+
+mod random;
+pub use random::*;
+
+mod folder;
+pub use folder::*;
+
+use crate::state::AppState;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
@@ -19,6 +29,10 @@ impl RuleFormat {
             range_start,
             range_end,
         }
+    }
+
+    pub const fn is_error(&self) -> bool {
+        self.content_id.is_nil()
     }
 }
 
@@ -44,27 +58,29 @@ impl Rule {
     }
 }
 
+#[async_trait::async_trait]
 pub trait RuleFormatIter {
-    fn formats(&self) -> Vec<RuleFormat>;
-    fn first(&self) -> Option<RuleFormat>;
+    async fn formats(&self, state: &AppState) -> Vec<RuleFormat>;
+    async fn first(&self, state: &AppState) -> Option<RuleFormat>;
 }
 
+#[async_trait::async_trait]
 impl RuleFormatIter for Rule {
-    fn formats(&self) -> Vec<RuleFormat> {
+    async fn formats(&self, state: &AppState) -> Vec<RuleFormat> {
         match self {
-            Rule::Content(rule) => rule.formats(),
-            Rule::Range(rule) => rule.formats(),
-            Rule::Loop(rule) => rule.formats(),
-            Rule::Random(rule) => rule.formats(),
+            Rule::Content(rule) => rule.formats(state).await,
+            Rule::Range(rule) => rule.formats(state).await,
+            Rule::Loop(rule) => rule.formats(state).await,
+            Rule::Random(rule) => rule.formats(state).await,
             Rule::Unknown => Vec::new(),
         }
     }
-    fn first(&self) -> Option<RuleFormat> {
+    async fn first(&self, state: &AppState) -> Option<RuleFormat> {
         match self {
-            Rule::Content(rule) => rule.first(),
-            Rule::Range(rule) => rule.first(),
-            Rule::Loop(rule) => rule.first(),
-            Rule::Random(rule) => rule.first(),
+            Rule::Content(rule) => rule.first(state).await,
+            Rule::Range(rule) => rule.first(state).await,
+            Rule::Loop(rule) => rule.first(state).await,
+            Rule::Random(rule) => rule.first(state).await,
             Rule::Unknown => None,
         }
     }
@@ -76,11 +92,12 @@ pub struct ContentRule {
     pub content_id: Uid,
 }
 
+#[async_trait::async_trait]
 impl RuleFormatIter for ContentRule {
-    fn formats(&self) -> Vec<RuleFormat> {
+    async fn formats(&self, _: &AppState) -> Vec<RuleFormat> {
         vec![RuleFormat::new(self.content_id, None, None)]
     }
-    fn first(&self) -> Option<RuleFormat> {
+    async fn first(&self, _: &AppState) -> Option<RuleFormat> {
         Some(RuleFormat::new(self.content_id, None, None))
     }
 }
@@ -93,90 +110,20 @@ pub struct RangeRule {
     pub range_end: Option<u32>,
 }
 
+#[async_trait::async_trait]
 impl RuleFormatIter for RangeRule {
-    fn formats(&self) -> Vec<RuleFormat> {
+    async fn formats(&self, _: &AppState) -> Vec<RuleFormat> {
         vec![RuleFormat::new(
             self.content_id,
             self.range_start,
             self.range_end,
         )]
     }
-    fn first(&self) -> Option<RuleFormat> {
+    async fn first(&self, _: &AppState) -> Option<RuleFormat> {
         Some(RuleFormat::new(
             self.content_id,
             self.range_start,
             self.range_end,
         ))
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
-pub struct LoopRule {
-    pub rules: Vec<Rule>,
-    pub times: u8,
-}
-
-impl RuleFormatIter for LoopRule {
-    fn formats(&self) -> Vec<RuleFormat> {
-        let mut formats = Vec::new();
-        for _ in 0..self.times {
-            for rule in &self.rules {
-                formats.extend(rule.formats());
-            }
-        }
-        formats
-    }
-    fn first(&self) -> Option<RuleFormat> {
-        self.rules.first().and_then(|rule| rule.first())
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
-pub struct RandomRule {
-    // u8 is the weight
-    pub rules: Vec<(Rule, u8)>,
-    pub times: u8,
-    pub duplicate: bool,
-}
-
-impl RuleFormatIter for RandomRule {
-    fn formats(&self) -> Vec<RuleFormat> {
-        let rng = &mut rand::rng();
-        let mut formats = Vec::new();
-        if self.duplicate {
-            for _ in 0..self.times {
-                let Ok((rule, _)) = self.rules.choose_weighted(rng, |item| item.1) else {
-                    return formats;
-                };
-
-                for format in rule.formats() {
-                    formats.push(format);
-                }
-            }
-        } else {
-            let Ok(rules) = self
-                .rules
-                .choose_multiple_weighted(rng, self.times as usize, |item| item.1)
-            else {
-                return formats;
-            };
-            for (rule, _) in rules {
-                for format in rule.formats() {
-                    formats.push(format);
-                }
-            }
-        }
-
-        formats
-    }
-
-    fn first(&self) -> Option<RuleFormat> {
-        if let Some((rule, _)) = self.rules.first() {
-            rule.first()
-        } else {
-            None
-        }
     }
 }

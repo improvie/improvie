@@ -31,11 +31,25 @@ pub async fn update_rules(
 }
 
 #[tauri::command]
-pub async fn get_rules_format(rules: Vec<Rule>) -> Vec<RuleFormat> {
-    rules.iter().flat_map(|rule| rule.formats()).collect()
+pub async fn get_rules_format(
+    state: TauriAppState<'_>,
+    rules: Vec<Rule>,
+) -> DynAppResult<Vec<RuleFormat>> {
+    let mut formats = Vec::new();
+    for rule in rules {
+        formats.extend(rule.formats(&state).await);
+    }
+    Ok(formats)
 }
 
 #[tauri::command]
-pub async fn get_first_rule_format(rules: Vec<Rule>) -> Option<RuleFormat> {
-    rules.iter().find_map(|rule| rule.first())
+pub async fn get_first_rule_format(
+    state: TauriAppState<'_>,
+    rules: Vec<Rule>,
+) -> DynAppResult<Option<RuleFormat>> {
+    if let Some(rule) = rules.first() {
+        Ok(rule.first(&state).await)
+    } else {
+        Ok(None)
+    }
 }

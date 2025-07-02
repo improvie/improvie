@@ -1,3 +1,4 @@
+use improvie_domain::model::rules::RuleData;
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
 
@@ -31,6 +32,16 @@ pub enum Rule {
     Loop(LoopRule),
     Random(RandomRule),
     Unknown,
+}
+
+impl Rule {
+    pub fn is_unknown(&self) -> bool {
+        matches!(self, Rule::Unknown)
+    }
+
+    pub fn from_data(data: RuleData) -> Self {
+        serde_json::from_str(&data.data).unwrap_or(Rule::Unknown)
+    }
 }
 
 pub trait RuleFormatIter {

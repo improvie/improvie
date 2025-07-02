@@ -15,7 +15,6 @@ uid.workspace = true
 thiserror.workspace = true
 chrono.workspace = true
 serde.workspace = true
-rand.workspace = true
 more-convert.workspace = true
 bind = { workspace = true, optional = true }
 ts-rs = { workspace = true, optional = true }

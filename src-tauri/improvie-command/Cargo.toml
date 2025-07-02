@@ -12,15 +12,19 @@ improvie-app.workspace = true
 uid.workspace = true
 youtube.workspace = true
 
+tauri.workspace = true
+tauri-plugin-dialog.workspace = true
+
 tokio.workspace = true
 reqwest.workspace = true
 futures-util.workspace = true
 thiserror.workspace = true
-tauri.workspace = true
 serde.workspace = true
+serde_json.workspace = true
+rand.workspace = true
 log.workspace = true
-tauri-plugin-dialog.workspace = true
 more-convert.workspace = true
+
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }
 

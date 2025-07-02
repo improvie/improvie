@@ -2,13 +2,15 @@ use std::collections::HashMap;
 
 use chrono::Utc;
 use improvie_domain::{
-    model::plays::{CreatePlayFolderModel, CreatePlaylistModel},
+    model::{
+        plays::{CreatePlayFolderModel, CreatePlaylistModel},
+        rules::RuleData,
+    },
     repository::plays::PlaystsRepository,
 };
 use improvie_logic::{
     DynAppResult,
     constant::plays::PlayItemKind,
-    logic::rule::Rule,
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
@@ -267,7 +269,7 @@ FROM folder_hierarchy
             sqlx::query("INSERT INTO playlists (item_id, thumbnail_path, rules) VALUES (?, ?, ?)")
                 .bind(content.item.id)
                 .bind(&content.thumbnail_path)
-                .bind(sqlx::types::Json(Vec::<Rule>::new()))
+                .bind(sqlx::types::Json(Vec::<RuleData>::new()))
                 .execute(tx.as_mut())
                 .await;
 

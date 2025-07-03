@@ -14,7 +14,7 @@ pub use folder::*;
 
 use crate::state::AppState;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
 pub struct RuleFormat {
     pub content_id: Uid,
@@ -23,6 +23,12 @@ pub struct RuleFormat {
 }
 
 impl RuleFormat {
+    pub const ERROR: Self = Self {
+        content_id: Uid::nil(),
+        range_start: None,
+        range_end: None,
+    };
+
     pub fn new(content_id: Uid, range_start: Option<u32>, range_end: Option<u32>) -> Self {
         Self {
             content_id,
@@ -45,6 +51,7 @@ pub enum Rule {
     Range(RangeRule),
     Loop(LoopRule),
     Random(RandomRule),
+    Folder(FolderRule),
     Unknown,
 }
 
@@ -72,6 +79,7 @@ impl RuleFormatIter for Rule {
             Rule::Range(rule) => rule.formats(state).await,
             Rule::Loop(rule) => rule.formats(state).await,
             Rule::Random(rule) => rule.formats(state).await,
+            Rule::Folder(rule) => rule.formats(state).await,
             Rule::Unknown => Vec::new(),
         }
     }
@@ -81,6 +89,7 @@ impl RuleFormatIter for Rule {
             Rule::Range(rule) => rule.first(state).await,
             Rule::Loop(rule) => rule.first(state).await,
             Rule::Random(rule) => rule.first(state).await,
+            Rule::Folder(rule) => rule.first(state).await,
             Rule::Unknown => None,
         }
     }

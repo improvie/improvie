@@ -52,6 +52,7 @@ pub enum Rule {
     Loop(LoopRule),
     Random(RandomRule),
     Folder(FolderRule),
+    #[serde(other)]
     Unknown,
 }
 
@@ -61,7 +62,10 @@ impl Rule {
     }
 
     pub fn from_data(data: RuleData) -> Self {
-        serde_json::from_str(&data.data).unwrap_or(Rule::Unknown)
+        let Ok(value) = data.into_value() else {
+            return Rule::Unknown;
+        };
+        serde_json::from_value(value).unwrap_or(Rule::Unknown)
     }
 }
 

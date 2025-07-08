@@ -47,6 +47,7 @@ async function getClient(): Promise<Innertube> {
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const client = await getClient();
   const videoInfo = await client.getBasicInfo(videoId, 'IOS');
+  const videoInfoByMWEBPromise = client.getBasicInfo(videoId, 'MWEB');
 
   if (videoInfo.playability_status?.status !== 'OK') {
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
@@ -101,7 +102,10 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     throw new Error('No suitable audio format found for this video.');
   }
 
-  const thumbnail_url = getBestThumbnailUrl(videoInfo.basic_info?.thumbnail || []);
+  const videoInfoByMWEB = await videoInfoByMWEBPromise;
+
+  const thumbnails = [...videoInfo.basic_info?.thumbnail || [], ...videoInfoByMWEB.basic_info?.thumbnail || []];
+  const thumbnail_url = getBestThumbnailUrl(thumbnails);
 
   return {
     thumbnail_url,

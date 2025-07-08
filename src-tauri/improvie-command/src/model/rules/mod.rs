@@ -68,7 +68,7 @@ impl Rule {
 #[async_trait::async_trait]
 pub trait RuleFormatIter {
     async fn formats(&self, state: &AppState) -> Vec<RuleFormat>;
-    async fn first(&self, state: &AppState) -> Option<RuleFormat>;
+    async fn thumbnail(&self, state: &AppState) -> Option<Uid>;
 }
 
 #[async_trait::async_trait]
@@ -83,13 +83,14 @@ impl RuleFormatIter for Rule {
             Rule::Unknown => Vec::new(),
         }
     }
-    async fn first(&self, state: &AppState) -> Option<RuleFormat> {
+
+    async fn thumbnail(&self, state: &AppState) -> Option<Uid> {
         match self {
-            Rule::Content(rule) => rule.first(state).await,
-            Rule::Range(rule) => rule.first(state).await,
-            Rule::Loop(rule) => rule.first(state).await,
-            Rule::Random(rule) => rule.first(state).await,
-            Rule::Folder(rule) => rule.first(state).await,
+            Rule::Content(rule) => rule.thumbnail(state).await,
+            Rule::Range(rule) => rule.thumbnail(state).await,
+            Rule::Loop(rule) => rule.thumbnail(state).await,
+            Rule::Random(rule) => rule.thumbnail(state).await,
+            Rule::Folder(rule) => rule.thumbnail(state).await,
             Rule::Unknown => None,
         }
     }
@@ -106,8 +107,8 @@ impl RuleFormatIter for ContentRule {
     async fn formats(&self, _: &AppState) -> Vec<RuleFormat> {
         vec![RuleFormat::new(self.content_id, None, None)]
     }
-    async fn first(&self, _: &AppState) -> Option<RuleFormat> {
-        Some(RuleFormat::new(self.content_id, None, None))
+    async fn thumbnail(&self, _: &AppState) -> Option<Uid> {
+        Some(self.content_id)
     }
 }
 
@@ -128,11 +129,7 @@ impl RuleFormatIter for RangeRule {
             self.range_end,
         )]
     }
-    async fn first(&self, _: &AppState) -> Option<RuleFormat> {
-        Some(RuleFormat::new(
-            self.content_id,
-            self.range_start,
-            self.range_end,
-        ))
+    async fn thumbnail(&self, _: &AppState) -> Option<Uid> {
+        Some(self.content_id)
     }
 }

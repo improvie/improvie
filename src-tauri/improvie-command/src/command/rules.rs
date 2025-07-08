@@ -43,12 +43,12 @@ pub async fn get_rules_format(
 }
 
 #[tauri::command]
-pub async fn get_first_rule_format(
+pub async fn get_thumbnail_content_uid(
     state: TauriAppState<'_>,
     rules: Vec<Rule>,
-) -> DynAppResult<Option<RuleFormat>> {
+) -> DynAppResult<Option<Uid>> {
     if let Some(rule) = rules.first() {
-        Ok(rule.first(&state).await)
+        Ok(rule.thumbnail(&state).await)
     } else {
         Ok(None)
     }

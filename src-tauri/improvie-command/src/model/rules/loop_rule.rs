@@ -2,6 +2,7 @@ use crate::state::AppState;
 
 use super::{Rule, RuleFormat, RuleFormatIter};
 use serde::{Deserialize, Serialize};
+use uid::Uid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
@@ -21,9 +22,9 @@ impl RuleFormatIter for LoopRule {
         }
         formats
     }
-    async fn first(&self, state: &AppState) -> Option<RuleFormat> {
+    async fn thumbnail(&self, state: &AppState) -> Option<Uid> {
         if let Some(rule) = self.rules.first() {
-            rule.first(state).await
+            rule.thumbnail(state).await
         } else {
             None
         }

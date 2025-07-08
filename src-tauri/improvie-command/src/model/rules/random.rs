@@ -3,6 +3,7 @@ use crate::state::AppState;
 use super::{Rule, RuleFormat, RuleFormatIter};
 use rand::seq::IndexedRandom;
 use serde::{Deserialize, Serialize};
+use uid::Uid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", bind::ts("rule.ts"))]
@@ -46,9 +47,9 @@ impl RuleFormatIter for RandomRule {
         formats
     }
 
-    async fn first(&self, state: &AppState) -> Option<RuleFormat> {
+    async fn thumbnail(&self, state: &AppState) -> Option<Uid> {
         if let Some((rule, _)) = self.rules.first() {
-            rule.first(state).await
+            rule.thumbnail(state).await
         } else {
             None
         }

@@ -36,7 +36,7 @@ impl RuleFormatIter for FolderRule {
         formats
     }
 
-    async fn first(&self, state: &AppState) -> Option<RuleFormat> {
+    async fn thumbnail(&self, state: &AppState) -> Option<Uid> {
         // Get the folder node for the target folder
         let folder_node = state
             .modules
@@ -48,7 +48,7 @@ impl RuleFormatIter for FolderRule {
         // Find the first content item in the folder
         for item in folder_node.items {
             if let ItemNode::Content { id, .. } = item {
-                return Some(RuleFormat::new(id, None, None));
+                return Some(id);
             }
         }
 

@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { actinn_get_first_rule_format, action_get_rules } from '$lib/action/rules';
+  import { action_get_rules, action_get_thumbnail_content_uid } from '$lib/action/rules';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import RenameElement from '$lib/components/element/RenameElement.svelte';
   import IconText from '$lib/components/IconText.svelte';
@@ -49,11 +49,11 @@
       return playlist.thumbnail_path;
     }
     const rules = await action_get_rules(playlist.id);
-    const format = await actinn_get_first_rule_format(rules);
-    if (format === undefined) {
+    const content_id = await action_get_thumbnail_content_uid(rules);
+    if (content_id === undefined) {
       return undefined;
     }
-    const content = contents.get(format.content_id);
+    const content = contents.get(content_id);
     if (content === undefined) {
       return undefined;
     }

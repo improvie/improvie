@@ -19,7 +19,6 @@
   import { contents } from '$lib/stores/items/content';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { tracker } from '$lib/stores/tracker.svelte';
-  import { cn } from '$lib/utils';
   import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
@@ -104,7 +103,7 @@
       </DropdownMenu.Root>
     </div>
   </div>
-  <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>
+  <ScrollArea orientation='both' class='w-full h-dvh relative z-0'>
     <ContextMenu.Root>
       <ContextMenu.Trigger>
         <div class='w-full flex flex-col gap-6 p-6'>

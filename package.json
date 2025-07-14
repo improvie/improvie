@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.5.0",
   "description": "",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",

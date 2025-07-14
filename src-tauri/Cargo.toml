@@ -77,7 +77,7 @@ edition = "2024"
 authors = ["moriyoshi-kasuga"]
 repository = "https://github.com/improvie/improvie"
 description = "This is a tauri app that improves movie(video) management."
-license = "Apache-2.0"
+license = "MIT"
 license-file = "../LICENSE"
 
 [workspace.dependencies]

@@ -1,6 +1,7 @@
 <script lang='ts'>
   import type { VideoDetail } from '$lib/youtube';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import { Logger } from '$lib/logger';
   import { getVideoDetail } from '$lib/youtube';
   import { toast } from 'svelte-sonner';
   import YtVideoComponent from './YtVideoComponent.svelte';
@@ -22,7 +23,7 @@
       detail = await getVideoDetail(videoId);
     }
     catch (error) {
-      console.error('Failed to fetch video details:', error);
+      Logger.error('Failed to fetch video details:', error);
       toast.error('Failed to fetch video details. Please check the video ID and try again.');
       processing = false;
     }

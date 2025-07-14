@@ -5,9 +5,11 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import FormError from '$lib/features/form/FormError.svelte';
+  import { Logger } from '$lib/logger';
   import { current_play_folder_ids } from '$lib/stores/plays';
   import { create_play_folder } from '$lib/stores/plays/folder';
   import { t } from '$lib/translations/translations';
+  import { toast } from 'svelte-sonner';
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import { z } from 'zod';
@@ -52,7 +54,8 @@
       open = false;
     }
     catch (e) {
-      console.error(e);
+      Logger.error('Failed to create play folder:', e);
+      toast.error('Failed to create play folder. Please try again.');
     }
   }
 </script>

@@ -1,6 +1,7 @@
 import type { BgConfig } from 'bgutils-js';
 import { BG } from 'bgutils-js';
 import { Innertube } from 'youtubei.js/web';
+import { Logger } from './logger';
 
 export async function generatePoToken(): Promise<{
   poToken: string;
@@ -47,8 +48,7 @@ export async function generatePoToken(): Promise<{
 
   const placeholderPoToken = BG.PoToken.generateColdStartToken(visitorData);
 
-  // eslint-disable-next-line no-console
-  console.info('Session Info:', {
+  Logger.debug('Session Info:', {
     visitorData,
     placeholderPoToken,
     poToken: poTokenResult.poToken,

@@ -31,8 +31,8 @@ export interface YtFormat {
 
 let client: Innertube | undefined;
 
-async function getClient(): Promise<Innertube> {
-  if (!client) {
+async function getClient(forceInit?: boolean): Promise<Innertube> {
+  if (forceInit || !client) {
     const data = await generatePoToken();
     client = await Innertube.create({
       po_token: data.poToken,
@@ -50,6 +50,13 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const videoInfoByMWEBPromise = client.getBasicInfo(videoId, 'MWEB');
 
   if (videoInfo.playability_status?.status !== 'OK') {
+    if (videoInfo.playability_status?.status === 'UNPLAYABLE') {
+      throw new Error(`Video is unplayable: ${videoInfo.playability_status.reason || 'Unknown reason'}`);
+    }
+    if (videoInfo.playability_status?.status === 'LOGIN_REQUIRED') {
+      await getClient(true); // Force re-initialization to refresh session
+      throw new Error('Blocked by YouTube: Session refreshed, please try again.');
+    }
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
   }
 

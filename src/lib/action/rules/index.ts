@@ -18,6 +18,6 @@ export async function action_get_rules_format(rules: RuleType[]): Promise<RuleFo
   return format;
 }
 
-export async function actinn_get_first_rule_format(rules: RuleType[]): Promise<RuleFormat | undefined> {
-  return await invoke<RuleFormat | undefined>('get_first_rule_format', { rules });
+export async function action_get_thumbnail_content_uid(rules: RuleType[]): Promise<string | undefined> {
+  return await invoke<string | undefined>('get_thumbnail_content_uid', { rules });
 }

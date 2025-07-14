@@ -5,7 +5,7 @@
 <script lang='ts'>
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
-  import { actinn_get_first_rule_format, action_update_rules } from '$lib/action/rules';
+  import { action_get_thumbnail_content_uid, action_update_rules } from '$lib/action/rules';
   import FilledIcon from '$lib/components/FilledIcon.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import IconText from '$lib/components/IconText.svelte';
@@ -19,7 +19,6 @@
   import { contents } from '$lib/stores/items/content';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
   import { tracker } from '$lib/stores/tracker.svelte';
-  import { cn } from '$lib/utils';
   import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
   let { playlist = $bindable(), rules: prop_rules }: { playlist: Playlist; rules: RuleType[] } = $props();
@@ -31,11 +30,11 @@
     if (playlist.thumbnail_path) {
       return playlist.thumbnail_path;
     }
-    const format = await actinn_get_first_rule_format(rules);
-    if (format === undefined) {
+    const content_id = await action_get_thumbnail_content_uid(rules);
+    if (content_id === undefined) {
       return undefined;
     }
-    const content = contents.get(format.content_id);
+    const content = contents.get(content_id);
     if (content === undefined) {
       return undefined;
     }
@@ -104,7 +103,7 @@
       </DropdownMenu.Root>
     </div>
   </div>
-  <ScrollArea orientation='both' class={cn('w-full h-dvh relative z-0', open && 'sm:w-2/3')}>
+  <ScrollArea orientation='both' class='w-full h-dvh relative z-0'>
     <ContextMenu.Root>
       <ContextMenu.Trigger>
         <div class='w-full flex flex-col gap-6 p-6'>

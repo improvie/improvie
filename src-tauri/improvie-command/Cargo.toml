@@ -1,7 +1,9 @@
 [package]
 name = "improvie-command"
-version = "0.1.0"
-edition = "2024"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
 
 [dependencies]
 improvie-domain.workspace = true
@@ -12,15 +14,20 @@ improvie-app.workspace = true
 uid.workspace = true
 youtube.workspace = true
 
+tauri.workspace = true
+tauri-plugin-dialog.workspace = true
+
 tokio.workspace = true
 reqwest.workspace = true
 futures-util.workspace = true
 thiserror.workspace = true
-tauri.workspace = true
 serde.workspace = true
+serde_json.workspace = true
+rand.workspace = true
 log.workspace = true
-tauri-plugin-dialog.workspace = true
 more-convert.workspace = true
+async-trait.workspace = true
+
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }
 

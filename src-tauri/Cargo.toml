@@ -4,6 +4,8 @@ description = "A Tauri app to 'improve like the movie' — helping you organize 
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
+license.workspace = true
+license-file.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -75,6 +77,8 @@ edition = "2024"
 authors = ["moriyoshi-kasuga"]
 repository = "https://github.com/improvie/improvie"
 description = "This is a tauri app that improves movie(video) management."
+license = "Apache-2.0"
+license-file = "../LICENSE"
 
 [workspace.dependencies]
 improvie-app = { path = "improvie-app" }

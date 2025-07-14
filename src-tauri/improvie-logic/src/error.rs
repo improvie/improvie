@@ -118,20 +118,27 @@ mod macros {
 
     #[macro_export]
     macro_rules! impl_serialize_for_dyn_app_error {
+        (@$serializer:ident, kind = $kind:expr, message = $message:expr) => {{
+            use serde::ser::SerializeStruct;
+            #[allow(unused_imports)]
+            use $crate::DynAppError;
+
+            let mut serde_state = $serializer.serialize_struct("DynAppError", 2)?;
+            serde_state.serialize_field("kind", $kind)?;
+            serde_state.serialize_field("message", $message)?;
+            serde_state.end()
+        }};
         ($error:ident, kind = $kind:expr, message = $message:expr) => {
             impl serde::Serialize for $error {
                 fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                 where
                     S: serde::Serializer,
                 {
-                    use serde::ser::SerializeStruct;
-                    #[allow(unused_imports)]
-                    use $crate::DynAppError;
-
-                    let mut serde_state = serializer.serialize_struct(stringify!($error), 2)?;
-                    serde_state.serialize_field("kind", $kind)?;
-                    serde_state.serialize_field("message", $message)?;
-                    serde_state.end()
+                    $crate::impl_serialize_for_dyn_app_error!(
+                        @serializer,
+                        kind = $kind,
+                        message = $message
+                    )
                 }
             }
         };
@@ -141,14 +148,11 @@ mod macros {
                 where
                     S: serde::Serializer,
                 {
-                    use serde::ser::SerializeStruct;
-                    #[allow(unused_imports)]
-                    use $crate::DynAppError;
-
-                    let mut serde_state = serializer.serialize_struct(stringify!($error), 2)?;
-                    serde_state.serialize_field("kind", self$(.$self)*.error_kind())?;
-                    serde_state.serialize_field("message", &self$(.$self)*.to_string())?;
-                    serde_state.end()
+                    $crate::impl_serialize_for_dyn_app_error!(
+                        @serializer,
+                        kind = self$(.$self)*.error_kind(),
+                        message = &self$(.$self)*.to_string()
+                    )
                 }
             }
         };

@@ -2168,8 +2168,9 @@ dependencies = [
 
 [[package]]
 name = "improvie-command"
-version = "0.1.0"
+version = "0.5.0"
 dependencies = [
+ "async-trait",
  "bind",
  "futures-util",
  "improvie-app",
@@ -2178,8 +2179,10 @@ dependencies = [
  "improvie-logic",
  "log",
  "more-convert",
+ "rand 0.9.1",
  "reqwest",
  "serde",
+ "serde_json",
  "tauri",
  "tauri-plugin-dialog",
  "thiserror 2.0.12",
@@ -2196,6 +2199,8 @@ dependencies = [
  "async-trait",
  "chrono",
  "improvie-logic",
+ "serde",
+ "serde_json",
  "thiserror 2.0.12",
  "uid",
 ]
@@ -2224,7 +2229,6 @@ dependencies = [
  "bind",
  "chrono",
  "more-convert",
- "rand 0.9.1",
  "serde",
  "sqlx",
  "thiserror 2.0.12",
@@ -5560,7 +5564,7 @@ dependencies = [
 
 [[package]]
 name = "uid"
-version = "0.1.0"
+version = "0.5.0"
 dependencies = [
  "bind",
  "serde",

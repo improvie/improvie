@@ -3,6 +3,8 @@ import type { Uid } from "./uid";
 
 export type ContentRule = { content_id: Uid, };
 
+export type FolderRule = { target_folder_id: Uid, };
+
 export type LoopRule = { rules: Array<RuleType>, times: number, };
 
 export type RandomRule = { rules: Array<[RuleType, number]>, times: number, duplicate: boolean, };
@@ -11,4 +13,4 @@ export type RangeRule = { content_id: Uid, range_start: number | null, range_end
 
 export type RuleFormat = { content_id: Uid, range_start: number | null, range_end: number | null, };
 
-export type RuleType = { "type": "Content", "data": ContentRule } | { "type": "Range", "data": RangeRule } | { "type": "Loop", "data": LoopRule } | { "type": "Random", "data": RandomRule };
+export type RuleType = { "type": "Content", "data": ContentRule } | { "type": "Range", "data": RangeRule } | { "type": "Loop", "data": LoopRule } | { "type": "Random", "data": RandomRule } | { "type": "Folder", "data": FolderRule } | { "type": "Unknown" };

@@ -4,7 +4,7 @@
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
 
-  export type SchemaName = 'uint' | 'int' | 'checkbox' | 'string' | 'content_pick';
+  export type SchemaName = 'uint' | 'int' | 'checkbox' | 'string' | 'content_pick' | 'range';
   const SchemaType: {
     name: SchemaName;
     zod: z.ZodTypeAny;
@@ -23,12 +23,16 @@
   }, {
     name: 'content_pick',
     zod: z.string().nonempty(),
+  }, {
+    name: 'range',
+    zod: z.array(z.number().int().nonnegative()).length(2).default([0, 0]),
   }];
 
   export type FormSchema = {
     [key: string]: {
       type: SchemaName;
       label: string;
+      props?: Record<string, any>;
     };
   };
 
@@ -60,6 +64,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import FormError from '../FormError.svelte';
   import NumberFormField from './NumberFormField.svelte';
+  import RangeFormField from './RangeFormField.svelte';
 
   const {
     schema,
@@ -92,6 +97,12 @@
         <NumberFormField
           bind:value={$formData[key]}
           label={value.label}
+        />
+      {:else if value.type === 'range'}
+        <RangeFormField
+          bind:value={$formData[key]}
+          label={value.label}
+          props={value.props}
         />
       {/if}
     </Form.Field>

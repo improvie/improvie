@@ -33,10 +33,10 @@ async fn download_single_video_internal(
         file_name,
         request.process_id
     );
-    let final_video_path = target_dir.join(format!("{}.mp4", file_name));
-    let download_video_path = target_dir.join(format!("{}.temp.mp4", file_name));
-    let download_audio_path = target_dir.join(format!("{}.aac", file_name));
-    let thumbnail_path = target_dir.join(format!("{}.jpg", file_name));
+    let final_video_path = target_dir.join(format!("{file_name}.mp4"));
+    let download_video_path = target_dir.join(format!("{file_name}.temp.mp4"));
+    let download_audio_path = target_dir.join(format!("{file_name}.aac"));
+    let thumbnail_path = target_dir.join(format!("{file_name}.jpg"));
 
     callback(YtVideoState::Idle {
         process_id: request.process_id.clone(),

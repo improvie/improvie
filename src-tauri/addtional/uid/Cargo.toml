@@ -11,7 +11,7 @@ ts = ["dep:bind", "dep:ts-rs"]
 db = ["sqlx"]
 
 [dependencies]
-uuid = { version = "=1.16.0", features = [
+uuid = { version = "=1.17.0", features = [
   "v7",
   "fast-rng",
   "macro-diagnostics",

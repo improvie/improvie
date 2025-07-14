@@ -38,8 +38,7 @@ impl ChunkStream {
 
         if content_length == 0 {
             log::info!(
-                "Content length is not provided, fetching from URL: {}",
-                link
+                "Content length is not provided, fetching from URL: {link}"
             );
             content_length = client
                 .get(&link)
@@ -50,10 +49,10 @@ impl ChunkStream {
                 .ok_or(crate::YtError::UrlMissing)?;
 
             if content_length == 0 {
-                log::error!("Content length is 0 for URL: {}", link);
+                log::error!("Content length is 0 for URL: {link}");
                 return Err(crate::YtError::UrlMissing);
             }
-            log::info!("Content length fetched: {}", content_length);
+            log::info!("Content length fetched: {content_length}");
         }
 
         Ok(Self {
@@ -87,7 +86,7 @@ impl ChunkStream {
 
         let start = *self.start.read().await;
 
-        let range = format!("bytes={}-{}", start, range_end);
+        let range = format!("bytes={start}-{range_end}");
         let response = self
             .client
             .get(&self.link)

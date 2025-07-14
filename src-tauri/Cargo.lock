@@ -2168,7 +2168,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-command"
-version = "0.1.0"
+version = "0.5.0"
 dependencies = [
  "async-trait",
  "bind",
@@ -5564,7 +5564,7 @@ dependencies = [
 
 [[package]]
 name = "uid"
-version = "0.1.0"
+version = "0.5.0"
 dependencies = [
  "bind",
  "serde",

@@ -31,8 +31,8 @@ export interface YtFormat {
 
 let client: Innertube | undefined;
 
-async function getClient(): Promise<Innertube> {
-  if (!client) {
+async function getClient(forceInit?: boolean): Promise<Innertube> {
+  if (forceInit || !client) {
     const data = await generatePoToken();
     client = await Innertube.create({
       po_token: data.poToken,
@@ -47,9 +47,16 @@ async function getClient(): Promise<Innertube> {
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const client = await getClient();
   const videoInfo = await client.getBasicInfo(videoId, 'IOS');
-  const videoInfoByMWEBPromise = client.getBasicInfo(videoId, 'MWEB');
+  const videoInfoByGreatThumbnailPromise = client.getBasicInfo(videoId, 'WEB');
 
   if (videoInfo.playability_status?.status !== 'OK') {
+    if (videoInfo.playability_status?.status === 'UNPLAYABLE') {
+      throw new Error(`Video is unplayable: ${videoInfo.playability_status.reason || 'Unknown reason'}`);
+    }
+    if (videoInfo.playability_status?.status === 'LOGIN_REQUIRED') {
+      await getClient(true); // Force re-initialization to refresh session
+      throw new Error('Blocked by YouTube: Session refreshed, please try again.');
+    }
     throw new Error(`Video is not playable: ${videoInfo.playability_status?.reason || 'Unknown reason'}`);
   }
 
@@ -102,9 +109,9 @@ export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
     throw new Error('No suitable audio format found for this video.');
   }
 
-  const videoInfoByMWEB = await videoInfoByMWEBPromise;
+  const videoInfoByGreatThumbnail = await videoInfoByGreatThumbnailPromise;
 
-  const thumbnails = [...videoInfo.basic_info?.thumbnail || [], ...videoInfoByMWEB.basic_info?.thumbnail || []];
+  const thumbnails = [...videoInfo.basic_info?.thumbnail || [], ...videoInfoByGreatThumbnail.basic_info?.thumbnail || []];
   const thumbnail_url = getBestThumbnailUrl(thumbnails);
 
   return {

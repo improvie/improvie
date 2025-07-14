@@ -9,6 +9,9 @@ pub const LOG_LEVEL_FILTER: log::LevelFilter = log::LevelFilter::Info;
 pub fn init_log_plugin<R: Runtime>() -> TauriPlugin<R> {
     tauri_plugin_log::Builder::new()
         .level(LOG_LEVEL_FILTER)
+        .level_for("h2", log::LevelFilter::Info)
+        .level_for("hyper", log::LevelFilter::Info)
+        .level_for("hyper_util", log::LevelFilter::Info)
         .targets(
             #[cfg(all(debug_assertions, not(mobile)))]
             [

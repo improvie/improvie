@@ -4,6 +4,7 @@
   import { page } from '$app/state';
   import { action_get_rules } from '$lib/action/rules';
   import LoadSpinner from '$lib/components/LoadSpinner.svelte';
+  import { Logger } from '$lib/logger';
   import { playlists } from '$lib/stores/plays/playlist';
   import { PlaylistInner } from './Inner.svelte';
 
@@ -35,6 +36,7 @@
   {:then rules}
     <PlaylistInner playlist={playlist[0]} rules={rules} />
   {:catch e}
+    {Logger.error('Failed to load rules', e)}
     <div class='w-full h-dvh flex flex-col justify-center items-center gap-4'>
       <div class='text-xl text-destructive'>エラーが発生しました</div>
       <div class='text-sm text-muted-foreground'>しばらく経ってから再度お試しください。</div>

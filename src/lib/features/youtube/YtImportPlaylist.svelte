@@ -3,6 +3,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+  import { Logger } from '$lib/logger';
   import { getPlaylistDetail } from '$lib/youtube';
   import { toast } from 'svelte-sonner';
   import YtVideoComponent from './YtVideoComponent.svelte';
@@ -26,7 +27,7 @@
       detail = await getPlaylistDetail(playlistId, videoId);
     }
     catch (error) {
-      console.error('Failed to fetch playlist details:', error);
+      Logger.error('Failed to fetch playlist details:', error);
       toast.error('Failed to fetch playlist details. Please check the playlist ID and try again.');
       processing = false;
     }

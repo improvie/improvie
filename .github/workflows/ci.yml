@@ -1,20 +1,23 @@
-name: CI
+name: Backend & Frontend CI
 
 on:
   pull_request:
 
 jobs:
-  build:
+  backend:
+    name: "Clippy & Test Backend"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: tauri requirements # ref: https://tauri.app/start/prerequisites/#linux
+      - name: "Install Tauri Requirements (Linux)"
+        # ref: https://tauri.app/start/prerequisites/#linux
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y libwebkit2gtk-4.1-dev \
+          sudo apt-get install --no-install-recommends -y \
+            libwebkit2gtk-4.1-dev \
             build-essential \
             curl \
             wget \
@@ -24,59 +27,65 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev
 
-      - name: install Rust stable
+      - name: "Install Rust (Stable)"
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Rust cache
+      - name: "Cache Rust Dependencies"
         uses: swatinem/rust-cache@v2
         with:
           workspaces: src-tauri -> target
 
-      - name: Fmt
+      - name: "Check Rust Formatting"
         run: |
           cd src-tauri
           cargo fmt --all -- --check
 
-      - name: Clippy
+      - name: "Run Clippy"
         run: |
           cd src-tauri
           cargo clippy -- -D warnings
 
-      - name: Run tests
+      - name: "Run Backend Tests"
         run: |
           cd src-tauri
           cargo ci
 
-      - name: Check ts-binding diff
+      - name: "Check TypeScript Binding Diff"
         run: |
           cd src
           git diff --exit-code -- bindings/
 
-  frontned:
+  frontend:
+    name: "Build & Test Frontend"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Cache Bun modules
+      - name: "Cache Bun modules"
         uses: actions/cache@v4
         with:
           path: node_modules
           key: bun-modules-${{ hashFiles('bun.lock') }}
-      - name: setup bun
+
+      - name: "Setup Bun"
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: install frontend dependencies
+
+      - name: "Install Frontend Dependencies"
         run: |
           bun install
 
-      - name: Check frontend dependencies
+      - name: "Check Frontend Dependencies"
         run: |
           bun run check
 
-      - name: Test and Lint frontend
+      - name: "Test Frontend"
         run: |
           bun test
+
+      - name: "Lint Frontend"
+        run: |
           bun run lint

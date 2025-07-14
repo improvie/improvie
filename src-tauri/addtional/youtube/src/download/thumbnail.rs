@@ -13,7 +13,7 @@ pub(crate) async fn download_thumbnail(
         .bytes()
         .await?;
 
-    log::debug!("Starting thumbnail download to {:?}", thumbnail_path);
+    log::debug!("Starting thumbnail download to {thumbnail_path:?}");
     std::fs::write(thumbnail_path, bytes)?;
     Ok(())
 }

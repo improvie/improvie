@@ -30,7 +30,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
         request,
         state.document_dir.clone(),
         Arc::new(move |downloading_state| {
-            log::debug!("Video Downloading state: {:?}", downloading_state);
+            log::debug!("Video Downloading state: {downloading_state:?}");
             let _ = app.emit("yt-downloading-state", downloading_state);
             true
         }),
@@ -47,7 +47,7 @@ pub async fn import_youtube_video<R: tauri::Runtime>(
             Ok(false)
         }
         Err(e) => {
-            log::error!("Error downloading video: {:?}", e);
+            log::error!("Error downloading video: {e:?}");
             Err(YtErrorWrapper(e))
         }
     }

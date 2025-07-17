@@ -111,3 +111,53 @@ impl Decode<'_, Sqlite> for Uid {
         uuid::fmt::Hyphenated::decode(value).map(|v| Self(v.into_uuid()))
     }
 }
+
+#[cfg(feature = "db")]
+impl From<Uid> for sea_orm::Value {
+    fn from(val: Uid) -> Self {
+        val.0.into()
+    }
+}
+
+#[cfg(feature = "db")]
+impl sea_orm::sea_query::ValueType for Uid {
+    fn try_from(v: sea_orm::Value) -> Result<Self, sea_orm::sea_query::ValueTypeErr> {
+        <uuid::Uuid as sea_orm::sea_query::ValueType>::try_from(v).map(Self)
+    }
+
+    fn type_name() -> String {
+        uuid::Uuid::type_name()
+    }
+
+    fn array_type() -> sea_orm::sea_query::ArrayType {
+        uuid::Uuid::array_type()
+    }
+
+    fn column_type() -> sea_orm::ColumnType {
+        uuid::Uuid::column_type()
+    }
+}
+
+#[cfg(feature = "db")]
+impl sea_orm::TryFromU64 for Uid {
+    fn try_from_u64(n: u64) -> Result<Self, sea_orm::DbErr> {
+        uuid::Uuid::try_from_u64(n).map(Self)
+    }
+}
+
+#[cfg(feature = "db")]
+impl sea_orm::sea_query::Nullable for Uid {
+    fn null() -> sea_orm::Value {
+        uuid::Uuid::null()
+    }
+}
+
+#[cfg(feature = "db")]
+impl sea_orm::TryGetable for Uid {
+    fn try_get_by<I: sea_orm::ColIdx>(
+        res: &sea_orm::QueryResult,
+        index: I,
+    ) -> Result<Self, sea_orm::TryGetError> {
+        uuid::Uuid::try_get_by(res, index).map(Self)
+    }
+}

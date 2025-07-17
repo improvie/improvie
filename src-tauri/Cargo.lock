@@ -5960,6 +5960,7 @@ name = "uid"
 version = "0.5.0"
 dependencies = [
  "bind",
+ "sea-orm",
  "serde",
  "sqlx",
  "ts-rs",

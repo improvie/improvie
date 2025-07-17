@@ -13,6 +13,7 @@ uid = { workspace = true, features = ["db"] }
 async-trait.workspace = true
 thiserror.workspace = true
 sqlx.workspace = true
+sea-orm.workspace = true
 log.workspace = true
 chrono.workspace = true
 more-convert.workspace = true

@@ -71,20 +71,22 @@ crate::impl_serialize_for_dyn_app_error!(TryFromConstantEnumError);
 
 #[cfg(feature = "db")]
 mod db {
+    type Err = sea_orm::error::DbErr;
+
     #[derive(Debug, thiserror::Error)]
     #[error("Database error: {0}")]
-    pub struct DbErr(pub sqlx::Error);
+    pub struct DbErr(pub Err);
 
     crate::impl_serialize_for_dyn_app_error!(DbErr);
 
-    impl From<sqlx::Error> for DbErr {
-        fn from(error: sqlx::Error) -> Self {
+    impl From<Err> for DbErr {
+        fn from(error: Err) -> Self {
             Self(error)
         }
     }
 
-    impl From<sqlx::Error> for super::BoxDynAppError {
-        fn from(error: sqlx::Error) -> Self {
+    impl From<Err> for super::BoxDynAppError {
+        fn from(error: Err) -> Self {
             super::BoxDynAppError::new(DbErr::from(error))
         }
     }

@@ -2263,6 +2263,7 @@ dependencies = [
  "improvie-logic",
  "log",
  "more-convert",
+ "sea-orm",
  "serde",
  "serde_json",
  "sqlx",

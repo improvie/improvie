@@ -1,28 +1,64 @@
 use improvie_logic::{DynAppError, DynAppResult};
+use sea_orm::{DbConn, TransactionTrait};
 use std::{fs::OpenOptions, path::PathBuf};
-
-use sqlx::{SqlitePool, pool::maybe::MaybePoolConnection, sqlite::SqliteConnectOptions};
 
 use crate::repository::MIGRATOR;
 
 pub enum DbConnection<'a> {
     Pool(&'a DbPool),
-    Tx(&'a mut DbTx),
+    Tx(&'a DbTx),
 }
 
-impl DbConnection<'_> {
-    pub async fn conn(&mut self) -> DynAppResult<MaybePoolConnection<sqlx::Sqlite>> {
-        match self {
-            DbConnection::Pool(pool) => {
-                let pool = pool.pool_ref();
-                let pool_conn = pool.acquire().await?;
-                Ok(pool_conn.into())
+macro_rules! internal {
+    ($(@$await:ident)?$self:ident, $fn:ident$(($($expr:expr)+))?) => {
+        match $self {
+            Self::Pool(pool) => {
+                pool.0.$fn($( $($expr)+ )?)$(.$await)?
             }
-            DbConnection::Tx(tx) => {
-                let conn = tx.as_mut();
-                Ok(conn.into())
+            Self::Tx(tx) => {
+                tx.0.$fn($( $($expr)+ )?)$(.$await)?
             }
         }
+    };
+}
+
+#[async_trait::async_trait]
+impl sea_orm::ConnectionTrait for DbConnection<'_> {
+    fn get_database_backend(&self) -> sea_orm::DbBackend {
+        internal!(self, get_database_backend)
+    }
+
+    async fn execute(
+        &self,
+        stmt: sea_orm::Statement,
+    ) -> Result<sea_orm::ExecResult, sea_orm::DbErr> {
+        internal!(@await self, execute(stmt))
+    }
+
+    async fn execute_unprepared(&self, sql: &str) -> Result<sea_orm::ExecResult, sea_orm::DbErr> {
+        internal!(@await self, execute_unprepared(sql))
+    }
+
+    async fn query_one(
+        &self,
+        stmt: sea_orm::Statement,
+    ) -> Result<Option<sea_orm::QueryResult>, sea_orm::DbErr> {
+        internal!(@await self, query_one(stmt))
+    }
+
+    async fn query_all(
+        &self,
+        stmt: sea_orm::Statement,
+    ) -> Result<Vec<sea_orm::QueryResult>, sea_orm::DbErr> {
+        internal!(@await self, query_all(stmt))
+    }
+
+    fn support_returning(&self) -> bool {
+        internal!(self, support_returning)
+    }
+
+    fn is_mock_connection(&self) -> bool {
+        internal!(self, is_mock_connection)
     }
 }
 
@@ -34,21 +70,17 @@ impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a>
         Self::Pool(pool)
     }
 
-    fn new_tx(tx: &'a mut Self::DbTx) -> Self {
+    fn new_tx(tx: &'a Self::DbTx) -> Self {
         Self::Tx(tx)
     }
 }
 
 #[derive(Clone)]
-pub struct DbPool(SqlitePool);
+pub struct DbPool(DbConn);
 
 impl DbPool {
-    pub fn pool_ref(&self) -> &SqlitePool {
+    pub fn pool(&self) -> &DbConn {
         &self.0
-    }
-
-    pub fn pool(&self) -> SqlitePool {
-        self.0.clone()
     }
 
     pub async fn begin(&self) -> DynAppResult<DbTx> {
@@ -70,15 +102,15 @@ impl improvie_domain::persistence::db::DbPool for DbPool {
     }
 }
 
-pub struct DbTx(sqlx::Transaction<'static, sqlx::Sqlite>);
+pub struct DbTx(sea_orm::DatabaseTransaction);
 
 impl DbTx {
-    fn new(tx: sqlx::Transaction<'static, sqlx::Sqlite>) -> Self {
+    fn new(tx: sea_orm::DatabaseTransaction) -> Self {
         Self(tx)
     }
 
-    pub fn tx(&mut self) -> &mut sqlx::Transaction<'static, sqlx::Sqlite> {
-        &mut self.0
+    pub fn tx(&self) -> &sea_orm::DatabaseTransaction {
+        &self.0
     }
 
     pub async fn commit(self) -> DynAppResult<()> {
@@ -93,12 +125,6 @@ impl DbTx {
             .rollback()
             .await
             .map_err(|e| improvie_logic::DbErr(e).into())
-    }
-}
-
-impl AsMut<sqlx::SqliteConnection> for DbTx {
-    fn as_mut(&mut self) -> &mut sqlx::SqliteConnection {
-        self.0.as_mut()
     }
 }
 
@@ -119,7 +145,7 @@ impl improvie_domain::persistence::db::DbTx for DbTx {
 #[derive(Debug, thiserror::Error)]
 pub enum InitDbError {
     #[error("create database error: {0}")]
-    Db(#[from] sqlx::Error),
+    Db(#[from] sea_orm::error::DbErr),
     #[error("create database error with io: {0}")]
     Io(#[from] std::io::Error),
 }
@@ -140,31 +166,32 @@ impl DbPool {
             .truncate(false)
             .open(&join)?;
 
-        let option = SqliteConnectOptions::new().filename(&join);
+        let mut option = sea_orm::ConnectOptions::new(format!("sqlite:{}", join.display()));
         #[cfg(debug_assertions)]
-        let option =
-            if option_env!("ENABLE_SQLX_LOG").is_some_and(|v| v.parse::<bool>().is_ok_and(|b| b)) {
-                log::debug!("enable sqlx logging");
-                option
-            } else {
-                log::debug!(
-                    "disable sqlx logging for readability. Set `ENABLE_SQLX_LOG=true` to enable it."
-                );
-                use sqlx::ConnectOptions;
-                option.disable_statement_logging()
-            };
-        let connect = SqlitePool::connect_with(option).await?;
-        MIGRATOR
-            .run(&connect)
+        if option_env!("ENABLE_SQLX_LOG").is_some_and(|v| v.parse::<bool>().is_ok_and(|b| b)) {
+            log::debug!("enable sqlx logging");
+        } else {
+            log::debug!(
+                "disable sqlx logging for readability. Set `ENABLE_SQLX_LOG=true` to enable it."
+            );
+            option.sqlx_logging(false);
+        };
+
+        let connect = sea_orm::SqlxSqliteConnector::connect(option)
             .await
-            .map_err(|err| sqlx::Error::Migrate(Box::new(err)))?;
+            .map_err(InitDbError::Db)?;
+
+        MIGRATOR
+            .run(connect.get_sqlite_connection_pool())
+            .await
+            .map_err(|err| InitDbError::Db(sea_orm::error::DbErr::Migration(err.to_string())))?;
         Ok(Self(connect))
     }
 }
 
 #[cfg(test)]
 impl DbPool {
-    pub fn with_pool(pool: SqlitePool) -> Self {
+    pub fn with_pool(pool: DbConn) -> Self {
         Self(pool)
     }
 }

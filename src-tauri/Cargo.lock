@@ -2290,8 +2290,11 @@ dependencies = [
 name = "improvie-row"
 version = "0.5.0"
 dependencies = [
+ "improvie-domain",
  "improvie-logic",
  "sea-orm",
+ "serde",
+ "serde_json",
  "uid",
 ]
 

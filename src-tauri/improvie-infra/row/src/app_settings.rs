@@ -2,12 +2,13 @@
 
 use improvie_logic::model::settings::AppSettings;
 use sea_orm::entity::prelude::*;
+use uid::Uid;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
 #[sea_orm(table_name = "app_settings")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false, column_type = "custom(\"uuid\")")]
-    pub id: String,
+    pub id: Uid,
     #[sea_orm(column_type = "custom(\"json\")")]
     pub settings: AppSettings,
     pub created_at: DateTimeUtc,

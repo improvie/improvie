@@ -40,7 +40,7 @@
 
 <Toaster />
 
-<Sidebar.Provider bind:open class='items-center' style='--sidebar-width: 10rem;'>
+<Sidebar.Provider bind:open class='items-center'>
   <Sealed />
   <AppSidebar />
   <Sidebar.Inset class='select-none'>

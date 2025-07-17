@@ -7,7 +7,6 @@ license.workspace = true
 
 [dependencies]
 improvie-logic.workspace = true
-improvie-domain.workspace = true
 
 uid.workspace = true
 serde.workspace = true

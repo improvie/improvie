@@ -13,11 +13,8 @@ pub struct Model {
     #[sea_orm(column_type = "Text", nullable)]
     pub thumbnail_path: Option<String>,
     #[sea_orm(column_type = "custom(\"json\")")]
-    pub rules: JsonRuleDataList,
+    pub rules: String,
 }
-
-#[derive(Clone, Debug, Serialize, Deserialize, FromJsonQueryResult, PartialEq, Eq)]
-pub struct JsonRuleDataList(pub Vec<RuleData>);
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {

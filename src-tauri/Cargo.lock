@@ -2277,7 +2277,9 @@ dependencies = [
  "bind",
  "chrono",
  "more-convert",
+ "sea-orm",
  "serde",
+ "serde_json",
  "sqlx",
  "thiserror 2.0.12",
  "ts-rs",
@@ -2288,6 +2290,7 @@ dependencies = [
 name = "improvie-row"
 version = "0.5.0"
 dependencies = [
+ "improvie-logic",
  "sea-orm",
  "uid",
 ]

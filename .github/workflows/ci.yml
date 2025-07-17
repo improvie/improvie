@@ -1,11 +1,11 @@
-name: Backend & Frontend CI
+name: CI
 
 on:
   pull_request:
 
 jobs:
   backend:
-    name: "Clippy & Test Backend"
+    name: "Backend"
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
           git diff --exit-code -- bindings/
 
   frontend:
-    name: "Build & Test Frontend"
+    name: "Frontend"
     runs-on: ubuntu-latest
 
     steps:
@@ -78,7 +78,7 @@ jobs:
         run: |
           bun install
 
-      - name: "Check Frontend Dependencies"
+      - name: "Check Frontend Diagnostics"
         run: |
           bun run check
 

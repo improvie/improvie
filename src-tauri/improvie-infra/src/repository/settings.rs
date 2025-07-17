@@ -24,12 +24,13 @@ impl SettingsRepository for SettingsRepositoryImpl {
 
     async fn set_app_settings(&self, settings: AppSettings) -> improvie_logic::DynAppResult<()> {
         let row = improvie_row::app_settings::ActiveModel {
-            id: Set(Uid::nil()),
             settings: Set(settings),
             ..Default::default()
         };
 
-        improvie_row::app_settings::Entity::update(row)
+        improvie_row::app_settings::Entity::update_many()
+            .set(row)
+            .filter(improvie_row::app_settings::Column::Id.eq(Uid::nil()))
             .exec(self.db.pool())
             .await?;
 

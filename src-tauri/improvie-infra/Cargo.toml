@@ -8,6 +8,7 @@ license.workspace = true
 [dependencies]
 improvie-domain.workspace = true
 improvie-logic = { workspace = true, features = ["db"] }
+improvie-row.workspace = true
 uid = { workspace = true, features = ["db"] }
 
 async-trait.workspace = true

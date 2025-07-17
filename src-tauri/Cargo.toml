@@ -82,6 +82,7 @@ license = "MIT"
 [workspace.dependencies]
 improvie-app = { path = "improvie-app" }
 improvie-infra = { path = "improvie-infra" }
+improvie-row = { path = "improvie-infra/row" }
 improvie-domain = { path = "improvie-domain" }
 improvie-logic = { path = "improvie-logic" }
 improvie-command = { path = "improvie-command" }

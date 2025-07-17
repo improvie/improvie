@@ -1,0 +1,13 @@
+[package]
+name = "improvie-row"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+uid.workspace = true
+sea-orm.workspace = true
+
+[lints]
+workspace = true

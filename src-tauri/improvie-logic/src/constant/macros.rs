@@ -7,7 +7,7 @@ macro_rules! def_constant_enum {
         )+
     ) => {
         $(
-            $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)]
+            $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, Hash, serde::Serialize, serde::Deserialize)]
             #[cfg_attr(feature = "db", derive(sea_orm::EnumIter, sea_orm::DeriveActiveEnum))]
             #[cfg_attr(feature = "db", sea_orm(rs_type = "u8", db_type = "TinyUnsigned"))]
             #[cfg_attr(feature = "ts", bind::ts("constants.ts"))]

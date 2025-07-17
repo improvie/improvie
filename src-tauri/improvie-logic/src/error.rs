@@ -54,6 +54,21 @@ crate::impl_serialize_for_dyn_app_error!(BoxDynAppError, 0);
 
 pub type DynAppResult<T> = std::result::Result<T, BoxDynAppError>;
 
+#[derive(Debug, Clone, thiserror::Error)]
+#[error("Failed to convert value {value} to enum {enum_name}")]
+pub struct TryFromConstantEnumError {
+    pub enum_name: &'static str,
+    pub value: u8,
+}
+
+impl DynAppError for TryFromConstantEnumError {
+    fn error_kind(&self) -> &'static str {
+        "try_from_constant_enum"
+    }
+}
+
+crate::impl_serialize_for_dyn_app_error!(TryFromConstantEnumError);
+
 #[cfg(feature = "db")]
 mod db {
     #[derive(Debug, thiserror::Error)]

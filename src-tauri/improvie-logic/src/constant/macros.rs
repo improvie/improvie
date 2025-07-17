@@ -8,10 +8,13 @@ macro_rules! def_constant_enum {
     ) => {
         $(
             $(#[$attr])* #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Ord, Eq, serde::Serialize, serde::Deserialize)]
+            #[cfg_attr(feature = "db", derive(sea_orm::EnumIter, sea_orm::DeriveActiveEnum))]
+            #[cfg_attr(feature = "db", sea_orm(rs_type = "u8", db_type = "TinyUnsigned"))]
             #[cfg_attr(feature = "ts", bind::ts("constants.ts"))]
             $pub $enum $name {
                 $(
                     $(#[$field_attr])*
+                    #[cfg_attr(feature = "db", sea_orm(num_value = $num))]
                     $variable = $num,
                 )*
             }
@@ -60,55 +63,6 @@ macro_rules! def_constant_enum {
                     let num = <u8 as sqlx::Decode<sqlx::Sqlite>>::decode(value)?;
 
                     num.try_into().map_err(Into::into)
-                }
-            }
-
-            #[cfg(feature = "db")]
-            impl From<$name> for sea_orm::Value {
-                fn from(val: $name) -> Self {
-                    sea_orm::Value::TinyUnsigned(Some(val.into()))
-                }
-            }
-
-            #[cfg(feature = "db")]
-            impl sea_orm::sea_query::Nullable for $name {
-                fn null() -> sea_orm::Value {
-                    <u8 as sea_orm::sea_query::Nullable>::null()
-                }
-            }
-
-            #[cfg(feature = "db")]
-            impl sea_orm::sea_query::ValueType for $name {
-                fn try_from(v: sea_orm::Value) -> Result<Self, sea_orm::sea_query::ValueTypeErr> {
-                    let num = <u8 as sea_orm::sea_query::ValueType>::try_from(v)?;
-                    num.try_into().map_err(|_| sea_orm::sea_query::ValueTypeErr)
-                }
-
-                fn type_name() -> String {
-                    stringify!($name).to_owned()
-                }
-
-                fn array_type() -> sea_orm::sea_query::ArrayType {
-                    <u8 as sea_orm::sea_query::ValueType>::array_type()
-                }
-
-                fn column_type() -> sea_orm::sea_query::ColumnType {
-                    <u8 as sea_orm::sea_query::ValueType>::column_type()
-                }
-            }
-
-            #[cfg(feature = "db")]
-            impl sea_orm::TryGetable for $name {
-                fn try_get_by<I: sea_orm::ColIdx>(
-                    res: &sea_orm::QueryResult,
-                    index: I,
-                ) -> Result<Self, sea_orm::TryGetError> {
-                    let value = <u8 as sea_orm::TryGetable>::try_get_by(res, index)?;
-                    value.try_into().map_err(|e| sea_orm::DbErr::TryIntoErr {
-                        from: "u8",
-                        into: stringify!($name),
-                        source: Box::new(e),
-                    }.into())
                 }
             }
         )+

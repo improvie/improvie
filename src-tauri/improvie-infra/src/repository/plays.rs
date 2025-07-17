@@ -14,6 +14,7 @@ use improvie_logic::{
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
+use sea_orm::{EntityTrait, QueryOrder, QuerySelect};
 use sqlx::QueryBuilder;
 use uid::Uid;
 
@@ -31,46 +32,47 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 impl PlaystsRepository for PlaylistsRepositoryImpl {
     type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
     async fn get_play_folders(&self) -> DynAppResult<Vec<PlayFolder>> {
-        let rows = sqlx::query_as::<_, PlayFolderRow>(
-            "
-SELECT
-    pi.id, pi.title, pi.description, pi.created_at
-FROM play_folders AS pf
-INNER JOIN play_items AS pi ON pi.id = pf.item_id
-",
-        )
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = improvie_row::play_folders::Entity::find()
+            .select_only()
+            .inner_join(improvie_row::play_items::Entity)
+            .column(improvie_row::play_items::Column::Id)
+            .column(improvie_row::play_items::Column::Title)
+            .column(improvie_row::play_items::Column::Description)
+            .column(improvie_row::play_items::Column::CreatedAt)
+            .into_model::<PlayFolderRow>()
+            .all(self.db.pool())
+            .await?;
 
         Ok(rows.vec_into())
     }
 
     async fn get_playlists(&self) -> DynAppResult<Vec<Playlist>> {
-        let rows = sqlx::query_as::<_, PlaylistRow>(
-            "
-SELECT
-    pi.id, pi.title, pi.description, pl.thumbnail_path, pi.created_at
-FROM playlists AS pl
-INNER JOIN play_items AS pi ON pi.id = pl.item_id
-",
-        )
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = improvie_row::playlists::Entity::find()
+            .select_only()
+            .column(improvie_row::playlists::Column::ThumbnailPath)
+            .inner_join(improvie_row::play_items::Entity)
+            .column(improvie_row::play_items::Column::Id)
+            .column(improvie_row::play_items::Column::Title)
+            .column(improvie_row::play_items::Column::Description)
+            .column(improvie_row::play_items::Column::CreatedAt)
+            .into_model::<PlaylistRow>()
+            .all(self.db.pool())
+            .await?;
 
         Ok(rows.vec_into())
     }
 
     async fn get_favorite_playlists(&self) -> DynAppResult<Vec<Uid>> {
-        let rows = sqlx::query_scalar::<_, Uid>(
-            "
-SELECT playlist_id
-FROM favorite_playlists
-ORDER BY sort_order
-",
-        )
-        .bind(Uid::nil())
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = improvie_row::favorite_playlists::Entity::find()
+            .select_only()
+            .column(improvie_row::favorite_playlists::Column::PlaylistId)
+            .order_by(
+                improvie_row::favorite_playlists::Column::SortOrder,
+                sea_orm::Order::Asc,
+            )
+            .into_tuple::<Uid>()
+            .all(self.db.pool())
+            .await?;
 
         Ok(rows.vec_into())
     }

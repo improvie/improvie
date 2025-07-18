@@ -38,7 +38,7 @@ pub struct PlayCurrentNodeRaw {
     pub sort_order: u32,
 }
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(sea_orm::FromQueryResult, Debug)]
 pub struct PlayNodeRaw {
     pub parent_folder_id: Uid,
     pub child_id: Uid,

@@ -37,11 +37,28 @@ pub trait PlaystsRepository {
         playlist_id: Uid,
     ) -> DynAppResult<()>;
 
-    async fn create_play_folder(&self, model: CreatePlayFolderModel) -> DynAppResult<PlayFolder>;
+    async fn create_play_folder(
+        &self,
+        conn: Self::DbConnection<'_>,
+        model: CreatePlayFolderModel,
+    ) -> DynAppResult<PlayFolder>;
 
-    async fn create_playlist(&self, model: CreatePlaylistModel) -> DynAppResult<Playlist>;
+    async fn create_playlist(
+        &self,
+        conn: Self::DbConnection<'_>,
+        model: CreatePlaylistModel,
+    ) -> DynAppResult<Playlist>;
 
-    async fn delete_play_item(&self, play_id: Uid) -> DynAppResult<Vec<Uid>>;
+    async fn delete_play_item(
+        &self,
+        conn: Self::DbConnection<'_>,
+        play_id: Uid,
+    ) -> DynAppResult<Vec<Uid>>;
 
-    async fn update_play_item_name(&self, play_id: Uid, name: String) -> DynAppResult<()>;
+    async fn update_play_item_name(
+        &self,
+        conn: Self::DbConnection<'_>,
+        play_id: Uid,
+        name: String,
+    ) -> DynAppResult<()>;
 }

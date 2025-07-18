@@ -29,5 +29,10 @@ pub trait ItemsRepository {
 
     async fn delete_item(&self, item_id: Uid) -> DynAppResult<Vec<Uid>>;
 
-    async fn update_item_name(&self, item_id: Uid, new_name: String) -> DynAppResult<()>;
+    async fn update_item_name(
+        &self,
+        conn: Self::DbConnection<'_>,
+        item_id: Uid,
+        new_name: String,
+    ) -> DynAppResult<()>;
 }

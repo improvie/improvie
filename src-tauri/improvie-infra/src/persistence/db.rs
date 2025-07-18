@@ -1,5 +1,5 @@
 use improvie_logic::{DynAppError, DynAppResult};
-use sea_orm::{DbConn, TransactionTrait};
+use sea_orm::{ConnectionTrait, DbConn, TransactionTrait};
 use std::{fs::OpenOptions, path::PathBuf};
 
 use crate::repository::MIGRATOR;
@@ -82,6 +82,10 @@ pub struct DbPool(DbConn);
 impl DbPool {
     pub fn pool(&self) -> &DbConn {
         &self.0
+    }
+
+    pub fn backend(&self) -> sea_orm::DbBackend {
+        self.0.get_database_backend()
     }
 
     pub async fn begin(&self) -> DynAppResult<DbTx> {

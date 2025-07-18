@@ -1,3 +1,6 @@
+use sea_orm::ColumnTrait;
+use sea_orm::FromQueryResult;
+use sea_orm::Statement;
 use std::collections::HashMap;
 
 use chrono::Utc;
@@ -11,15 +14,19 @@ use improvie_logic::{
     model::items::{Content, Folder, FolderNode, Item, ItemNode},
 };
 use more_convert::VecInto;
+use sea_orm::{EntityTrait, QueryFilter, QuerySelect};
 use sqlx::QueryBuilder;
 use uid::Uid;
 
+use crate::repository::modify_check;
 use crate::{
     model::items::{ContentRaw, CurrentNodeRaw, FolderRaw, NodeRaw},
     persistence::db::DbTx,
 };
 
 use super::{def_repository_impl, insert_check};
+
+use improvie_row as row;
 
 def_repository_impl!(ItemsRepositoryImpl);
 
@@ -28,18 +35,16 @@ impl ItemsRepository for ItemsRepositoryImpl {
     type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
 
     async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
-        let rows = sqlx::query_as::<_, CurrentNodeRaw>(
-            "
-SELECT
-    hi.child_id, i.kind AS child_kind, hi.sort_order
-FROM hierarchical_items AS hi
-INNER JOIN items AS i ON i.id = hi.child_id
-WHERE hi.parent_folder_id = ?
-",
-        )
-        .bind(folder_id)
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = row::hierarchical_items::Entity::find()
+            .select_only()
+            .column(row::hierarchical_items::Column::ChildId)
+            .column(row::hierarchical_items::Column::SortOrder)
+            .left_join(row::items::Entity)
+            .column(row::items::Column::Kind)
+            .filter(row::hierarchical_items::Column::ParentFolderId.eq(folder_id))
+            .into_model::<CurrentNodeRaw>()
+            .all(self.db.pool())
+            .await?;
 
         let mut items: Vec<ItemNode> = vec![];
         for row in rows {
@@ -69,35 +74,36 @@ WHERE hi.parent_folder_id = ?
         &self,
         folder_id: Uid,
     ) -> DynAppResult<HashMap<Uid, FolderNode>> {
-        let rows = sqlx::query_as::<_, NodeRaw>(
+        let rows = NodeRaw::find_by_statement(Statement::from_sql_and_values(
+            self.db.backend(),
             "
-WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
-    SELECT
-        hi.parent_folder_id,
-        hi.child_id,
-        i.kind AS child_kind,
-        hi.sort_order
-    FROM hierarchical_items AS hi
-    INNER JOIN items AS i ON i.id = hi.child_id
-    WHERE hi.parent_folder_id = ?
+        WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
+            SELECT
+                hi.parent_folder_id,
+                hi.child_id,
+                i.kind AS child_kind,
+                hi.sort_order
+            FROM hierarchical_items AS hi
+            INNER JOIN items AS i ON i.id = hi.child_id
+            WHERE hi.parent_folder_id = ?
 
-    UNION ALL
+            UNION ALL
 
-    SELECT
-        hi.parent_folder_id,
-        hi.child_id,
-        i.kind AS child_kind,
-        hi.sort_order
-    FROM hierarchical_items AS hi
-    INNER JOIN folder_hierarchy AS fh ON hi.parent_folder_id = fh.child_id
-    INNER JOIN items AS i ON hi.child_id = i.id
-)
-SELECT *
-FROM folder_hierarchy
-",
+            SELECT
+                hi.parent_folder_id,
+                hi.child_id,
+                i.kind AS child_kind,
+                hi.sort_order
+            FROM hierarchical_items AS hi
+            INNER JOIN folder_hierarchy AS fh ON hi.parent_folder_id = fh.child_id
+            INNER JOIN items AS i ON hi.child_id = i.id
         )
-        .bind(folder_id)
-        .fetch_all(&self.db.pool())
+        SELECT *
+        FROM folder_hierarchy
+        ",
+            [folder_id.into()],
+        ))
+        .all(self.db.pool())
         .await?;
 
         let mut nodes: HashMap<Uid, FolderNode> = HashMap::new();
@@ -127,34 +133,36 @@ FROM folder_hierarchy
     }
 
     async fn get_contents(&self) -> DynAppResult<Vec<Content>> {
-        let row: Vec<ContentRaw> = sqlx::query_as(
-            "
-SELECT
-    i.id, i.title, i.description, i.created_at,
-    c.kind, c.content_path, c.thumbnail_path
-FROM contents AS c
-INNER JOIN items AS i ON c.item_id = i.id
-",
-        )
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = row::contents::Entity::find()
+            .select_only()
+            .column(row::contents::Column::Kind)
+            .column(row::contents::Column::ContentPath)
+            .column(row::contents::Column::ThumbnailPath)
+            .left_join(row::items::Entity)
+            .column(row::items::Column::Id)
+            .column(row::items::Column::Title)
+            .column(row::items::Column::Description)
+            .column(row::items::Column::CreatedAt)
+            .into_model::<ContentRaw>()
+            .all(self.db.pool())
+            .await?;
 
-        Ok(row.vec_into())
+        Ok(rows.vec_into())
     }
 
     async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
-        let row: Vec<FolderRaw> = sqlx::query_as(
-            "
-SELECT
-    i.id, i.title, i.description, i.created_at
-FROM folders AS f
-INNER JOIN items AS i ON f.item_id = i.id
-",
-        )
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = row::folders::Entity::find()
+            .select_only()
+            .left_join(row::items::Entity)
+            .column(row::items::Column::Id)
+            .column(row::items::Column::Title)
+            .column(row::items::Column::Description)
+            .column(row::items::Column::CreatedAt)
+            .into_model::<FolderRaw>()
+            .all(self.db.pool())
+            .await?;
 
-        Ok(row.vec_into())
+        Ok(rows.vec_into())
     }
 
     async fn create_folder(&self, model: CreateFolderModel) -> DynAppResult<Folder> {
@@ -268,23 +276,23 @@ WHERE id IN (
         Ok(item_uids)
     }
 
-    async fn update_item_name(&self, item_id: Uid, new_name: String) -> DynAppResult<()> {
-        let mut tx = self.db.begin().await?;
-        let result = sqlx::query(
-            "
-UPDATE items
-SET title = ?
-WHERE id = ?
-",
-        )
-        .bind(&new_name)
-        .bind(item_id)
-        .execute(tx.as_mut())
-        .await;
+    async fn update_item_name(
+        &self,
+        conn: Self::DbConnection<'_>,
+        item_id: Uid,
+        new_name: String,
+    ) -> DynAppResult<()> {
+        let target = row::items::ActiveModel {
+            title: sea_orm::Set(new_name),
+            ..Default::default()
+        };
+        let result = row::items::Entity::update_many()
+            .filter(row::items::Column::Id.eq(item_id))
+            .set(target)
+            .exec(&conn)
+            .await;
 
-        insert_check!(result, tx);
-
-        tx.commit().await?;
+        modify_check!(result);
 
         Ok(())
     }

@@ -366,14 +366,11 @@ mod tests {
     use improvie_logic::model::items::{FolderNode, ItemNode};
     use uid::Uid;
 
-    use crate::{
-        persistence::db::DbPool,
-        repository::{MIGRATOR, items::ItemsRepositoryImpl},
-    };
+    use crate::{persistence::db::DbPool, repository::items::ItemsRepositoryImpl};
 
-    #[sqlx::test(migrator = "MIGRATOR", fixtures("get_items_hierarchy"))]
-    fn get_items_hierarchy(pool: sqlx::SqlitePool) {
-        let repo = ItemsRepositoryImpl::new(DbPool::with_pool(pool));
+    #[tokio::test]
+    async fn get_items_hierarchy() {
+        let repo = ItemsRepositoryImpl::new(DbPool::new_test().await);
         let res = repo.get_items_hierarchy_loop(Uid::nil()).await.unwrap();
         let mut map = HashMap::new();
         map.insert(

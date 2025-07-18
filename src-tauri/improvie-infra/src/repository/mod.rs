@@ -3,8 +3,6 @@ pub mod plays;
 pub mod rules;
 pub mod settings;
 
-pub static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../migrations");
-
 macro_rules! modify_match {
     ($result:expr, {$($t:tt)*}) => {
         match $result {

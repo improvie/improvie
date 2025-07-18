@@ -2,8 +2,6 @@ use improvie_logic::{DynAppError, DynAppResult};
 use sea_orm::{ConnectionTrait, DbConn, TransactionTrait};
 use std::{fs::OpenOptions, path::PathBuf};
 
-use crate::repository::MIGRATOR;
-
 #[derive(Clone, Copy)]
 pub enum DbConnection<'a> {
     Pool(&'a DbPool),
@@ -161,6 +159,8 @@ impl DynAppError for InitDbError {
     }
 }
 
+pub(crate) static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../migrations");
+
 impl DbPool {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         std::fs::create_dir_all(&data_dir)?;
@@ -182,6 +182,10 @@ impl DbPool {
             option.sqlx_logging(false);
         };
 
+        Self::new_internal(option).await
+    }
+
+    async fn new_internal(option: sea_orm::ConnectOptions) -> Result<Self, InitDbError> {
         let connect = sea_orm::SqlxSqliteConnector::connect(option)
             .await
             .map_err(InitDbError::Db)?;
@@ -196,7 +200,11 @@ impl DbPool {
 
 #[cfg(test)]
 impl DbPool {
-    pub fn with_pool(pool: DbConn) -> Self {
-        Self(pool)
+    pub async fn new_test() -> Self {
+        const DB_URL: &str = "sqlite::memory:";
+        let option = sea_orm::ConnectOptions::new(DB_URL);
+
+        #[allow(clippy::unwrap_used)]
+        Self::new_internal(option).await.unwrap()
     }
 }

@@ -19,7 +19,7 @@ use crate::{
     persistence::db::DbTx,
 };
 
-use super::{def_repository_impl, tx_check};
+use super::{def_repository_impl, insert_check};
 
 def_repository_impl!(ItemsRepositoryImpl);
 
@@ -176,7 +176,7 @@ INNER JOIN items AS i ON f.item_id = i.id
             .execute(tx.as_mut())
             .await;
 
-        tx_check!(folder_result, tx);
+        insert_check!(folder_result, tx);
 
         add_hierarchy(&mut tx, model.item.parent_folder_id, folder.item.id).await?;
 
@@ -212,7 +212,7 @@ INNER JOIN items AS i ON f.item_id = i.id
         .execute(tx.as_mut())
         .await;
 
-        tx_check!(content_result, tx);
+        insert_check!(content_result, tx);
 
         add_hierarchy(&mut tx, model.item.parent_folder_id, content.item.id).await?;
 
@@ -282,7 +282,7 @@ WHERE id = ?
         .execute(tx.as_mut())
         .await;
 
-        tx_check!(result, tx);
+        insert_check!(result, tx);
 
         tx.commit().await?;
 
@@ -302,7 +302,7 @@ async fn add_item(tx: &mut DbTx, item: &Item, kind: ItemKind) -> DynAppResult<()
     .execute(tx.as_mut())
     .await;
 
-    tx_check!(item_result, tx);
+    insert_check!(item_result, tx);
 
     Ok(())
 }
@@ -350,7 +350,7 @@ VALUES
     .execute(tx.as_mut())
     .await;
 
-    tx_check!(hierarchy_result, tx);
+    insert_check!(hierarchy_result, tx);
 
     Ok(())
 }

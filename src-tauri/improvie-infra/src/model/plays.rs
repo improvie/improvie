@@ -31,7 +31,7 @@ pub struct PlaylistRow {
     pub thumbnail_path: Option<String>,
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(sea_orm::FromQueryResult)]
 pub struct PlayCurrentNodeRaw {
     pub child_id: Uid,
     pub child_kind: PlayItemKind,

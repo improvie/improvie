@@ -25,9 +25,17 @@ pub trait PlaystsRepository {
 
     async fn get_favorite_playlists(&self) -> DynAppResult<Vec<Uid>>;
 
-    async fn add_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()>;
+    async fn add_favorite_playlist(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: Uid,
+    ) -> DynAppResult<()>;
 
-    async fn remove_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()>;
+    async fn remove_favorite_playlist(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: Uid,
+    ) -> DynAppResult<()>;
 
     async fn create_play_folder(&self, model: CreatePlayFolderModel) -> DynAppResult<PlayFolder>;
 

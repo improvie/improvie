@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use improvie_domain::{modules::RepositoriesModule, repository::plays::PlaystsRepository};
+use improvie_domain::{
+    modules::RepositoriesModule, persistence::db::DbTx, repository::plays::PlaystsRepository,
+};
 use improvie_logic::{
     DynAppResult,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
@@ -53,10 +55,13 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
     }
 
     pub async fn add_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {
-        self.repository
-            .playsts_repository()
-            .add_favorite_playlist(playlist_id)
-            .await
+        let tx = self.repository.begin().await?;
+        tx.execute(async |conn| {
+            self.repository
+                .playsts_repository()
+                .add_favorite_playlist(conn, playlist_id)
+                .await
+        })
     }
 
     pub async fn remove_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {

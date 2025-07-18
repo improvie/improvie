@@ -4,6 +4,7 @@ use std::{fs::OpenOptions, path::PathBuf};
 
 use crate::repository::MIGRATOR;
 
+#[derive(Clone, Copy)]
 pub enum DbConnection<'a> {
     Pool(&'a DbPool),
     Tx(&'a DbTx),

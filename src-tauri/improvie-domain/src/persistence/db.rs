@@ -1,6 +1,6 @@
 use improvie_logic::DynAppResult;
 
-pub trait DbConnection<'a>: Send + Sync {
+pub trait DbConnection<'a>: Send + Sync + Clone + Copy {
     type DbPool: DbPool<DbTx = Self::DbTx>;
     type DbTx: DbTx;
 
@@ -26,7 +26,7 @@ pub trait DbTx: Send + Sync + 'static {
     type DbConnection<'a>: DbConnection<'a, DbPool = Self::DbPool, DbTx = Self>;
     type DbPool: DbPool<DbTx = Self>;
 
-    fn connection(&mut self) -> Self::DbConnection<'_> {
+    fn connection(&self) -> Self::DbConnection<'_> {
         Self::DbConnection::new_tx(self)
     }
 
@@ -35,4 +35,24 @@ pub trait DbTx: Send + Sync + 'static {
 
     /// Rolls back the transaction.
     async fn rollback(self) -> DynAppResult<()>;
+
+    async fn execute<T, F, R>(self, func: F) -> DynAppResult<T>
+    where
+        Self: Sized,
+        T: Send,
+        F: FnOnce(Self::DbConnection<'_>) -> R + Send,
+        R: std::future::Future<Output = DynAppResult<T>> + Send,
+    {
+        let conn = self.connection();
+        match func(conn).await {
+            Ok(result) => {
+                self.commit().await?;
+                Ok(result)
+            }
+            Err(e) => {
+                self.rollback().await?;
+                Err(e)
+            }
+        }
+    }
 }

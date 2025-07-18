@@ -1,3 +1,4 @@
+use sea_orm::ColumnTrait;
 use std::collections::HashMap;
 
 use chrono::Utc;
@@ -14,14 +15,14 @@ use improvie_logic::{
     model::plays::{PlayFolder, PlayFolderNode, PlayItem, PlayItemNode, Playlist},
 };
 use more_convert::VecInto;
-use sea_orm::{EntityTrait, QueryOrder, QuerySelect};
+use sea_orm::{EntityTrait, QueryFilter, QueryOrder, QuerySelect};
 use sqlx::QueryBuilder;
 use uid::Uid;
 
 use crate::{
     model::plays::{PlayCurrentNodeRaw, PlayFolderRow, PlayNodeRaw, PlaylistRow},
     persistence::db::DbTx,
-    repository::tx_check,
+    repository::{insert_check, modify_check},
 };
 
 use super::def_repository_impl;
@@ -77,67 +78,60 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
         Ok(rows.vec_into())
     }
 
-    async fn add_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {
-        let mut tx = self.db.begin().await?;
+    async fn add_favorite_playlist(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: Uid,
+    ) -> DynAppResult<()> {
+        let max_number: u32 = improvie_row::favorite_playlists::Entity::find()
+            .select_only()
+            .column(improvie_row::favorite_playlists::Column::SortOrder)
+            .into_tuple::<u32>()
+            .one(&conn)
+            .await?
+            .unwrap_or(0);
 
-        let max_number: u32 = sqlx::query_scalar(
-            "
-SELECT
-    MAX(sort_order)
-FROM favorite_playlists
-",
+        let result = improvie_row::favorite_playlists::Entity::insert(
+            improvie_row::favorite_playlists::ActiveModel {
+                playlist_id: sea_orm::Set(playlist_id),
+                sort_order: sea_orm::Set(max_number + 1),
+                ..Default::default()
+            },
         )
-        .fetch_one(tx.as_mut())
-        .await?;
-
-        let result = sqlx::query(
-            "
-INSERT INTO favorite_playlists (playlist_id, sort_order) VALUES (?, ?)",
-        )
-        .bind(playlist_id)
-        .bind(max_number + 1)
-        .execute(tx.as_mut())
+        .exec_without_returning(&conn)
         .await;
 
-        tx_check!(result, tx);
-
-        tx.commit().await?;
+        insert_check!(result);
 
         Ok(())
     }
 
-    async fn remove_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {
-        let mut tx = self.db.begin().await?;
+    async fn remove_favorite_playlist(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: Uid,
+    ) -> DynAppResult<()> {
+        let result = improvie_row::favorite_playlists::Entity::delete_many()
+            .filter(improvie_row::favorite_playlists::Column::PlaylistId.eq(playlist_id))
+            .exec(&conn)
+            .await;
 
-        let result = sqlx::query(
-            "
-DELETE FROM favorite_playlists
-WHERE playlist_id = ?",
-        )
-        .bind(playlist_id)
-        .execute(tx.as_mut())
-        .await;
-
-        tx_check!(result, tx);
-
-        tx.commit().await?;
+        modify_check!(result);
 
         Ok(())
     }
 
     async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<PlayFolderNode> {
-        let rows = sqlx::query_as::<_, PlayCurrentNodeRaw>(
-            "
-SELECT
-    hpi.child_id, pi.kind AS child_kind, hpi.sort_order
-FROM hierarchical_play_items AS hpi
-INNER JOIN play_items AS pi ON pi.id = hpi.child_id
-WHERE hpi.parent_folder_id = ?
-",
-        )
-        .bind(folder_id)
-        .fetch_all(&self.db.pool())
-        .await?;
+        let rows = improvie_row::hierarchical_play_items::Entity::find()
+            .select_only()
+            .column(improvie_row::hierarchical_play_items::Column::ChildId)
+            .column(improvie_row::hierarchical_play_items::Column::SortOrder)
+            .inner_join(improvie_row::play_items::Entity)
+            .column(improvie_row::play_items::Column::Kind)
+            .filter(improvie_row::hierarchical_play_items::Column::ParentFolderId.eq(folder_id))
+            .into_model::<PlayCurrentNodeRaw>()
+            .all(self.db.pool())
+            .await?;
 
         let mut children: Vec<PlayItemNode> = vec![];
         for row in rows {
@@ -243,7 +237,7 @@ FROM folder_hierarchy
             .execute(tx.as_mut())
             .await;
 
-        tx_check!(folder_result, tx);
+        insert_check!(folder_result, tx);
 
         add_play_hierarchy(&mut tx, model.item.parent_folder_id, folder.item.id).await?;
 
@@ -275,7 +269,7 @@ FROM folder_hierarchy
                 .execute(tx.as_mut())
                 .await;
 
-        tx_check!(playlist_result, tx);
+        insert_check!(playlist_result, tx);
 
         add_play_hierarchy(&mut tx, model.item.parent_folder_id, content.item.id).await?;
 
@@ -345,7 +339,7 @@ WHERE id = ?
         .execute(tx.as_mut())
         .await;
 
-        tx_check!(result, tx);
+        insert_check!(result, tx);
 
         tx.commit().await?;
 
@@ -365,7 +359,7 @@ async fn add_play_item(tx: &mut DbTx, item: &PlayItem, kind: PlayItemKind) -> Dy
     .execute(tx.as_mut())
     .await;
 
-    tx_check!(item_result, tx);
+    insert_check!(item_result, tx);
 
     Ok(())
 }
@@ -417,7 +411,7 @@ VALUES
     .execute(tx.as_mut())
     .await;
 
-    tx_check!(hierarchy_result, tx);
+    insert_check!(hierarchy_result, tx);
 
     Ok(())
 }

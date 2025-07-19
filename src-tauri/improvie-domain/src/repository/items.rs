@@ -21,7 +21,11 @@ pub trait ItemsRepository {
 
     async fn get_contents(&self) -> DynAppResult<Vec<Content>>;
 
+    async fn get_content_by_id(&self, uid: Uid) -> DynAppResult<Option<Content>>;
+
     async fn get_folders(&self) -> DynAppResult<Vec<Folder>>;
+
+    async fn get_folder_by_id(&self, uid: Uid) -> DynAppResult<Option<Folder>>;
 
     async fn create_folder(
         &self,

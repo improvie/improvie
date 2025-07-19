@@ -147,6 +147,25 @@ impl ItemsRepository for ItemsRepositoryImpl {
         Ok(rows.vec_into())
     }
 
+    async fn get_content_by_id(&self, uid: Uid) -> DynAppResult<Option<Content>> {
+        let row = row::contents::Entity::find()
+            .select_only()
+            .column(row::contents::Column::Kind)
+            .column(row::contents::Column::ContentPath)
+            .column(row::contents::Column::ThumbnailPath)
+            .left_join(row::items::Entity)
+            .column(row::items::Column::Id)
+            .column(row::items::Column::Title)
+            .column(row::items::Column::Description)
+            .column(row::items::Column::CreatedAt)
+            .filter(row::contents::Column::ItemId.eq(uid))
+            .into_model::<ContentRaw>()
+            .one(self.db.pool())
+            .await?;
+
+        Ok(row.map(Into::into))
+    }
+
     async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
         let rows = row::folders::Entity::find()
             .select_only()
@@ -160,6 +179,22 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .await?;
 
         Ok(rows.vec_into())
+    }
+
+    async fn get_folder_by_id(&self, uid: Uid) -> DynAppResult<Option<Folder>> {
+        let row = row::folders::Entity::find()
+            .select_only()
+            .left_join(row::items::Entity)
+            .column(row::items::Column::Id)
+            .column(row::items::Column::Title)
+            .column(row::items::Column::Description)
+            .column(row::items::Column::CreatedAt)
+            .filter(row::folders::Column::ItemId.eq(uid))
+            .into_model::<FolderRaw>()
+            .one(self.db.pool())
+            .await?;
+
+        Ok(row.map(Into::into))
     }
 
     async fn create_folder(

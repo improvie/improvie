@@ -21,9 +21,7 @@ macro_rules! insert_check {
     ($result:expr, {$($t:tt)*}) => {
         $crate::repository::modify_match!($result, {
             Ok(rows_affected) if rows_affected == 0 => {
-                return Err(sea_orm::DbErr::RecordNotFound(String::from(
-                    "No rows affected",
-                )).into());
+                return Err(sea_orm::DbErr::RecordNotInserted.into());
             }
             $($t)*
             Ok(_) => {}
@@ -38,9 +36,7 @@ macro_rules! modify_check {
     ($result:expr, {$($t:tt)*}) => {
         $crate::repository::modify_match!($result, {
             Ok(modify_result) if modify_result.rows_affected == 0 => {
-                return Err(sea_orm::DbErr::RecordNotFound(String::from(
-                    "No rows affected",
-                )).into());
+                return Err(sea_orm::DbErr::RecordNotUpdated.into());
             }
             $($t)*
             Ok(_) => {}

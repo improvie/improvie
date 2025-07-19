@@ -198,8 +198,8 @@ impl DbPool {
     }
 }
 
-#[cfg(test)]
 impl DbPool {
+    #[cfg(feature = "test")]
     pub async fn new_test() -> Self {
         const DB_URL: &str = "sqlite::memory:";
         let option = sea_orm::ConnectOptions::new(DB_URL);

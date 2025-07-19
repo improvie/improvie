@@ -5,6 +5,9 @@ authors.workspace = true
 edition.workspace = true
 license.workspace = true
 
+[features]
+test = []
+
 [dependencies]
 improvie-domain.workspace = true
 improvie-logic = { workspace = true, features = ["db"] }
@@ -23,6 +26,7 @@ serde_json.workspace = true
 
 [dev-dependencies]
 tokio.workspace = true
+improvie-infra = { workspace = true, features = ["test"] }
 
 [lints]
 workspace = true

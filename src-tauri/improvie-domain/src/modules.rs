@@ -11,6 +11,7 @@ macros::def_module!(RepositoriesModule {
 }, {
     fn pool(&self) -> Self::DbPool;
     async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
+    fn record_not_found(&self) -> improvie_logic::BoxDynAppError;
 });
 
 mod macros {

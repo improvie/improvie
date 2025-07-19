@@ -56,38 +56,55 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
 
     pub async fn add_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {
         let tx = self.repository.begin().await?;
-        tx.execute(async |conn| {
-            self.repository
-                .playsts_repository()
-                .add_favorite_playlist(conn, playlist_id)
-                .await
-        })
+        let conn = tx.connection();
+
+        let result = self
+            .repository
+            .playsts_repository()
+            .add_favorite_playlist(conn, playlist_id)
+            .await;
+
+        super::tx_commit!(tx, result)
     }
 
     pub async fn remove_favorite_playlist(&self, playlist_id: Uid) -> DynAppResult<()> {
-        self.repository
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+        let result = self
+            .repository
             .playsts_repository()
-            .remove_favorite_playlist(playlist_id)
-            .await
+            .remove_favorite_playlist(conn, playlist_id)
+            .await;
+
+        super::tx_commit!(tx, result)
     }
 
     pub async fn create_play_folder(
         &self,
         model: CreatePlayFolderDto,
     ) -> DynAppResult<CreatePlayFolderResponse> {
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+
         let parent_folder_id = model.item.parent_folder_id;
 
         let folder = self
             .repository
             .playsts_repository()
-            .create_play_folder(model.into())
-            .await?;
+            .create_play_folder(conn, model.into())
+            .await;
+
+        let folder = super::tx_check!(tx, folder);
 
         let folder_node = self
             .repository
             .playsts_repository()
             .get_plays_hierarchy_current(parent_folder_id)
-            .await?;
+            .await;
+
+        let folder_node = super::tx_check!(tx, folder_node);
+
+        tx.commit().await?;
 
         Ok(CreatePlayFolderResponse {
             folder,
@@ -99,19 +116,26 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
         &self,
         model: CreatePlaylistDto,
     ) -> DynAppResult<CreatePlaylistResponse> {
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+
         let parent_folder_id = model.item.parent_folder_id;
 
         let playlist = self
             .repository
             .playsts_repository()
-            .create_playlist(model.into())
-            .await?;
+            .create_playlist(conn, model.into())
+            .await;
+        let playlist = super::tx_check!(tx, playlist);
 
         let folder_node = self
             .repository
             .playsts_repository()
             .get_plays_hierarchy_current(parent_folder_id)
-            .await?;
+            .await;
+        let folder_node = super::tx_check!(tx, folder_node);
+
+        tx.commit().await?;
 
         Ok(CreatePlaylistResponse {
             playlist,
@@ -120,16 +144,28 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
     }
 
     pub async fn delete_play_item(&self, play_id: Uid) -> DynAppResult<Vec<Uid>> {
-        self.repository
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+
+        let result = self
+            .repository
             .playsts_repository()
-            .delete_play_item(play_id)
-            .await
+            .delete_play_item(conn, play_id)
+            .await;
+
+        super::tx_commit!(tx, result)
     }
 
     pub async fn update_play_item_name(&self, play_id: Uid, name: String) -> DynAppResult<()> {
-        self.repository
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+
+        let result = self
+            .repository
             .playsts_repository()
-            .update_play_item_name(play_id, name)
-            .await
+            .update_play_item_name(conn, play_id, name)
+            .await;
+
+        super::tx_commit!(tx, result)
     }
 }

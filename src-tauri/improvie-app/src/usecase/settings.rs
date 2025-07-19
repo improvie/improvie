@@ -13,10 +13,13 @@ impl<R: RepositoriesModule> SettingsUseCase<R> {
     }
 
     pub async fn get_app_settings(&self) -> DynAppResult<AppSettings> {
-        self.repository
+        let option = self
+            .repository
             .settings_repository()
             .get_app_settings()
-            .await
+            .await?;
+
+        option.ok_or_else(|| self.repository.record_not_found())
     }
 
     pub async fn set_app_settings(&self, settings: AppSettings) -> DynAppResult<()> {

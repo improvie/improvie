@@ -59,6 +59,10 @@ mod macros {
             async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx> {
                 self.db.begin().await
             }
+
+            fn record_not_found(&self) -> improvie_logic::BoxDynAppError {
+                sea_orm::DbErr::RecordNotFound(String::from("Record not found")).into()
+            }
         }
 
         };

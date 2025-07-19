@@ -404,6 +404,8 @@ mod tests {
     use crate::{persistence::db::DbPoolImpl, repository::items::ItemsRepositoryImpl};
 
     #[tokio::test]
+    #[ignore]
+    // replaced with sea_orm
     async fn get_items_hierarchy() {
         let repo = ItemsRepositoryImpl::new(DbPoolImpl::new_test().await);
         let res = repo.get_items_hierarchy_loop(Uid::nil()).await.unwrap();

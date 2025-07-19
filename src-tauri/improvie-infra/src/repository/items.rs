@@ -29,7 +29,7 @@ def_repository_impl!(ItemsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl ItemsRepository for ItemsRepositoryImpl {
-    type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
+    type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
 
     async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
         let rows = row::hierarchical_items::Entity::find()
@@ -292,7 +292,7 @@ FROM item_hierarchy
 }
 
 async fn add_item(
-    conn: crate::persistence::db::DbConnection<'_>,
+    conn: crate::persistence::db::DbConnectionImpl<'_>,
     item: &Item,
     kind: ItemKind,
 ) -> DynAppResult<()> {
@@ -312,7 +312,7 @@ async fn add_item(
 }
 
 async fn add_hierarchy(
-    conn: crate::persistence::db::DbConnection<'_>,
+    conn: crate::persistence::db::DbConnectionImpl<'_>,
     parent_folder_id: Uid,
     item_id: Uid,
 ) -> DynAppResult<()> {
@@ -366,11 +366,11 @@ mod tests {
     use improvie_logic::model::items::{FolderNode, ItemNode};
     use uid::Uid;
 
-    use crate::{persistence::db::DbPool, repository::items::ItemsRepositoryImpl};
+    use crate::{persistence::db::DbPoolImpl, repository::items::ItemsRepositoryImpl};
 
     #[tokio::test]
     async fn get_items_hierarchy() {
-        let repo = ItemsRepositoryImpl::new(DbPool::new_test().await);
+        let repo = ItemsRepositoryImpl::new(DbPoolImpl::new_test().await);
         let res = repo.get_items_hierarchy_loop(Uid::nil()).await.unwrap();
         let mut map = HashMap::new();
         map.insert(

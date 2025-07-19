@@ -26,7 +26,7 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl PlaystsRepository for PlaylistsRepositoryImpl {
-    type DbConnection<'a> = crate::persistence::db::DbConnection<'a>;
+    type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
     async fn get_play_folders(&self) -> DynAppResult<Vec<PlayFolder>> {
         let rows = improvie_row::play_folders::Entity::find()
             .select_only()
@@ -341,7 +341,7 @@ FROM item_hierarchy
 }
 
 async fn add_play_item(
-    conn: crate::persistence::db::DbConnection<'_>,
+    conn: crate::persistence::db::DbConnectionImpl<'_>,
     item: &PlayItem,
     kind: PlayItemKind,
 ) -> DynAppResult<()> {
@@ -362,7 +362,7 @@ async fn add_play_item(
 }
 
 async fn add_play_hierarchy(
-    conn: crate::persistence::db::DbConnection<'_>,
+    conn: crate::persistence::db::DbConnectionImpl<'_>,
     parent_folder_id: Uid,
     item_id: Uid,
 ) -> DynAppResult<()> {

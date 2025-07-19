@@ -47,11 +47,11 @@ macro_rules! modify_check {
 macro_rules! def_repository_impl {
     ($impl:ident) => {
         pub struct $impl {
-            db: crate::persistence::db::DbPool,
+            db: $crate::persistence::db::DbPoolImpl,
         }
 
         impl $impl {
-            pub fn new(db: crate::persistence::db::DbPool) -> Self {
+            pub fn new(db: $crate::persistence::db::DbPoolImpl) -> Self {
                 Self { db }
             }
         }

@@ -1,7 +1,7 @@
 use improvie_domain::modules::RepositoriesModule;
 
 use crate::{
-    persistence::db::DbPool,
+    persistence::db::DbPoolImpl,
     repository::{
         items::ItemsRepositoryImpl, plays::PlaylistsRepositoryImpl, rules::RulesRepositoryImpl,
         settings::SettingsRepositoryImpl,
@@ -26,12 +26,12 @@ mod macros {
         { $($variable:ident: $impl:ident = $repository:ident,)* }
     ) => {
         pub struct $name {
-            db : DbPool,
+            db : DbPoolImpl,
             $($variable: $impl,)*
         }
 
         impl $name {
-            pub fn new(db: DbPool) -> Self {
+            pub fn new(db: DbPoolImpl) -> Self {
                 Self {
                     $($variable: $impl::new(db.clone()),)*
                     db,
@@ -41,9 +41,9 @@ mod macros {
 
         #[async_trait::async_trait]
         impl $trait for $name {
-            type DbConnection<'a> = $crate::persistence::db::DbConnection<'a>;
-            type DbPool = $crate::persistence::db::DbPool;
-            type DbTx = $crate::persistence::db::DbTx;
+            type DbConnection<'a> = $crate::persistence::db::DbConnectionImpl<'a>;
+            type DbPool = $crate::persistence::db::DbPoolImpl;
+            type DbTx = $crate::persistence::db::DbTxImpl;
 
             $(
                 type $repository = $impl;

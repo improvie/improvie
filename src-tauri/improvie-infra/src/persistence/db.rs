@@ -3,9 +3,9 @@ use sea_orm::{ConnectionTrait, DbConn, TransactionTrait};
 use std::{fs::OpenOptions, path::PathBuf};
 
 #[derive(Clone, Copy)]
-pub enum DbConnection<'a> {
-    Pool(&'a DbPool),
-    Tx(&'a DbTx),
+pub enum DbConnectionImpl<'a> {
+    Pool(&'a DbPoolImpl),
+    Tx(&'a DbTxImpl),
 }
 
 macro_rules! internal {
@@ -22,7 +22,7 @@ macro_rules! internal {
 }
 
 #[async_trait::async_trait]
-impl sea_orm::ConnectionTrait for DbConnection<'_> {
+impl sea_orm::ConnectionTrait for DbConnectionImpl<'_> {
     fn get_database_backend(&self) -> sea_orm::DbBackend {
         internal!(self, get_database_backend)
     }
@@ -61,9 +61,9 @@ impl sea_orm::ConnectionTrait for DbConnection<'_> {
     }
 }
 
-impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a> {
-    type DbPool = DbPool;
-    type DbTx = DbTx;
+impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnectionImpl<'a> {
+    type DbPool = DbPoolImpl;
+    type DbTx = DbTxImpl;
 
     fn new_pool(pool: &'a Self::DbPool) -> Self {
         Self::Pool(pool)
@@ -75,9 +75,9 @@ impl<'a> improvie_domain::persistence::db::DbConnection<'a> for DbConnection<'a>
 }
 
 #[derive(Clone)]
-pub struct DbPool(DbConn);
+pub struct DbPoolImpl(DbConn);
 
-impl DbPool {
+impl DbPoolImpl {
     pub fn pool(&self) -> &DbConn {
         &self.0
     }
@@ -86,28 +86,28 @@ impl DbPool {
         self.0.get_database_backend()
     }
 
-    pub async fn begin(&self) -> DynAppResult<DbTx> {
+    pub async fn begin(&self) -> DynAppResult<DbTxImpl> {
         let result = self.0.begin().await;
         match result {
-            Ok(tx) => Ok(DbTx::new(tx)),
+            Ok(tx) => Ok(DbTxImpl::new(tx)),
             Err(e) => Err(improvie_logic::DbErr(e).into()),
         }
     }
 }
 
 #[async_trait::async_trait]
-impl improvie_domain::persistence::db::DbPool for DbPool {
-    type DbConnection<'a> = DbConnection<'a>;
-    type DbTx = DbTx;
+impl improvie_domain::persistence::db::DbPool for DbPoolImpl {
+    type DbConnection<'a> = DbConnectionImpl<'a>;
+    type DbTx = DbTxImpl;
 
     async fn begin(&self) -> DynAppResult<Self::DbTx> {
         self.begin().await
     }
 }
 
-pub struct DbTx(sea_orm::DatabaseTransaction);
+pub struct DbTxImpl(sea_orm::DatabaseTransaction);
 
-impl DbTx {
+impl DbTxImpl {
     fn new(tx: sea_orm::DatabaseTransaction) -> Self {
         Self(tx)
     }
@@ -132,9 +132,9 @@ impl DbTx {
 }
 
 #[async_trait::async_trait]
-impl improvie_domain::persistence::db::DbTx for DbTx {
-    type DbConnection<'a> = DbConnection<'a>;
-    type DbPool = DbPool;
+impl improvie_domain::persistence::db::DbTx for DbTxImpl {
+    type DbConnection<'a> = DbConnectionImpl<'a>;
+    type DbPool = DbPoolImpl;
 
     async fn commit(self) -> improvie_logic::DynAppResult<()> {
         self.commit().await
@@ -161,7 +161,7 @@ impl DynAppError for InitDbError {
 
 pub(crate) static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../migrations");
 
-impl DbPool {
+impl DbPoolImpl {
     pub async fn new(data_dir: PathBuf) -> Result<Self, InitDbError> {
         std::fs::create_dir_all(&data_dir)?;
         let join = data_dir.join("data.sql");
@@ -198,7 +198,7 @@ impl DbPool {
     }
 }
 
-impl DbPool {
+impl DbPoolImpl {
     #[cfg(feature = "test")]
     pub async fn new_test() -> Self {
         const DB_URL: &str = "sqlite::memory:";

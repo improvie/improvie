@@ -1,13 +1,6 @@
 use std::fmt;
 
 use serde::{Deserialize, Serialize, Serializer};
-#[cfg(feature = "db")]
-use sqlx::{
-    Decode, Encode, Sqlite, Type,
-    encode::IsNull,
-    error::BoxDynError,
-    sqlite::{SqliteArgumentValue, SqliteTypeInfo, SqliteValueRef},
-};
 
 // ref: [uuid crate](https://github.com/uuid-rs/uuid/blob/main/src/macros.rs)
 #[macro_export]
@@ -22,6 +15,7 @@ macro_rules! uid {
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(feature = "db", derive(sea_orm::DeriveValueType))]
 #[cfg_attr(feature = "ts", bind::ts("uid.ts"))]
 #[repr(transparent)]
 pub struct Uid(uuid::Uuid);
@@ -89,25 +83,8 @@ impl<'de> Deserialize<'de> for Uid {
 }
 
 #[cfg(feature = "db")]
-impl Type<Sqlite> for Uid {
-    fn type_info() -> SqliteTypeInfo {
-        uuid::fmt::Hyphenated::type_info()
-    }
-}
-
-#[cfg(feature = "db")]
-impl<'q> Encode<'q, Sqlite> for Uid {
-    fn encode_by_ref(
-        &self,
-        args: &mut Vec<SqliteArgumentValue<'q>>,
-    ) -> Result<IsNull, BoxDynError> {
-        self.0.as_hyphenated().encode_by_ref(args)
-    }
-}
-
-#[cfg(feature = "db")]
-impl Decode<'_, Sqlite> for Uid {
-    fn decode(value: SqliteValueRef<'_>) -> Result<Self, BoxDynError> {
-        uuid::fmt::Hyphenated::decode(value).map(|v| Self(v.into_uuid()))
+impl sea_orm::TryFromU64 for Uid {
+    fn try_from_u64(n: u64) -> Result<Self, sea_orm::DbErr> {
+        uuid::Uuid::try_from_u64(n).map(Self)
     }
 }

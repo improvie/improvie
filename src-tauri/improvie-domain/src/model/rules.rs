@@ -2,7 +2,7 @@ use serde::de::{self};
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RuleData {
     pub r#type: String,
     pub data: String,

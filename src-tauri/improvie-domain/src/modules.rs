@@ -8,6 +8,10 @@ macros::def_module!(RepositoriesModule {
     items_repository: ItemsRepository<for DbConnection>,
     playsts_repository: PlaystsRepository<for DbConnection>,
     rules_repository: RulesRepository,
+}, {
+    fn pool(&self) -> Self::DbPool;
+    async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
+    fn record_not_found(&self) -> improvie_logic::BoxDynAppError;
 });
 
 mod macros {
@@ -15,7 +19,7 @@ mod macros {
         (
             $module:ident {
                 $($variable:ident: $repository:ident$(<$for_ident:ident $tx:ident>)?,)*
-            }
+            }, {$($tt:tt)*}
         ) => {
             #[async_trait::async_trait]
             pub trait $module: Send + Sync + Sized + 'static {
@@ -31,8 +35,8 @@ mod macros {
                     fn $variable(&self) -> &Self::$repository;
                 )*
 
-                fn pool(&self) -> Self::DbPool;
-                async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
+                $($tt)*
+
             }
         };
     }

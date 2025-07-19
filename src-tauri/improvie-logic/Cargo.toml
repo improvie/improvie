@@ -8,7 +8,7 @@ license.workspace = true
 [features]
 default = []
 ts = ["uid/ts", "dep:bind", "dep:ts-rs"]
-db = ["sqlx"]
+db = ["dep:sea-orm"]
 
 [dependencies]
 uid.workspace = true
@@ -16,11 +16,12 @@ uid.workspace = true
 thiserror.workspace = true
 chrono.workspace = true
 serde.workspace = true
+serde_json.workspace = true
 more-convert.workspace = true
 bind = { workspace = true, optional = true }
 ts-rs = { workspace = true, optional = true }
 
-sqlx = { workspace = true, optional = true }
+sea-orm = { workspace = true, optional = true }
 
 [lints]
 workspace = true

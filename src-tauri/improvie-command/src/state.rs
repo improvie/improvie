@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use improvie_infra::{
     modules::RepositoriesModuleImpl,
-    persistence::db::{DbPool, InitDbError},
+    persistence::db::{DbPoolImpl, InitDbError},
 };
 use tauri::State;
 
@@ -17,7 +17,7 @@ pub struct AppState {
 
 impl AppState {
     pub async fn new(data_dir: PathBuf, document_dir: PathBuf) -> Result<Self, InitDbError> {
-        let db = DbPool::new(data_dir.clone()).await?;
+        let db = DbPoolImpl::new(data_dir.clone()).await?;
         let repository = RepositoriesModuleImpl::new(db);
         let repository = std::sync::Arc::new(repository);
 

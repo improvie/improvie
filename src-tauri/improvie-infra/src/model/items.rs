@@ -4,14 +4,14 @@ use improvie_logic::model::items::{Content, Folder, Item};
 use more_convert::Convert;
 use uid::Uid;
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(sea_orm::FromQueryResult, Debug)]
 pub struct CurrentNodeRaw {
     pub child_id: Uid,
     pub child_kind: ItemKind,
     pub sort_order: u32,
 }
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(sea_orm::FromQueryResult, Debug)]
 pub struct NodeRaw {
     pub parent_folder_id: Uid,
     pub child_id: Uid,
@@ -19,7 +19,7 @@ pub struct NodeRaw {
     pub sort_order: u32,
 }
 
-#[derive(sqlx::FromRow, Debug, Convert)]
+#[derive(sea_orm::FromQueryResult, Debug, Convert)]
 #[convert(into(Item))]
 pub struct ItemRaw {
     pub id: Uid,
@@ -28,10 +28,10 @@ pub struct ItemRaw {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(sqlx::FromRow, Debug, Convert)]
+#[derive(sea_orm::FromQueryResult, Debug, Convert)]
 #[convert(into(Content))]
 pub struct ContentRaw {
-    #[sqlx(flatten)]
+    #[sea_orm(nested)]
     pub item: ItemRaw,
 
     pub kind: ContentKind,
@@ -39,9 +39,9 @@ pub struct ContentRaw {
     pub thumbnail_path: Option<String>,
 }
 
-#[derive(sqlx::FromRow, Debug, Convert)]
+#[derive(sea_orm::FromQueryResult, Debug, Convert)]
 #[convert(into(Folder))]
 pub struct FolderRaw {
-    #[sqlx(flatten)]
+    #[sea_orm(nested)]
     pub item: ItemRaw,
 }

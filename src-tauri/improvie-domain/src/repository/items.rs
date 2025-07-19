@@ -21,13 +21,34 @@ pub trait ItemsRepository {
 
     async fn get_contents(&self) -> DynAppResult<Vec<Content>>;
 
+    async fn get_content_by_id(&self, uid: Uid) -> DynAppResult<Option<Content>>;
+
     async fn get_folders(&self) -> DynAppResult<Vec<Folder>>;
 
-    async fn create_folder(&self, model: CreateFolderModel) -> DynAppResult<Folder>;
+    async fn get_folder_by_id(&self, uid: Uid) -> DynAppResult<Option<Folder>>;
 
-    async fn create_content(&self, model: CreateContentModel) -> DynAppResult<Content>;
+    async fn create_folder(
+        &self,
+        conn: Self::DbConnection<'_>,
+        model: CreateFolderModel,
+    ) -> DynAppResult<Folder>;
 
-    async fn delete_item(&self, item_id: Uid) -> DynAppResult<Vec<Uid>>;
+    async fn create_content(
+        &self,
+        conn: Self::DbConnection<'_>,
+        model: CreateContentModel,
+    ) -> DynAppResult<Content>;
 
-    async fn update_item_name(&self, item_id: Uid, new_name: String) -> DynAppResult<()>;
+    async fn delete_item(
+        &self,
+        conn: Self::DbConnection<'_>,
+        item_id: Uid,
+    ) -> DynAppResult<Vec<Uid>>;
+
+    async fn update_item_name(
+        &self,
+        conn: Self::DbConnection<'_>,
+        item_id: Uid,
+        new_name: String,
+    ) -> DynAppResult<()>;
 }

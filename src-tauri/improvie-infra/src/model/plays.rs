@@ -6,8 +6,9 @@ use improvie_logic::{
 use more_convert::Convert;
 use uid::Uid;
 
-#[derive(sqlx::FromRow, Debug, Convert)]
+#[derive(sea_orm::FromQueryResult, sea_orm::DerivePartialModel, Debug, Convert)]
 #[convert(into(PlayItem))]
+#[sea_orm(entity = "improvie_row::play_items::Entity")]
 pub struct PlayItemRaw {
     pub id: Uid,
     pub title: String,
@@ -15,29 +16,29 @@ pub struct PlayItemRaw {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(sqlx::FromRow, Debug, Convert)]
+#[derive(sea_orm::FromQueryResult, Debug, Convert)]
 #[convert(into(PlayFolder))]
 pub struct PlayFolderRow {
-    #[sqlx(flatten)]
+    #[sea_orm(nested)]
     pub item: PlayItemRaw,
 }
 
-#[derive(sqlx::FromRow, Convert)]
+#[derive(sea_orm::FromQueryResult, Convert)]
 #[convert(into(Playlist))]
 pub struct PlaylistRow {
-    #[sqlx(flatten)]
+    #[sea_orm(nested)]
     pub item: PlayItemRaw,
     pub thumbnail_path: Option<String>,
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(sea_orm::FromQueryResult)]
 pub struct PlayCurrentNodeRaw {
     pub child_id: Uid,
     pub child_kind: PlayItemKind,
     pub sort_order: u32,
 }
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(sea_orm::FromQueryResult, Debug)]
 pub struct PlayNodeRaw {
     pub parent_folder_id: Uid,
     pub child_id: Uid,

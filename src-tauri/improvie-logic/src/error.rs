@@ -54,22 +54,39 @@ crate::impl_serialize_for_dyn_app_error!(BoxDynAppError, 0);
 
 pub type DynAppResult<T> = std::result::Result<T, BoxDynAppError>;
 
+#[derive(Debug, Clone, thiserror::Error)]
+#[error("Failed to convert value {value} to enum {enum_name}")]
+pub struct TryFromConstantEnumError {
+    pub enum_name: &'static str,
+    pub value: u8,
+}
+
+impl DynAppError for TryFromConstantEnumError {
+    fn error_kind(&self) -> &'static str {
+        "try_from_constant_enum"
+    }
+}
+
+crate::impl_serialize_for_dyn_app_error!(TryFromConstantEnumError);
+
 #[cfg(feature = "db")]
 mod db {
+    type Err = sea_orm::error::DbErr;
+
     #[derive(Debug, thiserror::Error)]
     #[error("Database error: {0}")]
-    pub struct DbErr(pub sqlx::Error);
+    pub struct DbErr(pub Err);
 
     crate::impl_serialize_for_dyn_app_error!(DbErr);
 
-    impl From<sqlx::Error> for DbErr {
-        fn from(error: sqlx::Error) -> Self {
+    impl From<Err> for DbErr {
+        fn from(error: Err) -> Self {
             Self(error)
         }
     }
 
-    impl From<sqlx::Error> for super::BoxDynAppError {
-        fn from(error: sqlx::Error) -> Self {
+    impl From<Err> for super::BoxDynAppError {
+        fn from(error: Err) -> Self {
             super::BoxDynAppError::new(DbErr::from(error))
         }
     }

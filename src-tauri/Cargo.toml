@@ -63,6 +63,7 @@ members = [
   "improvie-domain",
   "improvie-command",
   "improvie-logic",
+  "improvie-infra/row",
   "improvie-app",
   "addtional/uid",
   "addtional/bind",
@@ -81,6 +82,7 @@ license = "MIT"
 [workspace.dependencies]
 improvie-app = { path = "improvie-app" }
 improvie-infra = { path = "improvie-infra" }
+improvie-row = { path = "improvie-infra/row" }
 improvie-domain = { path = "improvie-domain" }
 improvie-logic = { path = "improvie-logic" }
 improvie-command = { path = "improvie-command" }
@@ -135,6 +137,12 @@ seq-macro = "=0.3.6"
 
 # others
 log = "=0.4.27"
+sea-orm = { version = "1.1.0", features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+  "macros",
+  "with-chrono",
+] }
 sqlx = { version = "=0.8.6", features = [
   "sqlite",
   "tls-rustls",

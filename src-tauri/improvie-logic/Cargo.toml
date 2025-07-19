@@ -8,7 +8,7 @@ license.workspace = true
 [features]
 default = []
 ts = ["uid/ts", "dep:bind", "dep:ts-rs"]
-db = ["dep:sqlx", "dep:sea-orm"]
+db = ["dep:sea-orm"]
 
 [dependencies]
 uid.workspace = true
@@ -22,7 +22,6 @@ bind = { workspace = true, optional = true }
 ts-rs = { workspace = true, optional = true }
 
 sea-orm = { workspace = true, optional = true }
-sqlx = { workspace = true, optional = true }
 
 [lints]
 workspace = true

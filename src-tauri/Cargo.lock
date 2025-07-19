@@ -2284,7 +2284,6 @@ dependencies = [
  "sea-orm",
  "serde",
  "serde_json",
- "sqlx",
  "thiserror 2.0.12",
  "ts-rs",
  "uid",
@@ -5968,7 +5967,6 @@ dependencies = [
  "bind",
  "sea-orm",
  "serde",
- "sqlx",
  "ts-rs",
  "uuid",
 ]

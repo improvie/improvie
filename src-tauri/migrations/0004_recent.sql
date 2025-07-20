@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS recent_contents (
-    item_id uuid NOT NULL,
+    item_id varchar(26) NOT NULL,
     last_accessed timestamp NOT NULL,
 
     PRIMARY KEY (item_id),
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS recent_contents (
 );
 
 CREATE TABLE IF NOT EXISTS recent_playlists (
-    playlist_id uuid NOT NULL,
+    playlist_id varchar(26) NOT NULL,
     last_accessed timestamp NOT NULL,
 
     PRIMARY KEY (playlist_id),

@@ -4,7 +4,7 @@
   import { folder_nodes } from '$lib/stores/items';
   import { contents } from '$lib/stores/items/content';
   import { folders } from '$lib/stores/items/folder';
-  import { cn, UUID_NIL } from '$lib/utils.js';
+  import { cn, ULID_NIL } from '$lib/utils.js';
   import { Check } from '@lucide/svelte';
 
   let { content = $bindable(), open = $bindable() }: { content: PickItem | undefined; open: boolean } = $props();
@@ -42,7 +42,7 @@
     return items;
   }
 
-  const items = get_content(UUID_NIL);
+  const items = get_content(ULID_NIL);
 
   function closeAndFocusTrigger() {
     open = false;

@@ -11,7 +11,7 @@ async fn main() {
 
     let repo = ItemsRepositoryImpl::new(db.clone());
 
-    let uid = Uid::now();
+    let uid = Uid::new();
 
     let model = improvie_row::items::ActiveModel {
         id: sea_orm::Set(uid),

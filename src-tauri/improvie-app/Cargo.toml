@@ -7,7 +7,7 @@ license.workspace = true
 
 [features]
 default = []
-ts = ["uid/ts", "dep:bind", "dep:ts-rs"]
+ts = ["uid/ts", "improvie-logic/ts", "dep:bind", "dep:ts-rs"]
 
 [dependencies]
 improvie-domain.workspace = true

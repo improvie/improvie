@@ -3,7 +3,7 @@ use improvie_logic::constant::items::ContentKind;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-#[cfg_attr(feature = "ts", bind::ts("item/request.ts"))]
+#[cfg_attr(feature = "ts", bind::command("item"))]
 pub struct CreateContentRequest {
     #[serde(flatten)]
     pub item: CreateBaseItemDto,

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use uid::Uid;
 
 #[derive(Debug, Deserialize, Convert)]
-#[cfg_attr(feature = "ts", bind::ts("item/dto.ts"))]
+#[cfg_attr(feature = "ts", bind::dto("item"))]
 #[convert(into(CreateBaseItemModel))]
 pub struct CreateBaseItemDto {
     pub parent_folder_id: Uid,
@@ -18,7 +18,7 @@ pub struct CreateBaseItemDto {
 }
 
 #[derive(Debug, Deserialize, Convert)]
-#[cfg_attr(feature = "ts", bind::ts("item/dto.ts"))]
+#[cfg_attr(feature = "ts", bind::dto("item"))]
 #[convert(into(CreateFolderModel))]
 pub struct CreateFolderDto {
     #[serde(flatten)]
@@ -26,7 +26,7 @@ pub struct CreateFolderDto {
 }
 
 #[derive(Debug, Deserialize, Convert)]
-#[cfg_attr(feature = "ts", bind::ts("item/dto.ts"))]
+#[cfg_attr(feature = "ts", bind::dto("item"))]
 #[convert(into(CreateContentModel))]
 pub struct CreateContentDto {
     #[serde(flatten)]
@@ -39,14 +39,14 @@ pub struct CreateContentDto {
 }
 
 #[derive(Debug, Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("item/dto.ts"))]
+#[cfg_attr(feature = "ts", bind::response("item"))]
 pub struct CreateContentResponse {
     pub content: Content,
     pub folder_node: FolderNode,
 }
 
 #[derive(Debug, Serialize)]
-#[cfg_attr(feature = "ts", bind::ts("item/dto.ts"))]
+#[cfg_attr(feature = "ts", bind::response("item"))]
 pub struct CreateFolderResponse {
     pub folder: Folder,
     pub folder_node: FolderNode,

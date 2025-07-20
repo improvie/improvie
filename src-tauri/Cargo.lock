@@ -294,6 +294,7 @@ dependencies = [
 name = "bind"
 version = "0.5.0"
 dependencies = [
+ "syn 2.0.104",
  "ts-rs",
 ]
 

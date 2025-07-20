@@ -2,4 +2,8 @@
 import type { ContentKind } from "../constants";
 import type { Uid } from "../uid";
 
-export type CreateContentRequest = { kind: ContentKind, content_path: string, thumbnail_path: string | null, parent_folder_id: Uid, title: string, description: string | null, };
+export type CreateBaseItemRequest = { parent_folder_id: Uid, title: string, description: string | null, };
+
+export type CreateContentRequest = { kind: ContentKind, content_path: string, thumbnail_path: string | null, seconds: number, parent_folder_id: Uid, title: string, description: string | null, };
+
+export type CreateFolderRequest = { parent_folder_id: Uid, title: string, description: string | null, };

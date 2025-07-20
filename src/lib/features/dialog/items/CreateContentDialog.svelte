@@ -1,6 +1,6 @@
 <script lang='ts'>
   import type { ContentKind } from '$bindings/constants';
-  import type { CreateContentDto } from '$bindings/item/dto';
+  import type { CreateContentRequest } from '$bindings/item/request';
   import {
     action_select_content_dialog,
     action_select_thumbnail_dialog,
@@ -52,7 +52,7 @@
       return;
     }
 
-    const req: CreateContentDto = {
+    const req: CreateContentRequest = {
       title: $formData.title,
       description: $formData.description ?? null,
       content_path: $formData.content,

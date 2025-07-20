@@ -1,5 +1,6 @@
 import type { Content } from '$bindings/item';
-import type { CreateContentDto, CreateContentResponse } from '$bindings/item/dto';
+import type { CreateContentResponse } from '$bindings/item/dto';
+import type { CreateContentRequest } from '$bindings/item/request';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_contents(): Promise<Content[]> {
@@ -7,7 +8,7 @@ export async function action_get_contents(): Promise<Content[]> {
   return contents;
 }
 
-export async function action_create_content(data: CreateContentDto): Promise<CreateContentResponse> {
-  const res = await invoke<CreateContentResponse>('create_content', { dto: data });
+export async function action_create_content(data: CreateContentRequest): Promise<CreateContentResponse> {
+  const res = await invoke<CreateContentResponse>('create_content', { request: data });
   return res;
 }

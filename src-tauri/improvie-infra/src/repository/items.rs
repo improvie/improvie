@@ -1,5 +1,6 @@
 use sea_orm::ColumnTrait;
 use sea_orm::FromQueryResult;
+use sea_orm::QueryOrder;
 use sea_orm::Statement;
 use sea_orm::TryGetableMany;
 use std::collections::HashMap;
@@ -36,8 +37,8 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .select_only()
             .column(row::hierarchical_items::Column::ChildId)
             .column(row::hierarchical_items::Column::SortOrder)
-            .left_join(row::items::Entity)
-            .column(row::items::Column::Kind)
+            .inner_join(row::items::Entity)
+            .column_as(row::items::Column::Kind, "child_kind")
             .filter(row::hierarchical_items::Column::ParentFolderId.eq(folder_id))
             .into_model::<CurrentNodeRaw>()
             .all(self.db.pool())
@@ -135,7 +136,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::contents::Column::Kind)
             .column(row::contents::Column::ContentPath)
             .column(row::contents::Column::ThumbnailPath)
-            .left_join(row::items::Entity)
+            .inner_join(row::items::Entity)
             .column(row::items::Column::Id)
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
@@ -153,7 +154,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::contents::Column::Kind)
             .column(row::contents::Column::ContentPath)
             .column(row::contents::Column::ThumbnailPath)
-            .left_join(row::items::Entity)
+            .inner_join(row::items::Entity)
             .column(row::items::Column::Id)
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
@@ -169,7 +170,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
     async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
         let rows = row::folders::Entity::find()
             .select_only()
-            .left_join(row::items::Entity)
+            .inner_join(row::items::Entity)
             .column(row::items::Column::Id)
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
@@ -184,7 +185,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
     async fn get_folder_by_id(&self, uid: Uid) -> DynAppResult<Option<Folder>> {
         let row = row::folders::Entity::find()
             .select_only()
-            .left_join(row::items::Entity)
+            .inner_join(row::items::Entity)
             .column(row::items::Column::Id)
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
@@ -204,7 +205,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
     ) -> DynAppResult<Folder> {
         let folder = Folder {
             item: Item {
-                id: Uid::now(),
+                id: Uid::new(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -233,7 +234,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
     ) -> DynAppResult<Content> {
         let content = Content {
             item: Item {
-                id: Uid::now(),
+                id: Uid::new(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -354,8 +355,9 @@ async fn add_hierarchy(
 ) -> DynAppResult<()> {
     let sort_order = row::hierarchical_items::Entity::find()
         .select_only()
-        .expr(row::hierarchical_items::Column::SortOrder.into_expr().max())
+        .column(row::hierarchical_items::Column::SortOrder)
         .filter(row::hierarchical_items::Column::ParentFolderId.eq(parent_folder_id))
+        .order_by_asc(row::hierarchical_items::Column::SortOrder)
         .into_tuple::<u32>()
         .one(&conn)
         .await?
@@ -417,26 +419,26 @@ mod tests {
                 folder: Uid::nil(),
                 items: vec![
                     ItemNode::Folder {
-                        id: uid!("00000000-0000-0000-0000-000000000002"),
+                        id: uid!("00000000000000000000000000"),
                         sort_order: 2,
                     },
                     ItemNode::Content {
-                        id: uid!("00000000-0000-0000-0000-000000000003"),
+                        id: uid!("00000000000000000000000003"),
                         sort_order: 3,
                     },
                     ItemNode::Content {
-                        id: uid!("00000000-0000-0000-0000-000000000004"),
+                        id: uid!("00000000000000000000000004"),
                         sort_order: 1,
                     },
                 ],
             },
         );
         map.insert(
-            uid!("00000000-0000-0000-0000-000000000002"),
+            uid!("00000000000000000000000002"),
             FolderNode {
-                folder: uid!("00000000-0000-0000-0000-000000000002"),
+                folder: uid!("00000000000000000000000002"),
                 items: vec![ItemNode::Content {
-                    id: uid!("00000000-0000-0000-0000-000000000005"),
+                    id: uid!("00000000000000000000000005"),
                     sort_order: 1,
                 }],
             },

@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { locale } from './translations/translations';
 
-export const UUID_NIL: string = '00000000-0000-0000-0000-000000000000';
+export const ULID_NIL: string = '00000000000000000000000000';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

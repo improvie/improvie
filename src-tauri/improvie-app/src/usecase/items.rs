@@ -85,12 +85,13 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
             .await;
         let content = super::tx_check!(tx, content);
 
+        tx.commit().await?;
+
         let folder_node = self
             .repository
             .items_repository()
             .get_items_hierarchy_current(parent_folder_id)
-            .await;
-        let folder_node = super::tx_check!(tx, folder_node);
+            .await?;
 
         Ok(CreateContentResponse {
             content,

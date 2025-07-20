@@ -13,8 +13,8 @@ def_repository_impl!(SettingsRepositoryImpl);
 impl SettingsRepository for SettingsRepositoryImpl {
     async fn get_app_settings(&self) -> improvie_logic::DynAppResult<Option<AppSettings>> {
         improvie_row::app_settings::Entity::find()
-            .filter(improvie_row::app_settings::Column::Id.eq(Uid::nil()))
             .select_only()
+            .filter(improvie_row::app_settings::Column::Id.eq(Uid::nil()))
             .column(improvie_row::app_settings::Column::Settings)
             .into_tuple::<AppSettings>()
             .one(self.db.pool())

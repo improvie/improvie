@@ -11,13 +11,8 @@ ts = ["dep:bind", "dep:ts-rs"]
 db = ["sea-orm"]
 
 [dependencies]
-uuid = { version = "=1.17.0", features = [
-  "v7",
-  "fast-rng",
-  "macro-diagnostics",
-  "serde",
-] }
-sea-orm = { workspace = true, features = ["with-uuid"], optional = true }
+ulid = "=1.2.1"
+sea-orm = { workspace = true, optional = true }
 serde.workspace = true
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }

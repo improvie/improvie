@@ -31,6 +31,12 @@ export function update_content(res: CreateContentResponse): void {
 }
 
 export async function create_content(data: CreateContentRequest): Promise<void> {
-  const res = await action_create_content(data);
-  update_content(res);
+  try {
+    const res = await action_create_content(data);
+    update_content(res);
+  }
+  catch (error) {
+    console.error('Error creating content:', error);
+    throw error; // Re-throw the error for further handling if needed
+  }
 }

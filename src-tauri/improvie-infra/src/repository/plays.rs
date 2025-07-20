@@ -121,7 +121,7 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
             .column(improvie_row::hierarchical_play_items::Column::ChildId)
             .column(improvie_row::hierarchical_play_items::Column::SortOrder)
             .inner_join(improvie_row::play_items::Entity)
-            .column(improvie_row::play_items::Column::Kind)
+            .column_as(improvie_row::play_items::Column::Kind, "child_kind")
             .filter(improvie_row::hierarchical_play_items::Column::ParentFolderId.eq(folder_id))
             .into_model::<PlayCurrentNodeRaw>()
             .all(self.db.pool())
@@ -220,7 +220,7 @@ FROM folder_hierarchy
     ) -> DynAppResult<PlayFolder> {
         let folder = PlayFolder {
             item: PlayItem {
-                id: Uid::now(),
+                id: Uid::new(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -250,7 +250,7 @@ FROM folder_hierarchy
     ) -> DynAppResult<Playlist> {
         let content = Playlist {
             item: PlayItem {
-                id: Uid::now(),
+                id: Uid::new(),
                 title: model.item.title,
                 description: model.item.description,
                 created_at: Utc::now(),
@@ -370,8 +370,9 @@ async fn add_play_hierarchy(
 
     let sort_order = hierarchical_play_items::Entity::find()
         .select_only()
-        .expr(hierarchical_play_items::Column::SortOrder.into_expr().max())
+        .column(hierarchical_play_items::Column::SortOrder)
         .filter(hierarchical_play_items::Column::ParentFolderId.eq(parent_folder_id))
+        .order_by_asc(hierarchical_play_items::Column::SortOrder)
         .into_tuple::<u32>()
         .one(&conn)
         .await?

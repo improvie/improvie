@@ -250,6 +250,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             kind: sea_orm::Set(content.kind),
             content_path: sea_orm::Set(content.content_path.clone()),
             thumbnail_path: sea_orm::Set(content.thumbnail_path.clone()),
+            seconds: sea_orm::Set(model.seconds),
         })
         .exec_without_returning(&conn)
         .await;

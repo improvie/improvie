@@ -1,15 +1,16 @@
 use std::collections::HashMap;
 
-use improvie_app::model::items::{
-    CreateContentDto, CreateContentResponse, CreateFolderDto, CreateFolderResponse,
-};
+use improvie_app::model::items::{CreateContentResponse, CreateFolderDto, CreateFolderResponse};
 use improvie_logic::{
     DynAppResult,
     model::items::{Content, Folder, FolderNode},
 };
 use uid::Uid;
 
-use crate::state::TauriAppState;
+use crate::{
+    model::{items::CreateContentRequest, yt::YtErrorWrapper},
+    state::TauriAppState,
+};
 
 #[tauri::command]
 pub async fn get_items_hierarchy(
@@ -44,9 +45,14 @@ pub async fn create_folder(
 #[tauri::command]
 pub async fn create_content(
     state: TauriAppState<'_>,
-    dto: CreateContentDto,
+    request: CreateContentRequest,
 ) -> DynAppResult<CreateContentResponse> {
-    state.modules.items_use_case().create_content(dto).await
+    let seconds = youtube::get_duration(request.content_path.clone()).map_err(YtErrorWrapper)?;
+    state
+        .modules
+        .items_use_case()
+        .create_content(request.into_dto(seconds))
+        .await
 }
 
 #[tauri::command]

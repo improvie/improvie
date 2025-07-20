@@ -1,19 +1,9 @@
 use std::sync::Arc;
 
 use tauri::{AppHandle, Emitter};
-use youtube::{YtError, YtVideoRequest};
+use youtube::YtVideoRequest;
 
-use crate::state::TauriAppState;
-
-#[derive(Debug, thiserror::Error)]
-#[error("YouTube error: {0}")]
-pub struct YtErrorWrapper(#[from] pub YtError);
-
-improvie_logic::impl_serialize_for_dyn_app_error!(
-    YtErrorWrapper,
-    kind = "YtError",
-    message = "YouTube error"
-);
+use crate::{model::yt::YtErrorWrapper, state::TauriAppState};
 
 #[tauri::command]
 pub async fn import_youtube_video<R: tauri::Runtime>(

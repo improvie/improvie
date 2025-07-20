@@ -44,3 +44,28 @@ pub(crate) async fn merge_video_audio(
     try_ffmpeg!(result);
     Ok(())
 }
+
+#[cfg(not(feature = "include"))]
+pub fn get_duration(_path: String) -> Result<u32, YtError> {
+    unimplemented!("get_duration is not supported without the `include` feature");
+}
+
+#[cfg(feature = "include")]
+pub fn get_duration(path: String) -> Result<u32, YtError> {
+    use ez_ffmpeg::container_info::get_duration_us;
+
+    log::info!("Getting duration of video file: {path}");
+    let duration_micro = try_ffmpeg!(get_duration_us(path));
+    let duration_seconds = duration_micro / 1_000_000;
+    if 0 >= duration_seconds {
+        return Err(YtError::Ffmpeg(Box::new(ez_ffmpeg::error::Error::IO(
+            std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "Duration of video file is zero or negative",
+            ),
+        ))));
+    }
+
+    log::info!("Duration of video file: {duration_seconds} seconds");
+    Ok(duration_seconds as u32)
+}

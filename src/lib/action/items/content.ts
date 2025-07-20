@@ -1,6 +1,6 @@
 import type { Content } from '$bindings/item';
-import type { CreateContentResponse } from '$bindings/item/dto';
-import type { CreateContentRequest } from '$bindings/item/request';
+import type { CreateContentRequest } from '$bindings/item/command';
+import type { CreateContentResponse } from '$bindings/item/response';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_contents(): Promise<Content[]> {

@@ -1,6 +1,6 @@
 import type { Content } from '$bindings/item';
-import type { CreateContentResponse } from '$bindings/item/dto';
-import type { CreateContentRequest } from '$bindings/item/request';
+import type { CreateContentRequest } from '$bindings/item/command';
+import type { CreateContentResponse } from '$bindings/item/response';
 import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
 import { SvelteMap } from 'svelte/reactivity';

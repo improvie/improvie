@@ -26,7 +26,6 @@ pub struct CreateFolderDto {
 }
 
 #[derive(Debug, Deserialize, Convert)]
-#[cfg_attr(feature = "ts", bind::dto("item"))]
 #[convert(into(CreateContentModel))]
 pub struct CreateContentDto {
     #[serde(flatten)]

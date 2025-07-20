@@ -63,17 +63,17 @@ pub async fn get_plays_hierarchy(
 #[tauri::command]
 pub async fn create_play_folder(
     state: TauriAppState<'_>,
-    dto: CreatePlayFolderDto,
+    request: CreatePlayFolderDto,
 ) -> DynAppResult<CreatePlayFolderResponse> {
-    state.modules.plays_use_case().create_play_folder(dto).await
+    state.modules.plays_use_case().create_play_folder(request).await
 }
 
 #[tauri::command]
 pub async fn create_playlist(
     state: TauriAppState<'_>,
-    dto: CreatePlaylistDto,
+    request: CreatePlaylistDto,
 ) -> DynAppResult<CreatePlaylistResponse> {
-    state.modules.plays_use_case().create_playlist(dto).await
+    state.modules.plays_use_case().create_playlist(request).await
 }
 
 #[tauri::command]

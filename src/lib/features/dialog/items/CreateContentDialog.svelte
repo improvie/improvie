@@ -1,6 +1,6 @@
 <script lang='ts'>
   import type { ContentKind } from '$bindings/constants';
-  import type { CreateContentRequest } from '$bindings/item/request';
+  import type { CreateContentRequest } from '$bindings/item/command';
   import {
     action_select_content_dialog,
     action_select_thumbnail_dialog,

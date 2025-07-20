@@ -37,9 +37,9 @@ pub async fn get_folders(state: TauriAppState<'_>) -> DynAppResult<Vec<Folder>> 
 #[tauri::command]
 pub async fn create_folder(
     state: TauriAppState<'_>,
-    dto: CreateFolderDto,
+    request: CreateFolderDto,
 ) -> DynAppResult<CreateFolderResponse> {
-    state.modules.items_use_case().create_folder(dto).await
+    state.modules.items_use_case().create_folder(request).await
 }
 
 #[tauri::command]

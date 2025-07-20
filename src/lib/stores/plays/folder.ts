@@ -1,5 +1,5 @@
 import type { PlayFolder } from '$bindings/play';
-import type { CreatePlayFolderDto } from '$bindings/play/dto';
+import type { CreatePlayFolderRequest } from '$bindings/play/request';
 import { action_delete_play_item, action_update_play_item_name } from '$lib/action/plays';
 import { action_create_play_folder } from '$lib/action/plays/folder';
 import { SvelteMap } from 'svelte/reactivity';
@@ -23,7 +23,7 @@ export async function update_play_folder_name(id: string, name: string): Promise
   }
 }
 
-export async function create_play_folder(data: CreatePlayFolderDto): Promise<void> {
+export async function create_play_folder(data: CreatePlayFolderRequest): Promise<void> {
   const res = await action_create_play_folder(data);
 
   play_folder_nodes.set(res.folder_node.folder, res.folder_node);

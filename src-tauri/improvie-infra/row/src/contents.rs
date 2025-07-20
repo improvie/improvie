@@ -15,6 +15,8 @@ pub struct Model {
     pub content_path: String,
     #[sea_orm(column_type = "Text", nullable)]
     pub thumbnail_path: Option<String>,
+    #[sea_orm(column_type = "custom(\"int unsigned\")")]
+    pub seconds: u32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

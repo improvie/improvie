@@ -1,5 +1,6 @@
 import type { Content } from '$bindings/item';
-import type { CreateContentDto, CreateContentResponse } from '$bindings/item/dto';
+import type { CreateContentRequest } from '$bindings/item/command';
+import type { CreateContentResponse } from '$bindings/item/response';
 import { action_delete_item, action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
 import { SvelteMap } from 'svelte/reactivity';
@@ -29,7 +30,7 @@ export function update_content(res: CreateContentResponse): void {
   contents.set(res.content.id, res.content);
 }
 
-export async function create_content(data: CreateContentDto): Promise<void> {
+export async function create_content(data: CreateContentRequest): Promise<void> {
   const res = await action_create_content(data);
   update_content(res);
 }

@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS contents (
     kind tinyint unsigned NOT NULL,
     content_path text NOT NULL,
     thumbnail_path text DEFAULT NULL,
+    seconds int unsigned NOT NULL,
 
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE

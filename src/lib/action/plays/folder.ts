@@ -1,5 +1,6 @@
 import type { PlayFolder } from '$bindings/play';
-import type { CreatePlayFolderDto, CreatePlayFolderResponse } from '$bindings/play/dto';
+import type { CreatePlayFolderRequest } from '$bindings/play/request';
+import type { CreatePlayFolderResponse } from '$bindings/play/response';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_get_play_folders(): Promise<PlayFolder[]> {
@@ -7,7 +8,9 @@ export async function action_get_play_folders(): Promise<PlayFolder[]> {
   return folders;
 }
 
-export async function action_create_play_folder(data: CreatePlayFolderDto): Promise<CreatePlayFolderResponse> {
-  const res = await invoke<CreatePlayFolderResponse>('create_play_folder', { dto: data });
+export async function action_create_play_folder(
+  data: CreatePlayFolderRequest,
+): Promise<CreatePlayFolderResponse> {
+  const res = await invoke<CreatePlayFolderResponse>('create_play_folder', { request: data });
   return res;
 }

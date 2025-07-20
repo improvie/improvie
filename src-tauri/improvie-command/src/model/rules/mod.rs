@@ -52,7 +52,6 @@ pub enum Rule {
     Loop(LoopRule),
     Random(RandomRule),
     Folder(FolderRule),
-    #[serde(other)]
     Unknown,
 }
 

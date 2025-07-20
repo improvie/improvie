@@ -9,6 +9,7 @@ license.workspace = true
 proc-macro = true
 
 [dependencies]
+syn = "2.0"
 
 [lints]
 workspace = true

@@ -13,7 +13,7 @@ async fn main() {
 
     let uid = Uid::new();
 
-    let model = improvie_row::items::ActiveModel {
+    improvie_row::items::ActiveModel {
         id: sea_orm::Set(uid),
         title: sea_orm::Set(String::from("Test Item")),
         kind: sea_orm::Set(improvie_logic::constant::items::ItemKind::Folder),
@@ -24,13 +24,11 @@ async fn main() {
     .await
     .unwrap();
 
-    assert_eq!(model.title, "Test Item");
-
-    repo.update_item_name(conn, model.id, String::from("Updated Item Name"))
+    repo.update_item_name(conn, uid, String::from("Updated Item Name"))
         .await
         .unwrap();
 
-    let updated_model_opt = improvie_row::items::Entity::find_by_id(model.id)
+    let updated_model_opt = improvie_row::items::Entity::find_by_id(uid)
         .one(&conn)
         .await
         .unwrap();

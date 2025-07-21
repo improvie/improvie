@@ -31,7 +31,6 @@ async fn main() {
     .await
     .unwrap();
 
-    // FIXME: pacnied
     let result = repo.get_folder_by_id(folder_uid).await.unwrap();
 
     assert!(result.is_some());

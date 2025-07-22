@@ -34,7 +34,7 @@ mod macros {
         impl $name {
             pub fn new(db: DbPoolImpl) -> Self {
                 Self {
-                    $($variable: $impl::new(db.clone()),)*
+                    $($variable: $impl::new(),)*
                     db,
                 }
             }

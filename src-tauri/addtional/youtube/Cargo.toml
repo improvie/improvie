@@ -22,7 +22,7 @@ bytes.workspace = true
 ts-rs = { workspace = true, optional = true }
 bind = { workspace = true, optional = true }
 
-ez-ffmpeg = { version = "=0.5.1", features = ["async"], optional = true }
+ez-ffmpeg = { version = "=0.5.3", features = ["async"], optional = true }
 
 [lints]
 workspace = true

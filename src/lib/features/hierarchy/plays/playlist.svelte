@@ -48,8 +48,7 @@
     if (playlist.thumbnail_path) {
       return playlist.thumbnail_path;
     }
-    const rules = await action_get_rules(playlist.id);
-    const content_id = await action_get_thumbnail_content_uid(rules);
+    const content_id = await action_get_thumbnail_content_uid(playlist.id);
     if (content_id === undefined) {
       return undefined;
     }

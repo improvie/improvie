@@ -1,8 +1,8 @@
 import type { Content } from '$bindings/item';
 import type { RuleFormat } from '$bindings/rule';
+import { action_update_content_by_used, action_update_playlist_by_used } from '$lib/action/recents';
 import { action_get_rules_format, action_get_rules_format_with_shuffle } from '$lib/action/rules';
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
-import { shuffle } from '$lib/utils';
 import { contents } from './items/content';
 
 export class Tracker {
@@ -31,6 +31,8 @@ export class Tracker {
   }
 
   public set_single_content(id: string) {
+    action_update_content_by_used(id);
+
     const prev_track_id = this.current_track_id;
     this.clear_track();
 
@@ -97,13 +99,16 @@ export class Tracker {
   }
 
   public async set_rules_by_type(playlist_id: string): Promise<void> {
+    action_update_playlist_by_used(playlist_id);
+
     const formats = await action_get_rules_format(playlist_id);
     this.set_rules(formats);
   }
 
   public async set_rules_by_type_shuffle(playlist_id: string): Promise<void> {
+    action_update_playlist_by_used(playlist_id);
+
     const formats = await action_get_rules_format_with_shuffle(playlist_id);
-    shuffle(formats);
     this.set_rules(formats);
   }
 

@@ -10,3 +10,5 @@ pub mod items;
 pub mod play_folders;
 pub mod play_items;
 pub mod playlists;
+pub mod recent_contents;
+pub mod recent_playlists;

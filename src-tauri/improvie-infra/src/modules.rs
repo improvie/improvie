@@ -3,8 +3,8 @@ use improvie_domain::modules::RepositoriesModule;
 use crate::{
     persistence::db::DbPoolImpl,
     repository::{
-        items::ItemsRepositoryImpl, plays::PlaylistsRepositoryImpl, rules::RulesRepositoryImpl,
-        settings::SettingsRepositoryImpl,
+        items::ItemsRepositoryImpl, plays::PlaylistsRepositoryImpl, recents::RecentsRepositoryImpl,
+        rules::RulesRepositoryImpl, settings::SettingsRepositoryImpl,
     },
 };
 
@@ -15,6 +15,7 @@ macros::def_repositories_module!(
         items_repository: ItemsRepositoryImpl = ItemsRepository,
         playsts_repository: PlaylistsRepositoryImpl = PlaystsRepository,
         rules_repository: RulesRepositoryImpl = RulesRepository,
+        recents_repository: RecentsRepositoryImpl = RecentsRepository,
     }
 );
 
@@ -54,6 +55,11 @@ mod macros {
 
             fn pool(&self) -> Self::DbPool {
                 self.db.clone()
+            }
+
+            fn connection<'a>(&'a self) -> Self::DbConnection<'a> {
+                use improvie_domain::persistence::db::DbPool;
+                self.db.connection()
             }
 
             async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx> {

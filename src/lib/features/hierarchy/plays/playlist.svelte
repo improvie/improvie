@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { action_get_rules, action_get_thumbnail_content_uid } from '$lib/action/rules';
+  import { action_get_thumbnail_content_uid } from '$lib/action/rules';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import RenameElement from '$lib/components/element/RenameElement.svelte';
   import IconText from '$lib/components/IconText.svelte';

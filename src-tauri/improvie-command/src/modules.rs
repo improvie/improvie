@@ -1,5 +1,6 @@
 use improvie_app::usecase::{
-    items::ItemsUseCase, plays::PlaysUseCase, rules::RulesUseCase, settings::SettingsUseCase,
+    items::ItemsUseCase, plays::PlaysUseCase, recents::RecentsUseCase, rules::RulesUseCase,
+    settings::SettingsUseCase,
 };
 use improvie_infra::modules::RepositoriesModuleImpl;
 
@@ -10,6 +11,7 @@ macros::def_modules!(
         items_use_case: ItemsUseCase,
         plays_use_case: PlaysUseCase,
         rules_use_case: RulesUseCase,
+        recents_use_case: RecentsUseCase,
     }
 );
 

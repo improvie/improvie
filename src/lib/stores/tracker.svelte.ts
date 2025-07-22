@@ -1,6 +1,6 @@
 import type { Content } from '$bindings/item';
-import type { RuleFormat, RuleType } from '$bindings/rule';
-import { action_get_rules_format } from '$lib/action/rules';
+import type { RuleFormat } from '$bindings/rule';
+import { action_get_rules_format, action_get_rules_format_with_shuffle } from '$lib/action/rules';
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
 import { shuffle } from '$lib/utils';
 import { contents } from './items/content';
@@ -80,7 +80,7 @@ export class Tracker {
     return this.play_rules.length > 0;
   }
 
-  public set_rules(rules: RuleFormat[]) {
+  private set_rules(rules: RuleFormat[]) {
     const prev_track_id = this.current_track_id;
     this.clear_track();
 
@@ -96,13 +96,13 @@ export class Tracker {
     }
   }
 
-  public async set_rules_by_type(rules: RuleType[]): Promise<void> {
-    const formats = await action_get_rules_format(rules);
+  public async set_rules_by_type(playlist_id: string): Promise<void> {
+    const formats = await action_get_rules_format(playlist_id);
     this.set_rules(formats);
   }
 
-  public async set_rules_by_type_shuffle(rules: RuleType[]): Promise<void> {
-    const formats = await action_get_rules_format(rules);
+  public async set_rules_by_type_shuffle(playlist_id: string): Promise<void> {
+    const formats = await action_get_rules_format_with_shuffle(playlist_id);
     shuffle(formats);
     this.set_rules(formats);
   }

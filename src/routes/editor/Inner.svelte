@@ -30,7 +30,7 @@
     if (playlist.thumbnail_path) {
       return playlist.thumbnail_path;
     }
-    const content_id = await action_get_thumbnail_content_uid(rules);
+    const content_id = await action_get_thumbnail_content_uid(playlist.id);
     if (content_id === undefined) {
       return undefined;
     }
@@ -75,7 +75,7 @@
         {/snippet}
       </IconButton>
       <IconButton variant='default' class='size-12' onclick={() => {
-        tracker.set_rules_by_type(rules);
+        tracker.set_rules_by_type(playlist.id);
       }}>
         <FilledIcon icon={PlayIcon} filled class='size-8' />
         {#snippet content()}
@@ -94,7 +94,7 @@
         <DropdownMenu.Content>
           <DropdownMenu.Item>
             <Button variant='ghost' size='sm' class='p-0' onclick={() => {
-              tracker.set_rules_by_type_shuffle(rules);
+              tracker.set_rules_by_type_shuffle(playlist.id);
             }}>
               <IconText icon={ShuffleIcon} text='Shuffle Play' />
             </Button>

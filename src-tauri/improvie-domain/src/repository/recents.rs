@@ -19,12 +19,12 @@ pub trait RecentsRepository {
     async fn get_recent_contents(
         &self,
         conn: Self::DbConnection<'_>,
-        limit: Option<usize>,
+        limit: Option<u64>,
     ) -> DynAppResult<Vec<uid::Uid>>;
 
     async fn get_recent_playlists(
         &self,
         conn: Self::DbConnection<'_>,
-        limit: Option<usize>,
+        limit: Option<u64>,
     ) -> DynAppResult<Vec<uid::Uid>>;
 }

@@ -33,7 +33,7 @@ impl<R: RepositoriesModule> RecentsUseCase<R> {
 
     pub async fn get_recent_contents(
         &self,
-        limit: Option<usize>,
+        limit: Option<u64>,
     ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
         self.repository
             .recents_repository()
@@ -43,7 +43,7 @@ impl<R: RepositoriesModule> RecentsUseCase<R> {
 
     pub async fn get_recent_playlists(
         &self,
-        limit: Option<usize>,
+        limit: Option<u64>,
     ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
         self.repository
             .recents_repository()

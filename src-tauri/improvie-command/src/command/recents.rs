@@ -27,7 +27,7 @@ pub async fn update_playlist_by_used(
 #[tauri::command]
 pub async fn get_recent_contents(
     state: TauriAppState<'_>,
-    limit: Option<usize>,
+    limit: Option<u64>,
 ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
     state
         .modules
@@ -39,7 +39,7 @@ pub async fn get_recent_contents(
 #[tauri::command]
 pub async fn get_recent_playlists(
     state: TauriAppState<'_>,
-    limit: Option<usize>,
+    limit: Option<u64>,
 ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
     state
         .modules

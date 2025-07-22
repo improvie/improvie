@@ -71,6 +71,13 @@ impl Rule {
 #[async_trait::async_trait]
 pub trait RuleFormatIter {
     async fn formats(&self, state: &AppState) -> Vec<RuleFormat>;
+
+    async fn shuffle(&self, state: &AppState) -> Vec<RuleFormat> {
+        let mut formats = self.formats(state).await;
+        rand::prelude::SliceRandom::shuffle(formats.as_mut_slice(), &mut rand::rng());
+        formats
+    }
+
     async fn thumbnail(&self, state: &AppState) -> Option<Uid>;
 }
 
@@ -83,6 +90,17 @@ impl RuleFormatIter for Rule {
             Rule::Loop(rule) => rule.formats(state).await,
             Rule::Random(rule) => rule.formats(state).await,
             Rule::Folder(rule) => rule.formats(state).await,
+            Rule::Unknown => Vec::new(),
+        }
+    }
+
+    async fn shuffle(&self, state: &AppState) -> Vec<RuleFormat> {
+        match self {
+            Rule::Content(rule) => rule.shuffle(state).await,
+            Rule::Range(rule) => rule.shuffle(state).await,
+            Rule::Loop(rule) => rule.shuffle(state).await,
+            Rule::Random(rule) => rule.shuffle(state).await,
+            Rule::Folder(rule) => rule.shuffle(state).await,
             Rule::Unknown => Vec::new(),
         }
     }

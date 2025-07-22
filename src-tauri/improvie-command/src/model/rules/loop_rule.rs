@@ -22,6 +22,17 @@ impl RuleFormatIter for LoopRule {
         }
         formats
     }
+
+    async fn shuffle(&self, state: &AppState) -> Vec<RuleFormat> {
+        let mut formats = Vec::new();
+        for _ in 0..self.times {
+            for rule in &self.rules {
+                formats.extend(rule.shuffle(state).await);
+            }
+        }
+        formats
+    }
+
     async fn thumbnail(&self, state: &AppState) -> Option<Uid> {
         if let Some(rule) = self.rules.first() {
             rule.thumbnail(state).await

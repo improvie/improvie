@@ -33,8 +33,9 @@ pub async fn update_rules(
 #[tauri::command]
 pub async fn get_rules_format(
     state: TauriAppState<'_>,
-    rules: Vec<Rule>,
+    playlist_id: Uid,
 ) -> DynAppResult<Vec<RuleFormat>> {
+    let rules = get_rules(state.clone(), playlist_id).await?;
     let mut formats = Vec::new();
     for rule in rules {
         formats.extend(rule.formats(&state).await);
@@ -43,10 +44,25 @@ pub async fn get_rules_format(
 }
 
 #[tauri::command]
+pub async fn get_rules_format_with_shuffle(
+    state: TauriAppState<'_>,
+    playlist_id: Uid,
+) -> DynAppResult<Vec<RuleFormat>> {
+    let mut rules = get_rules(state.clone(), playlist_id).await?;
+    rand::prelude::SliceRandom::shuffle(rules.as_mut_slice(), &mut rand::rng());
+    let mut formats = Vec::new();
+    for rule in rules {
+        formats.extend(rule.shuffle(&state).await);
+    }
+    Ok(formats)
+}
+
+#[tauri::command]
 pub async fn get_thumbnail_content_uid(
     state: TauriAppState<'_>,
-    rules: Vec<Rule>,
+    playlist_id: Uid,
 ) -> DynAppResult<Option<Uid>> {
+    let rules = get_rules(state.clone(), playlist_id).await?;
     if let Some(rule) = rules.first() {
         Ok(rule.thumbnail(&state).await)
     } else {

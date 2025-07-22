@@ -13,11 +13,16 @@ export async function action_update_rules(playlist_id: string, rules: RuleType[]
   });
 }
 
-export async function action_get_rules_format(rules: RuleType[]): Promise<RuleFormat[]> {
-  const format = await invoke<RuleFormat[]>('get_rules_format', { rules });
+export async function action_get_rules_format(playlist_id: string): Promise<RuleFormat[]> {
+  const format = await invoke<RuleFormat[]>('get_rules_format', { playlist_id });
   return format;
 }
 
-export async function action_get_thumbnail_content_uid(rules: RuleType[]): Promise<string | undefined> {
-  return await invoke<string | undefined>('get_thumbnail_content_uid', { rules });
+export async function action_get_rules_format_with_shuffle(playlist_id: string): Promise<RuleFormat[]> {
+  const format = await invoke<RuleFormat[]>('get_rules_format_with_shuffle', { playlist_id });
+  return format;
+}
+
+export async function action_get_thumbnail_content_uid(playlist_id: string): Promise<string | undefined> {
+  return await invoke<string | undefined>('get_thumbnail_content_uid', { playlist_id });
 }

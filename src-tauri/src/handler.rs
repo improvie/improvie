@@ -32,6 +32,7 @@ pub fn generate_handler<R: tauri::Runtime>()
         rules::get_rules,
         rules::update_rules,
         rules::get_rules_format,
+        rules::get_rules_format_with_shuffle,
         rules::get_thumbnail_content_uid,
         // youtube
         youtube::import_youtube_video,

@@ -12,18 +12,24 @@ use crate::model::plays::{CreatePlayFolderModel, CreatePlaylistModel};
 pub trait PlaystsRepository {
     type DbConnection<'a>: crate::persistence::db::DbConnection<'a>;
 
-    async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<PlayFolderNode>;
+    async fn get_plays_hierarchy_current(
+        &self,
+        conn: Self::DbConnection<'_>,
+        folder_id: Uid,
+    ) -> DynAppResult<PlayFolderNode>;
 
     async fn get_plays_hierarchy_loop(
         &self,
+        conn: Self::DbConnection<'_>,
         folder_id: Uid,
     ) -> DynAppResult<HashMap<Uid, PlayFolderNode>>;
 
-    async fn get_play_folders(&self) -> DynAppResult<Vec<PlayFolder>>;
+    async fn get_play_folders(&self, conn: Self::DbConnection<'_>)
+    -> DynAppResult<Vec<PlayFolder>>;
 
-    async fn get_playlists(&self) -> DynAppResult<Vec<Playlist>>;
+    async fn get_playlists(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Playlist>>;
 
-    async fn get_favorite_playlists(&self) -> DynAppResult<Vec<Uid>>;
+    async fn get_favorite_playlists(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Uid>>;
 
     async fn add_favorite_playlist(
         &self,

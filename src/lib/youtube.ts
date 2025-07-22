@@ -46,8 +46,8 @@ async function getClient(forceInit?: boolean): Promise<Innertube> {
 
 export async function getVideoDetail(videoId: string): Promise<VideoDetail> {
   const client = await getClient();
-  const videoInfo = await client.getBasicInfo(videoId, 'IOS');
-  const videoInfoByGreatThumbnailPromise = client.getBasicInfo(videoId, 'WEB');
+  const videoInfo = await client.getBasicInfo(videoId, { client: 'IOS' });
+  const videoInfoByGreatThumbnailPromise = client.getBasicInfo(videoId, { client: 'WEB' });
 
   if (videoInfo.playability_status?.status !== 'OK') {
     if (videoInfo.playability_status?.status === 'UNPLAYABLE') {
@@ -146,7 +146,7 @@ export async function getPlaylistDetail(playlistId: string, videoId?: string): P
         playlistId,
       },
     });
-    const info = await client.getInfo(endpoint, 'IOS');
+    const info = await client.getInfo(endpoint, { client: 'IOS' });
     const playlistInfo = info.playlist;
     if (!playlistInfo) {
       throw new Error('No playlist information available for this video.');

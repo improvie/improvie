@@ -20,7 +20,7 @@
     "@tauri-apps/plugin-log": "~2.6.0",
     "bgutils-js": "^3.2.0",
     "sveltekit-i18n": "^2.4.2",
-    "youtubei.js": "^14.0.0"
+    "youtubei.js": "^15.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.17.0",

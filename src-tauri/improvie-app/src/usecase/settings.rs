@@ -19,7 +19,10 @@ impl<R: RepositoriesModule> SettingsUseCase<R> {
             .get_app_settings()
             .await?;
 
-        option.ok_or_else(|| self.repository.record_not_found())
+        option.ok_or_else(|| {
+            self.repository
+                .record_not_found(String::from("App settings not found"))
+        })
     }
 
     pub async fn set_app_settings(&self, settings: AppSettings) -> DynAppResult<()> {

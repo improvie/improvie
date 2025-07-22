@@ -15,7 +15,7 @@ macros::def_module!(
         fn pool(&self) -> Self::DbPool;
         fn connection<'a>(&'a self) -> Self::DbConnection<'a>;
         async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
-        fn record_not_found(&self) -> improvie_logic::BoxDynAppError;
+        fn record_not_found(&self, message: String) -> improvie_logic::BoxDynAppError;
     }
 );
 

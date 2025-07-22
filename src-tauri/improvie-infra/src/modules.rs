@@ -31,8 +31,8 @@ macros::def_repositories_module!(
             self.db.begin().await
         }
 
-        fn record_not_found(&self) -> improvie_logic::BoxDynAppError {
-            sea_orm::DbErr::RecordNotFound(String::from("Record not found")).into()
+        fn record_not_found(&self, message: String) -> improvie_logic::BoxDynAppError {
+            sea_orm::DbErr::RecordNotFound(message).into()
         }
     }
 );

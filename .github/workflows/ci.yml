@@ -85,6 +85,12 @@ jobs:
       - name: "Test Frontend"
         run: |
           bun test
+          FAILED=$?
+          if [ $FAILED -ne 0 ]; then
+            echo "Frontend tests failed with exit code $FAILED"
+            exit $FAILED
+          fi
+          exit 0
 
       - name: "Lint Frontend"
         run: |

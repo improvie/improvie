@@ -37,9 +37,7 @@ impl ChunkStream {
         let mut content_length = content_length.unwrap_or(0);
 
         if content_length == 0 {
-            log::info!(
-                "Content length is not provided, fetching from URL: {link}"
-            );
+            log::info!("Content length is not provided, fetching from URL: {link}");
             content_length = client
                 .get(&link)
                 .send()

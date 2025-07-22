@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS recent_contents (
-    item_id varchar(26) NOT NULL,
+    content_id varchar(26) NOT NULL,
     last_accessed timestamp NOT NULL,
 
-    PRIMARY KEY (item_id),
-    FOREIGN KEY (item_id) REFERENCES contents (item_id) ON DELETE CASCADE
+    PRIMARY KEY (content_id),
+    FOREIGN KEY (content_id) REFERENCES contents (item_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS recent_playlists (

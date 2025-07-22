@@ -1,4 +1,4 @@
-use improvie_command::command::{dialog, items, plays, rules, settings, youtube};
+use improvie_command::command::{dialog, items, plays, recents, rules, settings, youtube};
 
 pub fn generate_handler<R: tauri::Runtime>()
 -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
@@ -34,6 +34,11 @@ pub fn generate_handler<R: tauri::Runtime>()
         rules::get_rules_format,
         rules::get_rules_format_with_shuffle,
         rules::get_thumbnail_content_uid,
+        // recents
+        recents::update_content_by_used,
+        recents::update_playlist_by_used,
+        recents::get_recent_contents,
+        recents::get_recent_playlists,
         // youtube
         youtube::import_youtube_video,
     ]

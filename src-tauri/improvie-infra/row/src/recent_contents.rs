@@ -6,7 +6,7 @@ use sea_orm::entity::prelude::*;
 #[sea_orm(table_name = "recent_contents")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
-    pub item_id: uid::Uid,
+    pub content_id: uid::Uid,
     pub last_accessed: DateTimeUtc,
 }
 
@@ -14,7 +14,7 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::contents::Entity",
-        from = "Column::ItemId",
+        from = "Column::ContentId",
         to = "super::contents::Column::ItemId",
         on_update = "NoAction",
         on_delete = "Cascade"

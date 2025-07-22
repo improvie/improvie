@@ -1,6 +1,6 @@
 use crate::repository::{
-    items::ItemsRepository, plays::PlaystsRepository, rules::RulesRepository,
-    settings::SettingsRepository,
+    items::ItemsRepository, plays::PlaystsRepository, recents::RecentsRepository,
+    rules::RulesRepository, settings::SettingsRepository,
 };
 
 macros::def_module!(RepositoriesModule {
@@ -8,8 +8,10 @@ macros::def_module!(RepositoriesModule {
     items_repository: ItemsRepository<for DbConnection>,
     playsts_repository: PlaystsRepository<for DbConnection>,
     rules_repository: RulesRepository,
+    recents_repository: RecentsRepository<for DbConnection>,
 }, {
     fn pool(&self) -> Self::DbPool;
+    fn connection<'a>(&'a self) -> Self::DbConnection<'a>;
     async fn begin(&self) -> improvie_logic::DynAppResult<Self::DbTx>;
     fn record_not_found(&self) -> improvie_logic::BoxDynAppError;
 });

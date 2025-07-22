@@ -42,10 +42,7 @@ impl Related<super::hierarchical_items::Entity> for Entity {
 
 impl Related<super::folders::Entity> for Entity {
     fn to() -> RelationDef {
-        super::hierarchical_items::Relation::Folders.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(super::hierarchical_items::Relation::Items.def().rev())
+        Relation::Folders.def()
     }
 }
 

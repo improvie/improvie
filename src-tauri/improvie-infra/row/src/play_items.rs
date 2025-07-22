@@ -42,14 +42,7 @@ impl Related<super::playlists::Entity> for Entity {
 
 impl Related<super::play_folders::Entity> for Entity {
     fn to() -> RelationDef {
-        super::hierarchical_play_items::Relation::PlayFolders.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(
-            super::hierarchical_play_items::Relation::PlayItems
-                .def()
-                .rev(),
-        )
+        Relation::PlayFolders.def()
     }
 }
 

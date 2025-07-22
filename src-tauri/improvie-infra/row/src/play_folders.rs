@@ -32,14 +32,7 @@ impl Related<super::hierarchical_play_items::Entity> for Entity {
 
 impl Related<super::play_items::Entity> for Entity {
     fn to() -> RelationDef {
-        super::hierarchical_play_items::Relation::PlayItems.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(
-            super::hierarchical_play_items::Relation::PlayFolders
-                .def()
-                .rev(),
-        )
+        Relation::PlayItems.def()
     }
 }
 

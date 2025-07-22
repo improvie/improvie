@@ -8,6 +8,27 @@ pub enum DbConnectionImpl<'a> {
     Tx(&'a DbTxImpl),
 }
 
+impl DbConnectionImpl<'_> {
+    #[inline(always)]
+    pub fn backend(&self) -> sea_orm::DbBackend {
+        self.get_database_backend()
+    }
+
+    pub fn as_pool(&self) -> Option<&DbPoolImpl> {
+        match self {
+            Self::Pool(pool) => Some(pool),
+            Self::Tx(_) => None,
+        }
+    }
+
+    pub fn as_tx(&self) -> Option<&DbTxImpl> {
+        match self {
+            Self::Pool(_) => None,
+            Self::Tx(tx) => Some(tx),
+        }
+    }
+}
+
 macro_rules! internal {
     ($(@$await:ident)?$self:ident, $fn:ident$(($($expr:expr)+))?) => {
         match $self {
@@ -114,6 +135,10 @@ impl DbTxImpl {
 
     pub fn tx(&self) -> &sea_orm::DatabaseTransaction {
         &self.0
+    }
+
+    pub fn backend(&self) -> sea_orm::DbBackend {
+        self.0.get_database_backend()
     }
 
     pub async fn commit(self) -> DynAppResult<()> {

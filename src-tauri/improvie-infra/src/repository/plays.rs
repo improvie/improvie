@@ -27,7 +27,11 @@ def_repository_impl!(PlaylistsRepositoryImpl);
 #[async_trait::async_trait]
 impl PlaystsRepository for PlaylistsRepositoryImpl {
     type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
-    async fn get_play_folders(&self) -> DynAppResult<Vec<PlayFolder>> {
+
+    async fn get_play_folders(
+        &self,
+        conn: Self::DbConnection<'_>,
+    ) -> DynAppResult<Vec<PlayFolder>> {
         let rows = improvie_row::play_folders::Entity::find()
             .select_only()
             .inner_join(improvie_row::play_items::Entity)
@@ -36,13 +40,13 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
             .column(improvie_row::play_items::Column::Description)
             .column(improvie_row::play_items::Column::CreatedAt)
             .into_model::<PlayFolderRow>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         Ok(rows.vec_into())
     }
 
-    async fn get_playlists(&self) -> DynAppResult<Vec<Playlist>> {
+    async fn get_playlists(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Playlist>> {
         let rows = improvie_row::playlists::Entity::find()
             .select_only()
             .column(improvie_row::playlists::Column::ThumbnailPath)
@@ -52,13 +56,13 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
             .column(improvie_row::play_items::Column::Description)
             .column(improvie_row::play_items::Column::CreatedAt)
             .into_model::<PlaylistRow>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         Ok(rows.vec_into())
     }
 
-    async fn get_favorite_playlists(&self) -> DynAppResult<Vec<Uid>> {
+    async fn get_favorite_playlists(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Uid>> {
         let rows = improvie_row::favorite_playlists::Entity::find()
             .select_only()
             .column(improvie_row::favorite_playlists::Column::PlaylistId)
@@ -67,7 +71,7 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
                 sea_orm::Order::Asc,
             )
             .into_tuple::<Uid>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         Ok(rows.vec_into())
@@ -115,7 +119,11 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
         Ok(())
     }
 
-    async fn get_plays_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<PlayFolderNode> {
+    async fn get_plays_hierarchy_current(
+        &self,
+        conn: Self::DbConnection<'_>,
+        folder_id: Uid,
+    ) -> DynAppResult<PlayFolderNode> {
         let rows = improvie_row::hierarchical_play_items::Entity::find()
             .select_only()
             .column(improvie_row::hierarchical_play_items::Column::ChildId)
@@ -124,7 +132,7 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
             .column_as(improvie_row::play_items::Column::Kind, "child_kind")
             .filter(improvie_row::hierarchical_play_items::Column::ParentFolderId.eq(folder_id))
             .into_model::<PlayCurrentNodeRaw>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         let mut children: Vec<PlayItemNode> = vec![];
@@ -153,10 +161,11 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
 
     async fn get_plays_hierarchy_loop(
         &self,
+        conn: Self::DbConnection<'_>,
         folder_id: Uid,
     ) -> DynAppResult<HashMap<Uid, PlayFolderNode>> {
         let rows = PlayNodeRaw::find_by_statement(Statement::from_sql_and_values(
-            self.db.backend(),
+            conn.backend(),
             "
 WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
     SELECT
@@ -184,7 +193,7 @@ FROM folder_hierarchy
 ",
             [folder_id.into()],
         ))
-        .all(self.db.pool())
+        .all(&conn)
         .await?;
 
         let mut nodes: HashMap<Uid, PlayFolderNode> = HashMap::new();
@@ -283,7 +292,7 @@ FROM folder_hierarchy
     ) -> DynAppResult<Vec<Uid>> {
         let mut play_item_uids = Uid::find_by_statement::<improvie_row::play_items::Column>(
             Statement::from_sql_and_values(
-                self.db.backend(),
+                conn.backend(),
                 "
 WITH RECURSIVE item_hierarchy(child_id) AS (
     SELECT

@@ -10,7 +10,7 @@ async fn main() {
     let db = DbPoolImpl::new_test().await;
     let conn = db.connection();
 
-    let repo = ItemsRepositoryImpl::new(db.clone());
+    let repo = ItemsRepositoryImpl::new();
 
     let content_uid = Uid::new();
 
@@ -36,7 +36,7 @@ async fn main() {
     .await
     .unwrap();
 
-    let result = repo.get_content_by_id(content_uid).await.unwrap();
+    let result = repo.get_content_by_id(conn, content_uid).await.unwrap();
 
     assert!(result.is_some());
     let content = result.unwrap();
@@ -53,6 +53,6 @@ async fn main() {
         Some(String::from("/test/path/thumbnail.jpg"))
     );
 
-    let non_existent_result = repo.get_content_by_id(Uid::new()).await.unwrap();
+    let non_existent_result = repo.get_content_by_id(conn, Uid::new()).await.unwrap();
     assert!(non_existent_result.is_none());
 }

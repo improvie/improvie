@@ -51,6 +51,7 @@ macro_rules! def_repository_impl {
         }
 
         impl $impl {
+            #[allow(clippy::new_without_default)]
             pub fn new() -> Self {
                 Self {}
             }

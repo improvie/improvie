@@ -6,13 +6,19 @@ super::def_repository_impl!(RulesRepositoryImpl);
 
 #[async_trait::async_trait]
 impl RulesRepository for RulesRepositoryImpl {
-    async fn get_rules(&self, playlist_id: uid::Uid) -> DynAppResult<Vec<RuleData>> {
+    type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
+
+    async fn get_rules(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: uid::Uid,
+    ) -> DynAppResult<Vec<RuleData>> {
         let row = improvie_row::playlists::Entity::find()
             .filter(improvie_row::playlists::Column::ItemId.eq(playlist_id))
             .select_only()
             .column(improvie_row::playlists::Column::Rules)
             .into_tuple::<String>()
-            .one(self.db.pool())
+            .one(&conn)
             .await?;
 
         let rules_json = row.ok_or_else(|| {
@@ -25,7 +31,12 @@ impl RulesRepository for RulesRepositoryImpl {
         Ok(rules)
     }
 
-    async fn update_rules(&self, playlist_id: uid::Uid, rules: Vec<RuleData>) -> DynAppResult<()> {
+    async fn update_rules(
+        &self,
+        conn: Self::DbConnection<'_>,
+        playlist_id: uid::Uid,
+        rules: Vec<RuleData>,
+    ) -> DynAppResult<()> {
         let json = serde_json::to_string(&rules)
             .map_err(|e| sea_orm::error::DbErr::Json(e.to_string()))?;
 
@@ -37,7 +48,7 @@ impl RulesRepository for RulesRepositoryImpl {
         improvie_row::playlists::Entity::update_many()
             .set(row)
             .filter(improvie_row::playlists::Column::ItemId.eq(playlist_id))
-            .exec(self.db.pool())
+            .exec(&conn)
             .await?;
 
         Ok(())

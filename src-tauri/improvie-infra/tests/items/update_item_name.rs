@@ -9,7 +9,7 @@ async fn main() {
     let db = DbPoolImpl::new_test().await;
     let conn = db.connection();
 
-    let repo = ItemsRepositoryImpl::new(db.clone());
+    let repo = ItemsRepositoryImpl::new();
 
     let uid = Uid::new();
 

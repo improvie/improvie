@@ -11,18 +11,27 @@ def_repository_impl!(SettingsRepositoryImpl);
 
 #[async_trait::async_trait]
 impl SettingsRepository for SettingsRepositoryImpl {
-    async fn get_app_settings(&self) -> improvie_logic::DynAppResult<Option<AppSettings>> {
+    type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
+
+    async fn get_app_settings(
+        &self,
+        conn: Self::DbConnection<'_>,
+    ) -> improvie_logic::DynAppResult<Option<AppSettings>> {
         improvie_row::app_settings::Entity::find()
             .select_only()
             .filter(improvie_row::app_settings::Column::Id.eq(Uid::nil()))
             .column(improvie_row::app_settings::Column::Settings)
             .into_tuple::<AppSettings>()
-            .one(self.db.pool())
+            .one(&conn)
             .await
             .map_err(Into::into)
     }
 
-    async fn set_app_settings(&self, settings: AppSettings) -> improvie_logic::DynAppResult<()> {
+    async fn set_app_settings(
+        &self,
+        conn: Self::DbConnection<'_>,
+        settings: AppSettings,
+    ) -> improvie_logic::DynAppResult<()> {
         let row = improvie_row::app_settings::ActiveModel {
             settings: Set(settings),
             ..Default::default()
@@ -31,7 +40,7 @@ impl SettingsRepository for SettingsRepositoryImpl {
         improvie_row::app_settings::Entity::update_many()
             .set(row)
             .filter(improvie_row::app_settings::Column::Id.eq(Uid::nil()))
-            .exec(self.db.pool())
+            .exec(&conn)
             .await?;
 
         Ok(())

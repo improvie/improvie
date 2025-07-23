@@ -1,28 +1,28 @@
 import type { RuleFormat, RuleType } from '$bindings/rule';
 import { invoke } from '@tauri-apps/api/core';
 
-export async function action_get_rules(playlist_id: string): Promise<RuleType[]> {
-  const rules = await invoke<RuleType[]>('get_rules', { playlistId: playlist_id });
+export async function action_get_rules(playlistId: string): Promise<RuleType[]> {
+  const rules = await invoke<RuleType[]>('get_rules', { playlistId });
   return rules;
 }
 
-export async function action_update_rules(playlist_id: string, rules: RuleType[]): Promise<void> {
+export async function action_update_rules(playlistId: string, rules: RuleType[]): Promise<void> {
   await invoke('update_rules', {
-    playlistId: playlist_id,
+    playlistId,
     rules,
   });
 }
 
-export async function action_get_rules_format(playlist_id: string): Promise<RuleFormat[]> {
-  const format = await invoke<RuleFormat[]>('get_rules_format', { playlist_id });
+export async function action_get_rules_format(playlistId: string): Promise<RuleFormat[]> {
+  const format = await invoke<RuleFormat[]>('get_rules_format', { playlistId });
   return format;
 }
 
-export async function action_get_rules_format_with_shuffle(playlist_id: string): Promise<RuleFormat[]> {
-  const format = await invoke<RuleFormat[]>('get_rules_format_with_shuffle', { playlist_id });
+export async function action_get_rules_format_with_shuffle(playlistId: string): Promise<RuleFormat[]> {
+  const format = await invoke<RuleFormat[]>('get_rules_format_with_shuffle', { playlistId });
   return format;
 }
 
-export async function action_get_thumbnail_content_uid(playlist_id: string): Promise<string | undefined> {
-  return await invoke<string | undefined>('get_thumbnail_content_uid', { playlist_id });
+export async function action_get_thumbnail_content_uid(playlistId: string): Promise<string | undefined> {
+  return await invoke<string | undefined>('get_thumbnail_content_uid', { playlistId });
 }

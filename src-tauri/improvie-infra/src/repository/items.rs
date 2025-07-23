@@ -32,7 +32,11 @@ def_repository_impl!(ItemsRepositoryImpl);
 impl ItemsRepository for ItemsRepositoryImpl {
     type DbConnection<'a> = crate::persistence::db::DbConnectionImpl<'a>;
 
-    async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
+    async fn get_items_hierarchy_current(
+        &self,
+        conn: Self::DbConnection<'_>,
+        folder_id: Uid,
+    ) -> DynAppResult<FolderNode> {
         let rows = row::hierarchical_items::Entity::find()
             .select_only()
             .column(row::hierarchical_items::Column::ChildId)
@@ -41,7 +45,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column_as(row::items::Column::Kind, "child_kind")
             .filter(row::hierarchical_items::Column::ParentFolderId.eq(folder_id))
             .into_model::<CurrentNodeRaw>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         let mut items: Vec<ItemNode> = vec![];
@@ -70,10 +74,11 @@ impl ItemsRepository for ItemsRepositoryImpl {
 
     async fn get_items_hierarchy_loop(
         &self,
+        conn: Self::DbConnection<'_>,
         folder_id: Uid,
     ) -> DynAppResult<HashMap<Uid, FolderNode>> {
         let rows = NodeRaw::find_by_statement(Statement::from_sql_and_values(
-            self.db.backend(),
+            conn.backend(),
             "
         WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
             SELECT
@@ -101,7 +106,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
         ",
             [folder_id.into()],
         ))
-        .all(self.db.pool())
+        .all(&conn)
         .await?;
 
         let mut nodes: HashMap<Uid, FolderNode> = HashMap::new();
@@ -130,7 +135,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
         Ok(nodes)
     }
 
-    async fn get_contents(&self) -> DynAppResult<Vec<Content>> {
+    async fn get_contents(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Content>> {
         let rows = row::contents::Entity::find()
             .select_only()
             .column(row::contents::Column::Kind)
@@ -142,13 +147,17 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::Description)
             .column(row::items::Column::CreatedAt)
             .into_model::<ContentRaw>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         Ok(rows.vec_into())
     }
 
-    async fn get_content_by_id(&self, uid: Uid) -> DynAppResult<Option<Content>> {
+    async fn get_content_by_id(
+        &self,
+        conn: Self::DbConnection<'_>,
+        uid: Uid,
+    ) -> DynAppResult<Option<Content>> {
         let row = row::contents::Entity::find()
             .select_only()
             .column(row::contents::Column::Kind)
@@ -161,13 +170,13 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::CreatedAt)
             .filter(row::contents::Column::ItemId.eq(uid))
             .into_model::<ContentRaw>()
-            .one(self.db.pool())
+            .one(&conn)
             .await?;
 
         Ok(row.map(Into::into))
     }
 
-    async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
+    async fn get_folders(&self, conn: Self::DbConnection<'_>) -> DynAppResult<Vec<Folder>> {
         let rows = row::folders::Entity::find()
             .select_only()
             .inner_join(row::items::Entity)
@@ -176,13 +185,17 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::Description)
             .column(row::items::Column::CreatedAt)
             .into_model::<FolderRaw>()
-            .all(self.db.pool())
+            .all(&conn)
             .await?;
 
         Ok(rows.vec_into())
     }
 
-    async fn get_folder_by_id(&self, uid: Uid) -> DynAppResult<Option<Folder>> {
+    async fn get_folder_by_id(
+        &self,
+        conn: Self::DbConnection<'_>,
+        uid: Uid,
+    ) -> DynAppResult<Option<Folder>> {
         let row = row::folders::Entity::find()
             .select_only()
             .inner_join(row::items::Entity)
@@ -192,7 +205,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::CreatedAt)
             .filter(row::folders::Column::ItemId.eq(uid))
             .into_model::<FolderRaw>()
-            .one(self.db.pool())
+            .one(&conn)
             .await?;
 
         Ok(row.map(Into::into))
@@ -270,7 +283,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
     ) -> DynAppResult<Vec<Uid>> {
         let mut item_uids = Uid::find_by_statement::<row::hierarchical_items::Column>(
             Statement::from_sql_and_values(
-                self.db.backend(),
+                conn.backend(),
                 "
 WITH RECURSIVE item_hierarchy(child_id) AS (
     SELECT
@@ -393,56 +406,4 @@ async fn add_hierarchy(
     insert_check!(hierarchy_result);
 
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use std::collections::HashMap;
-    use uid::uid;
-
-    use improvie_domain::repository::items::ItemsRepository;
-    use improvie_logic::model::items::{FolderNode, ItemNode};
-    use uid::Uid;
-
-    use crate::{persistence::db::DbPoolImpl, repository::items::ItemsRepositoryImpl};
-
-    #[tokio::test]
-    #[ignore]
-    // replaced with sea_orm
-    async fn get_items_hierarchy() {
-        let repo = ItemsRepositoryImpl::new(DbPoolImpl::new_test().await);
-        let res = repo.get_items_hierarchy_loop(Uid::nil()).await.unwrap();
-        let mut map = HashMap::new();
-        map.insert(
-            Uid::nil(),
-            FolderNode {
-                folder: Uid::nil(),
-                items: vec![
-                    ItemNode::Folder {
-                        id: uid!("00000000000000000000000000"),
-                        sort_order: 2,
-                    },
-                    ItemNode::Content {
-                        id: uid!("00000000000000000000000003"),
-                        sort_order: 3,
-                    },
-                    ItemNode::Content {
-                        id: uid!("00000000000000000000000004"),
-                        sort_order: 1,
-                    },
-                ],
-            },
-        );
-        map.insert(
-            uid!("00000000000000000000000002"),
-            FolderNode {
-                folder: uid!("00000000000000000000000002"),
-                items: vec![ItemNode::Content {
-                    id: uid!("00000000000000000000000005"),
-                    sort_order: 1,
-                }],
-            },
-        );
-        assert_eq!(res, map)
-    }
 }

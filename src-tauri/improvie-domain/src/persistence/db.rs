@@ -35,24 +35,4 @@ pub trait DbTx: Send + Sync + 'static {
 
     /// Rolls back the transaction.
     async fn rollback(self) -> DynAppResult<()>;
-
-    async fn execute<T, F, R>(self, func: F) -> DynAppResult<T>
-    where
-        Self: Sized,
-        T: Send,
-        F: FnOnce(Self::DbConnection<'_>) -> R + Send,
-        R: std::future::Future<Output = DynAppResult<T>> + Send,
-    {
-        let conn = self.connection();
-        match func(conn).await {
-            Ok(result) => {
-                self.commit().await?;
-                Ok(result)
-            }
-            Err(e) => {
-                self.rollback().await?;
-                Err(e)
-            }
-        }
-    }
 }

@@ -47,13 +47,12 @@ macro_rules! modify_check {
 
 macro_rules! def_repository_impl {
     ($impl:ident) => {
-        pub struct $impl {
-            db: $crate::persistence::db::DbPoolImpl,
-        }
+        pub struct $impl {}
 
         impl $impl {
-            pub fn new(db: $crate::persistence::db::DbPoolImpl) -> Self {
-                Self { db }
+            #[allow(clippy::new_without_default)]
+            pub fn new() -> Self {
+                Self {}
             }
         }
     };

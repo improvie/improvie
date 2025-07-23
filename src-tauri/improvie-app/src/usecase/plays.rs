@@ -22,7 +22,7 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
     ) -> DynAppResult<PlayFolderNode> {
         self.repository
             .playsts_repository()
-            .get_plays_hierarchy_current(folder_id)
+            .get_plays_hierarchy_current(self.repository.connection(), folder_id)
             .await
     }
 
@@ -32,25 +32,28 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
     ) -> DynAppResult<HashMap<Uid, PlayFolderNode>> {
         self.repository
             .playsts_repository()
-            .get_plays_hierarchy_loop(folder_id)
+            .get_plays_hierarchy_loop(self.repository.connection(), folder_id)
             .await
     }
 
     pub async fn get_play_folders(&self) -> DynAppResult<Vec<PlayFolder>> {
         self.repository
             .playsts_repository()
-            .get_play_folders()
+            .get_play_folders(self.repository.connection())
             .await
     }
 
     pub async fn get_playlists(&self) -> DynAppResult<Vec<Playlist>> {
-        self.repository.playsts_repository().get_playlists().await
+        self.repository
+            .playsts_repository()
+            .get_playlists(self.repository.connection())
+            .await
     }
 
     pub async fn get_favorite_playlists(&self) -> DynAppResult<Vec<Uid>> {
         self.repository
             .playsts_repository()
-            .get_favorite_playlists()
+            .get_favorite_playlists(self.repository.connection())
             .await
     }
 
@@ -93,15 +96,13 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
             .playsts_repository()
             .create_play_folder(conn, model.into())
             .await;
-
         let folder = super::tx_check!(tx, folder);
 
         let folder_node = self
             .repository
             .playsts_repository()
-            .get_plays_hierarchy_current(parent_folder_id)
+            .get_plays_hierarchy_current(conn, parent_folder_id)
             .await;
-
         let folder_node = super::tx_check!(tx, folder_node);
 
         tx.commit().await?;
@@ -131,7 +132,7 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
         let folder_node = self
             .repository
             .playsts_repository()
-            .get_plays_hierarchy_current(parent_folder_id)
+            .get_plays_hierarchy_current(conn, parent_folder_id)
             .await;
         let folder_node = super::tx_check!(tx, folder_node);
 

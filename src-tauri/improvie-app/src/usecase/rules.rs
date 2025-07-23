@@ -1,5 +1,6 @@
 use improvie_domain::{
-    model::rules::RuleData, modules::RepositoriesModule, repository::rules::RulesRepository,
+    model::rules::RuleData, modules::RepositoriesModule, persistence::db::DbTx,
+    repository::rules::RulesRepository,
 };
 use improvie_logic::DynAppResult;
 use uid::Uid;
@@ -10,14 +11,19 @@ impl<R: RepositoriesModule> RulesUseCase<R> {
     pub async fn get_rules(&self, playlist_id: Uid) -> DynAppResult<Vec<RuleData>> {
         self.repository
             .rules_repository()
-            .get_rules(playlist_id)
+            .get_rules(self.repository.connection(), playlist_id)
             .await
     }
 
     pub async fn update_rules(&self, playlist_id: Uid, rules: Vec<RuleData>) -> DynAppResult<()> {
-        self.repository
+        let tx = self.repository.begin().await?;
+        let conn = tx.connection();
+        let result = self
+            .repository
             .rules_repository()
-            .update_rules(playlist_id, rules)
-            .await
+            .update_rules(conn, playlist_id, rules)
+            .await;
+
+        super::tx_commit!(tx, result)
     }
 }

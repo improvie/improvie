@@ -9,7 +9,7 @@ async fn main() {
     let db = DbPoolImpl::new_test().await;
     let conn = db.connection();
 
-    let repo = ItemsRepositoryImpl::new(db.clone());
+    let repo = ItemsRepositoryImpl::new();
 
     let folder_uid = Uid::new();
 
@@ -31,7 +31,7 @@ async fn main() {
     .await
     .unwrap();
 
-    let result = repo.get_folder_by_id(folder_uid).await.unwrap();
+    let result = repo.get_folder_by_id(conn, folder_uid).await.unwrap();
 
     assert!(result.is_some());
     let folder = result.unwrap();
@@ -42,6 +42,6 @@ async fn main() {
         Some(String::from("Test Folder Description"))
     );
 
-    let non_existent_result = repo.get_folder_by_id(Uid::new()).await.unwrap();
+    let non_existent_result = repo.get_folder_by_id(conn, Uid::new()).await.unwrap();
     assert!(non_existent_result.is_none());
 }

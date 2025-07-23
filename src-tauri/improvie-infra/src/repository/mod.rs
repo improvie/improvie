@@ -47,8 +47,7 @@ macro_rules! modify_check {
 
 macro_rules! def_repository_impl {
     ($impl:ident) => {
-        pub struct $impl {
-        }
+        pub struct $impl {}
 
         impl $impl {
             #[allow(clippy::new_without_default)]

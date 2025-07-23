@@ -19,23 +19,29 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
     ) -> DynAppResult<HashMap<Uid, FolderNode>> {
         self.repository
             .items_repository()
-            .get_items_hierarchy_loop(folder_id)
+            .get_items_hierarchy_loop(self.repository.connection(), folder_id)
             .await
     }
 
     pub async fn get_items_hierarchy_current(&self, folder_id: Uid) -> DynAppResult<FolderNode> {
         self.repository
             .items_repository()
-            .get_items_hierarchy_current(folder_id)
+            .get_items_hierarchy_current(self.repository.connection(), folder_id)
             .await
     }
 
     pub async fn get_contents(&self) -> DynAppResult<Vec<Content>> {
-        self.repository.items_repository().get_contents().await
+        self.repository
+            .items_repository()
+            .get_contents(self.repository.connection())
+            .await
     }
 
     pub async fn get_folders(&self) -> DynAppResult<Vec<Folder>> {
-        self.repository.items_repository().get_folders().await
+        self.repository
+            .items_repository()
+            .get_folders(self.repository.connection())
+            .await
     }
 
     pub async fn create_folder(
@@ -57,7 +63,7 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         let folder_node = self
             .repository
             .items_repository()
-            .get_items_hierarchy_current(parent_folder_id)
+            .get_items_hierarchy_current(conn, parent_folder_id)
             .await;
         let folder_node = super::tx_check!(tx, folder_node);
 
@@ -85,13 +91,14 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
             .await;
         let content = super::tx_check!(tx, content);
 
-        tx.commit().await?;
-
         let folder_node = self
             .repository
             .items_repository()
-            .get_items_hierarchy_current(parent_folder_id)
-            .await?;
+            .get_items_hierarchy_current(conn, parent_folder_id)
+            .await;
+        let folder_node = super::tx_check!(tx, folder_node);
+
+        tx.commit().await?;
 
         Ok(CreateContentResponse {
             content,

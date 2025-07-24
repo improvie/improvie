@@ -98,6 +98,18 @@ export class Tracker {
     }
   }
 
+  public set_multiple_contents(contentIds: string[]): void {
+    const rules: RuleFormat[] = contentIds.map((id) => {
+      return {
+        content_id: id,
+        range_start: null,
+        range_end: null,
+      };
+    });
+
+    this.set_rules(rules);
+  }
+
   public async set_rules_by_type(playlist_id: string): Promise<void> {
     action_update_playlist_by_used(playlist_id);
 

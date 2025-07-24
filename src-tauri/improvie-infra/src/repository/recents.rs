@@ -21,7 +21,7 @@ impl RecentsRepository for RecentsRepositoryImpl {
 
         let result = Entity::insert(model)
             .on_conflict(
-                OnConflict::column(Column::LastAccessed)
+                OnConflict::column(Column::ContentId)
                     .update_column(Column::LastAccessed)
                     .to_owned(),
             )
@@ -47,7 +47,7 @@ impl RecentsRepository for RecentsRepositoryImpl {
 
         let result = Entity::insert(model)
             .on_conflict(
-                OnConflict::column(Column::LastAccessed)
+                OnConflict::column(Column::PlaylistId)
                     .update_column(Column::LastAccessed)
                     .to_owned(),
             )

@@ -27,6 +27,8 @@
     return $favoritePlaylists.includes(playlist.id);
   });
   const playlist_thumbnail_path: Promise<string | undefined> = $derived.by(async () => {
+    action_update_rules(playlist.id, rules);
+
     if (playlist.thumbnail_path) {
       return playlist.thumbnail_path;
     }
@@ -39,9 +41,6 @@
       return undefined;
     }
     return content.thumbnail_path ? content.thumbnail_path : undefined;
-  });
-  $effect(() => {
-    action_update_rules(playlist.id, rules);
   });
   function add_rule(new_rule: RuleType) {
     rules.push(new_rule);

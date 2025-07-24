@@ -273,7 +273,7 @@ FROM folder_hierarchy
             improvie_row::playlists::Entity::insert(improvie_row::playlists::ActiveModel {
                 item_id: sea_orm::Set(content.item.id),
                 thumbnail_path: sea_orm::Set(content.thumbnail_path.clone()),
-                rules: sea_orm::Set(String::new()),
+                rules: sea_orm::Set("[]".to_string()), // Default empty rules
             })
             .exec_without_returning(&conn)
             .await;

@@ -29,7 +29,7 @@
       </div>
     </div>
     <ScrollArea class='whitespace-nowrap rounded-md border container' orientation='horizontal'>
-      <div class='h-98 flex flex-col flex-wrap gap-6 p-4'>
+      <div class='h-74 flex flex-col flex-wrap gap-6 p-4'>
         {#each recentContents as contentId}
           {@const content = contents.get(contentId)}
           {#if content !== undefined}

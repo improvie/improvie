@@ -1,21 +1,14 @@
 <script lang='ts' module>
-  import { z } from 'zod';
+  import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export const RangeFormProps = z.object({
-    min: z.number().int().nonnegative().optional(),
-    max: z.number().int().nonnegative().optional(),
-    step: z.number().int().nonnegative().optional(),
-    default: z.tuple([
-      z.number().int().nonnegative(),
-      z.number().int().nonnegative(),
-    ]).optional(),
-  });
+  export type RangeFormProps = {
+    min?: number;
+    max?: number;
+    step?: number;
+    default?: [number, number];
+  };
 
-  export const RangeFormSchema = z.object({
-    type: z.literal('range'),
-    label: z.string(),
-    props: RangeFormProps.optional(),
-  });
+  export type RangeFormSchema = CommonFieldSchema<'range', RangeFormProps>;
 </script>
 
 <script lang='ts'>
@@ -29,7 +22,7 @@
   }: {
     value: [number, number];
     label: string;
-    props?: z.infer<typeof RangeFormProps>;
+    props?: RangeFormProps;
   } = $props();
 
   const { max = 100, min = 0, step = 1 } = props;

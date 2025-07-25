@@ -1,10 +1,7 @@
 <script lang='ts' module>
-  import { z } from 'zod';
+  import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export const ContentPickFormSchema = z.object({
-    type: z.literal('content_pick'),
-    label: z.string(),
-  });
+  export type ContentPickFormSchema = CommonFieldSchema<'content_pick', {}>;
 </script>
 
 <script lang='ts'>

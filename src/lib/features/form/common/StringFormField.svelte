@@ -1,17 +1,13 @@
 <script lang='ts' module>
-  import { z } from 'zod';
+  import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export const StringFormProps = z.object({
-    default: z.boolean().optional(),
-    minLength: z.number().optional(),
-    maxLength: z.number().optional(),
-  });
+  export type StringFormProps = {
+    default?: boolean;
+    minLength?: number;
+    maxLength?: number;
+  };
 
-  export const StringFormSchema = z.object({
-    type: z.literal('string'),
-    label: z.string(),
-    props: StringFormProps.optional(),
-  });
+  export type StringFormSchema = CommonFieldSchema<'string', StringFormProps>;
 </script>
 
 <script lang='ts'>

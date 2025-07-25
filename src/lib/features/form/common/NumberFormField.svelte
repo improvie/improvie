@@ -1,22 +1,13 @@
 <script lang='ts' module>
-  import { z } from 'zod';
+  import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export const NumberFormProps = z.object({
-    min: z.number().int().optional(),
-    max: z.number().int().optional(),
-  });
+  export type NumberFormProps = {
+    min?: number;
+    max?: number;
+  };
 
-  export const UintFormSchema = z.object({
-    type: z.literal('uint'),
-    label: z.string(),
-    props: NumberFormProps.optional(),
-  });
-
-  export const IntFormSchema = z.object({
-    type: z.literal('int'),
-    label: z.string(),
-    props: NumberFormProps.optional(),
-  });
+  export type UintFormSchema = CommonFieldSchema<'uint', NumberFormProps>;
+  export type IntFormSchema = CommonFieldSchema<'int', NumberFormProps>;
 </script>
 
 <script lang='ts'>

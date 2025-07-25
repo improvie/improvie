@@ -1,15 +1,11 @@
 <script lang='ts' module>
-  import { z } from 'zod';
+  import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export const CheckBoxFormProps = z.object({
-    default: z.boolean().optional(),
-  });
+  export type CheckBoxFormProps = {
+    default?: boolean;
+  };
 
-  export const CheckBoxFormSchema = z.object({
-    type: z.literal('checkbox'),
-    label: z.string(),
-    props: CheckBoxFormProps.optional(),
-  });
+  export type CheckBoxFormSchema = CommonFieldSchema<'checkbox', CheckBoxFormProps>;
 </script>
 
 <script lang='ts'>

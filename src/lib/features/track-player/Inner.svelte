@@ -18,29 +18,22 @@
 
   let duration = $state(0);
 
-  let sliderCurrentTime = $state(0);
-
   function onended() {
     if (tracker.next()) {
-      sliderCurrentTime = 0;
+      tracker.currentTime = 0;
     }
   }
 
-  $effect(() => {
-    if (tracker.paused) {
-      return;
-    }
-    const interval = setInterval(() => {
-      sliderCurrentTime = tracker.currentTime;
-    }, 1000);
-    return () => clearInterval(interval);
-  });
+  let previous_paused = $state(false);
 
-  function sliderChange(value: number) {
-    if (Math.abs(value - tracker.currentTime) < 1) {
-      return;
-    }
+  function sliderChangeStart() {
+    previous_paused = tracker.paused;
+    tracker.paused = true;
+  }
+
+  function sliderCommit(value: number) {
     tracker.currentTime = value;
+    tracker.paused = previous_paused;
   }
 
 </script>
@@ -54,8 +47,7 @@
     track={track}
     bind:duration
     onended={onended}
-    bind:sliderCurrentTime
-    sliderChange={sliderChange}
+    sliderChangeStart={sliderChangeStart}
   />
 </div>
 
@@ -101,10 +93,10 @@
   <Slider
     class='absolute top-0 max-sm:group-data-[hidden=true]:hidden'
     type='single'
-    bind:value={sliderCurrentTime}
-    onValueChange={sliderChange}
+    bind:value={tracker.currentTime}
+    onValueCommit={sliderCommit}
+    onValueChangeStart={sliderChangeStart}
     max={duration}
-    step={1}
     min={0}
   />
   <div class='px-6 w-full h-full flex justify-between gap-1 flex-row-reverse sm:flex-row' role='button' tabindex='-1' onclick={(event) => {
@@ -179,7 +171,12 @@
           {/if}
         </Tooltip.Trigger>
         <Tooltip.Content side='left' class='p-4 w-40 bg-secondary' arrowClasses='bg-secondary'>
-          <Slider type='single' bind:value={tracker.volume} max={1} step={0.01} min={0} />
+          <Slider
+            type='single'
+            bind:value={tracker.volume}
+            max={1}
+            min={0}
+          />
         </Tooltip.Content>
       </Tooltip.Root>
 

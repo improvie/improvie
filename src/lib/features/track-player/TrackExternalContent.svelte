@@ -15,14 +15,12 @@
     track,
     duration = $bindable(),
     onended,
-    sliderCurrentTime = $bindable(),
-    sliderChange,
+    sliderChangeStart,
   }: {
     track: Content | undefined;
     duration: number;
     onended: () => void;
-    sliderCurrentTime: number;
-    sliderChange: (value: number) => void;
+    sliderChangeStart: (value: number) => void;
   } = $props();
 
   const is_video = $derived(track?.kind === 'Video');
@@ -57,6 +55,16 @@
       video_element.pause();
     }
   });
+
+  function ontimeupdate() {
+    tracker.currentTime = video_element.currentTime;
+  }
+
+  $effect(() => {
+    if (Math.abs(tracker.currentTime - video_element.currentTime) > 1) {
+      video_element.currentTime = tracker.currentTime;
+    }
+  });
 </script>
 
 <Tabs.Root bind:value class='container mx-auto text-center h-full'>
@@ -88,7 +96,7 @@
           crossorigin='anonymous'
           playsinline
           bind:volume={tracker.volume}
-          bind:currentTime={tracker.currentTime}
+          ontimeupdate={() => ontimeupdate()}
           bind:paused={tracker.paused}
           bind:duration
           onended={onended}
@@ -106,14 +114,13 @@
       <div class='w-full flex flex-col gap-1'>
         <Slider
           type='single'
-          bind:value={sliderCurrentTime}
-          onValueChange={sliderChange}
+          bind:value={tracker.currentTime}
+          onValueChangeStart={sliderChangeStart}
           max={duration}
-          step={1}
           min={0}
         />
         <div class='flex justify-between text-xs text-muted-foreground'>
-          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, sliderCurrentTime)}</span>
+          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, tracker.currentTime)}</span>
           <span>{TimeFormat.format_secs(TimeFormat.PlainHms, duration)}</span>
         </div>
       </div>

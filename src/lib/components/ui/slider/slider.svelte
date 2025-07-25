@@ -2,13 +2,18 @@
 	import { Slider as SliderPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 
+  type UserProps = {
+    onValueChangeStart?: (value: number) => void;
+  }
+
 	let {
 		ref = $bindable(null),
 		value = $bindable(),
 		orientation = "horizontal",
 		class: className,
+    onValueChangeStart,
 		...restProps
-	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
+	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> & UserProps = $props();
 </script>
 
 <!--
@@ -43,6 +48,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 		</span>
 		{#each thumbs as thumb (thumb)}
 			<SliderPrimitive.Thumb
+        onpointerdown={()=> onValueChangeStart?.(value as never)}
 				data-slot="slider-thumb"
 				index={thumb}
 				class="border-primary bg-background ring-ring/50 focus-visible:outline-hidden block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 disabled:pointer-events-none disabled:opacity-50"

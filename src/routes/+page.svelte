@@ -38,8 +38,8 @@
 
 <main class='flex flex-col w-full h-dvh items-center gap-4'>
   <div class='flex flex-col container'>
-    <div class='flex justify-between'>
-      <h2 class='text-3xl m-2 font-bold'>
+    <div class='flex justify-between p-2'>
+      <h2 class='text-3xl font-bold'>
         最近みたもの
       </h2>
       <Button variant='outline' onclick={() => playAllContents()}>

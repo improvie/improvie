@@ -3,15 +3,11 @@
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
+  import { CheckBoxFormSchema } from './CheckBoxField.svelte';
   import { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
   import { RangeFormSchema } from './RangeFormField.svelte';
 
   // スキーマごとに props の型を定義
-  const checkboxSchema = z.object({
-    type: z.literal('checkbox'),
-    label: z.string(),
-    props: z.object({}).optional(),
-  });
   const stringSchema = z.object({
     type: z.literal('string'),
     label: z.string(),
@@ -33,7 +29,7 @@
   const fieldSchema = z.union([
     UintFormSchema,
     IntFormSchema,
-    checkboxSchema,
+    CheckBoxFormSchema,
     stringSchema,
     contentPickSchema,
     RangeFormSchema,
@@ -55,7 +51,7 @@
           zodShape[key] = z.number().int().min(def.props?.min ?? Number.MIN_SAFE_INTEGER).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? 0);
           break;
         case 'checkbox':
-          zodShape[key] = z.boolean().default(false);
+          zodShape[key] = z.boolean().default(def.props?.default ?? false);
           break;
         case 'string': {
           let stringZod = z.string();

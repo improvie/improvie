@@ -3,60 +3,93 @@
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
+  import { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
+  import { RangeFormSchema } from './RangeFormField.svelte';
 
-  export type SchemaName = 'uint' | 'int' | 'checkbox' | 'string' | 'content_pick' | 'range';
-  const SchemaType: {
-    name: SchemaName;
-    zod: z.ZodTypeAny;
-  }[] = [{
-    name: 'uint',
-    zod: z.number().int().nonnegative().default('' as unknown as number),
-  }, {
-    name: 'int',
-    zod: z.number().int().default('' as unknown as number),
-  }, {
-    name: 'checkbox',
-    zod: z.boolean().default(false),
-  }, {
-    name: 'string',
-    zod: z.string().nonempty(),
-  }, {
-    name: 'content_pick',
-    zod: z.string().nonempty(),
-  }, {
-    name: 'range',
-    zod: z.array(z.number().int().nonnegative()).length(2).default([0, 0]),
-  }];
+  // スキーマごとに props の型を定義
+  const checkboxSchema = z.object({
+    type: z.literal('checkbox'),
+    label: z.string(),
+    props: z.object({}).optional(),
+  });
+  const stringSchema = z.object({
+    type: z.literal('string'),
+    label: z.string(),
+    props: z.object({
+      minLength: z.number().optional(),
+      maxLength: z.number().optional(),
+      pattern: z.string().optional(),
+    }).optional(),
+  });
+  const contentPickSchema = z.object({
+    type: z.literal('content_pick'),
+    label: z.string(),
+    props: z.object({
+      options: z.array(z.string()),
+    }),
+  });
 
-  export type FormSchema = {
-    [key: string]: {
-      type: SchemaName;
-      label: string;
-      props?: Record<string, any>;
-    };
-  };
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const fieldSchema = z.union([
+    UintFormSchema,
+    IntFormSchema,
+    checkboxSchema,
+    stringSchema,
+    contentPickSchema,
+    RangeFormSchema,
+  ]);
+  export type FieldSchema = z.infer<typeof fieldSchema>;
 
-  export function createForm(schema: FormSchema): SuperForm<Record<string, any>> {
-    const formSchema = z.object(
-      Object.fromEntries(
-        Object.entries(schema).map(([key, value]) => {
-          const type = SchemaType.find(t => t.name === value.type);
-          if (!type) {
-            throw new Error(`Unknown schema type: ${value.type}`);
-          }
-          return [key, type.zod];
-        }),
-      ),
-    );
+  // フォーム全体のスキーマ型
+  export type FormSchema = Record<string, FieldSchema>;
 
-    const form = superForm(defaults(zod(formSchema)), {
+  export function createForm<T extends FormSchema>(schema: T) {
+    // 各項目の zod 型を自動生成
+    const zodShape: Record<string, z.ZodTypeAny> = {};
+    for (const [key, def] of Object.entries(schema)) {
+      switch (def.type) {
+        case 'uint':
+          zodShape[key] = z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? 0);
+          break;
+        case 'int':
+          zodShape[key] = z.number().int().min(def.props?.min ?? Number.MIN_SAFE_INTEGER).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? 0);
+          break;
+        case 'checkbox':
+          zodShape[key] = z.boolean().default(false);
+          break;
+        case 'string': {
+          let stringZod = z.string();
+          if (def.props?.minLength)
+            stringZod = stringZod.min(def.props.minLength);
+          if (def.props?.maxLength)
+            stringZod = stringZod.max(def.props.maxLength);
+          if (def.props?.pattern)
+            stringZod = stringZod.regex(new RegExp(def.props.pattern));
+          zodShape[key] = stringZod;
+          break;
+        }
+        case 'content_pick':
+          zodShape[key] = z.string().nonempty().default('');
+          break;
+        case 'range':
+          zodShape[key] = z.tuple([
+            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
+            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
+          ]).default([def.props?.default?.[0] ?? 0, def.props?.default?.[1] ?? 100]);
+          break;
+        default:
+          throw new Error(`Unknown type: ${def}`);
+      }
+    }
+    const formSchema = zod(z.object(zodShape));
+
+    return superForm(defaults(formSchema), {
       SPA: true,
-      validators: zod(formSchema),
+      validators: formSchema,
       resetForm: false,
     });
-
-    return form;
   }
+
 </script>
 
 <script lang='ts'>

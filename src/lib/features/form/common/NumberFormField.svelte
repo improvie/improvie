@@ -1,3 +1,24 @@
+<script lang='ts' module>
+  import { z } from 'zod';
+
+  export const NumberFormProps = z.object({
+    min: z.number().int().optional(),
+    max: z.number().int().optional(),
+  });
+
+  export const UintFormSchema = z.object({
+    type: z.literal('uint'),
+    label: z.string(),
+    props: NumberFormProps.optional(),
+  });
+
+  export const IntFormSchema = z.object({
+    type: z.literal('int'),
+    label: z.string(),
+    props: NumberFormProps.optional(),
+  });
+</script>
+
 <script lang='ts'>
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input';

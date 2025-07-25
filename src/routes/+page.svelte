@@ -4,7 +4,7 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
   import { contents } from '$lib/stores/items/content';
-  import { playlists } from '$lib/stores/plays/playlist';
+  import { get_playlist_thumbnail_path, playlists } from '$lib/stores/plays/playlist';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { CirclePlayIcon } from '@lucide/svelte';
 
@@ -38,8 +38,8 @@
 
 <main class='flex flex-col w-full h-dvh items-center gap-4'>
   <div class='flex flex-col container'>
-    <div class='flex justify-between'>
-      <h2 class='text-3xl m-2 font-bold'>
+    <div class='flex justify-between p-2'>
+      <h2 class='text-3xl font-bold'>
         最近みたもの
       </h2>
       <Button variant='outline' onclick={() => playAllContents()}>
@@ -74,13 +74,20 @@
         {#each recentPlaylists as playlistId}
           {@const playlist = playlists.get(playlistId)}
           {#if playlist !== undefined}
+            {@const thumbnail_path = get_playlist_thumbnail_path(playlist, contents)}
             <div
               role={playlist.title}
               class='h-59 w-80 gap-2 flex flex-col'
               onclick={() => onclickPlaylist(playlistId)}
             >
               <div class='h-45 w-full'>
-                <ImageLoader local class='rounded-sm border' src={playlist.thumbnail_path} />
+                {#await thumbnail_path}
+                  <ImageLoader loading class='rounded-sm border' src={null} />
+                {:then path}
+                  <ImageLoader local class='rounded-sm border' src={path} />
+                {:catch}
+                  <ImageLoader failed class='rounded-sm border' src={null} />
+                {/await}
               </div>
               <p class='text-wrap line-clamp-3'>{playlist.title}</p>
             </div>

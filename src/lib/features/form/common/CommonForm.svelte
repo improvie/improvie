@@ -4,17 +4,10 @@
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
   import CheckBoxFormField, { CheckBoxFormSchema } from './CheckBoxFormField.svelte';
+  import { ContentPickFormSchema } from './ContentPickFormField.svelte';
   import { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
   import { RangeFormSchema } from './RangeFormField.svelte';
   import { StringFormSchema } from './StringFormField.svelte';
-
-  const contentPickSchema = z.object({
-    type: z.literal('content_pick'),
-    label: z.string(),
-    props: z.object({
-      options: z.array(z.string()),
-    }),
-  });
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const fieldSchema = z.union([
@@ -22,7 +15,7 @@
     IntFormSchema,
     CheckBoxFormSchema,
     StringFormSchema,
-    contentPickSchema,
+    ContentPickFormSchema,
     RangeFormSchema,
   ]);
   export type FieldSchema = z.infer<typeof fieldSchema>;

@@ -5,7 +5,7 @@
 <script lang='ts'>
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
-  import { action_get_thumbnail_content_uid, action_update_rules } from '$lib/action/rules';
+  import { action_update_rules } from '$lib/action/rules';
   import FilledIcon from '$lib/components/FilledIcon.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import IconText from '$lib/components/IconText.svelte';
@@ -18,6 +18,7 @@
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { contents } from '$lib/stores/items/content';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
+  import { get_playlist_thumbnail_path } from '$lib/stores/plays/playlist';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
@@ -29,18 +30,7 @@
   const playlist_thumbnail_path: Promise<string | undefined> = $derived.by(async () => {
     action_update_rules(playlist.id, rules);
 
-    if (playlist.thumbnail_path) {
-      return playlist.thumbnail_path;
-    }
-    const content_id = await action_get_thumbnail_content_uid(playlist.id);
-    if (content_id === undefined) {
-      return undefined;
-    }
-    const content = contents.get(content_id);
-    if (content === undefined) {
-      return undefined;
-    }
-    return content.thumbnail_path ? content.thumbnail_path : undefined;
+    return await get_playlist_thumbnail_path(playlist, contents);
   });
   function add_rule(new_rule: RuleType) {
     rules.push(new_rule);

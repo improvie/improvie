@@ -3,20 +3,11 @@
   import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
-  import { CheckBoxFormSchema } from './CheckBoxField.svelte';
+  import CheckBoxFormField, { CheckBoxFormSchema } from './CheckBoxFormField.svelte';
   import { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
   import { RangeFormSchema } from './RangeFormField.svelte';
+  import { StringFormSchema } from './StringFormField.svelte';
 
-  // スキーマごとに props の型を定義
-  const stringSchema = z.object({
-    type: z.literal('string'),
-    label: z.string(),
-    props: z.object({
-      minLength: z.number().optional(),
-      maxLength: z.number().optional(),
-      pattern: z.string().optional(),
-    }).optional(),
-  });
   const contentPickSchema = z.object({
     type: z.literal('content_pick'),
     label: z.string(),
@@ -30,7 +21,7 @@
     UintFormSchema,
     IntFormSchema,
     CheckBoxFormSchema,
-    stringSchema,
+    StringFormSchema,
     contentPickSchema,
     RangeFormSchema,
   ]);
@@ -59,8 +50,6 @@
             stringZod = stringZod.min(def.props.minLength);
           if (def.props?.maxLength)
             stringZod = stringZod.max(def.props.maxLength);
-          if (def.props?.pattern)
-            stringZod = stringZod.regex(new RegExp(def.props.pattern));
           zodShape[key] = stringZod;
           break;
         }
@@ -94,6 +83,7 @@
   import FormError from '../FormError.svelte';
   import NumberFormField from './NumberFormField.svelte';
   import RangeFormField from './RangeFormField.svelte';
+  import StringFormField from './StringFormField.svelte';
 
   const {
     schema,
@@ -124,6 +114,16 @@
     <Form.Field {form} name={key}>
       {#if value.type === 'uint' || value.type === 'int'}
         <NumberFormField
+          bind:value={$formData[key]}
+          label={value.label}
+        />
+      {:else if value.type === 'checkbox'}
+        <CheckBoxFormField
+          bind:value={$formData[key]}
+          label={value.label}
+        />
+      {:else if value.type === 'string'}
+        <StringFormField
           bind:value={$formData[key]}
           label={value.label}
         />

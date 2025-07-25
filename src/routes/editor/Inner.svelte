@@ -28,7 +28,7 @@
     return $favoritePlaylists.includes(playlist.id);
   });
   const playlist_thumbnail_path: Promise<string | undefined> = $derived.by(async () => {
-    action_update_rules(playlist.id, rules);
+    await action_update_rules(playlist.id, rules);
 
     return await get_playlist_thumbnail_path(playlist, contents);
   });

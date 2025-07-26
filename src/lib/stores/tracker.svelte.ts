@@ -5,6 +5,8 @@ import { action_get_rules_format, action_get_rules_format_with_shuffle } from '$
 import { getLocalStorageOrDefault, setLocalStorage } from '$lib/local-storage';
 import { contents } from './items/content';
 
+export type LoopState = 'off' | 'single' | 'full';
+
 export class Tracker {
   public current_track_id: string | undefined = $state();
   public play_rules: RuleFormat[] = $state([]);
@@ -13,16 +15,16 @@ export class Tracker {
   public paused: boolean = $state(false);
   public currentTime: number = $state(0);
 
-  public is_looping: boolean = $state(false);
+  public loop_state: LoopState = $state('off');
   public volume: number = $state(0.5);
 
   public init() {
-    this.is_looping
-      = getLocalStorageOrDefault('is_looping', 'false') === 'true';
+    this.loop_state
+      = getLocalStorageOrDefault('loop_state', 'off') as LoopState;
     this.volume = Number(getLocalStorageOrDefault('volume', '0.5'));
 
     $effect(() => {
-      setLocalStorage('is_looping', this.is_looping.toString());
+      setLocalStorage('loop_state', this.loop_state.toString());
     });
 
     $effect(() => {
@@ -59,7 +61,7 @@ export class Tracker {
 
   public reset_track() {
     const id = this.current_track_id;
-    this.clear_track();
+    this.currentTime = 0;
     this.current_track_id = id;
     this.paused = false;
   }
@@ -69,7 +71,15 @@ export class Tracker {
   }
 
   public toggle_loop() {
-    this.is_looping = !this.is_looping;
+    if (this.loop_state === 'off') {
+      this.loop_state = 'single';
+    }
+    else if (this.loop_state === 'single') {
+      this.loop_state = 'full';
+    }
+    else if (this.loop_state === 'full') {
+      this.loop_state = 'off';
+    }
   }
 
   public toggle_pause() {
@@ -140,41 +150,46 @@ export class Tracker {
     this.update_current_track();
   }
 
-  public next(): boolean {
+  public onended() {
+    if (this.loop_state === 'single') {
+      this.reset_track();
+    }
+    else if (this.loop_state === 'full') {
+      this.next();
+    }
+    else if (this.current_rule_idx < this.play_rules.length) {
+      this.current_rule_idx++;
+      this.update_current_track();
+    }
+  }
+
+  public next() {
     if (!this.is_playlist()) {
       this.reset_track();
-      return this.is_looping;
     }
     if (this.current_rule_idx < this.play_rules.length - 1) {
       this.current_rule_idx++;
       this.update_current_track();
-      return true;
     }
-    else if (this.is_looping) {
+    else {
       this.current_rule_idx = 0;
       this.update_current_track();
-      return true;
     }
-
-    return false;
   }
 
-  public previous(): boolean {
+  public previous() {
     if (!this.is_playlist()) {
       this.reset_track();
-      return this.is_looping;
+      return;
     }
     if (this.current_rule_idx > 0) {
       this.current_rule_idx--;
       this.update_current_track();
-      return true;
     }
-    else if (this.is_looping) {
+    else {
       this.current_rule_idx = this.play_rules.length - 1;
       this.update_current_track();
-      return true;
     }
-    return false;
   }
 }
 

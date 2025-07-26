@@ -7,7 +7,7 @@
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
-  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
+  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon, Volume2Icon, VolumeOffIcon } from '@lucide/svelte';
   import TrackExternalContent from './TrackExternalContent.svelte';
 
   const { track }: { track: Content | undefined } = $props();
@@ -19,9 +19,7 @@
   let duration = $state(0);
 
   function onended() {
-    if (tracker.next()) {
-      tracker.currentTime = 0;
-    }
+    tracker.onended();
   }
 
   let previous_paused = $state(false);
@@ -180,15 +178,21 @@
         </Tooltip.Content>
       </Tooltip.Root>
 
-      <IconButton pressed={tracker.is_looping} onclick={() => {
+      <IconButton pressed={tracker.loop_state !== 'off'} onclick={() => {
         tracker.toggle_loop();
       }}>
-        <RepeatIcon />
+        {#if tracker.loop_state === 'single'}
+          <Repeat1Icon />
+        {:else}
+          <RepeatIcon />
+        {/if}
         {#snippet content()}
-          {#if tracker.is_looping}
+          {#if tracker.loop_state === 'full'}
             <p>stop loop</p>
+          {:else if tracker.loop_state === 'single'}
+            <p>start full loop</p>
           {:else}
-            <p>start loop</p>
+            <p>start single loop</p>
           {/if}
         {/snippet}
       </IconButton>

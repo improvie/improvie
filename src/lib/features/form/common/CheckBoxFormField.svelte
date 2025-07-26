@@ -1,34 +1,35 @@
 <script lang='ts' module>
   import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export type NumberFormProps = {
-    min?: number;
-    max?: number;
+  export type CheckBoxFormProps = {
+    default?: boolean;
   };
 
-  export type UintFormSchema = CommonFieldSchema<'uint', NumberFormProps>;
-  export type IntFormSchema = CommonFieldSchema<'int', NumberFormProps>;
+  export type CheckBoxFormSchema = CommonFieldSchema<'checkbox', CheckBoxFormProps>;
 </script>
 
 <script lang='ts'>
+  import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
   import * as Form from '$lib/components/ui/form/index.js';
-  import { Input } from '$lib/components/ui/input';
 
   let {
     value = $bindable(),
     label,
   }: {
-    value: number;
+    value: boolean;
     label: string;
   } = $props();
 
 </script>
 
 <Form.Control>
-  {#snippet children({ props })}
+  {#snippet children()}
     <div class='grid grid-cols-7 items-center gap-4'>
       <Form.Label class='text-right col-span-2'>{label}</Form.Label>
-      <Input class='col-span-5' bind:value={value} type='number' {...props} />
+      <Checkbox
+        class='col-span-5'
+        bind:checked={value}
+      />
     </div>
   {/snippet}
 </Form.Control>

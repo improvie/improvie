@@ -146,6 +146,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
             .column(row::items::Column::CreatedAt)
+            .column(row::contents::Column::Seconds)
             .into_model::<ContentRaw>()
             .all(&conn)
             .await?;
@@ -168,6 +169,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             .column(row::items::Column::Title)
             .column(row::items::Column::Description)
             .column(row::items::Column::CreatedAt)
+            .column(row::contents::Column::Seconds)
             .filter(row::contents::Column::ItemId.eq(uid))
             .into_model::<ContentRaw>()
             .one(&conn)
@@ -255,6 +257,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             kind: model.kind,
             content_path: model.content_path,
             thumbnail_path: model.thumbnail_path,
+            seconds: model.seconds,
         };
 
         add_item(conn, &content.item, ItemKind::Content).await?;
@@ -264,7 +267,7 @@ impl ItemsRepository for ItemsRepositoryImpl {
             kind: sea_orm::Set(content.kind),
             content_path: sea_orm::Set(content.content_path.clone()),
             thumbnail_path: sea_orm::Set(content.thumbnail_path.clone()),
-            seconds: sea_orm::Set(model.seconds),
+            seconds: sea_orm::Set(content.seconds),
         })
         .exec_without_returning(&conn)
         .await;

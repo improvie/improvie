@@ -1,13 +1,13 @@
 <script lang='ts' module>
   import type { CommonFieldSchema } from './CommonFormSchema.svelte';
 
-  export type NumberFormProps = {
-    min?: number;
-    max?: number;
+  export type StringFormProps = {
+    default?: boolean;
+    minLength?: number;
+    maxLength?: number;
   };
 
-  export type UintFormSchema = CommonFieldSchema<'uint', NumberFormProps>;
-  export type IntFormSchema = CommonFieldSchema<'int', NumberFormProps>;
+  export type StringFormSchema = CommonFieldSchema<'string', StringFormProps>;
 </script>
 
 <script lang='ts'>
@@ -18,17 +18,22 @@
     value = $bindable(),
     label,
   }: {
-    value: number;
+    value: string;
     label: string;
   } = $props();
 
 </script>
 
 <Form.Control>
-  {#snippet children({ props })}
+  {#snippet children(props)}
     <div class='grid grid-cols-7 items-center gap-4'>
       <Form.Label class='text-right col-span-2'>{label}</Form.Label>
-      <Input class='col-span-5' bind:value={value} type='number' {...props} />
+      <Input
+        class='col-span-5'
+        bind:value={value}
+        type='number'
+        {...props}
+      />
     </div>
   {/snippet}
 </Form.Control>

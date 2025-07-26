@@ -1,11 +1,11 @@
 <script lang='ts'>
   import type { LoopRule, RuleType } from '$bindings/rule';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
-  import RenameElement from '$lib/components/element/RenameElement.svelte';
+  import IconText from '$lib/components/IconText.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
-  import { RepeatIcon } from '@lucide/svelte';
+  import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
   let {
@@ -24,7 +24,7 @@
 <CreateRuleDialog add_rule={add_rule} bind:open />
 
 <ContextMenu.Root>
-  <ContextMenu.Trigger class='relative overflow-visible' oncontextmenu={e => e.stopPropagation()}>
+  <ContextMenu.Trigger class='relative overflow-visible'>
     <RepeatIcon class='absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2' />
     <div class='absolute flex -translate-y-1/2 left-6'>
       <p>{rule.times}</p>
@@ -39,7 +39,7 @@
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Item onclick={() => open = true}>
-      <RenameElement />
+      <IconText icon={ListPlusIcon} text='Add Rule' />
     </ContextMenu.Item>
     <ContextMenu.Item onclick={remove_rule}>
       <RemoveElement />

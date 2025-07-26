@@ -11,13 +11,15 @@
   import StringFormField from './StringFormField.svelte';
 
   const {
-    schema,
+    schema = $bindable(),
     form,
     handle,
+    handleChange,
   }: {
     schema: CommonFormSchema;
     form: SuperForm<Record<string, any>>;
     handle: (data: any) => void;
+    handleChange?: (data: any) => void;
   } = $props();
 
   const { form: formData, enhance, validateForm } = form;
@@ -31,6 +33,12 @@
 
     handle(result.data);
   }
+
+  $effect(() => {
+    if (formData) {
+      handleChange?.($formData);
+    }
+  });
 </script>
 
 <form method='POST' use:enhance onsubmit={handleSubmit}>

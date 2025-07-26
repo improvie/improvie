@@ -6,6 +6,7 @@
     max?: number;
     step?: number;
     default?: [number, number];
+    disabled?: string; // reason
   };
 
   export type RangeFormSchema = CommonFieldSchema<'range', RangeFormProps>;
@@ -18,7 +19,7 @@
   let {
     value = $bindable(),
     label,
-    props = {},
+    props = $bindable({}),
   }: {
     value: [number, number];
     label: string;
@@ -33,7 +34,15 @@
   {#snippet children()}
     <div class='grid grid-cols-7 items-center gap-4'>
       <Form.Label class='text-right col-span-2'>{label}</Form.Label>
-      <Slider type='multiple' bind:value max={max} min={min} step={step} />
+      <Slider
+        class='col-span-5'
+        type='multiple'
+        bind:value
+        max={max}
+        min={min}
+        step={step}
+        disabled={!!props.disabled}
+      />
     </div>
   {/snippet}
 </Form.Control>

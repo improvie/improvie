@@ -5,6 +5,7 @@
   import * as Form from '$lib/components/ui/form/index.js';
   import FormError from '../FormError.svelte';
   import CheckBoxFormField from './CheckBoxFormField.svelte';
+  import ContentPickFormField from './ContentPickFormField.svelte';
   import NumberFormField from './NumberFormField.svelte';
   import RangeFormField from './RangeFormField.svelte';
   import StringFormField from './StringFormField.svelte';
@@ -47,6 +48,11 @@
         />
       {:else if value.type === 'string'}
         <StringFormField
+          bind:value={$formData[key]}
+          label={value.label}
+        />
+      {:else if value.type === 'content_pick'}
+        <ContentPickFormField
           bind:value={$formData[key]}
           label={value.label}
         />

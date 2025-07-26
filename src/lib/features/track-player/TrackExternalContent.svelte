@@ -8,7 +8,7 @@
   import { Logger } from '$lib/logger';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
-  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, RepeatIcon } from '@lucide/svelte';
+  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
   let {
@@ -183,15 +183,21 @@
         {/if}
         <IconButton
           class='scale-110'
-          pressed={tracker.is_looping}
+          pressed={tracker.loop_state !== 'off'}
           onclick={() => { tracker.toggle_loop(); }}
         >
-          <RepeatIcon />
+          {#if tracker.loop_state === 'single'}
+            <Repeat1Icon />
+          {:else}
+            <RepeatIcon />
+          {/if}
           {#snippet content()}
-            {#if tracker.is_looping}
+            {#if tracker.loop_state === 'full'}
               <p>stop loop</p>
+            {:else if tracker.loop_state === 'single'}
+              <p>start full loop</p>
             {:else}
-              <p>start loop</p>
+              <p>start single loop</p>
             {/if}
           {/snippet}
         </IconButton>

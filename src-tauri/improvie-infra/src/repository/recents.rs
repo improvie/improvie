@@ -1,5 +1,5 @@
 use improvie_domain::repository::recents::RecentsRepository;
-use sea_orm::{EntityTrait, QueryOrder, QuerySelect, sea_query::OnConflict};
+use sea_orm::{EntityTrait, IntoSimpleExpr, QueryOrder, QuerySelect, sea_query::OnConflict};
 
 super::def_repository_impl!(RecentsRepositoryImpl);
 
@@ -17,12 +17,17 @@ impl RecentsRepository for RecentsRepositoryImpl {
         let model = ActiveModel {
             content_id: sea_orm::Set(content_id),
             last_accessed: sea_orm::Set(chrono::Utc::now()),
+            total_accesses: sea_orm::Set(1),
         };
 
         let result = Entity::insert(model)
             .on_conflict(
                 OnConflict::column(Column::ContentId)
                     .update_column(Column::LastAccessed)
+                    .value(
+                        Column::TotalAccesses,
+                        Column::TotalAccesses.into_simple_expr().add(1),
+                    )
                     .to_owned(),
             )
             .exec_without_returning(&conn)
@@ -43,12 +48,17 @@ impl RecentsRepository for RecentsRepositoryImpl {
         let model = ActiveModel {
             playlist_id: sea_orm::Set(playlist_id),
             last_accessed: sea_orm::Set(chrono::Utc::now()),
+            total_accesses: sea_orm::Set(1),
         };
 
         let result = Entity::insert(model)
             .on_conflict(
                 OnConflict::column(Column::PlaylistId)
                     .update_column(Column::LastAccessed)
+                    .value(
+                        Column::TotalAccesses,
+                        Column::TotalAccesses.into_simple_expr().add(1),
+                    )
                     .to_owned(),
             )
             .exec_without_returning(&conn)

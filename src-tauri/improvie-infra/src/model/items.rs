@@ -37,6 +37,7 @@ pub struct ContentRaw {
     pub kind: ContentKind,
     pub content_path: String,
     pub thumbnail_path: Option<String>,
+    pub seconds: u32,
 }
 
 #[derive(sea_orm::FromQueryResult, Debug, Convert)]

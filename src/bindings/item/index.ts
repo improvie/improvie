@@ -2,7 +2,7 @@
 import type { ContentKind } from "../constants";
 import type { Uid } from "../uid";
 
-export type Content = { kind: ContentKind, content_path: string, thumbnail_path: string | null, id: Uid, title: string, description: string | null, created_at: string, };
+export type Content = { kind: ContentKind, content_path: string, thumbnail_path: string | null, seconds: number, id: Uid, title: string, description: string | null, created_at: string, };
 
 export type Folder = { id: Uid, title: string, description: string | null, created_at: string, };
 

@@ -50,10 +50,10 @@
     for (const [key, def] of Object.entries(schema)) {
       switch (def.type) {
         case 'uint':
-          zodShape[key] = z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? 0);
+          zodShape[key] = z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? undefined as never as number);
           break;
         case 'int':
-          zodShape[key] = z.number().int().min(def.props?.min ?? Number.MIN_SAFE_INTEGER).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? 0);
+          zodShape[key] = z.number().int().min(def.props?.min ?? Number.MIN_SAFE_INTEGER).max(def.props?.max ?? Number.MAX_SAFE_INTEGER).default(def.props?.min ?? undefined as never as number);
           break;
         case 'checkbox':
           zodShape[key] = z.boolean().default(def.props?.default ?? false);

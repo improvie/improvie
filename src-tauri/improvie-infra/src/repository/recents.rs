@@ -1,5 +1,9 @@
 use improvie_domain::repository::recents::RecentsRepository;
-use sea_orm::{EntityTrait, IntoSimpleExpr, QueryOrder, QuerySelect, sea_query::OnConflict};
+use improvie_logic::model::utils::RangeLimit;
+use sea_orm::ColumnTrait;
+use sea_orm::{
+    EntityTrait, IntoSimpleExpr, QueryFilter, QueryOrder, QuerySelect, sea_query::OnConflict,
+};
 
 super::def_repository_impl!(RecentsRepositoryImpl);
 
@@ -73,6 +77,7 @@ impl RecentsRepository for RecentsRepositoryImpl {
         &self,
         conn: Self::DbConnection<'_>,
         limit: Option<u64>,
+        duration_range: RangeLimit,
     ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
         use improvie_row::recent_contents::*;
 
@@ -80,6 +85,12 @@ impl RecentsRepository for RecentsRepositoryImpl {
             .select_only()
             .column(Column::ContentId)
             .order_by_desc(Column::LastAccessed);
+
+        if !duration_range.is_none() {
+            query = query
+                .inner_join(improvie_row::contents::Entity)
+                .filter(duration_range.into_db_condition(improvie_row::contents::Column::Seconds));
+        }
 
         if let Some(limit) = limit {
             query = query.limit(limit);

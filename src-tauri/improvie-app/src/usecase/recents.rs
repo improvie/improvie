@@ -1,6 +1,7 @@
 use improvie_domain::{
     modules::RepositoriesModule, persistence::db::DbTx, repository::recents::RecentsRepository,
 };
+use improvie_logic::model::utils::RangeLimit;
 
 super::def_use_case!(RecentsUseCase);
 
@@ -34,10 +35,11 @@ impl<R: RepositoriesModule> RecentsUseCase<R> {
     pub async fn get_recent_contents(
         &self,
         limit: Option<u64>,
+        duration_range: RangeLimit,
     ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
         self.repository
             .recents_repository()
-            .get_recent_contents(self.repository.connection(), limit)
+            .get_recent_contents(self.repository.connection(), limit, duration_range)
             .await
     }
 

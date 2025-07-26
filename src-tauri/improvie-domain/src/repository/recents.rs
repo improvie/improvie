@@ -1,4 +1,4 @@
-use improvie_logic::DynAppResult;
+use improvie_logic::{DynAppResult, model::utils::RangeLimit};
 
 #[async_trait::async_trait]
 pub trait RecentsRepository {
@@ -20,6 +20,7 @@ pub trait RecentsRepository {
         &self,
         conn: Self::DbConnection<'_>,
         limit: Option<u64>,
+        duration_range: RangeLimit,
     ) -> DynAppResult<Vec<uid::Uid>>;
 
     async fn get_recent_playlists(

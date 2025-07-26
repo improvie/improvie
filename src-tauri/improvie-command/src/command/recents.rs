@@ -1,3 +1,5 @@
+use improvie_logic::model::utils::RangeLimit;
+
 use crate::state::TauriAppState;
 
 #[tauri::command]
@@ -28,11 +30,12 @@ pub async fn update_playlist_by_used(
 pub async fn get_recent_contents(
     state: TauriAppState<'_>,
     limit: Option<u64>,
+    duration_range: RangeLimit,
 ) -> improvie_logic::DynAppResult<Vec<uid::Uid>> {
     state
         .modules
         .recents_use_case()
-        .get_recent_contents(limit)
+        .get_recent_contents(limit, duration_range)
         .await
 }
 

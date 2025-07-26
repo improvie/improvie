@@ -12,7 +12,7 @@
   let recentPlaylists: string[] = $state([]);
 
   async function init() {
-    recentContents = await action_get_recent_contents(30);
+    recentContents = await action_get_recent_contents(30, { Max: 1800 });
     recentPlaylists = await action_get_recent_playlists(10);
   }
 

@@ -8,6 +8,7 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub playlist_id: uid::Uid,
     pub last_accessed: DateTimeUtc,
+    pub total_accesses: u32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS hierarchical_items (
     created_at timestamp NOT NULL,
 
     PRIMARY KEY (parent_folder_id, child_id),
-    FOREIGN KEY (parent_folder_id) REFERENCES folders (item_id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_folder_id) REFERENCES folders (
+        item_id
+    ) ON DELETE CASCADE,
     FOREIGN KEY (child_id) REFERENCES items (id) ON DELETE CASCADE
 );

@@ -1,3 +1,4 @@
+import type { RangeLimit } from '$bindings/utils';
 import { invoke } from '@tauri-apps/api/core';
 
 export async function action_update_content_by_used(
@@ -17,8 +18,9 @@ export async function action_update_playlist_by_used(
 
 export async function action_get_recent_contents(
   limit: number | undefined,
+  durationRange: RangeLimit,
 ): Promise<string[]> {
-  return await invoke<string[]>('get_recent_contents', { limit });
+  return await invoke<string[]>('get_recent_contents', { limit, durationRange });
 }
 
 export async function action_get_recent_playlists(

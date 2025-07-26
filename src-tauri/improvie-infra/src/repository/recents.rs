@@ -1,6 +1,5 @@
 use improvie_domain::repository::recents::RecentsRepository;
 use improvie_logic::model::utils::RangeLimit;
-use sea_orm::ColumnTrait;
 use sea_orm::{
     EntityTrait, IntoSimpleExpr, QueryFilter, QueryOrder, QuerySelect, sea_query::OnConflict,
 };

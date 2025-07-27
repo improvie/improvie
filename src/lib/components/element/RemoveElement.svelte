@@ -7,6 +7,7 @@
 
 <IconText
   class='text-destructive'
+  iconClass='stroke-destructive'
   icon={TrashIcon}
   text='Remove'
 />

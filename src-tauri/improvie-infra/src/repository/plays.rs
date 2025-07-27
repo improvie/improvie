@@ -381,7 +381,7 @@ async fn add_play_hierarchy(
         .select_only()
         .column(hierarchical_play_items::Column::SortOrder)
         .filter(hierarchical_play_items::Column::ParentFolderId.eq(parent_folder_id))
-        .order_by_asc(hierarchical_play_items::Column::SortOrder)
+        .order_by_desc(hierarchical_play_items::Column::SortOrder)
         .into_tuple::<u32>()
         .one(&conn)
         .await?

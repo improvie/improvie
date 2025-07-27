@@ -373,7 +373,7 @@ async fn add_hierarchy(
         .select_only()
         .column(row::hierarchical_items::Column::SortOrder)
         .filter(row::hierarchical_items::Column::ParentFolderId.eq(parent_folder_id))
-        .order_by_asc(row::hierarchical_items::Column::SortOrder)
+        .order_by_desc(row::hierarchical_items::Column::SortOrder)
         .into_tuple::<u32>()
         .one(&conn)
         .await?

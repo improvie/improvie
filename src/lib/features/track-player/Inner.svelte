@@ -168,11 +168,12 @@
             <Volume2Icon />
           {/if}
         </Tooltip.Trigger>
-        <Tooltip.Content side='left' class='p-4 w-40 bg-secondary' arrowClasses='bg-secondary'>
+        <Tooltip.Content sideOffset={10} side='left' class='p-4 w-40 bg-input' arrowClasses='hidden'>
           <Slider
             type='single'
             bind:value={tracker.volume}
             max={1}
+            step={0.01}
             min={0}
           />
         </Tooltip.Content>

@@ -6,19 +6,20 @@
   import type { Playlist } from '$bindings/play';
   import type { RuleType } from '$bindings/rule';
   import { action_update_rules } from '$lib/action/rules';
+  import RenameElement from '$lib/components/element/RenameElement.svelte';
   import FilledIcon from '$lib/components/FilledIcon.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import IconText from '$lib/components/IconText.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
-  import Button from '$lib/components/ui/button/button.svelte';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
+  import RenameDialog from '$lib/features/dialog/RenameDialog.svelte';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
   import { RuleNode } from '$lib/features/hierarchy/rules';
   import { contents } from '$lib/stores/items/content';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
-  import { get_playlist_thumbnail_path } from '$lib/stores/plays/playlist';
+  import { get_playlist_thumbnail_path, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { EllipsisVerticalIcon, ListPlusIcon, PlayIcon, ShuffleIcon, StarIcon } from '@lucide/svelte';
 
@@ -36,9 +37,22 @@
     rules.push(new_rule);
   }
   let open = $state(false);
+
+  let rename_data: { now_name: string; update_fn: (name: string) => void } | undefined = $state();
+
+  function rename() {
+    rename_data = {
+      now_name: playlist.title,
+      update_fn: (name: string) => {
+        update_playlist_name(playlist.id, name);
+        playlists.set(playlist.id, { ...playlist, title: name });
+      },
+    };
+  }
 </script>
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
+<RenameDialog bind:data={rename_data} />
 
 <div class='flex flex-col lg:flex-row h-dvh w-full'>
   <div class='h-full mx-auto w-4/5 sm:w-3/5 md:w-2/5 lg:pl-6'>
@@ -49,6 +63,7 @@
     {:catch}
       <ImageLoader src={null} />
     {/await}
+    <h1 class='text-center text-2xl line-clamp-1'>{playlist.title}</h1>
     <div class='flex justify-center items-center gap-3 p-3 w-full'>
       <IconButton onclick={() => {
         if (isFavorite) {
@@ -81,12 +96,13 @@
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item>
-            <Button variant='ghost' size='sm' class='p-0' onclick={() => {
-              tracker.set_rules_by_type_shuffle(playlist.id);
-            }}>
-              <IconText icon={ShuffleIcon} text='Shuffle Play' />
-            </Button>
+          <DropdownMenu.Item onclick={rename}>
+            <RenameElement />
+          </DropdownMenu.Item>
+          <DropdownMenu.Item onclick={() => {
+            tracker.set_rules_by_type_shuffle(playlist.id);
+          }}>
+            <IconText icon={ShuffleIcon} text='Shuffle Play' />
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>

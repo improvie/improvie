@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use improvie_logic::{
     DynAppResult,
+    constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode},
 };
 use uid::Uid;
@@ -52,11 +53,11 @@ pub trait ItemsRepository {
         model: CreateContentModel,
     ) -> DynAppResult<Content>;
 
-    async fn delete_item(
+    async fn delete_items(
         &self,
         conn: Self::DbConnection<'_>,
-        item_id: Uid,
-    ) -> DynAppResult<Vec<Uid>>;
+        uids: Vec<Uid>,
+    ) -> DynAppResult<Vec<(Uid, ItemKind)>>;
 
     async fn update_item_name(
         &self,

@@ -2,7 +2,6 @@ use sea_orm::ColumnTrait;
 use sea_orm::FromQueryResult;
 use sea_orm::QueryOrder;
 use sea_orm::Statement;
-use sea_orm::TryGetableMany;
 use std::collections::HashMap;
 
 use chrono::Utc;
@@ -279,47 +278,53 @@ impl ItemsRepository for ItemsRepositoryImpl {
         Ok(content)
     }
 
-    async fn delete_item(
+    async fn delete_items(
         &self,
         conn: Self::DbConnection<'_>,
-        item_id: Uid,
-    ) -> DynAppResult<Vec<Uid>> {
-        let mut item_uids = Uid::find_by_statement::<row::hierarchical_items::Column>(
-            Statement::from_sql_and_values(
-                conn.backend(),
-                "
-WITH RECURSIVE item_hierarchy(child_id) AS (
-    SELECT
-        hi.child_id
-    FROM hierarchical_items AS hi
-    WHERE hi.parent_folder_id = ?
+        uids: Vec<Uid>,
+    ) -> DynAppResult<Vec<(Uid, ItemKind)>> {
+        let result = row::items::Entity::find()
+            .select_only()
+            .column(row::items::Column::Id)
+            .column(row::items::Column::Kind)
+            .filter(row::items::Column::Id.is_in(uids))
+            .into_tuple::<(Uid, ItemKind)>()
+            .all(&conn)
+            .await?;
 
-    UNION ALL
+        let mut flattened = Vec::with_capacity(result.len());
 
-    SELECT
-        hi.child_id
-    FROM hierarchical_items AS hi
-    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
-)
-SELECT child_id
-FROM item_hierarchy
-",
-                [item_id.into()],
-            ),
-        )
-        .all(&conn)
-        .await?;
+        for (uid, kind) in result {
+            match kind {
+                ItemKind::Content => flattened.push((uid, ItemKind::Content)),
+                ItemKind::Folder => {
+                    let nodes = self.get_items_hierarchy_loop(conn, uid).await?;
+                    for v in nodes.values() {
+                        flattened.push((v.folder, ItemKind::Folder));
+                        for v in &v.items {
+                            match v {
+                                ItemNode::Folder { id, .. } => {
+                                    flattened.push((*id, ItemKind::Folder))
+                                }
+                                ItemNode::Content { id, .. } => {
+                                    flattened.push((*id, ItemKind::Content))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        item_uids.push(item_id);
-
-        let result = row::items::Entity::delete_many()
-            .filter(row::items::Column::Id.is_in(item_uids.clone()))
+        row::items::Entity::delete_many()
+            .filter(
+                row::items::Column::Id
+                    .is_in(flattened.iter().map(|(uid, _)| *uid).collect::<Vec<Uid>>()),
+            )
             .exec(&conn)
-            .await;
+            .await?;
 
-        modify_check!(result);
-
-        Ok(item_uids)
+        Ok(flattened)
     }
 
     async fn update_item_name(

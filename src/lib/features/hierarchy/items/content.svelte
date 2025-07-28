@@ -4,7 +4,8 @@
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import { contents, delete_content, update_content_name } from '$lib/stores/items/content';
+  import { delete_items } from '$lib/stores/items';
+  import { contents, update_content_name } from '$lib/stores/items/content';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
 
@@ -34,7 +35,7 @@
   }
 
   function delete_item() {
-    delete_content(content_id);
+    delete_items([content_id]);
   }
 
   const thumbnail_path = $derived.by(() => {

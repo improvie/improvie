@@ -299,6 +299,10 @@ impl ItemsRepository for ItemsRepositoryImpl {
                 ItemKind::Content => flattened.push((uid, ItemKind::Content)),
                 ItemKind::Folder => {
                     let nodes = self.get_items_hierarchy_loop(conn, uid).await?;
+                    if nodes.is_empty() {
+                        flattened.push((uid, ItemKind::Folder));
+                        continue;
+                    }
                     for v in nodes.values() {
                         flattened.push((v.folder, ItemKind::Folder));
                         for v in &v.items {

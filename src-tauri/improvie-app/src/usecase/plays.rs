@@ -5,6 +5,7 @@ use improvie_domain::{
 };
 use improvie_logic::{
     DynAppResult,
+    constant::plays::PlayItemKind,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
 use uid::Uid;
@@ -144,14 +145,17 @@ impl<R: RepositoriesModule> PlaysUseCase<R> {
         })
     }
 
-    pub async fn delete_play_item(&self, play_id: Uid) -> DynAppResult<Vec<Uid>> {
+    pub async fn delete_play_items(
+        &self,
+        play_ids: Vec<Uid>,
+    ) -> DynAppResult<Vec<(Uid, PlayItemKind)>> {
         let tx = self.repository.begin().await?;
         let conn = tx.connection();
 
         let result = self
             .repository
             .playsts_repository()
-            .delete_play_item(conn, play_id)
+            .delete_play_items(conn, play_ids)
             .await;
 
         super::tx_commit!(tx, result)

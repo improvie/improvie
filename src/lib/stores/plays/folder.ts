@@ -1,18 +1,11 @@
 import type { PlayFolder } from '$bindings/play';
 import type { CreatePlayFolderRequest } from '$bindings/play/request';
-import { action_delete_play_item, action_update_play_item_name } from '$lib/action/plays';
+import { action_update_play_item_name } from '$lib/action/plays';
 import { action_create_play_folder } from '$lib/action/plays/folder';
 import { SvelteMap } from 'svelte/reactivity';
 import { play_folder_nodes } from '.';
 
 export const play_folders: SvelteMap<string, PlayFolder> = new SvelteMap();
-
-export async function delete_play_folder(id: string): Promise<void> {
-  const uids = await action_delete_play_item(id);
-  for (const uid of uids) {
-    play_folders.delete(uid);
-  }
-}
 
 export async function update_play_folder_name(id: string, name: string): Promise<void> {
   await action_update_play_item_name(id, name);

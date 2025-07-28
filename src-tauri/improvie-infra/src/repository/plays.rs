@@ -1,4 +1,4 @@
-use sea_orm::{ColumnTrait, FromQueryResult, Statement, TryGetableMany};
+use sea_orm::{ColumnTrait, FromQueryResult, Statement};
 use std::collections::HashMap;
 
 use chrono::Utc;
@@ -167,29 +167,29 @@ impl PlaystsRepository for PlaylistsRepositoryImpl {
         let rows = PlayNodeRaw::find_by_statement(Statement::from_sql_and_values(
             conn.backend(),
             "
-WITH RECURSIVE folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
-    SELECT
-        hi.parent_folder_id,
-        hi.child_id,
-        i.kind AS child_kind,
-        hi.sort_order
-    FROM hierarchical_play_items AS hi
-    INNER JOIN play_items AS i ON i.id = hi.child_id
-    WHERE hi.parent_folder_id = ?
+        WITH RECURSIVE play_folder_hierarchy(parent_folder_id, child_id, child_kind, sort_order) AS (
+            SELECT
+                hi.parent_folder_id,
+                hi.child_id,
+                i.kind AS child_kind,
+                hi.sort_order
+            FROM hierarchical_play_items AS hi
+            INNER JOIN play_items AS i ON i.id = hi.child_id
+            WHERE hi.parent_folder_id = ?
 
-    UNION ALL
+            UNION ALL
 
-    SELECT
-        hi.parent_folder_id,
-        hi.child_id,
-        i.kind AS child_kind,
-        hi.sort_order
-    FROM hierarchical_play_items AS hi
-    INNER JOIN folder_hierarchy AS fh ON hi.parent_folder_id = fh.child_id
-    INNER JOIN play_items AS i ON hi.child_id = i.id
-)
-SELECT *
-FROM folder_hierarchy
+            SELECT
+                hi.parent_folder_id,
+                hi.child_id,
+                i.kind AS child_kind,
+                hi.sort_order
+            FROM hierarchical_play_items AS hi
+            INNER JOIN play_folder_hierarchy AS fh ON hi.parent_folder_id = fh.child_id
+            INNER JOIN play_items AS i ON hi.child_id = i.id
+        )
+        SELECT *
+        FROM play_folder_hierarchy
 ",
             [folder_id.into()],
         ))
@@ -285,47 +285,58 @@ FROM folder_hierarchy
         Ok(content)
     }
 
-    async fn delete_play_item(
+    async fn delete_play_items(
         &self,
         conn: Self::DbConnection<'_>,
-        play_id: Uid,
-    ) -> DynAppResult<Vec<Uid>> {
-        let mut play_item_uids = Uid::find_by_statement::<improvie_row::play_items::Column>(
-            Statement::from_sql_and_values(
-                conn.backend(),
-                "
-WITH RECURSIVE item_hierarchy(child_id) AS (
-    SELECT
-        hi.child_id
-    FROM hierarchical_play_items AS hi
-    WHERE hi.parent_folder_id = ?
+        play_ids: Vec<Uid>,
+    ) -> DynAppResult<Vec<(Uid, PlayItemKind)>> {
+        use improvie_row as row;
+        let result = row::play_items::Entity::find()
+            .select_only()
+            .column(row::play_items::Column::Id)
+            .column(row::play_items::Column::Kind)
+            .filter(row::play_items::Column::Id.is_in(play_ids))
+            .into_tuple::<(Uid, PlayItemKind)>()
+            .all(&conn)
+            .await?;
 
-    UNION ALL
+        let mut flattened = Vec::with_capacity(result.len());
 
-    SELECT
-        hi.child_id
-    FROM hierarchical_play_items AS hi
-    INNER JOIN item_hierarchy AS ih ON hi.parent_folder_id = ih.child_id
-)
-SELECT child_id
-FROM item_hierarchy
-",
-                [play_id.into()],
-            ),
-        )
-        .all(&conn)
-        .await?;
+        for (uid, kind) in result {
+            match kind {
+                PlayItemKind::Playlist => flattened.push((uid, PlayItemKind::Playlist)),
+                PlayItemKind::Folder => {
+                    let nodes = self.get_plays_hierarchy_loop(conn, uid).await?;
+                    if nodes.is_empty() {
+                        flattened.push((uid, PlayItemKind::Folder));
+                        continue;
+                    }
+                    for v in nodes.values() {
+                        flattened.push((v.folder, PlayItemKind::Folder));
+                        for v in &v.children {
+                            match v {
+                                PlayItemNode::Folder { id, .. } => {
+                                    flattened.push((*id, PlayItemKind::Folder))
+                                }
+                                PlayItemNode::Playlist { id, .. } => {
+                                    flattened.push((*id, PlayItemKind::Playlist))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        play_item_uids.push(play_id);
-
-        let result = improvie_row::play_items::Entity::delete_many()
-            .filter(improvie_row::play_items::Column::Id.is_in(play_item_uids.clone()))
+        row::play_items::Entity::delete_many()
+            .filter(
+                row::play_items::Column::Id
+                    .is_in(flattened.iter().map(|(uid, _)| *uid).collect::<Vec<Uid>>()),
+            )
             .exec(&conn)
-            .await;
+            .await?;
 
-        modify_check!(result);
-
-        Ok(play_item_uids)
+        Ok(flattened)
     }
 
     async fn update_play_item_name(

@@ -1,8 +1,9 @@
+import type { PlayItemKind } from '$bindings/constants';
 import { invoke } from '@tauri-apps/api/core';
 
-export async function action_delete_play_item(play_id: string): Promise<string[]> {
-  return await invoke<string[]>('delete_play_item', {
-    playId: play_id,
+export async function action_delete_play_items(play_ids: string[]): Promise<Array<[string, PlayItemKind]>> {
+  return await invoke<Array<[string, PlayItemKind]>>('delete_play_items', {
+    playIds: play_ids,
   });
 }
 

@@ -1,6 +1,7 @@
 import type { PlayFolderNode } from '$bindings/play';
 import type { Writable } from 'svelte/store';
 import { goto } from '$app/navigation';
+import { action_delete_play_items } from '$lib/action/plays';
 import { action_get_play_folders } from '$lib/action/plays/folder';
 import { action_get_plays_hierarchy } from '$lib/action/plays/node';
 import { action_get_playlists } from '$lib/action/plays/playlists';
@@ -42,4 +43,21 @@ export function init_play_items() {
   }).catch((e) => {
     console.error(e);
   });
+}
+
+export async function delete_play_items(ids: string[]): Promise<void> {
+  const items = await action_delete_play_items(ids);
+
+  for (const item of items) {
+    switch (item[1]) {
+      case 'Folder': {
+        play_folders.delete(item[0]);
+        break;
+      }
+      case 'Playlist': {
+        playlists.delete(item[0]);
+        break;
+      }
+    }
+  }
 }

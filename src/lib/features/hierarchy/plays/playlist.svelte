@@ -7,9 +7,9 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { contents } from '$lib/stores/items/content';
-  import { select_playlist } from '$lib/stores/plays';
+  import { delete_play_items, select_playlist } from '$lib/stores/plays';
   import { addFavoritePlaylist, favoritePlaylists, removeFavoritePlaylist } from '$lib/stores/plays/favorite';
-  import { delete_playlist, playlists, update_playlist_name } from '$lib/stores/plays/playlist';
+  import { playlists, update_playlist_name } from '$lib/stores/plays/playlist';
   import { StarIcon, StarOffIcon } from '@lucide/svelte';
 
   let { playlist_id, rename_data = $bindable() }: {
@@ -32,7 +32,7 @@
   }
 
   function delete_item() {
-    delete_playlist(playlist_id);
+    delete_play_items([playlist_id]);
   }
 
   function dblclick() {

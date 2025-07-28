@@ -26,7 +26,7 @@ pub fn generate_handler<R: tauri::Runtime>()
         plays::get_plays_hierarchy,
         plays::create_play_folder,
         plays::create_playlist,
-        plays::delete_play_item,
+        plays::delete_play_items,
         plays::update_play_item_name,
         // rules
         rules::get_rules,

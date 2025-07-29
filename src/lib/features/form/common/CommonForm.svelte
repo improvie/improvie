@@ -19,7 +19,7 @@
     schema: CommonFormSchema;
     form: SuperForm<Record<string, any>>;
     handle: (data: any) => void;
-    handleChange?: (data: any) => void;
+    handleChange?: (data: any) => any | void;
   } = $props();
 
   const { form: formData, enhance, validateForm } = form;
@@ -36,23 +36,28 @@
 
   $effect(() => {
     if (formData) {
-      handleChange?.($formData);
+      const result = handleChange?.($formData);
+      if (result) {
+        $formData = result;
+      }
     }
   });
 </script>
 
 <form method='POST' use:enhance onsubmit={handleSubmit}>
   {#each Object.entries(schema) as [key, value]}
-    <Form.Field {form} name={key}>
+    <Form.Field {form} name={key} class='my-3'>
       {#if value.type === 'uint' || value.type === 'int'}
         <NumberFormField
           bind:value={$formData[key]}
           label={value.label}
+          props={value.props}
         />
       {:else if value.type === 'checkbox'}
         <CheckBoxFormField
           bind:value={$formData[key]}
           label={value.label}
+          props={value.props}
         />
       {:else if value.type === 'string'}
         <StringFormField
@@ -68,7 +73,7 @@
         <RangeFormField
           bind:value={$formData[key]}
           label={value.label}
-          props={value.props}
+          bind:props={value.props}
         />
       {/if}
     </Form.Field>

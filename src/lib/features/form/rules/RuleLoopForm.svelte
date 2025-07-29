@@ -10,6 +10,9 @@
     times: {
       type: 'uint',
       label: 'Times',
+      props: {
+        description: '合計何回ループするか',
+      },
     },
   });
   const form = createForm(schema);

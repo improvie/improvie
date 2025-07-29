@@ -10,10 +10,16 @@
     times: {
       type: 'uint',
       label: 'Times',
+      props: {
+        description: '合計何回ループするか',
+      },
     },
     duplicate: {
       type: 'checkbox',
       label: 'Duplicate',
+      props: {
+        description: '同じ内容が出るのを許容するか',
+      },
     },
   });
   const form = createForm(schema);

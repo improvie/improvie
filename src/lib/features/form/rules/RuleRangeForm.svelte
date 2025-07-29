@@ -22,8 +22,8 @@
       },
     },
   }));
-  const form = createForm(schema);
   type FormData = CommonSchemaToDataType<typeof schema>;
+  const form = createForm(schema);
 
   async function handleSubmit(data: FormData) {
     add_rule({
@@ -47,6 +47,8 @@
     }
     schema.range.props.min = 0;
     schema.range.props.max = content.seconds;
+    data.range = [0, content.seconds];
+    return data;
   }
 </script>
 

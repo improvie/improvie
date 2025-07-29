@@ -72,8 +72,8 @@
           break;
         case 'range':
           zodShape[key] = z.tuple([
-            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
-            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
+            z.number().int(),
+            z.number().int(),
           ]).default([def.props?.default?.[0] ?? 0, def.props?.default?.[1] ?? 100]);
           break;
         default:

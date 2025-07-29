@@ -26,8 +26,6 @@
     props?: RangeFormProps;
   } = $props();
 
-  const { max = 100, min = 0, step = 1 } = props;
-
 </script>
 
 <Form.Control>
@@ -38,9 +36,9 @@
         class='col-span-5'
         type='multiple'
         bind:value
-        max={max}
-        min={min}
-        step={step}
+        max={props.max}
+        min={props.min}
+        step={props.step}
         disabled={!!props.disabled}
       />
     </div>

@@ -1,4 +1,5 @@
 <script lang='ts' module>
+  import type { SuperForm } from 'sveltekit-superforms';
   import type { CheckBoxFormSchema } from './CheckBoxFormField.svelte';
   import type { ContentPickFormSchema } from './ContentPickFormField.svelte';
   import type { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
@@ -45,7 +46,7 @@
   //   [K in keyof T]: T[K]['type'] extends keyof TypeMap ? TypeMap[T[K]['type']] : never;
   // };
 
-  export function createForm(schema: CommonFormSchema) {
+  export function createForm<T extends CommonFormSchema>(schema: T): SuperForm<CommonSchemaToDataType<T>> {
     const zodShape: Record<string, z.ZodTypeAny> = {};
     for (const [key, def] of Object.entries(schema)) {
       switch (def.type) {
@@ -86,7 +87,7 @@
       SPA: true,
       validators: formSchema,
       resetForm: false,
-    });
+    }) as never as SuperForm<CommonSchemaToDataType<T>>;
   }
 
 </script>

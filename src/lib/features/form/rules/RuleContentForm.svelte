@@ -1,21 +1,26 @@
-<script lang='ts'>
-  import type { RuleType } from '$bindings/rule';
+<script lang='ts' module>
   import type { CommonSchemaToDataType } from '../common/CommonFormSchema.svelte';
-  import CommonForm from '../common/CommonForm.svelte';
-  import { createForm, defineSchema } from '../common/CommonFormSchema.svelte';
+  import { defineSchema } from '../common/CommonFormSchema.svelte';
 
-  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
-
-  const schema = defineSchema({
+  export const ContentRuleSchema = defineSchema({
     content_id: {
       type: 'content_pick',
       label: 'Content',
     },
   });
-  const form = createForm(schema);
-  type FormData = CommonSchemaToDataType<typeof schema>;
+  export type ContentRuleFormData = CommonSchemaToDataType<typeof ContentRuleSchema>;
+</script>
 
-  async function handleSubmit(data: FormData) {
+<script lang='ts'>
+  import type { RuleType } from '$bindings/rule';
+  import CommonForm from '../common/CommonForm.svelte';
+  import { createForm } from '../common/CommonFormSchema.svelte';
+
+  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
+
+  const form = createForm(ContentRuleSchema);
+
+  async function handleSubmit(data: ContentRuleFormData) {
     add_rule({
       type: 'Content',
       data: {
@@ -26,4 +31,4 @@
 
 </script>
 
-<CommonForm {form} {schema} handle={handleSubmit} />
+<CommonForm {form} schema={ContentRuleSchema} handle={handleSubmit} />

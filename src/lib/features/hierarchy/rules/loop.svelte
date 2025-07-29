@@ -7,11 +7,11 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
+  import CommonFormDialog from '$lib/features/form/common/CommonFormDialog.svelte';
   import { createForm } from '$lib/features/form/common/CommonFormSchema.svelte';
   import { LoopRuleSchema } from '$lib/features/form/rules/RuleLoopForm.svelte';
   import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
-    import CommonFormDialog from '$lib/features/form/common/CommonFormDialog.svelte';
 
   let {
     rule = $bindable(),

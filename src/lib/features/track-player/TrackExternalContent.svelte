@@ -10,6 +10,7 @@
   import { cn, TimeFormat } from '$lib/utils';
   import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
+  import { toast } from 'svelte-sonner';
 
   let {
     track,
@@ -65,6 +66,12 @@
       video_element.currentTime = tracker.currentTime;
     }
   });
+
+  function notFound() {
+    toast.error('Failed load video. (maybe video file deleted)', {
+      duration: 5000,
+    });
+  }
 </script>
 
 <Tabs.Root bind:value class='container mx-auto text-center h-full'>
@@ -103,8 +110,9 @@
           class='aspect-video object-contain w-full h-full'
           onclick={() => tracker.toggle_pause()}
           poster={thumbnail_path}
+          onerror={() => notFound()}
         >
-          <source src={content_path} />
+          <source src={content_path} onerror={() => notFound()} />
           <track kind='captions' />
         </video>
       </div>

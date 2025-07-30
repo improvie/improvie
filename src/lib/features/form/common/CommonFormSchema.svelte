@@ -6,8 +6,8 @@
   import type { RangeFormSchema } from './RangeFormField.svelte';
   import type { StringFormSchema } from './StringFormField.svelte';
   import { defaults, superForm } from 'sveltekit-superforms';
-  import { zod } from 'sveltekit-superforms/adapters';
 
+  import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
 
   type TypeMap = {
@@ -84,6 +84,7 @@
     const formSchema = zod(z.object(zodShape));
 
     return superForm(defaults(formSchema), {
+      id: formSchema.id,
       SPA: true,
       validators: formSchema,
       resetForm: false,

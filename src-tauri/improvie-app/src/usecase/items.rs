@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use improvie_domain::persistence::db::DbTx;
 use improvie_domain::{modules::RepositoriesModule, repository::items::ItemsRepository};
+use improvie_logic::constant::items::ItemKind;
 use improvie_logic::model::items::{Content, Folder};
 use improvie_logic::{DynAppResult, model::items::FolderNode};
 use uid::Uid;
@@ -106,14 +107,14 @@ impl<R: RepositoriesModule> ItemsUseCase<R> {
         })
     }
 
-    pub async fn delete_item(&self, item_id: Uid) -> DynAppResult<Vec<Uid>> {
+    pub async fn delete_items(&self, item_ids: Vec<Uid>) -> DynAppResult<Vec<(Uid, ItemKind)>> {
         let tx = self.repository.begin().await?;
         let conn = tx.connection();
 
         let result = self
             .repository
             .items_repository()
-            .delete_item(conn, item_id)
+            .delete_items(conn, item_ids)
             .await;
 
         super::tx_commit!(tx, result);

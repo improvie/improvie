@@ -108,29 +108,30 @@
       </DropdownMenu.Root>
     </div>
   </div>
-  <ScrollArea orientation='both' class='w-full h-dvh relative z-0'>
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>
-        <div class='w-full flex flex-col gap-6 p-6'>
-          {#each rules as _, i}
-            <RuleNode bind:rule={rules[i]} remove_rule={() => {
-              rules = rules.filter((_, j) => i !== j);
-            }} />
-          {:else}
-            <div class='flex items-center justify-center w-full h-full'>
-              <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
-            </div>
-          {/each}
+  <ContextMenu.Root>
+    <ContextMenu.Trigger>
+      <ScrollArea orientation='both'>
+        <div class='w-full h-dvh relative z-0'>
+          <div class='w-full flex flex-col gap-6 p-6 pb-160'>
+            {#each rules as _, i}
+              <RuleNode bind:rule={rules[i]} remove_rule={() => {
+                rules = rules.filter((_, j) => i !== j);
+              }} />
+            {:else}
+              <div class='flex items-center justify-center w-full h-full'>
+                <p class='text-muted-foreground'>No rules. Open the context menu to add one.</p>
+              </div>
+            {/each}
+          </div>
         </div>
-        <div class='min-h-80'></div>
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item onclick={() => {
-          open = true;
-        }}>
-          <IconText icon={ListPlusIcon} text='Add Rule' />
-        </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  </ScrollArea>
+      </ScrollArea>
+    </ContextMenu.Trigger>
+    <ContextMenu.Content>
+      <ContextMenu.Item onclick={() => {
+        open = true;
+      }}>
+        <IconText icon={ListPlusIcon} text='Add Rule' />
+      </ContextMenu.Item>
+    </ContextMenu.Content>
+  </ContextMenu.Root>
 </div>

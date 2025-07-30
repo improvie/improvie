@@ -5,10 +5,10 @@
 </script>
 
 <script lang='ts'>
-  import type { PickItem } from '$lib/types/item';
   import { Button } from '$lib/components/ui/button';
   import * as Form from '$lib/components/ui/form/index.js';
   import ContentPicker from '$lib/features/combobox/ContentPicker.svelte';
+  import { contents } from '$lib/stores/items/content';
 
   let {
     value = $bindable(),
@@ -18,16 +18,12 @@
     label: string;
   } = $props();
 
-  let content: undefined | PickItem = $state();
   let open = $state(false);
+  const content = $derived.by(() => contents.get(value));
 
 </script>
 
-<ContentPicker bind:content={() => content,
-  (v) => {
-  content = v;
-  value = v?.id ?? '';
-  }} bind:open />
+<ContentPicker bind:content_id={value} bind:open />
 
 <Form.Control>
   {#snippet children(props)}
@@ -39,7 +35,7 @@
         {...props}
         onclick={() => open = true}
       >
-        {content?.hierarchy_name || 'Select content'}
+        {content?.title || 'Select content'}
       </Button>
     </div>
   {/snippet}

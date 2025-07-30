@@ -1,12 +1,13 @@
 <script lang='ts' module>
+  import type { SuperForm } from 'sveltekit-superforms';
   import type { CheckBoxFormSchema } from './CheckBoxFormField.svelte';
   import type { ContentPickFormSchema } from './ContentPickFormField.svelte';
   import type { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
   import type { RangeFormSchema } from './RangeFormField.svelte';
   import type { StringFormSchema } from './StringFormField.svelte';
   import { defaults, superForm } from 'sveltekit-superforms';
-  import { zod } from 'sveltekit-superforms/adapters';
 
+  import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
 
   type TypeMap = {
@@ -45,7 +46,7 @@
   //   [K in keyof T]: T[K]['type'] extends keyof TypeMap ? TypeMap[T[K]['type']] : never;
   // };
 
-  export function createForm(schema: CommonFormSchema) {
+  export function createForm<T extends CommonFormSchema>(schema: T): SuperForm<CommonSchemaToDataType<T>> {
     const zodShape: Record<string, z.ZodTypeAny> = {};
     for (const [key, def] of Object.entries(schema)) {
       switch (def.type) {
@@ -72,8 +73,8 @@
           break;
         case 'range':
           zodShape[key] = z.tuple([
-            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
-            z.number().int().nonnegative().min(def.props?.min ?? 0).max(def.props?.max ?? Number.MAX_SAFE_INTEGER),
+            z.number().int(),
+            z.number().int(),
           ]).default([def.props?.default?.[0] ?? 0, def.props?.default?.[1] ?? 100]);
           break;
         default:
@@ -83,10 +84,11 @@
     const formSchema = zod(z.object(zodShape));
 
     return superForm(defaults(formSchema), {
+      id: formSchema.id,
       SPA: true,
       validators: formSchema,
       resetForm: false,
-    });
+    }) as never as SuperForm<CommonSchemaToDataType<T>>;
   }
 
 </script>

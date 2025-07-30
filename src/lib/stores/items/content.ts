@@ -1,19 +1,12 @@
 import type { Content } from '$bindings/item';
 import type { CreateContentRequest } from '$bindings/item/command';
 import type { CreateContentResponse } from '$bindings/item/response';
-import { action_delete_item, action_update_item_name } from '$lib/action/items';
+import { action_update_item_name } from '$lib/action/items';
 import { action_create_content } from '$lib/action/items/content';
 import { SvelteMap } from 'svelte/reactivity';
 import { folder_nodes } from '.';
 
 export const contents: SvelteMap<string, Content> = new SvelteMap();
-
-export async function delete_content(id: string): Promise<void> {
-  const uids = await action_delete_item(id);
-  for (const uid of uids) {
-    contents.delete(uid);
-  }
-}
 
 export async function update_content_name(id: string, name: string): Promise<void> {
   await action_update_item_name(id, name);

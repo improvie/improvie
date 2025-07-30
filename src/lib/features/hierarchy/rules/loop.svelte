@@ -1,10 +1,15 @@
 <script lang='ts'>
   import type { LoopRule, RuleType } from '$bindings/rule';
+  import type { LoopRuleFormData } from '$lib/features/form/rules/RuleLoopForm.svelte';
+  import ModifyElement from '$lib/components/element/ModifyElement.svelte';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import IconText from '$lib/components/IconText.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
+  import CommonFormDialog from '$lib/features/form/common/CommonFormDialog.svelte';
+  import { createForm } from '$lib/features/form/common/CommonFormSchema.svelte';
+  import { LoopRuleSchema } from '$lib/features/form/rules/RuleLoopForm.svelte';
   import { ListPlusIcon, RepeatIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
@@ -19,9 +24,27 @@
   function add_rule(new_rule: RuleType) {
     rule.rules.push(new_rule);
   }
+
+  let modifyOpen = $state(false);
+  const form = createForm(LoopRuleSchema);
+
+  function onModifyOpen() {
+    form.form.update((data) => {
+      data.times = rule.times;
+      return data;
+    });
+    modifyOpen = true;
+  }
+
+  async function handleSubmit(data: LoopRuleFormData) {
+    rule.times = data.times;
+    modifyOpen = false;
+  }
 </script>
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
+
+<CommonFormDialog bind:open={modifyOpen} title='Modify Rule' {form} schema={LoopRuleSchema} handle={handleSubmit} />
 
 <ContextMenu.Root>
   <ContextMenu.Trigger class='relative overflow-visible'>
@@ -38,6 +61,9 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
+    <ContextMenu.Item onclick={() => onModifyOpen()}>
+      <ModifyElement />
+    </ContextMenu.Item>
     <ContextMenu.Item onclick={() => open = true}>
       <IconText icon={ListPlusIcon} text='Add Rule' />
     </ContextMenu.Item>

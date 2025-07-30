@@ -1,21 +1,28 @@
-<script lang='ts'>
-  import type { RuleType } from '$bindings/rule';
+<script lang='ts' module>
   import type { CommonSchemaToDataType } from '../common/CommonFormSchema.svelte';
-  import CommonForm from '../common/CommonForm.svelte';
-  import { createForm, defineSchema } from '../common/CommonFormSchema.svelte';
+  import { defineSchema } from '../common/CommonFormSchema.svelte';
 
-  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
-
-  const schema = defineSchema({
+  export const LoopRuleSchema = defineSchema({
     times: {
       type: 'uint',
       label: 'Times',
+      props: {
+        description: '合計何回ループするか',
+      },
     },
   });
-  const form = createForm(schema);
-  type FormData = CommonSchemaToDataType<typeof schema>;
+  export type LoopRuleFormData = CommonSchemaToDataType<typeof LoopRuleSchema>;
+</script>
 
-  async function handleSubmit(data: FormData) {
+<script lang='ts'>
+  import type { RuleType } from '$bindings/rule';
+  import CommonForm from '../common/CommonForm.svelte';
+  import { createForm } from '../common/CommonFormSchema.svelte';
+
+  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
+  const form = createForm(LoopRuleSchema);
+
+  async function handleSubmit(data: LoopRuleFormData) {
     add_rule({
       type: 'Loop',
       data: {
@@ -27,4 +34,4 @@
 
 </script>
 
-<CommonForm {form} {schema} handle={handleSubmit} />
+<CommonForm {form} schema={LoopRuleSchema} handle={handleSubmit} />

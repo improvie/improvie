@@ -87,6 +87,8 @@
 <div
   class={cn('group bg-card py-3 sticky bottom-0 h-20 z-40', track || 'hidden')}
   data-hidden={tracker.external_open}
+  oncontextmenu={e => e.stopPropagation()}
+  role='navigation'
 >
   <Slider
     class='absolute top-0 max-sm:group-data-[hidden=true]:hidden'

@@ -1,13 +1,8 @@
-<script lang='ts'>
-  import type { RuleType } from '$bindings/rule';
+<script lang='ts' module>
   import type { CommonSchemaToDataType } from '../common/CommonFormSchema.svelte';
-  import { contents } from '$lib/stores/items/content';
-  import CommonForm from '../common/CommonForm.svelte';
-  import { createForm, defineSchema } from '../common/CommonFormSchema.svelte';
+  import { defineSchema } from '../common/CommonFormSchema.svelte';
 
-  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
-
-  const schema = $state(defineSchema({
+  export const RangeRuleSchema = $state(defineSchema({
     content_id: {
       type: 'content_pick',
       label: 'Content',
@@ -22,10 +17,20 @@
       },
     },
   }));
-  const form = createForm(schema);
-  type FormData = CommonSchemaToDataType<typeof schema>;
+  export type RangeRuleFormData = CommonSchemaToDataType<typeof RangeRuleSchema>;
+</script>
 
-  async function handleSubmit(data: FormData) {
+<script lang='ts'>
+  import type { RuleType } from '$bindings/rule';
+  import { contents } from '$lib/stores/items/content';
+  import CommonForm from '../common/CommonForm.svelte';
+  import { createForm } from '../common/CommonFormSchema.svelte';
+
+  let { add_rule = $bindable() }: { add_rule: (rule: RuleType) => void } = $props();
+
+  const form = createForm(RangeRuleSchema);
+
+  async function handleSubmit(data: RangeRuleFormData) {
     add_rule({
       type: 'Range',
       data: {
@@ -36,18 +41,20 @@
     });
   }
 
-  function handleChange(data: FormData) {
-    if (!(data.content_id && schema.range.props.disabled)) {
+  function handleChange(data: RangeRuleFormData) {
+    if (!(data.content_id && RangeRuleSchema.range.props.disabled)) {
       return;
     }
-    schema.range.props.disabled = '';
+    RangeRuleSchema.range.props.disabled = '';
     const content = contents.get(data.content_id);
     if (!content) {
       return;
     }
-    schema.range.props.min = 0;
-    schema.range.props.max = content.seconds;
+    RangeRuleSchema.range.props.min = 0;
+    RangeRuleSchema.range.props.max = content.seconds;
+    data.range = [0, content.seconds];
+    return data;
   }
 </script>
 
-<CommonForm {form} {schema} handle={handleSubmit} handleChange={handleChange} />
+<CommonForm {form} schema={RangeRuleSchema} handle={handleSubmit} handleChange={handleChange} />

@@ -1,20 +1,13 @@
 import type { Content } from '$bindings/item';
 import type { Playlist } from '$bindings/play';
 import type { CreatePlaylistRequest } from '$bindings/play/request';
-import { action_delete_play_item, action_update_play_item_name } from '$lib/action/plays';
+import { action_update_play_item_name } from '$lib/action/plays';
 import { action_create_playlist } from '$lib/action/plays/playlists';
 import { action_get_thumbnail_content_uid } from '$lib/action/rules';
 import { SvelteMap } from 'svelte/reactivity';
 import { play_folder_nodes } from '.';
 
 export const playlists: SvelteMap<string, Playlist> = new SvelteMap();
-
-export async function delete_playlist(id: string): Promise<void> {
-  const uids = await action_delete_play_item(id);
-  for (const uid of uids) {
-    playlists.delete(uid);
-  }
-}
 
 export async function update_playlist_name(id: string, name: string): Promise<void> {
   await action_update_play_item_name(id, name);

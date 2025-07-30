@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use improvie_logic::{
     DynAppResult,
+    constant::plays::PlayItemKind,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
 use uid::Uid;
@@ -55,11 +56,11 @@ pub trait PlaystsRepository {
         model: CreatePlaylistModel,
     ) -> DynAppResult<Playlist>;
 
-    async fn delete_play_item(
+    async fn delete_play_items(
         &self,
         conn: Self::DbConnection<'_>,
-        play_id: Uid,
-    ) -> DynAppResult<Vec<Uid>>;
+        play_ids: Vec<Uid>,
+    ) -> DynAppResult<Vec<(Uid, PlayItemKind)>>;
 
     async fn update_play_item_name(
         &self,

@@ -12,12 +12,12 @@
 </script>
 
 <Dialog.Root bind:open>
-  <Dialog.Content class='sm:max-w-xl md:max-w-3xl'>
+  <Dialog.Content>
     <Dialog.Header>
       <Dialog.Title class='text-center'>Create Rule</Dialog.Title>
     </Dialog.Header>
     <Tabs.Root value='content' class='min-h-80 text-center'>
-      <Tabs.List>
+      <Tabs.List class='mx-auto mb-4'>
         <Tabs.Trigger value='content'>Content</Tabs.Trigger>
         <Tabs.Trigger value='range'>Range</Tabs.Trigger>
         <Tabs.Trigger value='loop'>Loop</Tabs.Trigger>

@@ -1,5 +1,6 @@
 import type { FolderNode } from '$bindings/item';
 import type { Writable } from 'svelte/store';
+import { action_delete_items } from '$lib/action/items';
 import { action_get_contents } from '$lib/action/items/content';
 import { action_get_folders } from '$lib/action/items/folder';
 import { action_get_items_hierarchy } from '$lib/action/items/node';
@@ -37,4 +38,21 @@ export function init_items() {
   }).catch((e) => {
     console.error(e);
   });
+}
+
+export async function delete_items(ids: string[]): Promise<void> {
+  const items = await action_delete_items(ids);
+
+  for (const item of items) {
+    switch (item[1]) {
+      case 'Folder': {
+        folders.delete(item[0]);
+        break;
+      }
+      case 'Content': {
+        contents.delete(item[0]);
+        break;
+      }
+    }
+  }
 }

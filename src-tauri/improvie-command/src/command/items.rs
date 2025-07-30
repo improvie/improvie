@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use improvie_app::model::items::{CreateContentResponse, CreateFolderDto, CreateFolderResponse};
 use improvie_logic::{
     DynAppResult,
+    constant::items::ItemKind,
     model::items::{Content, Folder, FolderNode},
 };
 use uid::Uid;
@@ -56,8 +57,11 @@ pub async fn create_content(
 }
 
 #[tauri::command]
-pub async fn delete_item(state: TauriAppState<'_>, item_id: Uid) -> DynAppResult<Vec<Uid>> {
-    state.modules.items_use_case().delete_item(item_id).await
+pub async fn delete_items(
+    state: TauriAppState<'_>,
+    item_ids: Vec<Uid>,
+) -> DynAppResult<Vec<(Uid, ItemKind)>> {
+    state.modules.items_use_case().delete_items(item_ids).await
 }
 
 #[tauri::command]

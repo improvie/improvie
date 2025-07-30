@@ -1,11 +1,16 @@
 <script lang='ts'>
   import type { RandomRule, RuleType } from '$bindings/rule';
+  import type { RandomRuleFormData } from '$lib/features/form/rules/RuleRandomForm.svelte';
+  import ModifyElement from '$lib/components/element/ModifyElement.svelte';
   import RemoveElement from '$lib/components/element/RemoveElement.svelte';
   import IconText from '$lib/components/IconText.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
   import { Separator } from '$lib/components/ui/separator';
   import CreateRuleDialog from '$lib/features/dialog/rules/CreateRuleDialog.svelte';
+  import CommonFormDialog from '$lib/features/form/common/CommonFormDialog.svelte';
+  import { createForm } from '$lib/features/form/common/CommonFormSchema.svelte';
+  import { RandomRuleSchema } from '$lib/features/form/rules/RuleRandomForm.svelte';
   import { CopyCheckIcon, CopyMinusIcon, ListPlusIcon, RepeatIcon, ShuffleIcon } from '@lucide/svelte';
   import { RuleNode } from '.';
 
@@ -22,9 +27,29 @@
     rule.rules.push([new_rule, 1]);
   }
 
+  let modifyOpen = $state(false);
+  const form = createForm(RandomRuleSchema);
+
+  function onModifyOpen() {
+    form.form.update((data) => {
+      data.times = rule.times;
+      data.duplicate = rule.duplicate;
+      return data;
+    });
+    modifyOpen = true;
+  }
+
+  async function handleSubmit(data: RandomRuleFormData) {
+    rule.times = data.times;
+    rule.duplicate = data.duplicate;
+    modifyOpen = false;
+  }
+
 </script>
 
 <CreateRuleDialog add_rule={add_rule} bind:open />
+
+<CommonFormDialog bind:open={modifyOpen} title='Modify Rule' {form} schema={RandomRuleSchema} handle={handleSubmit} />
 
 <ContextMenu.Root>
   <ContextMenu.Trigger class='relative overflow-visible'>
@@ -48,6 +73,9 @@
     </Card.Root>
   </ContextMenu.Trigger>
   <ContextMenu.Content>
+    <ContextMenu.Item onclick={() => onModifyOpen()}>
+      <ModifyElement />
+    </ContextMenu.Item>
     <ContextMenu.Item onclick={() => open = true}>
       <IconText icon={ListPlusIcon} text='Add Rule' />
     </ContextMenu.Item>

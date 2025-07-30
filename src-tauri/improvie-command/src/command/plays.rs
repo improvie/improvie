@@ -5,6 +5,7 @@ use improvie_app::model::plays::{
 };
 use improvie_logic::{
     DynAppResult,
+    constant::plays::PlayItemKind,
     model::plays::{PlayFolder, PlayFolderNode, Playlist},
 };
 use uid::Uid;
@@ -85,11 +86,14 @@ pub async fn create_playlist(
 }
 
 #[tauri::command]
-pub async fn delete_play_item(state: TauriAppState<'_>, play_id: Uid) -> DynAppResult<Vec<Uid>> {
+pub async fn delete_play_items(
+    state: TauriAppState<'_>,
+    play_ids: Vec<Uid>,
+) -> DynAppResult<Vec<(Uid, PlayItemKind)>> {
     state
         .modules
         .plays_use_case()
-        .delete_play_item(play_id)
+        .delete_play_items(play_ids)
         .await
 }
 

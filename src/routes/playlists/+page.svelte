@@ -33,33 +33,32 @@
 <Separator class='mb-2' />
 <PlayPageBreadcrumb />
 <Separator class='my-2' />
-<ScrollArea>
-  <div class='w-full h-dvh relative'>
-    <ContextMenu.Root>
-      <ContextMenu.Trigger class='absolute w-full h-full z-10'>
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item onclick={() => {
-          is_open_create_playlist = true;
-        }} class='flex items-center'>
-          <IconText icon={CirclePlusIcon} text='Add Playlist' />
-        </ContextMenu.Item>
-        <ContextMenu.Item onclick={() => {
-          is_open_create_play_folder = true;
-        }} class='flex items-center'>
-          <IconText icon={FolderIcon} text='Add Folder' />
-        </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-
-    <div class='absolute top-0 pb-50 w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-      {#each node as child}
-        {#if child.kind === 'Folder'}
-          <HierarchyPlayerFolder folder_id={child.id} bind:rename_data />
-        {:else if child.kind === 'Playlist'}
-          <HierarchyPlaylist playlist_id={child.id} bind:rename_data />
-        {/if}
-      {/each}
-    </div>
-  </div>
-</ScrollArea>
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <ScrollArea>
+      <div class='w-full h-dvh relative'>
+        <div class='absolute top-0 pb-80 w-full grid p-4 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+          {#each node as child}
+            {#if child.kind === 'Folder'}
+              <HierarchyPlayerFolder folder_id={child.id} bind:rename_data />
+            {:else if child.kind === 'Playlist'}
+              <HierarchyPlaylist playlist_id={child.id} bind:rename_data />
+            {/if}
+          {/each}
+        </div>
+      </div>
+    </ScrollArea>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item onclick={() => {
+      is_open_create_playlist = true;
+    }} class='flex items-center'>
+      <IconText icon={CirclePlusIcon} text='Add Playlist' />
+    </ContextMenu.Item>
+    <ContextMenu.Item onclick={() => {
+      is_open_create_play_folder = true;
+    }} class='flex items-center'>
+      <IconText icon={FolderIcon} text='Add Folder' />
+    </ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>

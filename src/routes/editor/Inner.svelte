@@ -109,10 +109,10 @@
     </div>
   </div>
   <ContextMenu.Root>
-    <ContextMenu.Trigger>
+    <ContextMenu.Trigger class='w-full'>
       <ScrollArea orientation='both'>
-        <div class='w-full h-dvh relative z-0'>
-          <div class='w-full flex flex-col gap-6 p-6 pb-160'>
+        <div class='h-dvh relative z-0'>
+          <div class='flex flex-col gap-6 p-6 pb-160'>
             {#each rules as _, i}
               <RuleNode bind:rule={rules[i]} remove_rule={() => {
                 rules = rules.filter((_, j) => i !== j);

@@ -55,7 +55,7 @@
 <RenameDialog bind:data={rename_data} />
 
 <div class='flex flex-col lg:flex-row h-dvh w-full'>
-  <div class='h-full mx-auto w-4/5 sm:w-3/5 md:w-2/5 lg:pl-6'>
+  <div class='h-full w-4/5 sm:w-3/5 md:w-1/3 ml-8 mt-12 lg:pl-6'>
     {#await playlist_thumbnail_path}
       <ImageLoader loading src={null} />
     {:then src}
@@ -109,10 +109,10 @@
     </div>
   </div>
   <ContextMenu.Root>
-    <ContextMenu.Trigger>
+    <ContextMenu.Trigger class='w-full pl-8'>
       <ScrollArea orientation='both'>
         <div class='w-full h-dvh relative z-0'>
-          <div class='w-full flex flex-col gap-6 p-6 pb-160'>
+          <div class='flex flex-col gap-6 p-6 pb-160'>
             {#each rules as _, i}
               <RuleNode bind:rule={rules[i]} remove_rule={() => {
                 rules = rules.filter((_, j) => i !== j);

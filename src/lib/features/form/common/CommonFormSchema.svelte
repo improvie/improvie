@@ -85,6 +85,9 @@
 
     return superForm(defaults(formSchema), {
       id: formSchema.id,
+      warnings: {
+        duplicateId: false,
+      },
       SPA: true,
       validators: formSchema,
       resetForm: false,

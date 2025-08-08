@@ -196,6 +196,7 @@ impl DbPoolImpl {
             .truncate(false)
             .open(&join)?;
 
+        #[allow(unused_mut)]
         let mut option = sea_orm::ConnectOptions::new(format!("sqlite:{}", join.display()));
         #[cfg(debug_assertions)]
         if option_env!("ENABLE_SQLX_LOG").is_some_and(|v| v.parse::<bool>().is_ok_and(|b| b)) {

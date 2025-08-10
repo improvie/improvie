@@ -21,7 +21,10 @@
     if (!folder) {
       return [];
     }
-    let items: PickItem[] = [];
+    let items: PickItem[] = [{
+      id,
+      hierarchy_name: folder.title,
+    }];
     for (const item of node.items) {
       if (item.kind === 'Folder') {
         const children = get_folders(item.id);
@@ -35,12 +38,7 @@
     return items;
   }
 
-  const ROOT: PickItem = {
-    id: ULID_NIL,
-    hierarchy_name: folders.get(ULID_NIL)!.title,
-  };
-
-  const items = [ROOT, ...get_folders(ULID_NIL)];
+  const items = get_folders(ULID_NIL);
 
   function closeAndFocusTrigger() {
     open = false;

@@ -3,6 +3,7 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import RuleContentForm from '$lib/features/form/rules/RuleContentForm.svelte';
+  import RuleFolderForm from '$lib/features/form/rules/RuleFolderForm.svelte';
   import RuleLoopForm from '$lib/features/form/rules/RuleLoopForm.svelte';
   import RuleRandomForm from '$lib/features/form/rules/RuleRandomForm.svelte';
   import RuleRangeForm from '$lib/features/form/rules/RuleRangeForm.svelte';
@@ -19,12 +20,16 @@
     <Tabs.Root value='content' class='min-h-80 text-center'>
       <Tabs.List class='mx-auto mb-4'>
         <Tabs.Trigger value='content'>Content</Tabs.Trigger>
+        <Tabs.Trigger value='folder'>Folder</Tabs.Trigger>
         <Tabs.Trigger value='range'>Range</Tabs.Trigger>
         <Tabs.Trigger value='loop'>Loop</Tabs.Trigger>
         <Tabs.Trigger value='random'>Random</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value='content'>
         <RuleContentForm bind:add_rule />
+      </Tabs.Content>
+      <Tabs.Content value='folder'>
+        <RuleFolderForm bind:add_rule />
       </Tabs.Content>
       <Tabs.Content value='range'>
         <RuleRangeForm bind:add_rule />

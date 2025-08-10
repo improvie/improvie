@@ -1,6 +1,6 @@
 <script lang='ts'>
   import type { RuleType } from '$bindings/rule';
-  import { ContentRuleNode, LoopRuleNode, RandomRuleNode, RangeRuleNode } from '.';
+  import { ContentRuleNode, FolderRuleNode, LoopRuleNode, RandomRuleNode, RangeRuleNode } from '.';
 
   let {
     rule = $bindable(),
@@ -13,6 +13,8 @@
 
 {#if rule.type === 'Content'}
   <ContentRuleNode bind:rule={rule.data} remove_rule={remove_rule} />
+{:else if rule.type === 'Folder'}
+  <FolderRuleNode bind:rule={rule.data} remove_rule={remove_rule} />
 {:else if rule.type === 'Range'}
   <RangeRuleNode bind:rule={rule.data} remove_rule={remove_rule} />
 {:else if rule.type === 'Random'}

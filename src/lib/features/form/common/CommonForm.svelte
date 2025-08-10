@@ -6,6 +6,7 @@
   import FormError from '../FormError.svelte';
   import CheckBoxFormField from './CheckBoxFormField.svelte';
   import ContentPickFormField from './ContentPickFormField.svelte';
+  import FolderPickFormField from './FolderPickFormField.svelte';
   import NumberFormField from './NumberFormField.svelte';
   import RangeFormField from './RangeFormField.svelte';
   import StringFormField from './StringFormField.svelte';
@@ -68,6 +69,11 @@
         />
       {:else if value.type === 'content_pick'}
         <ContentPickFormField
+          bind:value={$formData[key] as never}
+          label={value.label}
+        />
+      {:else if value.type === 'folder_pick'}
+        <FolderPickFormField
           bind:value={$formData[key] as never}
           label={value.label}
         />

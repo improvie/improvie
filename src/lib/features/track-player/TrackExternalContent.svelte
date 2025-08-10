@@ -68,6 +68,9 @@
   });
 
   function notFound() {
+    if (track === undefined) {
+      return;
+    }
     toast.error('Failed load video. (maybe video file deleted)', {
       duration: 5000,
     });

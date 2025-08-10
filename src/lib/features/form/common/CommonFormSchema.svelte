@@ -2,11 +2,12 @@
   import type { SuperForm } from 'sveltekit-superforms';
   import type { CheckBoxFormSchema } from './CheckBoxFormField.svelte';
   import type { ContentPickFormSchema } from './ContentPickFormField.svelte';
+  import type { FolderPickFormSchema } from './FolderPickFormField.svelte';
   import type { IntFormSchema, UintFormSchema } from './NumberFormField.svelte';
   import type { RangeFormSchema } from './RangeFormField.svelte';
   import type { StringFormSchema } from './StringFormField.svelte';
-  import { defaults, superForm } from 'sveltekit-superforms';
 
+  import { defaults, superForm } from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
   import z from 'zod';
 
@@ -17,6 +18,7 @@
     checkbox: boolean;
     range: [number, number];
     content_pick: string;
+    folder_pick: string;
   };
 
   export type CommonFieldSchema<T extends keyof TypeMap, P = undefined> = {
@@ -31,6 +33,7 @@
       | StringFormSchema
       | CheckBoxFormSchema
       | RangeFormSchema
+      | FolderPickFormSchema
       | ContentPickFormSchema;
 
   export type CommonFormSchema = Record<string, AllCommonFieldSchema>;
@@ -69,6 +72,9 @@
           break;
         }
         case 'content_pick':
+          zodShape[key] = z.string().nonempty().default('');
+          break;
+        case 'folder_pick':
           zodShape[key] = z.string().nonempty().default('');
           break;
         case 'range':

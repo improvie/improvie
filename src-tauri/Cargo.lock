@@ -292,7 +292,7 @@ dependencies = [
 
 [[package]]
 name = "bind"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "syn 2.0.104",
  "ts-rs",
@@ -2180,7 +2180,7 @@ dependencies = [
 
 [[package]]
 name = "improvie"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "cfg-if",
  "fix-path-env",
@@ -2200,7 +2200,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-app"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "bind",
  "chrono",
@@ -2217,7 +2217,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-command"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "async-trait",
  "bind",
@@ -2243,7 +2243,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-domain"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2256,7 +2256,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-infra"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2277,7 +2277,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-logic"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "bind",
  "chrono",
@@ -2292,7 +2292,7 @@ dependencies = [
 
 [[package]]
 name = "improvie-row"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "improvie-logic",
  "sea-orm",
@@ -5962,7 +5962,7 @@ dependencies = [
 
 [[package]]
 name = "uid"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "bind",
  "sea-orm",
@@ -7105,7 +7105,7 @@ dependencies = [
 
 [[package]]
 name = "youtube"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "bind",
  "bytes",

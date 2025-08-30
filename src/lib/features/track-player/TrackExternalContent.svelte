@@ -1,6 +1,5 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
-  import IconText from '$lib/components/IconText.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -14,6 +13,7 @@
   import { ChevronsLeftIcon, ChevronsRightIcon, MusicIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { toast } from 'svelte-sonner';
+  import * as Drawer from "$lib/components/ui/drawer";
 
   let {
     track,
@@ -224,7 +224,7 @@
   </div>
 
   {#if is_playlist}
-    <div class='w-80 border-l p-4'>
+    <div class='hidden sm:block w-80 border-l p-4'>
       <h2 class='text-lg font-semibold mb-2'>Up Next</h2>
       <ScrollArea class='h-[calc(100%-2rem)]'>
         <div class='flex flex-col gap-2'>
@@ -251,5 +251,36 @@
         </div>
       </ScrollArea>
     </div>
+    <Drawer.Root bind:open={tracker.external_open}>
+      <Drawer.Content class="sm:hidden">
+        <Drawer.Header>
+          <Drawer.Title>Up Next</Drawer.Title>
+        </Drawer.Header>
+        <ScrollArea class='h-80 p-4'>
+          <div class='flex flex-col gap-2'>
+            {#each tracker.play_rules as rule, i}
+              {@const content = contents.get(rule.content_id)}
+              {#if content}
+                <button
+                  class={cn(
+                    'w-full text-left p-2 rounded-md hover:bg-accent',
+                    i === tracker.current_rule_idx && 'bg-accent',
+                  )}
+                  onclick={() => tracker.set_current_track(i)}
+                >
+                  <div class='flex items-center'>
+                    <MusicIcon class='w-4 h-4 mr-2 flex-shrink-0' />
+                    <div class='flex-1 truncate'>
+                      <p class='truncate text-sm'>{content.title}</p>
+                      <p class='text-xs text-muted-foreground truncate'>{content.description ?? 'No description'}</p>
+                    </div>
+                  </div>
+                </button>
+              {/if}
+            {/each}
+          </div>
+        </ScrollArea>
+      </Drawer.Content>
+    </Drawer.Root>
   {/if}
 </div>

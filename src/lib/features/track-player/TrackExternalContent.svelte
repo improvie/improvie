@@ -1,14 +1,17 @@
 <script lang='ts'>
   import type { Content } from '$bindings/item';
+  import IconText from '$lib/components/IconText.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
   import ImageLoader from '$lib/components/ImageLoader.svelte';
+  import { ScrollArea } from '$lib/components/ui/scroll-area';
   import { Slider } from '$lib/components/ui/slider/index.js';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as Tooltip from '$lib/components/ui/tooltip/index.js';
   import { Logger } from '$lib/logger';
+  import { contents } from '$lib/stores/items/content';
   import { tracker } from '$lib/stores/tracker.svelte';
   import { cn, TimeFormat } from '$lib/utils';
-  import { ChevronsLeftIcon, ChevronsRightIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon } from '@lucide/svelte';
+  import { ChevronsLeftIcon, ChevronsRightIcon, MusicIcon, PanelBottomOpenIcon, PanelTopOpenIcon, PauseIcon, PlayIcon, Repeat1Icon, RepeatIcon } from '@lucide/svelte';
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { toast } from 'svelte-sonner';
 
@@ -77,142 +80,176 @@
   }
 </script>
 
-<Tabs.Root bind:value class='container mx-auto text-center h-full'>
-  <Tabs.List class='absolute top-2 left-1/2 -translate-x-1/2 flex items-center justify-center'>
-    <Tabs.Trigger value='thumbnail'>Thumbnail</Tabs.Trigger>
-    {#if is_video}
-      <Tabs.Trigger value='video'>Video</Tabs.Trigger>
-    {:else}
-      <Tooltip.Root>
-        <Tooltip.Trigger class='cursor-not-allowed'>
-          <Tabs.Trigger value='video' disabled>Video</Tabs.Trigger>
-        </Tooltip.Trigger>
-        <Tooltip.Content>
-          <p>This content is not Video</p>
-        </Tooltip.Content>
-      </Tooltip.Root>
-    {/if}
-  </Tabs.List>
-  <div class='pt-2 h-full flex flex-col relative'>
-    <div class='w-full h-fit aspect-video absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
-      <div class={cn(value !== 'thumbnail' && 'hidden')}>
-        <ImageLoader
-          src={thumbnail_path}
-        />
-      </div>
-      <div class={cn(value !== 'video' && 'hidden')}>
-        <video
-          bind:this={video_element}
-          crossorigin='anonymous'
-          playsinline
-          bind:volume={tracker.volume}
-          ontimeupdate={() => ontimeupdate()}
-          bind:paused={tracker.paused}
-          bind:duration
-          onended={onended}
-          class='aspect-video object-contain w-full h-full'
-          onclick={() => tracker.toggle_pause()}
-          poster={thumbnail_path}
-          onerror={() => notFound()}
-        >
-          <source src={content_path} onerror={() => notFound()} />
-          <track kind='captions' />
-        </video>
-      </div>
-    </div>
+<div class='flex h-full w-full'>
+  <div class='flex-1'>
+    <Tabs.Root bind:value class='container mx-auto text-center h-full'>
+      <Tabs.List class='absolute top-2 left-1/2 -translate-x-1/2 flex items-center justify-center'>
+        <Tabs.Trigger value='thumbnail'>Thumbnail</Tabs.Trigger>
+        {#if is_video}
+          <Tabs.Trigger value='video'>Video</Tabs.Trigger>
+        {:else}
+          <Tooltip.Root>
+            <Tooltip.Trigger class='cursor-not-allowed'>
+              <Tabs.Trigger value='video' disabled>Video</Tabs.Trigger>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <p>This content is not Video</p>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        {/if}
+      </Tabs.List>
+      <div class='pt-2 h-full flex flex-col relative'>
+        <div class='w-full h-fit aspect-video absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'>
+          <div class={cn(value !== 'thumbnail' && 'hidden')}>
+            <ImageLoader
+              src={thumbnail_path}
+            />
+          </div>
+          <div class={cn(value !== 'video' && 'hidden')}>
+            <video
+              bind:this={video_element}
+              crossorigin='anonymous'
+              playsinline
+              bind:volume={tracker.volume}
+              ontimeupdate={() => ontimeupdate()}
+              bind:paused={tracker.paused}
+              bind:duration
+              onended={onended}
+              class='aspect-video object-contain w-full h-full'
+              onclick={() => tracker.toggle_pause()}
+              poster={thumbnail_path}
+              onerror={() => notFound()}
+            >
+              <source src={content_path} onerror={() => notFound()} />
+              <track kind='captions' />
+            </video>
+          </div>
+        </div>
 
-    <div class='w-full flex flex-col sm:hidden absolute bottom-0 p-6 gap-4'>
-      <div class='w-full flex flex-col gap-1'>
-        <Slider
-          type='single'
-          bind:value={tracker.currentTime}
-          onValueChangeStart={sliderChangeStart}
-          max={duration}
-          min={0}
-        />
-        <div class='flex justify-between text-xs text-muted-foreground'>
-          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, tracker.currentTime)}</span>
-          <span>{TimeFormat.format_secs(TimeFormat.PlainHms, duration)}</span>
+        <div class='w-full flex flex-col sm:hidden absolute bottom-0 p-6 gap-4'>
+          <div class='w-full flex flex-col gap-1'>
+            <Slider
+              type='single'
+              bind:value={tracker.currentTime}
+              onValueChangeStart={sliderChangeStart}
+              max={duration}
+              min={0}
+            />
+            <div class='flex justify-between text-xs text-muted-foreground'>
+              <span>{TimeFormat.format_secs(TimeFormat.PlainHms, tracker.currentTime)}</span>
+              <span>{TimeFormat.format_secs(TimeFormat.PlainHms, duration)}</span>
+            </div>
+          </div>
+          <div class='flex items-center justify-between px-8'>
+            <IconButton
+              class='scale-110'
+              onclick={() => { tracker.toggle_external_open(); }}
+            >
+              {#if tracker.external_open}
+                <PanelTopOpenIcon />
+              {:else}
+                <PanelBottomOpenIcon />
+              {/if}
+              {#snippet content()}
+                {#if tracker.external_open}
+                  <p>close</p>
+                {:else}
+                  <p>open</p>
+                {/if}
+              {/snippet}
+            </IconButton>
+            {#if is_playlist}
+              <IconButton
+                class='scale-110'
+                onclick={() => { tracker.previous(); }}
+              >
+                <ChevronsLeftIcon />
+                {#snippet content()}
+                  <p>previous</p>
+                {/snippet}
+              </IconButton>
+            {/if}
+            <IconButton
+              onclick={() => tracker.toggle_pause()}
+              class='scale-160'
+            >
+              {#if tracker.paused}
+                <PlayIcon />
+              {:else}
+                <PauseIcon />
+              {/if}
+              {#snippet content()}
+                {#if tracker.paused}
+                  <p>start content</p>
+                {:else}
+                  <p>pause content</p>
+                {/if}
+              {/snippet}
+            </IconButton>
+            {#if is_playlist}
+              <IconButton
+                class='scale-110'
+                onclick={() => { tracker.next(); }}
+              >
+                <ChevronsRightIcon />
+                {#snippet content()}
+                  <p>next</p>
+                {/snippet}
+              </IconButton>
+            {/if}
+            <IconButton
+              class='scale-110'
+              pressed={tracker.loop_state !== 'off'}
+              onclick={() => { tracker.toggle_loop(); }}
+            >
+              {#if tracker.loop_state === 'single'}
+                <Repeat1Icon />
+              {:else}
+                <RepeatIcon />
+              {/if}
+              {#snippet content()}
+                {#if tracker.loop_state === 'full'}
+                  <p>stop loop</p>
+                {:else if tracker.loop_state === 'single'}
+                  <p>start full loop</p>
+                {:else}
+                  <p>start single loop</p>
+                {/if}
+              {/snippet}
+            </IconButton>
+          </div>
         </div>
       </div>
-      <div class='flex items-center justify-between px-8'>
-        <IconButton
-          class='scale-110'
-          onclick={() => { tracker.toggle_external_open(); }}
-        >
-          {#if tracker.external_open}
-            <PanelTopOpenIcon />
-          {:else}
-            <PanelBottomOpenIcon />
-          {/if}
-          {#snippet content()}
-            {#if tracker.external_open}
-              <p>close</p>
-            {:else}
-              <p>open</p>
-            {/if}
-          {/snippet}
-        </IconButton>
-        {#if is_playlist}
-          <IconButton
-            class='scale-110'
-            onclick={() => { tracker.previous(); }}
-          >
-            <ChevronsLeftIcon />
-            {#snippet content()}
-              <p>previous</p>
-            {/snippet}
-          </IconButton>
-        {/if}
-        <IconButton
-          onclick={() => tracker.toggle_pause()}
-          class='scale-160'
-        >
-          {#if tracker.paused}
-            <PlayIcon />
-          {:else}
-            <PauseIcon />
-          {/if}
-          {#snippet content()}
-            {#if tracker.paused}
-              <p>start content</p>
-            {:else}
-              <p>pause content</p>
-            {/if}
-          {/snippet}
-        </IconButton>
-        {#if is_playlist}
-          <IconButton
-            class='scale-110'
-            onclick={() => { tracker.next(); }}
-          >
-            <ChevronsRightIcon />
-            {#snippet content()}
-              <p>next</p>
-            {/snippet}
-          </IconButton>
-        {/if}
-        <IconButton
-          class='scale-110'
-          pressed={tracker.loop_state !== 'off'}
-          onclick={() => { tracker.toggle_loop(); }}
-        >
-          {#if tracker.loop_state === 'single'}
-            <Repeat1Icon />
-          {:else}
-            <RepeatIcon />
-          {/if}
-          {#snippet content()}
-            {#if tracker.loop_state === 'full'}
-              <p>stop loop</p>
-            {:else if tracker.loop_state === 'single'}
-              <p>start full loop</p>
-            {:else}
-              <p>start single loop</p>
-            {/if}
-          {/snippet}
-        </IconButton>
-      </div>
-    </div>
+    </Tabs.Root>
   </div>
-</Tabs.Root>
+
+  {#if is_playlist}
+    <div class='w-80 border-l p-4'>
+      <h2 class='text-lg font-semibold mb-2'>Up Next</h2>
+      <ScrollArea class='h-[calc(100%-2rem)]'>
+        <div class='flex flex-col gap-2'>
+          {#each tracker.play_rules as rule, i}
+            {@const content = contents.get(rule.content_id)}
+            {#if content}
+              <button
+                class={cn(
+                  'w-full text-left p-2 rounded-md hover:bg-accent',
+                  i === tracker.current_rule_idx && 'bg-accent',
+                )}
+                onclick={() => tracker.set_current_track(i)}
+              >
+                <div class='flex items-center'>
+                  <MusicIcon class='w-4 h-4 mr-2 flex-shrink-0' />
+                  <div class='flex-1 truncate'>
+                    <p class='truncate text-sm'>{content.title}</p>
+                    <p class='text-xs text-muted-foreground truncate'>{content.description ?? 'No description'}</p>
+                  </div>
+                </div>
+              </button>
+            {/if}
+          {/each}
+        </div>
+      </ScrollArea>
+    </div>
+  {/if}
+</div>
